@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Studio Maison Volodymyr</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Layout: slide picker on top, live 1080×1350 canvas on the left, photo slots and price fields on the right (stacked on phones) */
 :root{--bg:#1c0609;--panel:#2a0b10;--soft:#33101a;--line:#4d1d27;--ink:#f6e9d6;--mute:#c9a99b;--gold:#d8b46a;--gold2:#f3d996;--display:"Cinzel",Georgia,serif;--body:Montserrat,system-ui,sans-serif;color-scheme:dark}
@@ -46,32 +46,32 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <body>
 <div class="wrap">
  <h1>Studio Maison Volodymyr</h1>
- <p class="lead">Выбери слайд, нажми на рамку и вставь своё фото. Перетаскивай фото пальцем, масштабируй ползунком, меняй цены справа, потом нажми «Сохранить PNG». Слайды 1080×1350 для Instagram, текст на французском.</p>
+ <p class="lead">Выбери слайд, нажми на рамку и вставь своё фото. Перетаскивай фото пальцем, масштабируй ползунком, меняй цены справа, потом нажми «Сохранить PNG». Слайды 1080×1920 (формат сторис 9:16), текст на французском. Верх и низ оставлены свободными под интерфейс Instagram.</p>
  <div class="tabs" id="tabs" role="tablist"></div>
  <div class="main">
-  <div class="stage"><canvas id="cv" width="1080" height="1350" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». Фото не уходят в интернет, они остаются только в этом окне.</p></div>
+  <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». Фото не уходят в интернет, они остаются только в этом окне.</p></div>
   <div class="panel" id="panel"></div>
  </div>
 </div>
 <input type="file" id="file" accept="image/*" hidden>
 <div id="fallback" hidden><img id="fbimg" alt="Готовый слайд"><p style="margin:0;text-align:center">Нажми на картинку и удерживай, чтобы сохранить её в фото.</p><button class="btn" id="fbclose">Закрыть</button></div>
 <script>
-const W=1080,H=1350,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const W=1080,H=1920,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const DISP='"Cinzel",Georgia,serif',ITAL='italic 600 {s}px "Cormorant Garamond",Georgia,serif',SANS='Montserrat,Arial,sans-serif';
-const FOOT={f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS  ✦  −20% 1ÈRE COMMANDE',f2:'@maison.volodymyr  ·  Porte de Clignancourt'};
+const FOOT={f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS',f2:'@maison.volodymyr  ·  Porte de Clignancourt'};
 const SL=[
- {id:'tasses',name:'☕ Кружки',title:'TASSES PHOTO',sub:'VOTRE PHOTO, VOTRE CADEAU',f:{p:'10 €',cap:'La tasse personnalisée'},fl:{p:'Цена кружки',cap:'Подпись'},
-  el:[{t:'slot',x:80,y:392,w:600,h:716,k:'mug'},{t:'slot',x:710,y:392,w:290,h:342,k:'mug'},{t:'slot',x:710,y:766,w:290,h:342,k:'mug'},{t:'pill',x:380,y:1108,txt:'{p}'},{t:'it',x:540,y:1182,txt:'{cap}',s:32}]},
- {id:'metal',name:'🖼 Фото на металле',title:'PHOTO SUR MÉTAL',sub:'VOTRE PHOTO, SUBLIMÉE',f:{s1:'15 × 20 cm',p1:'6 €',s2:'20 × 30 cm',p2:'8 €'},fl:{s1:'Формат 1',p1:'Цена 1',s2:'Формат 2',p2:'Цена 2'},
-  el:[{t:'slot',x:120,y:400,w:285,h:370,k:'metal'},{t:'size',x:470,y:530,txt:'{s1}'},{t:'arrow',x1:472,y1:600,x2:640,y2:600},{t:'pill',x:830,y:600,txt:'{p1}'},
-      {t:'slot',x:120,y:810,w:285,h:370,k:'metal'},{t:'size',x:470,y:940,txt:'{s2}'},{t:'arrow',x1:472,y1:1010,x2:640,y2:1010},{t:'pill',x:830,y:1010,txt:'{p2}'}]},
- {id:'grand',name:'🖼 Большой формат',title:'GRAND FORMAT',sub:'PHOTO SUR MÉTAL 30 × 40 CM',f:{p:'dès 25 €',small:'Aussi : 10 × 15 cm · 4 €   |   5,5 × 8,5 cm · 2 €'},fl:{p:'Цена 30×40',small:'Строка про другие форматы'},
-  el:[{t:'slot',x:285,y:392,w:510,h:680,k:'metal'},{t:'pill',x:540,y:1100,txt:'{p}'},{t:'small',x:540,y:1180,txt:'{small}'}]},
- {id:'cles',name:'🔑 Брелки и магниты',title:'PORTE-CLÉS & MAGNETS',sub:'PETITS CADEAUX, GRANDS SOUVENIRS',f:{n1:'Porte-clés métal',p1:'4 €',n2:'Double face',p2:'5 €',n3:'Pendentif',p3:'8 €',n4:'Magnet photo',p4:'3 €',small:'Porte-clés plastique dès 2 €'},fl:{n1:'Название 1',p1:'Цена 1',n2:'Название 2',p2:'Цена 2',n3:'Название 3',p3:'Цена 3',n4:'Название 4',p4:'Цена 4',small:'Нижняя строка'},
-  el:[{t:'slot',x:85,y:392,w:430,h:330,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:722,txt:'{p1}',sz:44},{t:'slot',x:565,y:392,w:430,h:330,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:722,txt:'{p2}',sz:44},
-      {t:'slot',x:85,y:790,w:430,h:330,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1120,txt:'{p3}',sz:44},{t:'slot',x:565,y:790,w:430,h:330,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1120,txt:'{p4}',sz:44},{t:'small',x:540,y:1186,txt:'{small}'}]},
- {id:'coffrets',name:'🎁 Наборы',title:'COFFRETS CADEAUX',sub:'PRÊTS À OFFRIR, COFFRET INCLUS',f:{n1:'Coffret Prestige · valeur 56 €',p1:'51 €',n2:'Coffret Famille',p2:'28 €',n3:'Coffret Noël',p3:'41 €'},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
-  el:[{t:'slot',x:80,y:392,w:920,h:400,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:792,txt:'{p1}'},{t:'slot',x:80,y:836,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1126,txt:'{p2}',sz:44},{t:'slot',x:560,y:836,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1126,txt:'{p3}',sz:44}]}
+ {id:'tasses',name:'☕ Кружки',title:'Tasses photo',sub:'Votre photo, votre cadeau',f:{p:'10 €',cap:'La tasse personnalisée'},fl:{p:'Цена кружки',cap:'Подпись'},
+  el:[{t:'slot',x:80,y:670,w:580,h:690,k:'mug'},{t:'slot',x:690,y:670,w:310,h:330,k:'mug'},{t:'slot',x:690,y:1030,w:310,h:330,k:'mug'},{t:'pill',x:370,y:1360,txt:'{p}'},{t:'it',x:540,y:1450,txt:'{cap}',s:36}]},
+ {id:'metal',name:'🖼 Фото на металле',title:'Photo sur métal',sub:'Votre photo, sublimée',f:{s1:'15 × 20 cm',p1:'6 €',s2:'20 × 30 cm',p2:'8 €'},fl:{s1:'Формат 1',p1:'Цена 1',s2:'Формат 2',p2:'Цена 2'},
+  el:[{t:'slot',x:120,y:680,w:280,h:360,k:'metal'},{t:'size',x:470,y:820,txt:'{s1}'},{t:'arrow',x1:472,y1:885,x2:640,y2:885},{t:'pill',x:830,y:885,txt:'{p1}'},
+      {t:'slot',x:120,y:1085,w:280,h:360,k:'metal'},{t:'size',x:470,y:1225,txt:'{s2}'},{t:'arrow',x1:472,y1:1290,x2:640,y2:1290},{t:'pill',x:830,y:1290,txt:'{p2}'}]},
+ {id:'grand',name:'🖼 Большой формат',title:'Grand format',sub:'Photo sur métal 30 × 40 cm',f:{p:'dès 25 €',small:'Aussi : 10 × 15 cm · 4 €   |   5,5 × 8,5 cm · 2 €'},fl:{p:'Цена 30×40',small:'Строка про другие форматы'},
+  el:[{t:'slot',x:285,y:680,w:510,h:680,k:'metal'},{t:'pill',x:540,y:1365,txt:'{p}'},{t:'small',x:540,y:1450,txt:'{small}'}]},
+ {id:'cles',name:'🔑 Брелки и магниты',title:'Porte-clés & magnets',sub:'Petits cadeaux, grands souvenirs',f:{n1:'Porte-clés métal',p1:'4 €',n2:'Double face',p2:'5 €',n3:'Pendentif',p3:'8 €',n4:'Magnet photo',p4:'3 €',small:'Porte-clés plastique dès 2 €'},fl:{n1:'Название 1',p1:'Цена 1',n2:'Название 2',p2:'Цена 2',n3:'Название 3',p3:'Цена 3',n4:'Название 4',p4:'Цена 4',small:'Нижняя строка'},
+  el:[{t:'slot',x:85,y:670,w:430,h:320,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:990,txt:'{p1}',sz:44},{t:'slot',x:565,y:670,w:430,h:320,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:990,txt:'{p2}',sz:44},
+      {t:'slot',x:85,y:1045,w:430,h:320,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1365,txt:'{p3}',sz:44},{t:'slot',x:565,y:1045,w:430,h:320,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1365,txt:'{p4}',sz:44},{t:'small',x:540,y:1450,txt:'{small}'}]},
+ {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige · valeur 56 €',p1:'51 €',n2:'Coffret Famille',p2:'28 €',n3:'Coffret Noël',p3:'41 €'},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
+  el:[{t:'slot',x:80,y:670,w:920,h:360,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1080,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1370,txt:'{p2}',sz:44},{t:'slot',x:560,y:1080,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1370,txt:'{p3}',sz:44}]}
 ];
 let cur=0;const IM={};// key "slide.slot" -> {img,zoom,ox,oy}
 const slotsOf=s=>s.el.filter(e=>e.t=='slot');
@@ -79,25 +79,29 @@ const fill=(s,txt)=>txt.replace(/\{(\w+)\}/g,(m,k)=>s.f[k]??'');
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function goldGrad(y0,y1){const g=ctx.createLinearGradient(0,y0,0,y1);g.addColorStop(0,'#fbe7b0');g.addColorStop(.5,'#e2bb6c');g.addColorStop(1,'#b8863a');return g}
 function spaced(txt,x,y,sp,align){const w=[...txt].reduce((a,c)=>a+ctx.measureText(c).width+sp,0)-sp;let cx=align=='center'?x-w/2:x;for(const c of txt){ctx.fillText(c,cx,y);cx+=ctx.measureText(c).width+sp}return w}
+function star(x,y,r,a){ctx.save();ctx.globalAlpha=a;const g=ctx.createRadialGradient(x,y,0,x,y,r*1.6);g.addColorStop(0,'rgba(255,240,205,.9)');g.addColorStop(.25,'rgba(243,217,150,.35)');g.addColorStop(1,'rgba(243,217,150,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*1.6,0,7);ctx.fill();
+ ctx.fillStyle='#fff3d6';ctx.beginPath();ctx.moveTo(x,y-r);ctx.quadraticCurveTo(x,y,x+r*.16,y);ctx.quadraticCurveTo(x,y,x,y+r);ctx.quadraticCurveTo(x,y,x-r*.16,y);ctx.quadraticCurveTo(x,y,x,y-r);ctx.fill();
+ ctx.beginPath();ctx.moveTo(x-r*.75,y);ctx.quadraticCurveTo(x,y,x,y-r*.12);ctx.quadraticCurveTo(x,y,x+r*.75,y);ctx.quadraticCurveTo(x,y,x,y+r*.12);ctx.quadraticCurveTo(x,y,x-r*.75,y);ctx.fill();ctx.restore()}
 function bg(){
- const g=ctx.createRadialGradient(540,260,40,540,520,1100);g.addColorStop(0,'#8e1c3a');g.addColorStop(.55,'#5e0f24');g.addColorStop(1,'#2a050e');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
- ctx.save();ctx.translate(540,-160);for(let i=-6;i<=6;i++){ctx.save();ctx.rotate(i*0.11);const lg=ctx.createLinearGradient(0,0,0,1300);lg.addColorStop(0,'rgba(255,220,200,.10)');lg.addColorStop(1,'rgba(255,220,200,0)');ctx.fillStyle=lg;ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(8,0);ctx.lineTo(i%2?60:30,1300);ctx.lineTo(i%2?-60:-30,1300);ctx.fill();ctx.restore()}ctx.restore();
- for(let i=0;i<60;i++){const r=v=>{const s=Math.sin(i*91.7+v*17.3)*1e4;return s-Math.floor(s)};ctx.fillStyle=`rgba(243,217,150,${.12+r(3)*.35})`;ctx.beginPath();ctx.arc(r(1)*W,r(2)*H,1+r(4)*2.4,0,7);ctx.fill()}
+ const g=ctx.createRadialGradient(540,780,60,540,900,1250);g.addColorStop(0,'#8c1b38');g.addColorStop(.45,'#5f1026');g.addColorStop(1,'#25060e');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.save();ctx.translate(-120,-200);ctx.rotate(-0.42);for(let i=0;i<4;i++){const lg=ctx.createLinearGradient(0,0,0,2600);lg.addColorStop(0,'rgba(255,220,200,.07)');lg.addColorStop(1,'rgba(255,220,200,0)');ctx.fillStyle=lg;ctx.fillRect(260+i*230,0,70+i*25,2600)}ctx.restore();
+ const fl=ctx.createRadialGradient(540,1700,20,540,1700,560);fl.addColorStop(0,'rgba(255,190,150,.10)');fl.addColorStop(1,'rgba(255,190,150,0)');ctx.fillStyle=fl;ctx.fillRect(0,1300,W,620);
+ for(let i=0;i<70;i++){const r=v=>{const s=Math.sin(i*91.7+v*17.3)*1e4;return s-Math.floor(s)};ctx.fillStyle=`rgba(243,217,150,${.1+r(3)*.35})`;ctx.beginPath();ctx.arc(r(1)*W,r(2)*H,1+r(4)*2.4,0,7);ctx.fill()}
+ ctx.fillStyle='rgba(243,217,150,.5)';ctx.fillRect(70,560,1.4,900);star(71,640,46,1);star(71,1330,34,.9);star(1010,250,22,.7)
 }
 function header(s){
- ctx.save();ctx.shadowColor='rgba(0,0,0,.4)';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(540,96,44,0,7);ctx.fillStyle='#5a0f22';ctx.fill();ctx.restore();
- ctx.lineWidth=2.5;ctx.strokeStyle='#e2bb6c';ctx.beginPath();ctx.arc(540,96,44,0,7);ctx.stroke();ctx.lineWidth=1;ctx.beginPath();ctx.arc(540,96,38,0,7);ctx.stroke();
- ctx.fillStyle=goldGrad(70,125);ctx.textBaseline='alphabetic';ctx.font='600 34px '+DISP;ctx.textAlign='left';ctx.fillText('M',512,104);ctx.font='600 30px '+DISP;ctx.fillText('V',538,118);
- ctx.font='500 28px '+DISP;ctx.fillStyle='#ecd6b4';spaced('MAISON VOLODYMYR',540,182,9,'center');
- const lg=ctx.createLinearGradient(330,0,750,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(330,206,420,1.6);
- ctx.font='600 74px '+DISP;ctx.fillStyle=goldGrad(225,295);ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=12;spaced(s.title,540,290,3,'center');ctx.restore();
- ctx.font='600 22px '+SANS;ctx.fillStyle='#f6e9d6';spaced(s.sub,540,342,7,'center');
+ const cy=290;ctx.save();ctx.shadowColor='rgba(255,200,170,.35)';ctx.shadowBlur=40;ctx.beginPath();ctx.arc(540,cy,58,0,7);ctx.fillStyle='#5a0f22';ctx.fill();ctx.restore();
+ ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';ctx.beginPath();ctx.arc(540,cy,58,0,7);ctx.stroke();ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(540,cy,50,0,7);ctx.stroke();
+ ctx.fillStyle=goldGrad(cy-35,cy+35);ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.font='600 44px '+DISP;ctx.fillText('M',503,cy+10);ctx.font='600 38px '+DISP;ctx.fillText('V',537,cy+28);
+ ctx.font='500 36px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#ecdcc6';spaced('MAISON VOLODYMYR',540,405,10,'center');
+ const lg=ctx.createLinearGradient(300,0,780,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(300,432,480,1.6);
+ ctx.font='600 78px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=14;ctx.fillText(s.title,540,545);ctx.restore();
+ ctx.font=ITAL.replace('{s}',46);ctx.fillStyle='#e9c47e';ctx.fillText(s.sub,540,605);
 }
 function footer(){
- const g=ctx.createLinearGradient(0,1205,0,H);g.addColorStop(0,'#2a050e');g.addColorStop(1,'#1a0308');ctx.fillStyle=g;ctx.fillRect(0,1205,W,H-1205);
- ctx.fillStyle=goldGrad(1205,1208);ctx.fillRect(0,1205,W,2);
- ctx.font='600 21px '+SANS;ctx.fillStyle='#e9cf98';ctx.textAlign='left';spaced(FOOT.f1,540,1264,2.5,'center');
- ctx.font=ITAL.replace('{s}',30);ctx.fillStyle='#f6e9d6';ctx.textAlign='center';ctx.fillText(FOOT.f2,540,1314);
+ const lg=ctx.createLinearGradient(330,0,750,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(330,1500,420,1.6);
+ ctx.font='600 22px '+SANS;ctx.fillStyle='#e9cf98';ctx.textAlign='left';spaced(FOOT.f1,540,1548,3,'center');
+ ctx.font=ITAL.replace('{s}',34);ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.fillText(FOOT.f2,540,1598);
 }
 function placeholder(e){
  const g=ctx.createLinearGradient(e.x,e.y,e.x+e.w,e.y+e.h);g.addColorStop(0,'#46101d');g.addColorStop(1,'#2a070f');ctx.fillStyle=g;ctx.fill();
@@ -178,7 +182,7 @@ async function save(){
 $('#fbclose').addEventListener('click',()=>$('#fallback').hidden=true);
 window.__studio={SL,IM,setCur:i=>{cur=i;tabs();panel();draw()},load:(i,u)=>loadInto(i,u),draw};
 tabs();panel();draw();
-Promise.all(['600 74px Cinzel','500 28px Cinzel','italic 600 32px "Cormorant Garamond"','800 56px Montserrat','600 22px Montserrat','500 24px Montserrat'].map(f=>document.fonts.load(f).catch(()=>0))).then(draw);
+Promise.all(['600 44px Cinzel','600 78px "Cormorant Garamond"','500 36px "Cormorant Garamond"','italic 600 32px "Cormorant Garamond"','800 56px Montserrat','600 22px Montserrat','500 24px Montserrat'].map(f=>document.fonts.load(f).catch(()=>0))).then(draw);
 document.fonts&&document.fonts.ready.then(draw);
 </script>
 </body>
