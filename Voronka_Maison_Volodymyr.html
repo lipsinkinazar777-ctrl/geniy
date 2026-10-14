@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Воронка Maison Volodymyr</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky language switch, funnel graphic, Instagram scheme, then the 12-step timeline with copy-ready messages */
+:root{--bg:#f6f0e6;--card:#fffdf8;--soft:#f9f3e7;--ink:#2a1a1c;--mute:#756660;--line:#eadfcb;--acc:#6b1620;--acc2:#8f2433;--gold:#b8913f;--ok:#2f7d4e;--ig:#b02a6f;--igsoft:#fbe9f2;--sh:0 1px 2px rgba(60,20,20,.05),0 10px 26px rgba(60,20,20,.07);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140a0b;--card:#201213;--soft:#2a1717;--ink:#f3e9d8;--mute:#b3a093;--line:#3b2321;--acc:#c04656;--acc2:#a1303d;--gold:#d4b062;--ok:#5bb97d;--ig:#e56aa6;--igsoft:#3a1428;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#140a0b;--card:#201213;--soft:#2a1717;--ink:#f3e9d8;--mute:#b3a093;--line:#3b2321;--acc:#c04656;--acc2:#a1303d;--gold:#d4b062;--ok:#5bb97d;--ig:#e56aa6;--igsoft:#3a1428;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 70px}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,52px);line-height:1.05}
+h2{font-size:clamp(26px,4vw,34px);margin:42px 0 6px}
+.lead{color:var(--mute);max-width:60ch;margin:8px 0 0}
+button{font:inherit;color:inherit;cursor:pointer}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:10px;margin:18px -4px 0;padding:10px 4px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar span{color:var(--mute);font-size:13px;flex:1;min-width:0}
+.seg{display:inline-flex;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{border:0;background:none;padding:7px 18px;border-radius:9px;font-weight:600;font-size:14px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:8px}
+
+/* funnel graphic */
+.funnel{display:grid;gap:8px;margin-top:18px}
+.fb{margin:0 auto;width:var(--w);min-width:min(100%,300px);padding:14px 18px;border-radius:14px;color:#fff;background:linear-gradient(100deg,var(--c1),var(--c2));display:flex;align-items:center;gap:14px;box-shadow:var(--sh)}
+.fb b{font:600 22px/1.1 "Cormorant Garamond",Georgia,serif;flex:1;min-width:0}
+.fb small{display:block;font:400 12.5px/1.35 Inter,sans-serif;opacity:.9;margin-top:2px}
+.fb .n{font-variant-numeric:tabular-nums;font-size:12.5px;opacity:.92;white-space:nowrap;text-align:right}
+.fb .ig{display:inline-block;margin-left:6px;padding:0 7px;border-radius:99px;background:rgba(255,255,255,.92);color:#8e2159;font-weight:700;font-size:11px}
+.fb:nth-child(1){--c1:#4a0d12;--c2:#6b1620}.fb:nth-child(2){--c1:#5c1019;--c2:#82202f}.fb:nth-child(3){--c1:#7a1a28;--c2:#9a3040}.fb:nth-child(4){--c1:#9a3040;--c2:#b0603f}.fb:nth-child(5){--c1:#b0703a;--c2:#b8913f}
+.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--mute);font-size:13px;margin-top:12px}
+
+/* instagram scheme */
+.igbox{background:var(--igsoft);border:1px solid color-mix(in srgb,var(--ig) 35%,var(--line));border-radius:18px;padding:20px;margin-top:14px}
+.igbox h3{font-size:26px;color:var(--ig)}
+.igbox ol{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:t}
+.igbox li{counter-increment:t;display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.igbox li:before{content:counter(t);width:30px;height:30px;border-radius:50%;background:var(--ig);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.igbox li b{display:block}
+.key{margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.key b{color:var(--ig)}
+
+/* timeline */
+.tl{margin:18px 0 0;padding:0;list-style:none;position:relative}
+.tl:before{content:"";position:absolute;left:19px;top:10px;bottom:10px;width:2px;background:var(--line)}
+.st{position:relative;padding-left:56px;margin-bottom:16px}
+.st>.no{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font:600 18px "Cormorant Garamond",Georgia,serif;font-variant-numeric:tabular-nums;border:3px solid var(--bg)}
+.st.ig>.no{background:var(--ig)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:16px 18px;min-width:0}
+.st.ig .card{border-color:color-mix(in srgb,var(--ig) 45%,var(--line))}
+.hd{display:flex;gap:8px 10px;flex-wrap:wrap;align-items:center}
+.hd h3{font-size:24px;flex:1 1 200px}
+.chip{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--soft);border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.chip.ig{background:var(--ig);border-color:var(--ig);color:#fff}
+.when{color:var(--mute);font-size:13px;margin:2px 0 0}
+.goal{margin:10px 0 0}
+.msg{position:relative;margin-top:12px;padding:12px 14px 12px;border-radius:12px;background:var(--soft);border:1px solid var(--line);white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.cp{margin-top:8px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 14px;font-weight:600;font-size:13px}
+.cp:hover{border-color:var(--gold)}
+.tip{margin-top:10px;padding:10px 12px;border-radius:10px;border-left:3px solid var(--gold);background:var(--soft);font-size:14px}
+.tip.ig{border-left-color:var(--ig);background:var(--igsoft)}
+.steps-list{margin:8px 0 0;padding-left:20px}.steps-list li{margin:4px 0}
+.foot{margin-top:36px;color:var(--mute);font-size:13px}
+@media(max-width:560px){.fb{padding:12px 14px}.fb b{font-size:19px}.fb .n{display:none}.st{padding-left:48px}.st>.no{width:34px;height:34px;font-size:16px}.tl:before{left:16px}.bar span{display:none}.seg{flex:1}.seg button{flex:1}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>Воронка общения с клиентом</h1>
+ <p class="lead">Maison Volodymyr: от первого сообщения до повторного заказа. В каждом шаге готовый текст на французском и украинском. Шаги с меткой Instagram приводят клиента в подписчики.</p>
+
+ <div class="bar"><span>Язык сообщений</span><div class="seg" role="group" aria-label="Язык сообщений"><button id="bfr" aria-pressed="true" onclick="setLang('fr')">Français</button><button id="bua" aria-pressed="false" onclick="setLang('ua')">Українська</button></div></div>
+
+ <h2>Воронка</h2>
+ <div class="funnel" id="funnel"></div>
+ <div class="legend"><span>Ширина блока показывает, как сужается поток: часть людей отпадает на каждом этапе.</span><span><b style="color:var(--ig)">IG</b> — шаг, где клиент приходит в Instagram.</span></div>
+
+ <h2>Как сделать, чтобы подписались</h2>
+ <p class="lead">Подписку нельзя гарантировать на 100%, но можно подвести клиента к ней пять раз и сделать это в самый надёжный момент.</p>
+ <div class="igbox">
+  <h3>Пять касаний с Instagram</h3>
+  <ol>
+   <li><div><b>Стенд и визитка.</b> QR на Instagram на прилавке и на визитке. Рядом закреплённый пост «Как заказать» и подборка «Отзывы».</div></li>
+   <li><div><b>Первое сообщение.</b> В автоответе стоит ссылка на Instagram: «Наши работы и отзывы». Клиент смотрит примеры, пока ждёт ответа.</div></li>
+   <li><div><b>Сообщение «заказ готов».</b> Вместе с адресом стенда клиент узнаёт про маленький подарок на месте. Это причина прийти и открыть Instagram.</div></li>
+   <li><div><b>Выдача на стенде.</b> Главное касание. Клиент стоит перед тобой, ты показываешь QR, он подписывается, ты видишь экран и отдаёшь мини-магнит. Занимает 10 секунд.</div></li>
+   <li><div><b>Карточка в пакете и сообщение на следующий день.</b> Карточка с QR и −10% на следующий заказ. Через день просьба выложить сторис с отметкой.</div></li>
+  </ol>
+  <div class="key"><b>Почему касание 4 сработает.</b> Люди редко отказывают в маленькой просьбе, когда стоят лицом к лицу, получили заказ и видят, что взамен получат подарок. Условие: мини-подарок лежит у тебя под рукой, QR виден, и ты сам говоришь, что делать, а не спрашиваешь «хотите подписаться?».</div>
+ </div>
+
+ <h2>Шаги от первого сообщения до повторного заказа</h2>
+ <ol class="tl" id="tl"></ol>
+ <p class="foot">Во всех сообщениях замени слова в квадратных скобках: [Prénom] — имя, [date] — дата, [lien] — ссылка. Награду (мини-магнит и −10%) давай всем одинаково, это честнее и проще. За отзыв на Google ничего не обещай и не дари: Google такое запрещает.</p>
+</div>
+
+<script>
+const PH=[
+ {n:'Привлечение',d:'рынок, соцсети, карта',s:'шаг 1',w:'100%',ig:1},
+ {n:'Первый контакт',d:'автоответ и уточнение',s:'шаги 2–3',w:'90%',ig:1},
+ {n:'Заказ',d:'фото, макет, оплата',s:'шаги 4–7',w:'80%'},
+ {n:'Выдача',d:'сообщение и стенд',s:'шаги 8–9',w:'70%',ig:1},
+ {n:'Удержание',d:'сторис, отзыв, возврат',s:'шаги 10–12',w:'60%',ig:1}
+];
+const ST=[
+ {t:'Человек узнаёт о вас',ch:'Стенд · Instagram · TikTok · Google Maps',ig:1,when:'До первого сообщения',goal:'Привести человека в WhatsApp или Instagram. Везде одна и та же точка входа: QR и @maison.volodymyr.',tip:'На прилавке образцы с семейными фото и QR на Instagram. На визитке QR и «−20% на первый заказ». В Instagram закрепи пост «Как заказать» и подборку «Отзывы».'},
+ {t:'Автоответ в WhatsApp',ch:'WhatsApp',ig:1,when:'Сразу, автоматически',goal:'Ответить мгновенно, узнать, что нужно (изделие, дата) и показать работы в Instagram.',
+  fr:"Bonjour et merci de contacter Maison Volodymyr 🌿\n🤖 Ceci est un message automatique. Nous vous répondrons personnellement très vite.\n\nEn attendant, dites-nous quel produit vous souhaitez (mug, magnet, photo sur métal, impression) et pour quelle date.\n\n📸 Nos créations et avis clients : instagram.com/maison.volodymyr (@maison.volodymyr) ✨",
+  ua:"Доброго дня і дякуємо, що звернулися до Maison Volodymyr 🌿\n🤖 Це автоматичне повідомлення. Ми відповімо особисто дуже скоро.\n\nТим часом підкажіть, який виріб вам потрібен (кружка, магніт, фото на металі, друк) і на яку дату.\n\n📸 Наші роботи та відгуки клієнтів: instagram.com/maison.volodymyr (@maison.volodymyr) ✨",
+  tip:'У твоём текущем автоответе после «Catalogue et avis clients :» стоит пустое место. Здесь это исправлено ссылкой на Instagram.'},
+ {t:'Уточняем, что нужно',ch:'WhatsApp',when:'После первого ответа',goal:'Собрать данные для расчёта: изделие, количество, дата.',
+  fr:"Avec plaisir ! Pour préparer votre devis, dites-nous :\n1️⃣ Quel produit (mug, magnet, photo sur métal, impression) ?\n2️⃣ Quelle quantité ?\n3️⃣ Pour quelle date en avez-vous besoin ?",
+  ua:"З радістю! Щоб підготувати розрахунок, підкажіть:\n1️⃣ Який виріб (кружка, магніт, фото на металі, принт)?\n2️⃣ Скільки штук?\n3️⃣ На яку дату потрібно?"},
+ {t:'Просим фото',ch:'WhatsApp',when:'Когда ясно, что нужно',goal:'Получить фото хорошего качества.',
+  fr:"Pour un rendu parfait, pourriez-vous nous envoyer votre photo ici en haute qualité ? Si vous hésitez entre plusieurs photos, envoyez-les toutes, nous vous aiderons à choisir la meilleure ! 📸",
+  ua:"Для ідеального результату, чи не могли б ви надіслати ваше фото сюди у найкращій якості, яку маєте? Якщо вибираєте між кількома фото, надсилайте всі, ми допоможемо обрати найкраще! 📸"},
+ {t:'Показываем макет',ch:'WhatsApp',when:'После получения фото',goal:'Получить согласие «ОК» на макет.',
+  fr:"Voici votre aperçu 🎨\nDites-nous si tout vous convient ou si vous souhaitez un changement. Dès votre « OK », nous passons à la suite 🌿",
+  ua:"Ось ваш макет 🎨\nСкажіть, чи все влаштовує, або що змінити. Щойно напишете «ОК», переходимо до наступного кроку 🌿",
+  tip:'Если клиент молчит 2 дня, отправь одно напоминание: «Avez-vous eu le temps de regarder ? 🌿» / «Чи встигли переглянути? 🌿». Больше одного не нужно.'},
+ {t:'Сумма и предоплата',ch:'WhatsApp',when:'После «ОК» на макет',goal:'Получить предоплату, чтобы запустить производство.',
+  fr:"Merci ! Le total de votre commande est de [montant] €.\nPour lancer la production, un acompte de [X] € est demandé : [IBAN / lien de paiement].\nDès réception, nous confirmons votre commande ✅",
+  ua:"Дякуємо! Сума вашого замовлення: [сума] €.\nЩоб запустити виробництво, потрібна передоплата [X] €: [IBAN / посилання на оплату].\nОдразу після отримання підтвердимо замовлення ✅"},
+ {t:'Подтверждаем заказ',ch:'WhatsApp',when:'Сразу после оплаты',goal:'Успокоить клиента и назвать срок.',
+  fr:"Merci, paiement bien reçu ✅\nVotre commande est lancée. Elle sera prête le [date]. Nous vous écrivons dès qu'elle est prête 🌿",
+  ua:"Дякуємо, оплату отримано ✅\nВаше замовлення в роботі. Буде готове [дата]. Напишемо, щойно воно буде готове 🌿"},
+ {t:'Заказ готов + подарок на месте',ch:'WhatsApp',ig:1,when:'Когда заказ готов',goal:'Позвать на стенд и дать причину прийти с телефоном.',
+  fr:"Bonne nouvelle ! Votre commande personnalisée est prête 🎁\nVous pouvez venir la récupérer sur notre stand à Porte de Clignancourt, samedi/dimanche de 10h à 18h.\n\nPetite surprise offerte sur place 🤍",
+  ua:"Гарна новина! Ваше персональне замовлення готове 🎁\nЗабрати його можна на нашому стенді на Porte de Clignancourt, субота/неділя з 10:00 до 18:00.\n\nНа місці на вас чекає маленький сюрприз 🤍",
+  tip:'К твоему шаблону добавлена последняя строка про сюрприз. Это причина прийти и подписаться.'},
+ {t:'Выдача на стенде: главный момент',ch:'Стенд, лично',ig:1,when:'Когда клиент пришёл',goal:'Подписать клиента в Instagram прямо на месте.',
+  list:['Положи заказ в пакет, а в пакет карточку с QR и «−10% на следующий заказ».','Скажи фразу ниже, сразу показывая QR на прилавке или на своём телефоне.','Подожди 10 секунд, пока клиент нажмёт «Подписаться». Посмотри на экран.','Отдай мини-подарок (мини-магнит или стикер), когда подписка оформлена. Если клиент не хочет, всё равно отдай заказ вежливо и без давления.'],
+  fr:"Voilà votre commande ! 🎁\nPetite surprise : un mini-magnet offert si vous nous suivez sur Instagram, c'est ici (QR). Ça prend 5 secondes, et on adore voir vos photos !",
+  ua:"Ось ваше замовлення! 🎁\nМаленький сюрприз: мініатюрний магніт у подарунок, якщо підпишетеся на нас в Instagram. Ось QR. Це 5 секунд, і ми обожнюємо бачити ваші фото!",
+  tip:'Говори как факт, а не как вопрос: «вот подарок, вот QR». Вопрос «хотите подписаться?» чаще получает «потом». Мини-магнит стоит тебе около 1 €, подписчик приносит гораздо больше.'},
+ {t:'Просим сторис',ch:'WhatsApp · Instagram',ig:1,when:'Через 1 день после выдачи',goal:'Получить сторис с отметкой. Это бесплатная реклама для друзей клиента.',
+  fr:"Bonjour [Prénom] ! 🌿 J'espère que [le cadeau / le mug] a fait plaisir à [la personne].\nSi vous avez une minute, une petite photo en story avec @maison.volodymyr nous aiderait énormément, c'est un atelier familial 🤍\nPour vous remercier, envoyez-nous la capture d'écran et profitez de −10% sur votre prochain cadeau ✨",
+  ua:"Доброго дня, [ім'я]! 🌿 Сподіваюся, [подарунок / кружка] порадував [людину].\nЯкщо маєте хвилинку, зробіть, будь ласка, фото у сторіс з відміткою @maison.volodymyr. Для нашого сімейного ательє це дуже важливо 🤍\nУ подяку надішліть скріншот і отримайте −10% на наступний подарунок ✨"},
+ {t:'Просим отзыв на Google',ch:'WhatsApp · Google Maps',when:'Через 3–4 дня, только довольным',goal:'Получить отзыв, чтобы вас находили в Париже. Без скидки и подарка.',
+  fr:"Merci pour votre retour, ça nous touche ! 🤍\nSi vous êtes satisfait(e), un avis Google nous aiderait beaucoup à être trouvés à Paris. Ça prend 30 secondes : [lien]\nMerci de faire partie de notre histoire 🌿",
+  ua:"Дякуємо за відгук, нам дуже приємно! 🤍\nЯкщо вам сподобалось, залиште, будь ласка, відгук у Google, це допоможе нам знаходити нових клієнтів у Парижі. Це 30 секунд: [посилання]\nДякуємо, що ви частина нашої історії 🌿",
+  tip:'Отправляй только тем, кто ответил тепло или поблагодарил. Недовольным сначала помоги, потом, возможно, проси отзыв.'},
+ {t:'Возвращаем к новому заказу',ch:'WhatsApp · Instagram',ig:1,when:'Перед праздниками, 1–2 раза',goal:'Получить повторную покупку. Следи за датами в календаре CRM.',
+  fr:"Bonjour [Prénom] ! 🌿 Les fêtes de fin d'année approchent. Pour que vos cadeaux personnalisés (mugs, magnets, photos sur métal) soient prêts à temps, nous vous conseillons de commander avant le [date].\n🎁 Votre −10% est toujours valable. Envoyez-nous simplement votre photo ici !",
+  ua:"Доброго дня, [ім'я]! 🌿 Наближаються свята. Щоб персональні подарунки (кружки, магніти, фото на металі) були готові вчасно, радимо замовити до [дата].\n🎁 Ваша знижка −10% досі діє. Просто надішліть нам фото сюди!",
+  tip:'Для тех, кто писал, но не заказал: одно сообщение без давления. «Vous nous aviez écrit pour une idée cadeau personnalisée. Avez-vous encore besoin d\'aide ? Envoyez-nous votre photo et nous préparons un aperçu gratuit 🎨». Уже есть в твоих шаблонах.'}
+];
+let lang='fr';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('#funnel').innerHTML=PH.map(p=>`<div class="fb" style="--w:${p.w}"><b>${p.n}${p.ig?'<span class="ig">IG</span>':''}<small>${p.d}</small></b><span class="n">${p.s}</span></div>`).join('');
+function render(){
+ $('#tl').innerHTML=ST.map((s,i)=>`<li class="st ${s.ig?'ig':''}"><span class="no">${i+1}</span><div class="card"><div class="hd"><h3>${esc(s.t)}</h3>${s.ig?'<span class="chip ig">Instagram</span>':''}<span class="chip">${esc(s.ch)}</span></div><p class="when">${esc(s.when)}</p><p class="goal">${esc(s.goal)}</p>${s.list?`<ol class="steps-list">${s.list.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:''}${s[lang]?`<div class="msg" id="m${i}">${esc(s[lang])}</div><button class="cp" onclick="cp(${i},this)">Копировать ${lang=='fr'?'FR':'UA'}</button>`:''}${s.tip?`<div class="tip ${s.ig?'ig':''}">${esc(s.tip)}</div>`:''}</div></li>`).join('')}
+function setLang(l){lang=l;$('#bfr').setAttribute('aria-pressed',l=='fr');$('#bua').setAttribute('aria-pressed',l=='ua');render()}
+function flash(b,t){const o=b.textContent;b.textContent=t;setTimeout(()=>b.textContent=o,1800)}
+async function cp(i,b){try{await navigator.clipboard.writeText(ST[i][lang]);flash(b,'Скопировано ✓')}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('m'+i));const s=getSelection();s.removeAllRanges();s.addRange(r);flash(b,'Текст выделен, скопируй вручную')}}
+render();
+</script>
+</body>
+</html>
