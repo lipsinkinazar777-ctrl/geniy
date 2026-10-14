@@ -148,8 +148,8 @@ details.dd{border:1px solid var(--line);border-radius:12px;margin-top:12px;backg
 }
 @media(max-width:900px){
  #app{display:block}#side{display:none}
- #top{padding:10px 14px}#top .logo,#top .tt{display:grid}#top .tt{display:block}#top .date{display:none}
- #view{padding:16px 14px calc(96px + env(safe-area-inset-bottom,0px))}
+ #top{padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}#top .logo,#top .tt{display:grid}#top .tt{display:block}#top .date{display:none}
+ #view{padding:16px max(16px,env(safe-area-inset-right,0px)) calc(96px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
  h2{font-size:30px}
  .hero{padding:20px;border-radius:20px}.hero .big{font-size:46px}
  .grid{grid-template-columns:repeat(2,1fr)}.kpi b{font-size:28px}
@@ -347,6 +347,8 @@ let TT=0;
 function toast(m,undo){const e=$('#toast');e.innerHTML=esc(m)+(undo?` <button onclick="undo()">Отменить</button>`:'');e.classList.add('on');clearTimeout(TT);TT=setTimeout(()=>e.classList.remove('on'),undo?6500:2200)}
 function snap(){SNAP=JSON.stringify(D)}
 function undo(){if(!SNAP)return;D=JSON.parse(SNAP);SNAP=null;norm();save();$('#toast').classList.remove('on');refresh()}
+let ASKF=null;
+function ask(msg,yes,back){ASKF=yes;modal(`<h2>Подтверди</h2><div class="note" style="font-size:15px;color:var(--ink)">${esc(msg)}</div><div class="foot"><button class="btn" onclick="const f=ASKF;ASKF=null;f()">Да</button><button class="btn ghost" onclick="${back||'closeM()'}">Отмена</button></div>`)}
 function fld(id,l,t='t',v='',o,x=''){
  v=v??'';let c;
  if(t=='s')c=`<select id="f_${id}" ${x}>${Array.isArray(o)?o.map(a=>{const[val,lab]=Array.isArray(a)?a:[a,a];return `<option value="${esc(val)}" ${val==v?'selected':''}>${esc(lab)}</option>`}).join(''):Object.entries(o).map(([g,arr])=>`<optgroup label="${g}">${arr.map(a=>`<option ${a==v?'selected':''}>${esc(a)}</option>`).join('')}</optgroup>`).join('')}</select>`;
@@ -426,10 +428,10 @@ function posV(){
  <div class="foot" style="display:grid;gap:8px;margin-top:16px"><button class="btn lg gold" onclick="posSave()">✓ Записать продажу</button><div style="display:flex;gap:8px"><button class="btn ghost" style="flex:1" onclick="posWa()">💬 Чек в WhatsApp</button><button class="btn ghost" onclick="P.cart=[];P.disc='';P.given='';render()">Очистить</button></div></div></aside></div>
  <button class="cartbar hide" id="cbar" onclick="modalCartOpen(1)"></button>`}
 function posSave(){
- const s=pSum();if(!P.cart.length||s<=0){alert('Добавь товары и укажи цены');return}
+ const s=pSum();if(!P.cart.length||s<=0){toast('Добавь товары и укажи цены');return}
  let cid=($('#p_cid')||{value:''}).value;const nn=$('#p_nn').value.trim(),rel=$('#p_rel').value,rd=$('#p_rd').value;
  if(nn){cid=uid();D.clients.push({id:cid,name:nn,phone:$('#p_ph').value,src:'Рынок',bday:'',note:'',created:today()})}
- let rid='';if((rel||rd)&&cid){rid=uid();D.rec.push({id:rid,cid,rel,date:rd})}else if(rel||rd)alert('Получатель сохраняется вместе с клиентом — выбери или добавь клиента');
+ let rid='';if((rel||rd)&&cid){rid=uid();D.rec.push({id:rid,cid,rel,date:rd})}else if(rel||rd)toast('Получатель сохраняется вместе с клиентом — выбери или добавь клиента');
  const net=pT();let acc=0;snap();
  P.cart.forEach((l,i)=>{const a=i==P.cart.length-1?Math.round((net-acc)*100)/100:Math.round(l.qty*l.price*net/s*100)/100;acc+=a;D.sales.push({id:uid(),cid,rid,date:today(),item:l.name,qty:l.qty,amt:a,ch:'Рынок',pay:P.pay})});
  save();toast('Записано · '+eur(net)+' ✓',1);P.cart=[];P.given='';P.disc='';render()}
@@ -452,7 +454,7 @@ function openSale(id,cid){
  const x=id?D.sales.find(a=>a.id==id):{date:today(),cid:cid||'',item:'',qty:1,amt:'',ch:'Рынок',pay:'Наличные'};if(!x)return;
  modal(`<h2>${id?'Изменить продажу':'Новая продажа'}</h2><div class="row">${fld('date','Дата','d',x.date)}${fld('cid','Клиент','s',x.cid,[['','— без клиента —'],...D.clients.map(c=>[c.id,c.name])])}${id?'':fld('nn','или новый клиент (имя)')}${fld('item','Изделие / набор','t',x.item,0,'list="items"')}${fld('qty','Кол-во','n',x.qty)}${fld('amt','Сумма €','n',x.amt)}${fld('ch','Канал','s',x.ch,CH)}${fld('pay','Оплата','s',x.pay,PAY)}</div><div class="foot"><button class="btn" onclick="saveSale('${id||''}')">Сохранить</button><button class="btn ghost" onclick="closeM()">Отмена</button></div>`)}
 function saveSale(id){
- const item=fv('item').trim(),amt=num(fv('amt'));if(!item||!amt){alert('Укажи изделие и сумму');return}
+ const item=fv('item').trim(),amt=num(fv('amt'));if(!item||!amt){toast('Укажи изделие и сумму');return}
  let cid=fv('cid');const nn=(fv('nn')||'').trim(),ch=fv('ch');
  if(nn){cid=uid();D.clients.push({id:cid,name:nn,phone:'',src:ch,bday:'',note:'',created:today()})}
  const o={date:fv('date')||today(),cid,item,qty:num(fv('qty'))||1,amt,ch,pay:fv('pay')};
@@ -489,9 +491,10 @@ function openC(id){
  <h3 class="serif">Данные клиента</h3><div class="row"><div><label>Имя</label><input value="${esc(c.name)}" onchange="_upd('name',this.value.trim()||'Без имени')"></div><div><label>WhatsApp / телефон</label><input type="tel" value="${esc(c.phone)}" onchange="_upd('phone',this.value)"></div><div><label>Откуда пришёл</label><select onchange="_upd('src',this.value)">${CH.map(a=>`<option ${a==c.src?'selected':''}>${a}</option>`).join('')}</select></div><div><label>День рождения</label><input type="date" value="${esc(c.bday)}" onchange="_upd('bday',this.value)"></div></div>
  <label>Заметки</label><textarea oninput="_upd('note',this.value)">${esc(c.note)}</textarea>
  <div class="foot"><button class="btn ghost danger" onclick="delC()">Удалить клиента</button></div>`)}
-function addSaleC(){const item=fv('item').trim(),amt=num(fv('amt'));if(!item||!amt){alert('Укажи изделие и сумму');return}
+function addSaleC(){const item=fv('item').trim(),amt=num(fv('amt'));if(!item||!amt){toast('Укажи изделие и сумму');return}
  const c=D.clients.find(x=>x.id==cur);D.sales.push({id:uid(),cid:cur,date:fv('date')||today(),item,qty:num(fv('qty'))||1,amt,ch:c.src||'Рынок',pay:fv('pay')});save();toast('Покупка записана ✓');refresh()}
-function delC(){if(!confirm('Удалить клиента и все его покупки?'))return;snap();const id=cur;cur=null;D.sales=D.sales.filter(x=>x.cid!=id);D.rec=D.rec.filter(x=>x.cid!=id);D.clients=D.clients.filter(x=>x.id!=id);save();closeM();render();toast('Клиент удалён',1)}
+function delC(){const id=cur;ask('Удалить клиента и все его покупки?',()=>doDelC(id),`openC('${id}')`)}
+function doDelC(id){snap();cur=null;D.sales=D.sales.filter(x=>x.cid!=id);D.rec=D.rec.filter(x=>x.cid!=id);D.clients=D.clients.filter(x=>x.id!=id);save();closeM();render();toast('Клиент удалён',1)}
 function addRec(){const rel=fv('r_rel'),rd=fv('r_rd');if(!rel&&!rd)return;D.rec.push({id:uid(),cid:cur,rel,date:rd});save();refresh()}
 function delRec(id){D.rec=D.rec.filter(x=>x.id!=id);save();refresh()}
 function demo(){const T=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
@@ -577,11 +580,12 @@ function del(k,id){snap();D[k]=D[k].filter(a=>a.id!=id);save();render();toast('�
 function bk(){
  modal(`<h2>Резервная копия</h2><div class="note">Все данные хранятся в этом браузере. Если очистить браузер или сменить телефон, они пропадут — поэтому раз в неделю скачивай файл и храни его в облаке или мессенджере.</div>
  <div style="display:grid;gap:8px;margin-top:16px"><button class="btn lg gold" onclick="dlBk()">⬇ Скачать копию (файл)</button><button class="btn lg ghost" onclick="$('#impf').click()">⬆ Загрузить копию из файла</button><button class="btn lg ghost" onclick="navigator.clipboard?.writeText(JSON.stringify(D));D.lastBackup=today();save();toast('Скопировано ✓')">📋 Скопировать текстом</button></div>
+ <div class="note">Если файл не скачивается, используй «Скопировать текстом» и вставь текст в заметки.</div>
  ${D.lastBackup?`<div class="note">Последняя копия: ${fd(D.lastBackup)}</div>`:''}
  <h3 class="serif">Восстановить из текста</h3><textarea id="bkt" placeholder="Вставь сюда скопированный текст копии" style="min-height:110px"></textarea><div class="foot"><button class="btn" onclick="rsText()">Восстановить</button></div>`)}
 function dlBk(){D.lastBackup=today();save();dl(JSON.stringify(D),'maison-volodymyr-'+today()+'.json','application/json');toast('Копия скачана ✓')}
-function restore(txt){let n;try{n=JSON.parse(txt);if(!n||typeof n!=='object'||Array.isArray(n))throw 0}catch(e){alert('Это не похоже на копию данных');return}
- if(!confirm('Заменить текущие данные данными из копии?'))return;snap();D=n;norm();save();closeM();render();toast('Данные восстановлены',1)}
+function restore(txt){let n;try{n=JSON.parse(txt);if(!n||typeof n!=='object'||Array.isArray(n))throw 0}catch(e){toast('Это не похоже на копию данных');return}
+ ask('Заменить текущие данные данными из копии?',()=>{snap();D=n;norm();save();cur=null;hideM();render();toast('Данные восстановлены',1)},'bk()')}
 function rsText(){restore($('#bkt').value)}
 $('#impf').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>restore(r.result);r.readAsText(f);e.target.value=''});
 
