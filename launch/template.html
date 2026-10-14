@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Запуск Maison Volodymyr</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky tab bar over six ready-to-use packs (WhatsApp, Google Maps, box, prices, Instagram, cards) */
+:root{--bg:#f6f0e6;--card:#fffdf8;--soft:#f9f3e7;--ink:#2a1a1c;--mute:#756660;--line:#eadfcb;--acc:#6b1620;--gold:#b8913f;--ok:#2f7d4e;--warn:#a8641a;--bad:#b3392f;--cu:#c0742f;--gr:#12301f;--sh:0 1px 2px rgba(60,20,20,.05),0 10px 26px rgba(60,20,20,.07);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#140a0b;--card:#201213;--soft:#2a1717;--ink:#f3e9d8;--mute:#b3a093;--line:#3b2321;--acc:#c04656;--gold:#d4b062;--ok:#5bb97d;--warn:#e0a458;--bad:#e5695e;--cu:#e08a3c;--gr:#0f2a22;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#140a0b;--card:#201213;--soft:#2a1717;--ink:#f3e9d8;--mute:#b3a093;--line:#3b2321;--acc:#c04656;--gold:#d4b062;--ok:#5bb97d;--warn:#e0a458;--bad:#e5695e;--cu:#e08a3c;--gr:#0f2a22;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:900px;margin:0 auto;padding-block:28px 80px}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,52px);line-height:1.05}h2{font-size:clamp(28px,4.5vw,38px);margin:6px 0 4px}h3{font-size:23px;margin:26px 0 8px}
+p{margin:8px 0}.lead{color:var(--mute);max-width:62ch}
+button{font:inherit;color:inherit;cursor:pointer}a{color:var(--cu);font-weight:500}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:8px}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:6px;overflow-x:auto;margin:20px -4px 0;padding:10px 4px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line);scrollbar-width:none}
+.nav button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;font-weight:600;font-size:14px;white-space:nowrap}
+.nav button[aria-selected="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.tab{display:none;padding-top:22px}.tab.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:16px 18px;margin:12px 0;min-width:0}
+.dec{counter-reset:d;list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.dec li{counter-increment:d;display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start}
+.dec li:before{content:counter(d);width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--soft);border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+.chip.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,var(--line))}.chip.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}.chip.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+code.sc{font:600 13px ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--gr);color:#f0a257;padding:2px 8px;border-radius:6px;white-space:nowrap}
+.tx{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0}
+.cp{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:5px 12px;font-weight:600;font-size:13px}.cp:hover{border-color:var(--gold)}
+.row{display:flex;gap:8px 12px;flex-wrap:wrap;align-items:center}.row .sp{flex:1}
+.seg{display:inline-flex;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:3px;margin:8px 0}
+.seg button{border:0;background:none;padding:6px 16px;border-radius:9px;font-weight:600;font-size:14px;color:var(--mute)}.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:var(--sh)}
+.msg h3{font-size:21px;margin:0 0 4px}.msg .l{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start;margin-top:10px}.msg .l .tx{margin:0}
+.tbl{overflow-x:auto;margin:10px 0}table{border-collapse:collapse;width:100%;min-width:520px;font-size:14px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:600}td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{border-left:3px solid var(--gold);background:var(--soft);border-radius:0 10px 10px 0;padding:10px 14px;margin:12px 0;font-size:14px}.note.warn{border-left-color:var(--warn)}.note.bad{border-left-color:var(--bad)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+ol.st,ul.ck{margin:8px 0;padding-left:22px}ol.st li,ul.ck li{margin:5px 0}
+.covers{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin:10px 0}
+.covers figure{margin:0}.covers img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:14px;border:1px solid var(--line);display:block}.covers figcaption{font-weight:600;text-align:center;margin-top:6px}.covers small{display:block;text-align:center;color:var(--mute);font-size:12px}
+.svgbox{background:var(--gr);border-radius:16px;padding:8px;margin:12px 0}.svgbox svg{display:block;width:100%;height:auto}
+.src{font-size:13px;color:var(--mute)}.src li{margin:3px 0}
+@media(max-width:560px){.msg .l{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>Запуск Maison Volodymyr</h1>
+ <p class="lead">Всё, что я подготовил, пока ты спал: быстрые ответы WhatsApp, карточка Google Maps, коробка, цены, Instagram и разбор визиток. Цены и факты взяты из твоих фото и PDF. Что я не знаю, помечено в квадратных скобках или жёлтой плашкой.</p>
+ <div class="card"><b>Шесть решений, которые нужны от тебя утром</b>
+  <ol class="dec">
+   <li><span><b>Название и логотип.</b> В Instagram и CRM «Maison Volodymyr», на визитке «VOLODYMYR» (медь на зелёном), на аватарке бордовый «MV». Выбери одно для вывески, Google, коробки и визиток.</span></li>
+   <li><span><b>Цены.</b> Проверь листок с папой. Непонятно: ø10 у магнитов, «прапори 2/3/4», что за «фото» (бумага или металл).</span></li>
+   <li><span><b>Визитки.</b> Файл технически в порядке, но перед 1000 штук закажи пробник (вкладка «Визитки»).</span></li>
+   <li><span><b>Коробка.</b> Выбери три набора и запроси цены у трёх поставщиков (шаблон письма есть).</span></li>
+   <li><span><b>Google Maps.</b> Нужны точный номер или аллея стенда и решение, как подтверждать карточку.</span></li>
+   <li><span><b>Скидки.</b> Визитка обещает −20% на первый заказ, в сообщениях −10% за сторис и мини-подарок за подписку. Согласуй с папой.</span></li>
+  </ol></div>
+
+ <div class="nav" role="tablist" id="nav">
+  <button role="tab" data-t="wa" aria-selected="true">💬 Ответы</button>
+  <button role="tab" data-t="maps" aria-selected="false">📍 Google Maps</button>
+  <button role="tab" data-t="box" aria-selected="false">🎁 Коробка</button>
+  <button role="tab" data-t="prices" aria-selected="false">💶 Цены</button>
+  <button role="tab" data-t="ig" aria-selected="false">📸 Instagram</button>
+  <button role="tab" data-t="cards" aria-selected="false">🪪 Визитки</button>
+ </div>
+
+ <!-- WHATSAPP -->
+ <section class="tab on" id="t-wa">
+  <h2>Быстрые ответы WhatsApp Business</h2>
+  <p class="lead">15 ответов на трёх языках: 45 штук. Главный язык французский. Ярлык = код + язык: <code class="sc">/зпрфр</code> <code class="sc">/зпрукр</code> <code class="sc">/зпррус</code>. Тексты короткие, под них можно писать вручную.</p>
+  <div class="card">
+   <b>Как добавить в WhatsApp Business</b>
+   <ol class="st"><li>Инструменты для бизнеса → Быстрые ответы → «+».</li><li>Вставь текст (кнопка «Копировать») и впиши ярлык, например <code class="sc">/зпрфр</code>.</li><li>В чате набери «/» и первые буквы, текст подставится сам.</li></ol>
+   <div class="note warn">По сторонним источникам лимит около 50 быстрых ответов и 25 символов в ярлыке. Если приложение не принимает кириллицу, замени ярлыки латиницей (например /zpr-fr). Надёжного подтверждения от WhatsApp я не нашёл, проверь в самом приложении.</div>
+   <div class="row"><button class="cp" id="copyAll">Скопировать весь список (для заметок)</button><span class="sub" style="color:var(--mute);font-size:13px" id="copyAllMsg"></span></div>
+  </div>
+  <div class="row"><span style="color:var(--mute);font-size:13px">Показать язык:</span><div class="seg" id="lang"><button data-l="all" aria-pressed="true">Все</button><button data-l="fr" aria-pressed="false">FR</button><button data-l="ua" aria-pressed="false">UA</button><button data-l="ru" aria-pressed="false">RU</button></div></div>
+  <div id="qr"></div>
+ </section>
+
+ <!-- MAPS -->
+ <section class="tab" id="t-maps">
+  <h2>Карточка Google Maps: всё для заполнения</h2>
+  <p class="lead">Открой Google Business Profile и вставляй по порядку. Тексты на французском, потому что клиенты и Google в Париже читают по-французски.</p>
+  <div class="note bad"><b>Главный риск.</b> Google оценивает карточку по правилам: место должно принимать клиентов лично в заявленные часы. Стенд на рынке, который работает только в выходные, может подойти, а может быть отклонён как временный. Я не нашёл подтверждения ни в одну сторону. Заводи карточку, а если откажут, пиши в поддержку Google Business Profile и объясняй, что это стенд с постоянными днями и часами. Пока карточки нет, ставь ссылку на Instagram и адрес стенда в сообщения.</div>
+  <h3>Данные карточки</h3>
+  <div class="tbl"><table>
+   <tr><th>Поле</th><th>Что вписать</th></tr>
+   <tr><td>Название</td><td><b>Maison Volodymyr</b> <span class="chip warn">должно совпадать с вывеской на стенде</span></td></tr>
+   <tr><td>Основная категория</td><td>Magasin de cadeaux (Gift shop)</td></tr>
+   <tr><td>Дополнительные</td><td>Service de gravure · Magasin de souvenirs · Imprimerie <span class="chip">названия в выпадающем списке могут слегка отличаться</span></td></tr>
+   <tr><td>Адрес</td><td>Porte de Clignancourt, 75018 Paris — [аллея / номер стенда]</td></tr>
+   <tr><td>Часы работы</td><td>Samedi 10:00–18:00 · Dimanche 10:00–18:00 (остальные дни закрыто)</td></tr>
+   <tr><td>Телефон</td><td>+33 7 58 18 15 15</td></tr>
+   <tr><td>Сайт</td><td>https://www.instagram.com/maison.volodymyr (пока нет своего сайта)</td></tr>
+   <tr><td>Соцсети</td><td>Instagram @maison.volodymyr</td></tr>
+  </table></div>
+  <h3>Описание (до 750 символов)</h3>
+  <div class="card"><div class="tx" id="d-fr">Maison Volodymyr est un atelier familial parisien de cadeaux personnalisés avec vos photos : mugs, photos sur métal, magnets, porte-clés et coffrets cadeaux. Retrouvez-nous sur notre stand à Porte de Clignancourt (Paris 18e), le samedi et le dimanche de 10h à 18h. Envoyez-nous votre photo sur WhatsApp : nous préparons un aperçu gratuit, puis votre cadeau est fabriqué à la main et prêt à offrir. Nous réalisons aussi des commandes en quantité pour les écoles, associations et entreprises. Idées pour la fête des mères, Noël, anniversaires et mariages.</div><button class="cp" data-copy="d-fr">Копировать FR</button>
+   <p class="src">Перевод для тебя: семейная мастерская подарков с вашими фото в Париже: кружки, фото на металле, магниты, брелки, подарочные наборы. Стенд на Porte de Clignancourt по выходным. Макет бесплатно, пришли фото в WhatsApp. Партии для школ и компаний.</p>
+   <div class="note">В описании Google не нужны ссылки и скидки: промо-тексты могут не пройти. Поэтому −20% здесь нет.</div></div>
+  <h3>Товары и цены (раздел «Produits»)</h3>
+  <div class="tbl"><table>
+   <tr><th>Название (FR)</th><th class="n">Цена</th><th>Описание</th></tr>
+   <tr><td>Mug personnalisé photo</td><td class="n">8 €</td><td>Mug avec votre photo, prêt à offrir</td></tr>
+   <tr><td>Photo 10×15 cm</td><td class="n">4 €</td><td>Votre photo en 10×15 cm</td></tr>
+   <tr><td>Photo 15×20 cm</td><td class="n">6 €</td><td>Votre photo en 15×20 cm</td></tr>
+   <tr><td>Photo 20×30 cm</td><td class="n">8 €</td><td>Votre photo en 20×30 cm</td></tr>
+   <tr><td>Photo 30×40 cm</td><td class="n">dès 25 €</td><td>Grand format, idéal pour le salon</td></tr>
+   <tr><td>Magnet photo</td><td class="n">3 €</td><td>Magnet avec votre photo</td></tr>
+   <tr><td>Porte-clés photo</td><td class="n">dès 2 €</td><td>Plastique ou métal, simple ou double face</td></tr>
+   <tr><td>Coffret cadeau Famille</td><td class="n">[29 €]</td><td>Mug + photo + magnet + porte-clés en coffret</td></tr>
+  </table></div>
+  <div class="note warn">Цены взяты из твоего рукописного листка. Подтверди их с папой до публикации.</div>
+  <h3>Вопросы и ответы (добавь сам в карточку)</h3>
+  <div class="card" id="qa"></div>
+  <h3>Три первых поста Google</h3>
+  <div class="card" id="posts"></div>
+  <h3>Ответы на отзывы</h3>
+  <div class="card" id="revs"></div>
+  <h3>Фото для карточки</h3>
+  <ul class="ck"><li><b>Логотип</b> (квадрат) и <b>обложка</b> (горизонтальное фото с продуктами на тёмном фоне).</li><li><b>Фасад стенда</b> с вывеской, чтобы клиент узнал место. Часто нужен и для подтверждения.</li><li>8–10 фото изделий при дневном свете: кружка, фото на металле, магниты, брелки, коробка.</li><li>Фото папы за работой (лазер, печать) и семьи у стенда. Живые лица повышают доверие.</li></ul>
+  <h3>Как создать и подтвердить, по шагам</h3>
+  <ol class="st"><li>Зайди на business.google.com, нажми «Добавить вашу компанию».</li><li>Введи название, выбери категорию, ответь «да» на вопрос про физическое место и укажи адрес стенда.</li><li>Заполни часы, телефон, сайт (Instagram).</li><li>Подтверди: обычно просят видео стенда (вывеска, товары, местность вокруг), иногда открытку с кодом.</li><li>Добавь товары, описание, фото, вопросы и ответы, первый пост.</li><li>Когда карточка принята, в панели выбери «Запросить отзывы» и скопируй короткую ссылку. Она нужна в быстрых ответах /отз.</li></ol>
+  <ul class="src"><li>Правила Google: <a href="https://support.google.com/business/answer/13763036" target="_blank" rel="noopener">support.google.com/business/answer/13763036</a></li><li>Карточка без адреса (зона обслуживания): <a href="https://wisestart.fr/guides/premiers-clients/google-my-business-sans-adresse-fixe/" target="_blank" rel="noopener">wisestart.fr</a> (подходит выездным услугам, стенду скорее нет)</li></ul>
+ </section>
+
+ <!-- BOX -->
+ <section class="tab" id="t-box">
+  <h2>Коробка «La Boîte Maison»</h2>
+  <p class="lead">Идея: «maison» значит «дом». Коробка выглядит как маленький дом: тёмно-зелёная крышка с медным силуэтом дома, внутри «комнаты» под каждое изделие. Цвета те же, что на визитке, чтобы всё было одной семьёй.</p>
+  <div class="svgbox"><svg viewBox="0 0 760 330" role="img" aria-label="Эскиз коробки: закрытая и открытая сверху">
+   <defs><linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b4331"/><stop offset="1" stop-color="#0f2a22"/></linearGradient></defs>
+   <g>
+    <rect x="30" y="64" width="300" height="130" rx="10" fill="url(#gg)" stroke="#e08a3c" stroke-width="2"/>
+    <rect x="22" y="194" width="316" height="60" rx="8" fill="#0e2519" stroke="#e08a3c" stroke-width="2"/>
+    <g fill="none" stroke="#f0a257" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M138 112 180 80 222 112"/><path d="M148 104v34h64v-34"/><rect x="172" y="116" width="16" height="22"/><rect x="194" y="112" width="10" height="10"/></g>
+    <text x="180" y="162" text-anchor="middle" font-family="Georgia,serif" font-size="17" letter-spacing="4" fill="#f0a257">MAISON VOLODYMYR</text>
+    <text x="180" y="180" text-anchor="middle" font-family="Georgia,serif" font-size="10.5" letter-spacing="1.5" font-style="italic" fill="#d7b896">Fait main à la maison · Paris</text>
+    <circle cx="180" cy="194" r="15" fill="#e08a3c"/><text x="180" y="199" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="700" fill="#12301f">MV</text>
+    <text x="180" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#d7b896">Закрытая: матовая, медное тиснение</text>
+   </g>
+   <g transform="translate(390 0)">
+    <rect x="20" y="30" width="350" height="224" rx="8" fill="#1b4331" stroke="#e08a3c" stroke-width="2"/>
+    <rect x="34" y="44" width="150" height="120" rx="10" fill="#0f2a22" stroke="#e08a3c" stroke-dasharray="4 4"/>
+    <circle cx="100" cy="104" r="40" fill="#f3e7cf"/><circle cx="100" cy="104" r="32" fill="#e9d9bb"/><path d="M142 96h18a10 10 0 0 1 0 20h-18" fill="none" stroke="#f3e7cf" stroke-width="7"/>
+    <text x="109" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#f0a257">Mug, в бумажной стружке</text>
+    <rect x="200" y="44" width="150" height="120" rx="10" fill="#0f2a22" stroke="#e08a3c" stroke-dasharray="4 4"/>
+    <rect x="236" y="54" width="78" height="100" rx="4" fill="#c9884a"/><rect x="243" y="62" width="64" height="84" rx="2" fill="#5a4636"/><circle cx="275" cy="92" r="9" fill="#d7b896"/><path d="M252 134q23-30 46 0z" fill="#d7b896"/>
+    <text x="275" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#f0a257">Фото на металле 15×20</text>
+    <rect x="34" y="196" width="76" height="46" rx="8" fill="#0f2a22" stroke="#e08a3c" stroke-dasharray="4 4"/><circle cx="72" cy="219" r="15" fill="#c9884a"/><text x="72" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#f0a257">Магнит</text>
+    <rect x="118" y="196" width="76" height="46" rx="8" fill="#0f2a22" stroke="#e08a3c" stroke-dasharray="4 4"/><circle cx="144" cy="219" r="9" fill="none" stroke="#f0a257" stroke-width="3"/><path d="M153 219h28" stroke="#f0a257" stroke-width="3"/><text x="156" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#f0a257">Брелок</text>
+    <rect x="202" y="196" width="148" height="46" rx="8" fill="#f3e7cf"/><text x="276" y="214" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#12301f">Carte-histoire</text><text x="276" y="231" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#12301f">QR Instagram · −10%</text>
+    <text x="195" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#d7b896">Открытая сверху: «комнаты» для изделий</text>
+   </g></svg></div>
+  <h3>Три набора</h3>
+  <p class="lead">Цены частей взяты из твоего листка. Я не знаю твою себестоимость и цену коробки, поэтому итог считается по формуле «части + упаковка и работа». Проверь маржу в CRM (раздел «Каталог»).</p>
+  <div class="tbl"><table>
+   <tr><th>Набор</th><th>Состав</th><th class="n">Сумма частей</th><th class="n">Цена</th></tr>
+   <tr><td><b>Petit Souvenir</b><br><span class="chip">коробка 12×12×5,5 см</span></td><td>магнит 3 + брелок металл 4 + фото 5,5×8,5 см 2</td><td class="n">9 €</td><td class="n"><b>12 €</b></td></tr>
+   <tr><td><b>Coffret Famille</b><br><span class="chip">коробка 24×17×11 см</span></td><td>кружка 8 + фото 15×20 см 6 + магнит 3 + брелок двойной металл 5</td><td class="n">22 €</td><td class="n"><b>29 €</b></td></tr>
+   <tr><td><b>Coffret Prestige</b><br><span class="chip">коробка 36×26×12 см</span></td><td>кружка 8 + фото 20×30 см 8 + магнит 3 + подвеска 8 + брелок двойной 5</td><td class="n">32 €</td><td class="n"><b>39 €</b></td></tr>
+  </table></div>
+  <div class="note">В Prestige нижний слой: фото 20×30 лежит плашмя. Верхний слой: вырубка из картона под кружку и мелкие изделия. Кружку обязательно закрепи гофрой или бумажной стружкой. Сначала собери прототип из обычного картона и проверь, что ничего не бьётся.</div>
+  <h3>Как оформить</h3>
+  <ul class="ck"><li>Коробка: жёсткая, матовая тёмно-зелёная, магнитная крышка, медное горячее тиснение логотипа. Такие делают с логотипом от нескольких десятков штук.</li><li>Внутри: бумажная стружка крафт, тонкая бумага с мелким рисунком домика.</li><li>«Carte-histoire»: открытка «Fait main à la maison, Paris» с QR на Instagram и −10% на следующий заказ.</li><li>Наклейка-печать «Fait main · Paris» и медная лента.</li><li>На внутренней стороне крышки подпись «Merci de faire partie de notre histoire».</li></ul>
+  <div class="note warn"><b>Сколько это стоит.</b> У поставщиков я нашёл магнитные коробки 33×22×10 см примерно от 61 € HT за небольшую партию и от 1,85 € HT за штуку при большом тираже, а у Packhelp заказы от 30 штук. Это ориентиры из объявлений, точные цены только по запросу. Цена коробки сильно влияет на маржу набора за 12 или 29 €.</div>
+  <h3>Письмо поставщику (скопируй)</h3>
+  <div class="card"><div class="tx" id="supq">Bonjour,
+Je cherche des coffrets cadeaux rigides à fermeture magnétique, avec impression personnalisée (vert foncé mat, logo en dorure cuivre).
+Dimensions intérieures : 12×12×5,5 cm, 24×17×11 cm et 36×26×12 cm.
+Quantité : 50, 100 et 200 pièces.
+Pouvez-vous m'envoyer le prix unitaire HT, le délai de fabrication et de livraison à Paris, et la possibilité d'une épreuve avant production ?
+Merci, Maison Volodymyr</div><button class="cp" data-copy="supq">Копировать</button>
+   <p class="src">Запроси минимум у трёх: <a href="https://www.hellopro.fr/20601-14-coffrets-magnetiques-pellicule-mat-boite-cadeau-myprindis-33x22x10cm-2014054-6667078-produit.html" target="_blank" rel="noopener">MyPrindis (пример)</a>, Packhelp, Rajapack. Цены и условия сравни сам.</p></div>
+ </section>
+
+ <!-- PRICES -->
+ <section class="tab" id="t-prices">
+  <h2>Цены</h2>
+  <div class="note warn"><b>Как я прочитал твой листок.</b> Почерк непростой, так что проверь. В таблице то, что я понял.</div>
+  <div class="tbl"><table>
+   <tr><th>Изделие</th><th class="n">Цена</th><th>Комментарий</th></tr>
+   <tr><td>Кружка («горнятко»)</td><td class="n">8 €</td><td></td></tr>
+   <tr><td>Брелок пластик</td><td class="n">2 €</td><td></td></tr>
+   <tr><td>Брелок металл</td><td class="n">4 €</td><td></td></tr>
+   <tr><td>Брелок двойной металл («подв. метал»)</td><td class="n">5 €</td><td><span class="chip warn">проверь</span></td></tr>
+   <tr><td>Подвеска («підвіска»)</td><td class="n">8 €</td><td></td></tr>
+   <tr><td>Фото 5,5×8,5 см</td><td class="n">2 €</td><td></td></tr>
+   <tr><td>Фото 10×15 см</td><td class="n">4 €</td><td></td></tr>
+   <tr><td>Фото 15×20 см</td><td class="n">6 €</td><td>на листке похоже на «45×20», я читаю как 15×20</td></tr>
+   <tr><td>Фото 20×30 см</td><td class="n">8 €</td><td></td></tr>
+   <tr><td>Фото 30×40 см</td><td class="n">25–35 €</td><td>разброс по материалу или рамке?</td></tr>
+   <tr><td>Магнит ø10</td><td class="n">3 €</td><td><span class="chip warn">мм или см?</span></td></tr>
+   <tr><td>Прапори (флажки)</td><td class="n">2 / 3 / 4 €</td><td><span class="chip warn">непонятно, что за размеры</span></td></tr>
+  </table></div>
+  <h3>Что я заметил</h3>
+  <ul class="ck"><li><b>Цены очень низкие.</b> В сети я нашёл кружки с фото за 13,99 € и 18 € (онлайн-магазины). Рынок и интернет не одно и то же, но 8 € за кружку почти вдвое ниже. На одной кружке ты теряешь 5–10 €.</li><li><b>Коробка съедает маржу.</b> Коробка за 2–5 € на наборе за 12 € забирает четверть цены. Поэтому в наборах цену я поднял выше суммы частей.</li><li><b>Крупный формат даёт больше всего.</b> 30×40 за 25–35 € в разы выгоднее мелочи. Его стоит показывать первым.</li></ul>
+  <div class="card"><b>Что я предлагаю обсудить с папой</b>
+   <ol class="st"><li>Поднять кружку до 12–14 € (диапазон по найденным предложениям). Для постоянных клиентов оставить скидку −10%.</li><li>Мелочь (магнит, брелок) продавать как «3 по цене 2» или набором, а не поштучно.</li><li>Всё остальное считать от себестоимости: цена = себестоимость × 2–2,5, пока нет данных лучше.</li></ol>
+   <p class="src">Источники цен: <a href="https://www.paris-friendly.fr/mug-i-love-personnalise.html" target="_blank" rel="noopener">paris-friendly.fr (18 €)</a>, <a href="https://www.pariszigzag.fr/paris-au-quotidien/les-cadeaux-de-st-valentin-personnalises-qui-vont-faire-un-grand-effet/" target="_blank" rel="noopener">pariszigzag.fr (13,99 €)</a>. Магазинов и рынков Парижа с точными ценами я не нашёл.</p></div>
+  <h3>Как показывать цены в Instagram</h3>
+  <ul class="ck"><li>В актуальном «Tarifs» показывай <b>«à partir de»</b> и три-четыре цены (кружка, 15×20, магнит, коробка). Это снимает вопрос «сколько?» и отсекает случайных людей.</li><li>Точную цену и оформление давай в WhatsApp ответом /цен.</li><li>Коробки показывай с названием и ценой в сторис. Это «готовое решение», его проще купить, чем собирать по частям.</li></ul>
+ </section>
+
+ <!-- INSTAGRAM -->
+ <section class="tab" id="t-ig">
+  <h2>Instagram</h2>
+  <div class="note warn">Все посты, подписи и сторис в Instagram только на французском, как ты решил. Украинский и русский оставь для личных сообщений.</div>
+  <h3>Профиль (твой сейчас: 0 публикаций, 1 подписчик)</h3>
+  <div class="card"><b>Имя профиля</b><p class="src">Сейчас: MAISON VOLODYMYR</p><div class="tx" id="nm">Maison Volodymyr · Cadeaux photo</div><button class="cp" data-copy="nm">Копировать</button><p class="src">Имя участвует в поиске Instagram, поэтому слова «Cadeaux photo» помогают найти вас.</p></div>
+  <div class="card"><b>Био</b><p class="src">Сейчас: «Cadeaux personnalisés avec vos photos, Tasses · Cadres photo · Porte-clés, Paris · Porte Clignancourt…»</p><div class="tx" id="bio">🎁 Cadeaux personnalisés avec vos photos
+☕ Mugs · 🖼 Photos sur métal · 🔑 Porte-clés
+📍 Porte de Clignancourt · sam–dim 10h–18h
+👇 Commandez sur WhatsApp</div><button class="cp" data-copy="bio">Копировать</button></div>
+  <div class="card"><b>Ссылка и категория</b><p>Ссылка wa.me/33758181515 это твой WhatsApp, оставь. Категорию «Магазин подарков» тоже оставь.</p></div>
+  <h3>Актуальные: названия и обложки</h3>
+  <p class="lead">Восемь актуальных, названия короткие. Обложки 1080×1920 в тёмно-зелёном и меди, в стиле визитки. Нажми и держи картинку, чтобы сохранить. Файлы также лежат в репозитории, в папке instagram/covers.</p>
+  <div class="covers" id="cov"></div>
+  <div class="note warn">Твоё «Tasses» оставь, только замени обложку. Instagram обрезает обложку кругом, поэтому иконки стоят в центре.</div>
+  <h3>Что снимать (фото-лист)</h3>
+  <div class="grid2" id="shots"></div>
+  <h3>Свет и фон</h3>
+  <ul class="ck"><li>Дневной свет у окна или в тени навеса. Без вспышки и без жёлтых ламп.</li><li>Фон: тёмное дерево или тёмно-зелёная ткань, как на визитке. Реквизит: кофейные зёрна, веточка зелени, медные детали.</li><li>Одна история на кадр: изделие и руки, а не гора товара.</li></ul>
+  <h3>10 идей роликов на французском</h3>
+  <div class="card" id="reels"></div>
+  <h3>Лестница предложений</h3>
+  <ul class="ck"><li><b>Визитка:</b> «Scanne le QR, −20% sur la 1ère commande». Условие проверяй на стенде: человек показывает, что подписан.</li><li><b>Выдача заказа:</b> мини-магнит за подписку (мы это описали в воронке).</li><li><b>Через день:</b> −10% на следующий подарок за сторис с отметкой.</li><li>Не давай скидки за отзывы на Google. Это запрещено правилами Google.</li></ul>
+ </section>
+
+ <!-- CARDS -->
+ <section class="tab" id="t-cards">
+  <h2>Визитки: разбор файла перед заказом 1000 штук</h2>
+  <p class="lead">Я открыл твой PDF «VOLODYMYR print CMYK v3», посчитал цвет и размер и проверил QR.</p>
+  <div class="tbl"><table>
+   <tr><th>Что проверил</th><th>Результат</th><th>Вердикт</th></tr>
+   <tr><td>Формат</td><td>89×59 мм с припуском 2 мм вокруг; чистый размер 85×55 мм, 2 страницы (лицо и оборот)</td><td><span class="chip ok">ок</span> <span class="chip warn">спроси про припуск 3 мм</span></td></tr>
+   <tr><td>Цветовой режим</td><td>CMYK, профиль FOGRA39 встроен (в прошлой версии было RGB)</td><td><span class="chip ok">ок</span></td></tr>
+   <tr><td>Разрешение</td><td>ровно 300 ppi</td><td><span class="chip ok">ок</span></td></tr>
+   <tr><td>Тёмные места (суммарная краска)</td><td>максимум 316% на лице (2% пикселей выше 300%) и 300% на обороте</td><td><span class="chip warn">спроси лимит типографии</span></td></tr>
+   <tr><td>Безопасная зона</td><td>текст и логотип лежат внутри, не ближе 3–4 мм к обрезке; у края только декор (листья, лампа)</td><td><span class="chip ok">ок</span></td></tr>
+   <tr><td>QR-код</td><td>считывается и ведёт на https://www.instagram.com/maison.volodymyr, размер около 20 мм</td><td><span class="chip ok">ок</span></td></tr>
+   <tr><td>Текст</td><td>всё слито в картинку, векторного текста нет</td><td><span class="chip warn">мелкий текст может быть чуть мягче</span></td></tr>
+  </table></div>
+  <h3>Почему визитка кажется серой</h3>
+  <p>Это не ошибка файла. Яркий оранжевый и насыщенный зелёный с экрана (RGB) шире, чем умеет печать (CMYK, профиль FOGRA39). При переводе цвета сжимаются, и на экране файл выглядит тусклее и темнее. Некоторые программы показывают CMYK без профиля и добавляют ещё серости. На бумаге цвет зависит от самой бумаги и ламинации.</p>
+  <div class="note"><b>Главное правило:</b> перед 1000 штук закажи <b>один пробный экземпляр</b> («épreuve» или «BAT», обычно несколько евро) и посмотри живьём. Только потом печатай тираж.</div>
+  <div class="note warn">Про «старую и новую фотку»: я сравнил присланные картинки с PDF. Содержание лица и оборота совпадает, отличается только цвет. Если ты имел в виду другое, пришли скриншот.</div>
+  <h3>Чего не хватает на визитке</h3>
+  <ul class="ck"><li><b>Где вас найти:</b> на обороте нет адреса. Добавь строку «Stand Porte de Clignancourt · sam–dim 10h–18h».</li><li><b>Название:</b> «VOLODYMYR», а в Instagram «Maison Volodymyr». Выбери одно.</li><li>Сообщение «−20% 1ère commande» нужно подкрепить правилом (см. вкладку Instagram).</li></ul>
+  <h3>Сообщение типографии (скопируй)</h3>
+  <div class="card"><b>Украинский</b><div class="tx" id="pu">Добрий день! Надсилаю оновлений макет візитки 85×55 мм (CMYK, профіль FOGRA39, 300 ppi, припуск 2 мм). Підкажіть, будь ласка:
+1) який потрібен припуск: 2 чи 3 мм?
+2) яке максимальне покриття фарбою (TAC), 300% чи 320%?
+3) чи можна зробити один пробний відбиток (BAT) перед тиражем 1000 шт.?
+4) які варіанти паперу і ламінації (глянцева, матова, soft-touch) і як вони змінюють колір?
+Дякую!</div><button class="cp" data-copy="pu">Копировать UA</button>
+   <b style="display:block;margin-top:14px">Французский</b><div class="tx" id="pf">Bonjour ! Je vous envoie le fichier de ma carte de visite 85×55 mm (CMYK, profil FOGRA39, 300 ppi, fond perdu 2 mm). Pourriez-vous me préciser :
+1) le fond perdu requis : 2 ou 3 mm ?
+2) la couverture d'encre maximale (TAC) : 300 % ou 320 % ?
+3) la possibilité d'une épreuve (BAT) avant le tirage de 1000 exemplaires ?
+4) les papiers et pelliculages disponibles (brillant, mat, soft-touch) et leur effet sur les couleurs ?
+Merci !</div><button class="cp" data-copy="pf">Копировать FR</button></div>
+  <h3>Чего я не смог проверить</h3>
+  <ul class="ck"><li>Как цвет выглядит на настоящей бумаге.</li><li>Исходный RGB-файл: у меня только готовый CMYK-PDF. Если нужно переделать с другими настройками (3 мм, меньше краски), пришли исходник.</li></ul>
+ </section>
+</div>
+
+<script>
+const QR=__QR_JSON__;
+const SUF={fr:'фр',ua:'укр',ru:'рус'};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* tabs */
+function show(t){$$('.tab').forEach(e=>e.classList.toggle('on',e.id=='t-'+t));$$('#nav button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t==t));try{history.replaceState(null,'','#'+t)}catch(e){}window.scrollTo(0,0)}
+$('#nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.t)});
+const h=(location.hash||'').slice(1);if(['wa','maps','box','prices','ig','cards'].includes(h))show(h);
+/* copy */
+function flash(b,t){const o=b.textContent;b.textContent=t;setTimeout(()=>b.textContent=o,1600)}
+async function copyText(txt,b){try{await navigator.clipboard.writeText(txt);flash(b,'Скопировано ✓')}catch(e){flash(b,'Выдели текст вручную')}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b){copyText($('#'+b.dataset.copy).innerText,b)}const c=e.target.closest('[data-qr]');if(c){const [i,l]=c.dataset.qr.split('.');copyText(QR[+i][{fr:2,ua:3,ru:4}[l]],c)}});
+/* whatsapp list */
+let LANG='all';
+function renderQR(){
+ $('#qr').innerHTML=QR.map((r,i)=>`<div class="card msg"><h3>${esc(r[1])}</h3>${['fr','ua','ru'].filter(l=>LANG=='all'||LANG==l).map(l=>`<div class="l"><div><code class="sc">/${r[0]}${SUF[l]}</code><div style="margin-top:6px"><span class="chip">${l.toUpperCase()}</span></div></div><div><div class="tx">${esc(r[{fr:2,ua:3,ru:4}[l]])}</div><button class="cp" data-qr="${i}.${l}">Копировать</button></div></div>`).join('')}</div>`).join('')}
+$('#lang').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;LANG=b.dataset.l;$$('#lang button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderQR()});
+$('#copyAll').addEventListener('click',()=>{const t=QR.map(r=>`=== ${r[1]} ===\n`+['fr','ua','ru'].map(l=>`/${r[0]}${SUF[l]}\n${r[{fr:2,ua:3,ru:4}[l]]}`).join('\n\n')).join('\n\n');copyText(t,$('#copyAll'))});
+renderQR();
+/* maps */
+const QA=[['Comment passer commande ?','Envoyez-nous votre photo sur WhatsApp au +33 7 58 18 15 15 ou passez sur notre stand. Nous préparons un aperçu gratuit avant de lancer la production.'],['Quels produits personnalisez-vous ?','Mugs, photos sur métal, magnets, porte-clés, cadres photo et coffrets cadeaux.'],['Quels sont vos délais ?','En général [X] jours. Pour Noël et la fête des mères, commandez au moins deux semaines à l\'avance.'],['Où et quand vous trouver ?','Sur notre stand à Porte de Clignancourt (Paris 18e), le samedi et le dimanche de 10h à 18h.'],['Peut-on payer par carte ?','[Oui / bientôt] Nous acceptons aussi les espèces et le virement.'],['Faites-vous des commandes en quantité ?','Oui, pour les écoles, associations et entreprises. Écrivez-nous pour un devis.']];
+$('#qa').innerHTML=QA.map((q,i)=>`<div style="margin:10px 0"><b>${esc(q[0])}</b><div class="tx" id="qa${i}">${esc(q[1])}</div><button class="cp" data-copy="qa${i}">Копировать ответ</button></div>`).join('');
+const POSTS=[['Знакомство со стендом',"Bienvenue chez Maison Volodymyr 🌿 Atelier familial à Porte de Clignancourt : mugs, photos sur métal, magnets et porte-clés avec vos photos. Samedi et dimanche, 10h–18h. Envoyez-nous votre photo sur WhatsApp !"],['Идея к празднику',"Noël approche 🎄 Offrez un cadeau unique avec votre plus belle photo : mug, photo sur métal ou coffret. Commandez avant le [date] pour être livré à temps."],['До и после',"Votre photo → votre cadeau ✨ Envoyez-nous une image, nous préparons un aperçu gratuit. Fait main à la maison, à Paris."]];
+$('#posts').innerHTML=POSTS.map((p,i)=>`<div style="margin:10px 0"><b>${i+1}. ${esc(p[0])}</b><div class="tx" id="po${i}">${esc(p[1])}</div><button class="cp" data-copy="po${i}">Копировать</button></div>`).join('');
+const REVS=[['Положительный',"Merci beaucoup pour votre confiance et votre gentil mot 🤍 Nous sommes ravis que votre cadeau vous plaise. À très bientôt sur notre stand !"],['Нейтральный',"Merci pour votre retour. Nous sommes toujours heureux d'améliorer nos créations : n'hésitez pas à nous écrire sur WhatsApp pour nous dire ce que nous pouvons faire mieux 🌿"],['Негативный',"Merci de nous avoir signalé ce problème, nous sommes désolés. Écrivez-nous sur WhatsApp au +33 7 58 18 15 15 : nous allons régler cela rapidement."]];
+$('#revs').innerHTML=REVS.map((p,i)=>`<div style="margin:10px 0"><b>${esc(p[0])}</b><div class="tx" id="rv${i}">${esc(p[1])}</div><button class="cp" data-copy="rv${i}">Копировать</button></div>`).join('');
+/* instagram */
+const COV=[['commander','Commander','Как заказать: 3 шага, WhatsApp, срок, стенд'],['tarifs','Tarifs','Цены «à partir de», коробки'],['tasses','Tasses','Кружки: до/после, процесс, клиенты'],['photos','Photos','Фото на металле и в рамках'],['porte-cles','Porte-clés','Брелки и магниты'],['coffrets','Coffrets','Подарочные наборы, распаковка'],['atelier','Atelier','Папа за работой, лазер, печать'],['avis','Avis','Отзывы и скриншоты сообщений']];
+$('#cov').innerHTML=COV.map(c=>`<figure><img src="covers/${c[0]}.png" alt="Обложка ${esc(c[1])}" loading="lazy"><figcaption>${esc(c[1])}</figcaption><small>${esc(c[2])}</small></figure>`).join('');
+const SH=[['Tasses',['Кружка на тёмном дереве, рядом кофейные зёрна','Кружка в руках, лицо не в кадре','До и после: фото клиента рядом с готовой кружкой','Распаковка кружки в коробке']],['Photos',['Фото на металле при боковом свете, блики на металле','Крупный план гравировки','Фото в руках на фоне стенда','Размеры рядом для сравнения']],['Porte-clés',['Связка брелков на деревянной доске','Ключ с брелком в руке','Магниты на холодильнике, домашняя сцена']],['Coffrets',['Закрытая коробка с лентой','Открытая сверху, видно «комнаты»','Распаковка: рука открывает крышку','Carte-histoire рядом']],['Atelier',['Папа у лазера, искры и свет','Руки за работой, процесс печати','Семья у стенда на рынке','Готовые заказы, упакованные в ряд']],['Stand',['Фасад стенда с вывеской','Прилавок с образцами и QR','Вид с улицы: как найти','Часы работы на табличке']]];
+$('#shots').innerHTML=SH.map(s=>`<div class="card" style="margin:0"><b>${esc(s[0])}</b><ul class="ck">${s[1].map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('');
+const RL=[['Avant / après','Votre photo devient un cadeau 🎁','Envoyez-nous une photo, nous préparons un aperçu gratuit. #cadeaupersonnalisé #paris'],['Gravure au laser','Un instant de magie sur le métal ✨','Chaque détail est fait main à la maison. #gravurelaser #fabriquéàparis'],['3 étapes pour commander','Commander, c\'est simple 🌿','1. Envoyez votre photo 2. Validez l\'aperçu 3. Récupérez votre cadeau. #commandeperso'],['Réaction cadeau','Sa réaction quand il a ouvert le mug 🥹','Avec l\'accord du client. #cadeaufamille #émotion'],['Tour du stand','Où nous trouver à Paris ? 📍','Porte de Clignancourt, samedi et dimanche, 10h–18h. #clignancourt #paris18'],['Déballage du coffret','Le Coffret Famille, déballage 🎁','Mug, photo, magnet et porte-clés dans une seule boîte. #coffretcadeau'],['Atelier familial','Père et fils à l\'atelier 🛠','Une histoire de famille, des cadeaux faits main. #atelierfamilial'],['Idées fête des mères','3 idées cadeaux pour maman 💐','Mug, photo sur métal ou porte-clés avec la photo des enfants. #fêtedesmères'],['Quelle photo choisir ?','Comment choisir la meilleure photo 📸','Lumineuse, nette, visages visibles. Envoyez-nous toutes vos photos. #astuce'],['Avis clients','Merci pour vos mots doux 🤍','Capture d\'écran d\'un avis avec accord du client. #avisclients']];
+$('#reels').innerHTML=RL.map((r,i)=>`<div style="margin:10px 0;padding-bottom:10px;border-bottom:1px solid var(--line)"><b>${i+1}. ${esc(r[0])}</b><div class="tx" id="rl${i}">${esc(r[1])}\n${esc(r[2])}</div><button class="cp" data-copy="rl${i}">Копировать подпись</button></div>`).join('');
+</script>
+</body>
+</html>
