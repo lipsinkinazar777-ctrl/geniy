@@ -126,7 +126,7 @@ function slot(s,e,i){
  ctx.restore();
  if(e.k!='metal'){ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';rr(e.x,e.y,e.w,e.h,r);ctx.stroke();if(e.k=='gold'){ctx.lineWidth=1;ctx.strokeStyle='rgba(243,217,150,.6)';rr(e.x+8,e.y+8,e.w-16,e.h-16,Math.max(2,r-6));ctx.stroke()}}
  else{ctx.lineWidth=1.5;ctx.strokeStyle='rgba(0,0,0,.35)';ctx.strokeRect(e.x,e.y,e.w,e.h)}
- if(e.tag&&e.above){const t=fill(s,e.tag);ctx.font=ITAL.replace('{s}',30);ctx.fillStyle='#e9c47e';ctx.textAlign='center';ctx.fillText(t,e.x+e.w/2,e.y-16)}
+ if(e.tag&&e.above){const t=fill(s,e.tag);ctx.font='600 26px '+SANS;const tw=ctx.measureText(t).width,w=tw+44,h=52,x=e.x+(e.w-w)/2,y=e.y-h-14;ctx.fillStyle='rgba(26,4,9,.78)';rr(x,y,w,h,26);ctx.fill();ctx.strokeStyle='#e2bb6c';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#f6e9d6';ctx.textAlign='center';ctx.fillText(t,e.x+e.w/2,y+35)}
  else if(e.tag){const t=fill(s,e.tag);ctx.font='600 22px '+SANS;const tw=ctx.measureText(t).width;ctx.fillStyle='rgba(26,4,9,.78)';rr(e.x+18,e.y+18,tw+32,44,22);ctx.fill();ctx.strokeStyle='#e2bb6c';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#f6e9d6';ctx.textAlign='left';ctx.fillText(t,e.x+34,e.y+48)}
 }
 function pill(s,e){
