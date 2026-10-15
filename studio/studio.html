@@ -49,7 +49,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
  <p class="lead">Выбери слайд, нажми на рамку и вставь своё фото. Перетаскивай фото пальцем, масштабируй ползунком, цены (по желанию) и подписи меняй справа; пустое поле цены скрывает ценник, потом нажми «Сохранить PNG». Слайды 1080×1920 (формат сторис 9:16), текст на французском. Верх и низ оставлены свободными под интерфейс Instagram.</p>
  <div class="tabs" id="tabs" role="tablist"></div>
  <div class="main">
-  <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». В слайд «Отзывы» вставляй скриншот сообщения клиента (с его разрешения). Фото не уходят в интернет, они остаются только в этом окне.</p></div>
+  <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». В слайд «Отзывы» вставляй слева скриншот сообщения клиента (с его разрешения), справа фото его заказа. Фото не уходят в интернет, они остаются только в этом окне.</p></div>
   <div class="panel" id="panel"></div>
  </div>
 </div>
@@ -73,10 +73,8 @@ const SL=[
  {id:'creations',name:'✨ Наши работы',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок',sb:'Подзаголовок'},
   el:[{t:'slot',x:95,y:640,w:890,h:840,k:'gold'}]},
  {id:'fond',name:'🎨 Пустой фон',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок (можно стереть)',sb:'Подзаголовок (можно стереть)'},el:[]},
- {id:'avistxt',name:'💬 Отзыв текстом',title:'Vos avis',sub:'Merci pour vos mots doux',ta:['mot'],f:{mot:'Écrivez ici le commentaire de votre client.',nom:'— Prénom du client'},fl:{mot:'Комментарий клиента (вставь текст)',nom:'Подпись: имя клиента'},
-  el:[{t:'quote',x:90,y:660,w:900,h:640,txt:'{mot}'},{t:'stars',x:540,y:1370},{t:'small',x:540,y:1445,txt:'{nom}'}]},
- {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{nom:'— Prénom du client',mot:'Collez ici les mots de votre client'},fl:{nom:'Подпись: имя настоящего клиента',mot:'Цитата из его настоящего отзыва'},
-  el:[{t:'it',x:540,y:700,txt:'« {mot} »',s:40},{t:'slot',x:150,y:740,w:780,h:560,k:'gold'},{t:'stars',x:540,y:1365},{t:'small',x:540,y:1445,txt:'{nom}'}]},
+ {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{m:'Son message',c:'Sa commande'},fl:{m:'Подпись над скриншотом',c:'Подпись над фото заказа'},
+  el:[{t:'slot',x:80,y:640,w:450,h:770,k:'gold',tag:'{m}',fit:'contain'},{t:'slot',x:550,y:640,w:450,h:770,k:'gold',tag:'{c}'},{t:'stars',x:540,y:1452}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige',p1:'',n2:'Coffret Famille',p2:'',n3:'Coffret Noël',p3:''},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
   el:[{t:'slot',x:80,y:670,w:920,h:360,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1080,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1370,txt:'{p2}',sz:44},{t:'slot',x:560,y:1080,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1370,txt:'{p3}',sz:44}]}
 ];
@@ -123,7 +121,7 @@ function slot(s,e,i){
  else{ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=36;ctx.shadowOffsetY=16;rr(e.x,e.y,e.w,e.h,r);ctx.fillStyle='#2a070f';ctx.fill()}
  ctx.restore();
  ctx.save();rr(e.x,e.y,e.w,e.h,r);ctx.clip();
- if(d&&d.img){const iw=d.img.naturalWidth||d.img.width,ih=d.img.naturalHeight||d.img.height,sc=Math.max(e.w/iw,e.h/ih)*d.zoom,dw=iw*sc,dh=ih*sc;ctx.drawImage(d.img,e.x+(e.w-dw)/2+d.ox,e.y+(e.h-dh)/2+d.oy,dw,dh)}else{rr(e.x,e.y,e.w,e.h,r);placeholder(e)}
+ if(d&&d.img){const iw=d.img.naturalWidth||d.img.width,ih=d.img.naturalHeight||d.img.height,sc=(e.fit=='contain'?Math.min(e.w/iw,e.h/ih):Math.max(e.w/iw,e.h/ih))*d.zoom,dw=iw*sc,dh=ih*sc;ctx.drawImage(d.img,e.x+(e.w-dw)/2+d.ox,e.y+(e.h-dh)/2+d.oy,dw,dh)}else{rr(e.x,e.y,e.w,e.h,r);placeholder(e)}
  if(e.k=='metal'){const rg=ctx.createLinearGradient(e.x,e.y,e.x+e.w,e.y+e.h);rg.addColorStop(0,'rgba(255,255,255,0)');rg.addColorStop(.42,'rgba(255,255,255,0)');rg.addColorStop(.5,'rgba(255,255,255,.16)');rg.addColorStop(.58,'rgba(255,255,255,0)');ctx.fillStyle=rg;ctx.fillRect(e.x,e.y,e.w,e.h)}
  ctx.restore();
  if(e.k!='metal'){ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';rr(e.x,e.y,e.w,e.h,r);ctx.stroke();if(e.k=='gold'){ctx.lineWidth=1;ctx.strokeStyle='rgba(243,217,150,.6)';rr(e.x+8,e.y+8,e.w-16,e.h-16,Math.max(2,r-6));ctx.stroke()}}
@@ -164,7 +162,7 @@ function tabs(){$('#tabs').innerHTML=SL.map((s,i)=>`<button role="tab" aria-sele
 $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=+b.dataset.i;tabs();panel();draw()});
 function panel(){
  const s=SL[cur];
- $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="1" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"></div>`:''}</div>`}).join('')}
+ $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="0.5" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"></div>`:''}</div>`}).join('')}
  <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label>${(s.ta||[]).includes(k)?`<textarea id="f_${k}" rows="6" data-f="${k}" style="width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#1f070b;color:var(--ink);font:inherit;resize:vertical">${esc(s.f[k])}</textarea>`:`<input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}">`}</div>`).join('')}
  <div><label for="ft1">Нижняя полоса, строка 1</label><input type="text" id="ft1" value="${esc(FOOT.f1)}" data-foot="f1"></div><div><label for="ft2">Нижняя полоса, строка 2</label><input type="text" id="ft2" value="${esc(FOOT.f2)}" data-foot="f2"></div>
  <button class="btn main" id="save">Сохранить PNG</button><div class="msg" id="msg" role="status"></div>`;
