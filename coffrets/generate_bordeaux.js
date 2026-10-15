@@ -66,7 +66,7 @@ h1{font:600 64px/1 Cinzel,serif;text-align:center;margin:16px 0 4px;letter-spaci
 .f{margin-top:14px;border-top:2px solid #e2bb6c;padding-top:12px;text-align:center}.f1{font-weight:600;font-size:17px;letter-spacing:.14em;color:#e9cf98}.f2{font:italic 600 24px "Cormorant Garamond",serif;margin-top:4px}
 </style></head><body><div class="w bg"><div class="hd">${MONO}<div class="brand">MAISON VOLODYMYR</div></div><h1 class="gold">COFFRETS CADEAUX</h1><div class="sub">PERSONNALISÉS AVEC VOS PHOTOS · COFFRET INCLUS</div>
 <div class="g">${SETS.map(s=>`<div class="c ${s.rib?'hl':''}">${s.rib?`<span class="rib">${s.rib}</span>`:''}<div class="n gold">${s.n}</div><div class="o">${s.o}</div><div class="ct">${s.c}</div><div class="b"><div class="ics">${icons(s.ic)}</div><div>${s.v?`<div class="v">Valeur ${s.v}</div>`:''}<span class="pill"><span class="gold">${s.p}</span></span></div></div></div>`).join('')}</div>
-<div class="f"><div class="f1">APERÇU GRATUIT  ✦  FAIT MAIN À PARIS  ✦  WHATSAPP +33 7 58 18 15 15</div><div class="f2">@maison.volodymyr · Porte de Clignancourt</div></div></div></body></html>`;
+<div class="f"><div class="f1">APERÇU GRATUIT  ✦  FAIT MAIN À PARIS  ✦  WHATSAPP +33 7 58 18 15 15</div><div class="f2">@maison.volodymyr</div></div></div></body></html>`;
 (async()=>{const b=await chromium.launch();const out='/home/user/geniy/coffrets/';
  let p=await b.newPage({viewport:{width:794,height:1123}});await p.setContent(A4,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);
  await p.pdf({path:out+'etiquettes_bordeaux_A4.pdf',format:'A4',printBackground:true,margin:{top:0,right:0,bottom:0,left:0}});

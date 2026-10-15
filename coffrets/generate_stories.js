@@ -55,7 +55,7 @@ h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 
 </style></head><body>${BG}<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 <div class="list">${list.map(s=>`<div class="c ${s[4]?'hl':''}">${s[4]?`<span class="rib">${s[4]}</span>`:''}<div class="tx"><div class="n">${s[0]}</div><div class="o">${s[1]}</div><div class="ct">${s[2]}</div></div><div class="p"><span>${s[3]}</span></div></div>`).join('')}</div>
-<div class="foot"><div class="line"></div><div class="f1">COFFRET INCLUS  ✦  APERÇU GRATUIT</div><div class="f2">@maison.volodymyr · Porte de Clignancourt</div></div></body></html>`;
+<div class="foot"><div class="line"></div><div class="f1">COFFRET INCLUS  ✦  APERÇU GRATUIT</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  for(const k of Object.keys(ICONS)){await p.setContent(cover(k),{waitUntil:'networkidle'});await p.screenshot({path:`/home/user/geniy/instagram/covers/${k}.png`});}
  await p.setContent(story('Coffrets cadeaux','Personnalisés avec vos photos',SETS.slice(0,5)),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_1.png'});

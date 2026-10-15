@@ -49,7 +49,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
  <p class="lead">Выбери слайд, нажми на рамку и вставь своё фото. Перетаскивай фото пальцем, масштабируй ползунком, меняй цены справа, потом нажми «Сохранить PNG». Слайды 1080×1920 (формат сторис 9:16), текст на французском. Верх и низ оставлены свободными под интерфейс Instagram.</p>
  <div class="tabs" id="tabs" role="tablist"></div>
  <div class="main">
-  <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». Фото не уходят в интернет, они остаются только в этом окне.</p></div>
+  <div class="stage"><canvas id="cv" width="1080" height="1920" aria-label="Предпросмотр слайда"></canvas><p class="hint">Пустые рамки сохраняются как красивая заглушка «Votre photo». В слайд «Отзывы» вставляй скриншот сообщения клиента (с его разрешения). Фото не уходят в интернет, они остаются только в этом окне.</p></div>
   <div class="panel" id="panel"></div>
  </div>
 </div>
@@ -58,7 +58,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <script>
 const W=1080,H=1920,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const DISP='"Cinzel",Georgia,serif',ITAL='italic 600 {s}px "Cormorant Garamond",Georgia,serif',SANS='Montserrat,Arial,sans-serif';
-const FOOT={f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS',f2:'@maison.volodymyr  ·  Porte de Clignancourt'};
+const FOOT={f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS',f2:'@maison.volodymyr'};
 const SL=[
  {id:'tasses',name:'☕ Кружки',title:'Tasses photo',sub:'Votre photo, votre cadeau',f:{p:'10 €',cap:'La tasse personnalisée'},fl:{p:'Цена кружки',cap:'Подпись'},
   el:[{t:'slot',x:80,y:670,w:580,h:690,k:'mug'},{t:'slot',x:690,y:670,w:310,h:330,k:'mug'},{t:'slot',x:690,y:1030,w:310,h:330,k:'mug'},{t:'pill',x:370,y:1360,txt:'{p}'},{t:'it',x:540,y:1450,txt:'{cap}',s:36}]},
@@ -70,6 +70,8 @@ const SL=[
  {id:'cles',name:'🔑 Брелки и магниты',title:'Porte-clés & magnets',sub:'Petits cadeaux, grands souvenirs',f:{n1:'Porte-clés métal',p1:'4 €',n2:'Double face',p2:'5 €',n3:'Pendentif',p3:'8 €',n4:'Magnet photo',p4:'3 €',small:'Porte-clés plastique dès 2 €'},fl:{n1:'Название 1',p1:'Цена 1',n2:'Название 2',p2:'Цена 2',n3:'Название 3',p3:'Цена 3',n4:'Название 4',p4:'Цена 4',small:'Нижняя строка'},
   el:[{t:'slot',x:85,y:670,w:430,h:320,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:990,txt:'{p1}',sz:44},{t:'slot',x:565,y:670,w:430,h:320,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:990,txt:'{p2}',sz:44},
       {t:'slot',x:85,y:1045,w:430,h:320,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1365,txt:'{p3}',sz:44},{t:'slot',x:565,y:1045,w:430,h:320,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1365,txt:'{p4}',sz:44},{t:'small',x:540,y:1450,txt:'{small}'}]},
+ {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{nom:'— Sophie, cliente fidèle',mot:'Un cadeau qui a fait pleurer maman de joie !'},fl:{nom:'Подпись (имя клиента)',mot:'Цитата (коротко, по-французски)'},
+  el:[{t:'it',x:540,y:700,txt:'« {mot} »',s:40},{t:'slot',x:150,y:740,w:780,h:560,k:'gold'},{t:'stars',x:540,y:1365},{t:'small',x:540,y:1445,txt:'{nom}'}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige · valeur 56 €',p1:'51 €',n2:'Coffret Famille',p2:'28 €',n3:'Coffret Noël',p3:'41 €'},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
   el:[{t:'slot',x:80,y:670,w:920,h:360,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1080,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1370,txt:'{p2}',sz:44},{t:'slot',x:560,y:1080,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1370,txt:'{p3}',sz:44}]}
 ];
@@ -137,6 +139,7 @@ function draw(){
   else if(e.t=='size'){ctx.font='600 48px '+DISP;ctx.fillStyle=goldGrad(e.y-44,e.y);ctx.textAlign='left';ctx.fillText(fill(s,e.txt),e.x,e.y)}
   else if(e.t=='arrow'){ctx.strokeStyle='#e2bb6c';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(e.x1,e.y1);ctx.lineTo(e.x2,e.y2);ctx.moveTo(e.x2-16,e.y2-11);ctx.lineTo(e.x2,e.y2);ctx.lineTo(e.x2-16,e.y2+11);ctx.stroke()}
   else if(e.t=='it'){ctx.font=ITAL.replace('{s}',e.s||32);ctx.fillStyle='#f3d996';ctx.textAlign='center';ctx.fillText(fill(s,e.txt),e.x,e.y)}
+  else if(e.t=='stars'){for(let k=0;k<5;k++){const cx=e.x+(k-2)*70,cy=e.y;ctx.beginPath();for(let j=0;j<10;j++){const r=j%2?13:30,an=-Math.PI/2+j*Math.PI/5;ctx.lineTo(cx+r*Math.cos(an),cy+r*Math.sin(an))}ctx.closePath();ctx.fillStyle=goldGrad(cy-30,cy+30);ctx.save();ctx.shadowColor='rgba(243,217,150,.6)';ctx.shadowBlur=18;ctx.fill();ctx.restore()}}
   else if(e.t=='small'){ctx.font='500 24px '+SANS;ctx.fillStyle='#f6e9d6';ctx.textAlign='center';ctx.fillText(fill(s,e.txt),e.x,e.y)}
  }
  footer();
