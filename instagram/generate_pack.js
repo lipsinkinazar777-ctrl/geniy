@@ -30,8 +30,7 @@ const avatar=`<!doctype html><html><head><meta charset="utf-8">${FONTS}</head><b
 <div style="position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 45%,#8c1b38 0%,#5f1026 55%,#2a050e 100%)"></div>
 <svg viewBox="0 0 1080 1080" width="1080" height="1080" style="position:absolute;inset:0">${DEFS}${dots(1080,1080,40)}
 <circle cx="540" cy="540" r="372" fill="none" stroke="url(#gold)" stroke-width="10"/><circle cx="540" cy="540" r="340" fill="none" stroke="url(#gold)" stroke-width="3" opacity=".8"/>
-<text x="452" y="590" font-family="Cinzel,serif" font-weight="600" font-size="300" fill="url(#gold)" text-anchor="middle" style="filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))">M</text>
-<text x="640" y="700" font-family="Cinzel,serif" font-weight="600" font-size="260" fill="url(#gold)" text-anchor="middle" style="filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))">V</text>
+<text x="540" y="652" font-family="Cinzel,serif" font-weight="600" font-size="320" fill="url(#gold)" text-anchor="middle" style="filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))">MV</text>
 ${STAR(800,300,34,.95)}</svg></body></html>`;
 
 /* ---------- Commander ---------- */

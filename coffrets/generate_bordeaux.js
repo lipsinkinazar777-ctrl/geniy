@@ -32,7 +32,7 @@ const SETS=[
  {n:'Coffret Prestige',o:'Le grand cadeau',c:'Photo 30×40 · tasse photo · pendentif · porte-clés double · magnet',ic:[['photo'],['mug'],['heart'],['key'],['magnet']],p:'51 €',v:'56 €',rib:'Prestige'},
  {n:'Prestige Duo',o:'Pour deux familles',c:'Photo 30×40 · 2 tasses photo · 2 pendentifs · 2 magnets',ic:[['photo'],['mug',2],['heart',2],['magnet',2]],p:'66 €',v:'72 €',rib:'Prestige'}
 ];
-const MONO=`<svg viewBox="0 0 40 40" class="mono"><circle cx="20" cy="20" r="18" fill="#5a0f22" stroke="#e2bb6c" stroke-width="1.6"/><circle cx="20" cy="20" r="15" fill="none" stroke="#e2bb6c" stroke-width=".6"/><text x="11" y="23" font-family="Cinzel,serif" font-weight="600" font-size="14" fill="#f3d996">M</text><text x="20" y="28" font-family="Cinzel,serif" font-weight="600" font-size="12" fill="#f3d996">V</text></svg>`;
+const MONO=`<svg viewBox="0 0 40 40" class="mono"><circle cx="20" cy="20" r="18" fill="#5a0f22" stroke="#e2bb6c" stroke-width="1.6"/><circle cx="20" cy="20" r="15" fill="none" stroke="#e2bb6c" stroke-width=".6"/><text x="20" y="24.7" text-anchor="middle" font-family="Cinzel,serif" font-weight="600" font-size="13" fill="#f3d996">MV</text></svg>`;
 const BASE=`<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet"><style>
 *{box-sizing:border-box;margin:0}body{font-family:Montserrat,Arial,sans-serif;color:#f6e9d6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .bg{background:radial-gradient(120% 90% at 50% 0%,#8e1c3a 0%,#5e0f24 55%,#2a050e 100%)}
