@@ -205,7 +205,34 @@ dialog label{display:block;font-size:12px;color:var(--mut);margin:14px 0 6px;tex
 .mgi{flex:1;min-width:0}.mgi b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mgi small{display:block;color:var(--mut);font-size:12.5px}
 .mg>span{font-weight:800;white-space:nowrap}.mg>span small{color:var(--mut);font-weight:500}
 @media (max-width:700px){.mny{flex:1 1 100%}}
-</style></head>
+</style><style>
+.pjs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+.pjt{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:800;font-size:15px;cursor:pointer;transition:.2s}
+.pjt:hover{transform:translateY(-1px)}
+.pjt small{font-size:12px;padding:2px 9px;border-radius:99px;background:var(--bg2);color:var(--mut)}
+.pjt.on{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset,0 10px 26px rgba(0,0,0,.22);background:linear-gradient(135deg,color-mix(in srgb,var(--c) 24%,var(--card)),var(--card))}
+.pjt.on small{background:var(--c);color:#fff}
+.pjt.add{color:var(--mut);border-style:dashed;font-weight:700}
+.pjh{display:grid;grid-template-columns:1fr auto;gap:4px 24px;align-items:start;margin-bottom:20px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 20%,var(--card)),var(--card) 62%);border-color:color-mix(in srgb,var(--c) 45%,var(--line))}
+.pjh small{color:var(--mut);letter-spacing:.14em;font-size:11px;font-weight:700}
+.pjh h2{margin:4px 0 6px;font-size:30px;display:flex;align-items:center;gap:10px}
+.pjh h2 button{border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px;padding:4px}
+.pjr{text-align:right}.pjr b{display:block;font-size:36px;line-height:1;color:var(--c)}.pjr small{letter-spacing:0;font-size:12px}
+.pjh .prog{grid-column:1/-1}.pjh .prog i{background:var(--c)}
+.pjg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-bottom:20px}
+.pjb{margin-bottom:20px}.pjg .pjb{margin-bottom:0}
+.pjl{display:block;font-weight:800;font-size:14px;margin-bottom:10px;color:var(--ink)}
+.pjb textarea,.pjh textarea{width:100%;box-sizing:border-box;background:var(--bg2);border:1px solid var(--line);border-radius:12px;color:var(--ink);padding:12px 14px;font:inherit;font-size:14px;resize:vertical;line-height:1.55}
+.pjh textarea{background:transparent;border-color:transparent;padding:2px 0;color:var(--mut);resize:none}
+.pjh textarea:focus{border-color:var(--line);background:var(--bg2);padding:8px 10px;outline:0}
+.pjb textarea:focus{outline:0;border-color:var(--gold)}
+.pjhd{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.pjhd .pjl{margin:0}
+.pjs2{margin-top:10px;font-size:13px;color:var(--mut)}.pjs2 b{color:var(--gold2);cursor:pointer}
+.pjd summary{cursor:pointer;color:var(--mut);font-weight:700;margin:12px 0 8px}
+.pjk{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.pjk a{text-decoration:none;color:var(--gold2);border:1px solid var(--line)}
+@media(max-width:700px){.pjh{grid-template-columns:1fr}.pjr{text-align:left}.pjh h2{font-size:24px}}
+</style>
+</head>
 <body>
 <div class="blob b1"></div><div class="blob b2"></div>
 <div id="intro"><div class="glow"></div><div class="c"><div class="dw"><svg viewBox="0 0 200 200" class="rn"><circle cx="100" cy="100" r="96"/></svg><div class="dol">$</div></div><div class="ttl" id="ttl"></div><div class="ln"></div><div class="sub">НАЖМИ, ЧТОБЫ ВОЙТИ</div></div></div>
@@ -239,14 +266,15 @@ let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.tasks)S=se
 if(!S.theme||S.theme==='auto')S.theme='dark';S.xp=S.xp||0;S.ach=S.ach||{};S.qb=S.qb||{};fixS();document.documentElement.dataset.theme=S.theme;
 if(!S.mvAdd1){S.mvAdd1=1;let mvp=S.projects.find(p=>p.name==='Maison Volodymyr');if(!mvp){mvp={id:uid(),name:'Maison Volodymyr'};S.projects.push(mvp)}[["u",0,"Получить цены от папы и переслать Claude","Сообщение папе уже готово. Нужны: цены, себестоимость, срок изготовления, что такое ø10 и «прапори»."],["u",0,"Визитки: отправить файл v6 в типографию + заказать пробник","Файл VOLODYMYR_print_CMYK_v6 (спросить: припуск 2 или 3 мм).\nСпросить про soft touch и лак на логотипе.\nТираж 1000 шт. — только после пробника."],["u",0,"Заказать терминал для карт (SumUp или аналог)","Нужен до выходных на рынке."],["h",0,"Загрузить быстрые ответы в WhatsApp Business","Файл whatsapp_quick_replies.txt — 45 ответов (фр/укр/рус)."],["u",1,"Заказать плёнку и крафт для кружек",""],["u",1,"Купить мини-магниты + напечатать карточки с QR","Мини-магнит — подарок за подписку на стенде. Карточка с QR Instagram — в пакет."],["h",1,"Instagram: аватарка MV + имя + био","Имя: Maison Volodymyr · Cadeaux photo\nБио — в пакете запуска, вкладка Instagram."],["h",1,"Instagram: 8 актуальных с обложками + залить сторис","1 Commander (визитка — последней)\n2 Tarifs\n3 Avis\n4 Tasses\n5 Photos\n6 Porte-clés\n7 Coffrets\n8 Atelier"],["h",1,"Решить название: Maison Volodymyr или VOLODYMYR","Одно имя для вывески, Google, коробки и визиток."],["h",2,"Утвердить наборы и цены","После ответа папы. Цена набора должна быть выше себестоимости + коробки."],["h",2,"Отправить письмо 3 поставщикам коробок","Письмо готово в пакете запуска (вкладка «Коробка»)."],["h",3,"Создать карточку Google Maps","Нужен номер/аллея стенда. Тексты готовы в пакете запуска."],["n",3,"Снять контент: кружки, металл с бликом, распаковка, лазер","Только на французском."],["n",4,"Вставить свои фото в студию / Canva и сохранить слайды","Студия или файл Maison_Volodymyr_tasses_EDITABLE.pptx."],["n",null,"Сделать сайт",""],["n",null,"Внешний вид стенда: столы, кресло, бордо",""]].forEach(([p,d,t,n])=>S.tasks.push({id:uid(),title:t,note:n,sec:'Работа',pri:p,st:'todo',due:d===null?'':day(d),proj:mvp.id}));try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 if(!S.mvAdd2){S.mvAdd2=1;const o=S.projects.find(p=>p.name==='Maison Volodymyr');if(o)o.name='maison.volodymyr';if(!S.projects.find(p=>p.name==='maison.volodymyr'))S.projects.push({id:uid(),name:'maison.volodymyr'});if(!S.projects.find(p=>p.name==='бинарки'))S.projects.push({id:uid(),name:'бинарки'});try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-const PJC=n=>n==='maison.volodymyr'?'#c9405c':n==='бинарки'?'#3fa66b':'#8a7fd0';let fj='';
+const PJC=n=>{n=String(n).toLowerCase();return n.includes('maison')?'#c9405c':n.includes('бинар')?'#3fa66b':'#8a7fd0'};let fj='',pj='',pjNew='';
+if(!S.mvAdd3){S.mvAdd3=1;const del=['Контент-завод','Трейдинг-обучение','Французский'],ids=S.projects.filter(p=>del.includes(p.name)).map(p=>p.id);S.projects=S.projects.filter(p=>!ids.includes(p.id));S.tasks.forEach(t=>{if(ids.includes(t.proj))t.proj=''});const mv=S.projects.find(p=>p.name==='maison.volodymyr');if(mv&&mv.about===undefined)Object.assign(mv,{about:'Семейное ателье подарков с вашими фото: кружки, фото на металле, магниты, брелки, подарочные наборы. Стенд на рынке по выходным + Instagram и WhatsApp.',goal:'Запустить Instagram (аватарка, 8 актуальных) и Google Maps, получить первые заказы через WhatsApp.',next:'Получить цены от папы и переслать Claude.',problems:'Мало клиентов на рынке → визитки с QR, образцы на прилавке, Instagram\nНет оплаты картой → заказать терминал\nДва названия (Maison Volodymyr / VOLODYMYR) → выбрать одно\nЦены ниже рынка → обсудить с папой',ideas:'Сайт\nВнешний вид стенда: столы, кресло, бордо\nАнимированные заставки для актуальных\nНовые каталоги кружек: пары, дети, праздники',links:'CRM — https://claude.ai/artifact/HkMudeAzB9BWGkwJhVU7q8\nПакет запуска — https://claude.ai/artifact/YHbCUt8vG1PuNQrPy4xxMS\nСтудия слайдов — https://claude.ai/artifact/MDxVZxZY3QRGxio7dG12Cp\nВоронка общения — https://claude.ai/artifact/J4pvgfFWbD9xp1Jstr7irT\nInstagram — https://www.instagram.com/maison.volodymyr'});try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 let dirty=false,tm;
 const ui=()=>{$('#sv').classList.toggle('dirty',dirty);$('#sm').textContent=dirty?'есть несохранённые изменения':'всё сохранено ✓'};
 const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));localStorage.setItem('kb-theme',S.theme)}catch(e){}dirty=false;ui()};
 const touch=()=>{dirty=true;ui();clearTimeout(tm);tm=setTimeout(persist,3000)};
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e.t);e.t=setTimeout(()=>e.classList.remove('on'),2200)}
 const SECS=[['Работа','#4a78c9'],['Личное','#e3b650'],['Здоровье','#2f9e6b']],PRI={n:'Обычное',h:'Важно',u:'Срочно'};
-const TABS=[['tasks','☑','Задачи'],['habits','▦','Привычки'],['focus','◔','Фокус'],['cal','▣','Календарь'],['money','◈','Финансы'],['set','⚙','Настройки']];
+const TABS=[['tasks','☑','Задачи'],['proj','◫','Проекты'],['habits','▦','Привычки'],['focus','◔','Фокус'],['cal','▣','Календарь'],['money','◈','Финансы'],['set','⚙','Настройки']];
 let tab='tasks',q='',fp='',fs='',fl='';
 const act=k=>S.habits.some(h=>h.d[k])||S.doneLog[k];
 const streak=()=>{let n=0,i=act(day())?0:1;while(act(day(-i))){n++;i++}return n};
@@ -258,8 +286,8 @@ function burst(el){const r=el.getBoundingClientRect(),x=r.left+12,y=r.top+12;for
 function dlg(h,f){const d=$('#dlg');d.innerHTML=h;d.showModal();d.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>d.close());const out=e=>{const r=d.getBoundingClientRect();return e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom};d._o=false;d.onmousedown=e=>{d._o=out(e)};d.onclick=e=>{if(d._o&&out(e))d.close();d._o=false};f&&f(d)}
 const ask=(t,ph,cb)=>dlg(`<h2>${t}</h2><input id="ai" placeholder="${ph}"><div class="acts"><button class="btn" data-x>Отмена</button><button class="btn g" id="ok">Добавить</button></div>`,d=>{$('#ai').focus();const go=()=>{const v=$('#ai').value.trim();if(v){d.close();cb(v)}};$('#ok').onclick=go;$('#ai').onkeydown=e=>e.key==='Enter'&&go()});
 const conf=(t,cb)=>dlg(`<h2>${t}</h2><div class="acts"><button class="btn" data-x>Отмена</button><button class="btn g" id="ok">Да</button></div>`,d=>$('#ok').onclick=()=>{d.close();cb()});
-function render(anim){setNav();const H={tasks:'Всё, что нужно <em>сделать</em>',money:'Твои <em>деньги</em>',cal:'Твой <em>календарь</em>',habits:'Ежедневная <em>сила</em>',focus:'Глубокая <em>работа</em>',set:'Твой <em>кабинет</em>'}[tab],m=$('#main');
-m.className=anim?'':'still';m.innerHTML=`<h1 class="rise">${H}</h1>`+vStats()+({tasks:vTasks,cal:vCal,money:vMoney,habits:vHab2,focus:vFocus,set:vSet}[tab])();bind();
+function render(anim){setNav();const H={proj:'Твои <em>проекты</em>',tasks:'Всё, что нужно <em>сделать</em>',money:'Твои <em>деньги</em>',cal:'Твой <em>календарь</em>',habits:'Ежедневная <em>сила</em>',focus:'Глубокая <em>работа</em>',set:'Твой <em>кабинет</em>'}[tab],m=$('#main');
+m.className=anim?'':'still';m.innerHTML=`<h1 class="rise">${H}</h1>`+vStats()+({tasks:vTasks,proj:vPrj,cal:vCal,money:vMoney,habits:vHab2,focus:vFocus,set:vSet}[tab])();bind();
 if(anim){$$('#main .rise').forEach((e,i)=>e.style.animationDelay=Math.min(i,26)*45+'ms');cnt()}}
 function vStats(){if(tab==='money')return '';const t=day(),hd=S.habits.filter(h=>h.d[t]).length,fm=S.sessions.filter(s=>s.date===t).reduce((a,s)=>a+s.min,0);
 return `<div class="stats">${[['✓','Сегодня: задачи',S.doneLog[t]||0,''],['▦','Привычки',hd,'/'+S.habits.length],['◔','Фокус',fm,' мин'],['🔥','Серия',streak(),' дн']].map(([i,n,v,u])=>`<div class="stat sp rise"><em>${i}</em><small>${n}</small><b><span data-n="${v}">${v}</span>${u}</b></div>`).join('')}</div>`}
@@ -270,6 +298,19 @@ return `${miniRep()}<div class="open rise"><b>${S.tasks.filter(x=>x.st!=='done')
 <div class="cols">${SECS.map(([sec,c])=>{const L=S.tasks.filter(x=>x.sec===sec&&f(x));return `<div class="col rise" data-sec="${sec}"><h3 style="color:${c}"><i></i><span style="color:var(--ink)">${sec}</span><small>${L.length}</small></h3>${L.map(card).join('')||'<div class="empty">Нет задач</div>'}<button class="add" data-new="${sec}">＋ Новая задача</button></div>`}).join('')}</div>
 <p class="note rise">Перетаскивай карточки между разделами, кликай по карточке для редактирования. Каждая закрытая задача приносит XP.</p>`}
 function card(x){const p=S.projects.find(pp=>pp.id===x.proj),d=x.st==='done';return `<div class="task sp rise ${d?'done':''}" draggable="true" data-id="${x.id}" data-ed="${x.id}"><button class="ck ${d?'on':''}" data-ck="${x.id}">✓</button><div><div class="t">${esc(x.title)}</div><div class="meta"><span class="tag ${x.pri==='h'?'hot':x.pri==='u'?'urg':'n'}">${PRI[x.pri]}</span><span class="tag">${d?'Готово':'К выполнению'}</span>${x.due?`<span class="tag">📅 ${x.due.slice(5).split('-').reverse().join('.')}</span>`:''}${p?`<span class="tag" style="background:${PJC(p.name)}22;color:${PJC(p.name)};border:1px solid ${PJC(p.name)}66">◫ ${esc(p.name)}</span>`:''}${x.note?'<span class="tag">≡</span>':''}</div></div></div>`}
+function vPrj(){const P=S.projects;if(!P.length)return `<div class="pjs rise"><button class="pjt add" id="np">＋ Проект</button></div><div class="empty rise">Проектов пока нет</div>`;if(!P.find(p=>p.id===pj))pj=P[0].id;
+const p=P.find(x=>x.id===pj),T=S.tasks.filter(t=>t.proj===p.id),open=T.filter(t=>t.st!=='done'),dn=T.length-open.length,pc=T.length?Math.round(dn/T.length*100):0,c=PJC(p.name),
+top=open.slice().sort((a,b)=>'uhn'.indexOf(a.pri)-'uhn'.indexOf(b.pri)||((a.due||'9')>(b.due||'9')?1:-1))[0],
+F=(k,l,ph,rows)=>`<div class="card sp rise pjb"><label class="pjl">${l}</label><textarea data-pf="${k}" rows="${rows}" placeholder="${ph}">${esc(p[k]||'')}</textarea></div>`,
+links=(p.links||'').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>{const u=(x.match(/https?:\/\/\S+/)||[])[0];if(!u)return '';const n=x.replace(u,'').replace(/[\s—–-]+$/,'').trim()||u;return `<a class="tag" href="${esc(u)}" target="_blank" rel="noopener">↗ ${esc(n)}</a>`}).join('');
+return `<div class="pjs rise">${P.map(x=>`<button class="pjt ${x.id===pj?'on':''}" data-pj="${x.id}" style="--c:${PJC(x.name)}">${esc(x.name)}<small>${S.tasks.filter(t=>t.proj===x.id&&t.st!=='done').length}</small></button>`).join('')}<button class="pjt add" id="np">＋ Проект</button></div>
+<div class="card sp rise pjh" style="--c:${c}"><div><small>ПРОЕКТ</small><h2>${esc(p.name)}<button id="pjrn" title="Переименовать">✎</button></h2><textarea data-pf="about" rows="2" placeholder="Суть проекта в 1–2 фразах: что это и зачем">${esc(p.about||'')}</textarea></div><div class="pjr"><b>${pc}%</b><small>${dn} из ${T.length} задач</small></div><div class="prog"><i style="width:${pc}%"></i></div></div>
+<div class="pjg">${F('goal','🎯 Цель на месяц','Одна измеримая цель. Например: 50 подписчиков и 20 продаж',3)}
+<div class="card sp rise pjb"><label class="pjl">➜ Следующий шаг</label><textarea data-pf="next" rows="3" placeholder="Одно действие, с которого начать прямо сейчас">${esc(p.next||'')}</textarea>${top?`<div class="pjs2">Самая срочная задача: <b data-ed="${top.id}">${esc(top.title)}</b></div>`:''}</div></div>
+<div class="card rise pjb"><div class="pjhd"><label class="pjl">☑ Задачи проекта · ${open.length} открыто</label><button class="btn g" id="pjnt">＋ Задача</button></div>${open.map(card).join('')||'<div class="empty">Открытых задач нет</div>'}${dn?`<details class="pjd"><summary>Готово · ${dn}</summary>${T.filter(t=>t.st==='done').map(card).join('')}</details>`:''}</div>
+<div class="pjg">${F('problems','⚠ Проблемы','Одна строка — одна проблема → что с ней делать',5)}${F('ideas','💡 Идеи / потом','Всё, что не сейчас. Записал — и не держишь в голове',5)}</div>
+<div class="card sp rise pjb"><label class="pjl">🔗 Ссылки и файлы</label>${links?`<div class="pjk">${links}</div>`:''}<textarea data-pf="links" rows="3" placeholder="Название — https://ссылка (по одной на строку)">${esc(p.links||'')}</textarea></div>
+<div class="bar rise"><button class="btn d" data-dp="${p.id}">Удалить проект</button></div>`}
 function vProj(){return `<div class="bar rise"><button class="btn g" id="np">＋ Новый проект</button></div><div class="grid">${S.projects.map(p=>{const T=S.tasks.filter(t=>t.proj===p.id),d=T.filter(t=>t.st==='done').length,pc=T.length?Math.round(d/T.length*100):0;
 return `<div class="card sp rise"><div style="display:flex;justify-content:space-between;align-items:center"><h4 data-op="${p.id}">${esc(p.name)} →</h4><button class="btn d" style="padding:3px 11px" data-dp="${p.id}">×</button></div><div class="prog"><i style="width:${pc}%"></i></div><small style="color:var(--mut)">${d} из ${T.length} задач · ${pc}%</small></div>`}).join('')||'<div class="empty">Проектов пока нет</div>'}</div>`}
 function vHab(){const D=[...Array(7)].map((_,i)=>day(i-6));
@@ -297,6 +338,10 @@ m.querySelectorAll('.task').forEach(el=>{el.ondragstart=e=>{e.dataTransfer.setDa
 m.querySelectorAll('.col').forEach(c=>{c.ondragover=e=>{e.preventDefault();c.classList.add('over')};c.ondragleave=()=>c.classList.remove('over');c.ondrop=e=>{e.preventDefault();const t=S.tasks.find(x=>x.id===e.dataTransfer.getData('t'));if(t){t.sec=c.dataset.sec;touch();render(false)}}});
 const qe=$('#q');if(qe)qe.oninput=e=>{q=e.target.value.toLowerCase();const p=e.target.selectionStart;render(false);const i=$('#q');i.focus();i.setSelectionRange(p,p)};
 [['#fp',v=>fp=v],['#fs',v=>fs=v],['#fj',v=>fj=v]].forEach(([id,f])=>{const e=$(id);if(e)e.onchange=()=>{f(e.value);render(false)}});
+m.querySelectorAll('[data-pj]').forEach(b=>b.onclick=()=>{pj=b.dataset.pj;render(false)});
+m.querySelectorAll('[data-pf]').forEach(e=>{e.oninput=()=>{const p=S.projects.find(x=>x.id===pj);if(p){p[e.dataset.pf]=e.value;touch()}};if(e.dataset.pf==='links')e.onchange=()=>render(false)});
+on('#pjnt',()=>{pjNew=pj;edit(null,'Работа')});
+on('#pjrn',()=>ask('Переименовать проект','Новое название',v=>{const p=S.projects.find(x=>x.id===pj);if(p){p.name=v;touch();render(false)}}));
 on('#np',()=>ask('Новый проект','Название проекта',v=>{S.projects.push({id:uid(),name:v});touch();render(false)}));
 on('#nh',()=>ask('Новая привычка','Название привычки',v=>{S.habits.push({id:uid(),name:v,d:{}});touch();render(false)}));
 m.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>{fl=b.dataset.op;tab='tasks';render(true)});
@@ -463,7 +508,7 @@ function exp(){dlg(`<h2>Экспорт</h2><p style="color:var(--mut);margin:0 0
 function imp(){dlg(`<h2>Импорт</h2><p style="color:var(--mut);margin:0 0 10px">Вставь ранее экспортированный текст. Текущие данные будут заменены.</p><textarea id="ta" rows="9"></textarea><div class="acts"><button class="btn" data-x>Отмена</button><button class="btn g" id="ok">Загрузить</button></div>`,d=>$('#ok').onclick=()=>{try{const v=JSON.parse($('#ta').value);if(!v.tasks||!v.habits)throw 0;S=v;S.xp=S.xp||0;S.ach=S.ach||{};S.qb=S.qb||{};fixS();S.theme=S.theme||'dark';d.close();persist();xpUI();render(true);toast('Импортировано ✓')}catch(e){toast('Неверные данные')}})}
 $('#ex').onclick=exp;$('#im').onclick=imp;$('#sv').onclick=()=>{persist();toast('Сохранено ✓')};
 document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='s'){e.preventDefault();persist();toast('Сохранено ✓')}});
-function edit(id,sec){const t=id?S.tasks.find(x=>x.id===id):{title:'',note:'',sec,pri:'n',st:'todo',due:day(),proj:fj&&fj!=='-'?fj:''};
+function edit(id,sec){const t=id?S.tasks.find(x=>x.id===id):{title:'',note:'',sec,pri:'n',st:'todo',due:day(),proj:(()=>{const v=pjNew||(fj&&fj!=='-'?fj:'');pjNew='';return v})()};
 dlg(`<h2>Задача</h2><label>Название</label><input id="e1" value="${esc(t.title)}"><label>Заметка</label><textarea id="e2" rows="4">${esc(t.note)}</textarea>
 <div class="two"><div><label>Раздел</label><select id="e3">${opt(SECS.map(s=>[s[0],s[0]]),t.sec)}</select></div><div><label>Приоритет</label><select id="e4">${opt(Object.entries(PRI),t.pri)}</select></div>
 <div><label>Статус</label><select id="e5">${opt([['todo','К выполнению'],['done','Готово']],t.st)}</select></div><div><label>Срок</label><input type="date" id="e6" value="${t.due}"></div><div style="grid-column:1/-1"><label>Проект</label><select id="e7"><option value="">— без проекта —</option>${opt(S.projects.map(p=>[p.id,p.name]),t.proj)}</select></div></div>
