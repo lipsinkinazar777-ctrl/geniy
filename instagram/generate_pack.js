@@ -128,7 +128,8 @@ const catalogue=(items,o)=>page(`<div style="position:absolute;top:680px;left:80
 ${items.map(([n,d])=>`<div style="text-align:center">${mug(d,208)}<div style="font:italic 600 26px 'Cormorant Garamond',serif;color:#f4e6d3;margin-top:-6px">${n}</div></div>`).join('')}</div>`,o);
 const heroSunset=page(`<div style="position:absolute;top:690px;left:100px;right:100px;height:300px;border-radius:22px;overflow:hidden;border:2.5px solid #e2bb6c;box-shadow:0 18px 40px rgba(0,0,0,.45)"><svg viewBox="0 0 880 300" width="880" height="300">${SUNSET(880,300)}</svg></div>
 <div style="position:absolute;top:1015px;left:0;right:0;display:flex;justify-content:center">${mug(SUNSET(182,188),500)}</div>`,{title:'Tasse Sunset Drive',sub:'L’esprit road trip au coucher du soleil',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'});
-(async()=>{require('fs').mkdirSync(OUT,{recursive:true});const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
+module.exports={mug,SUNSET,PROCHES,GAMING,HUMOUR,BG,DEFS,dots,STAR,FONTS};
+if(require.main===module)(async()=>{require('fs').mkdirSync(OUT,{recursive:true});const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  const shot=async(html,f,vp)=>{if(vp)await p.setViewportSize(vp);await p.setContent(html,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:OUT+f})};
  await shot(avatar,'avatar_MV.png',{width:1080,height:1080});
  await p.setViewportSize({width:1080,height:1920});
