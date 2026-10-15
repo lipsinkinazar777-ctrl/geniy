@@ -70,6 +70,9 @@ const SL=[
  {id:'cles',name:'🔑 Брелки и магниты',title:'Porte-clés & magnets',sub:'Petits cadeaux, grands souvenirs',f:{n1:'Porte-clés métal',p1:'',n2:'Double face',p2:'',n3:'Pendentif',p3:'',n4:'Magnet photo',p4:'',small:'Aussi en plastique'},fl:{n1:'Название 1',p1:'Цена 1',n2:'Название 2',p2:'Цена 2',n3:'Название 3',p3:'Цена 3',n4:'Название 4',p4:'Цена 4',small:'Нижняя строка'},
   el:[{t:'slot',x:85,y:670,w:430,h:320,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:990,txt:'{p1}',sz:44},{t:'slot',x:565,y:670,w:430,h:320,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:990,txt:'{p2}',sz:44},
       {t:'slot',x:85,y:1045,w:430,h:320,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1365,txt:'{p3}',sz:44},{t:'slot',x:565,y:1045,w:430,h:320,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1365,txt:'{p4}',sz:44},{t:'small',x:540,y:1450,txt:'{small}'}]},
+ {id:'creations',name:'✨ Наши работы',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок',sb:'Подзаголовок'},
+  el:[{t:'slot',x:210,y:660,w:660,h:800,k:'gold'}]},
+ {id:'fond',name:'🎨 Пустой фон',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок (можно стереть)',sb:'Подзаголовок (можно стереть)'},el:[]},
  {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{nom:'— Prénom du client',mot:'Collez ici les mots de votre client'},fl:{nom:'Подпись: имя настоящего клиента',mot:'Цитата из его настоящего отзыва'},
   el:[{t:'it',x:540,y:700,txt:'« {mot} »',s:40},{t:'slot',x:150,y:740,w:780,h:560,k:'gold'},{t:'stars',x:540,y:1365},{t:'small',x:540,y:1445,txt:'{nom}'}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige',p1:'',n2:'Coffret Famille',p2:'',n3:'Coffret Noël',p3:''},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
@@ -97,8 +100,8 @@ function header(s){
  ctx.fillStyle=goldGrad(cy-35,cy+35);ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.font='600 44px '+DISP;ctx.fillText('M',503,cy+10);ctx.font='600 38px '+DISP;ctx.fillText('V',537,cy+28);
  ctx.font='500 36px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#ecdcc6';spaced('MAISON VOLODYMYR',540,405,10,'center');
  const lg=ctx.createLinearGradient(300,0,780,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(300,432,480,1.6);
- ctx.font='600 78px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=14;ctx.fillText(s.title,540,545);ctx.restore();
- ctx.font=ITAL.replace('{s}',46);ctx.fillStyle='#e9c47e';ctx.fillText(s.sub,540,605);
+ ctx.font='600 78px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=14;ctx.fillText(fill(s,s.title),540,545);ctx.restore();
+ ctx.font=ITAL.replace('{s}',46);ctx.fillStyle='#e9c47e';ctx.fillText(fill(s,s.sub),540,605);
 }
 function footer(){
  const lg=ctx.createLinearGradient(330,0,750,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(330,1500,420,1.6);
