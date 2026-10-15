@@ -47,10 +47,10 @@ const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;bor
 <div><div class="gold" style="font:600 46px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:24px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
 const commander=page(`<div style="position:absolute;top:700px;left:100px;right:100px;display:grid;gap:34px">
 ${step(1,'photo','Envoyez votre photo','Sur WhatsApp, avec votre idée et la date souhaitée.')}
-${step(2,'eye','Validez l’aperçu','Nous préparons un aperçu gratuit. Vous dites « OK ».')}
+${step(2,'eye','Validez la maquette','Nous vous montrons le rendu avant l’impression.')}
 ${step(3,'gift','Récupérez votre cadeau','Fait main, prêt à offrir, dans son coffret.')}
 <div style="text-align:center;margin-top:8px"><span class="pill"><span class="gold" style="font-size:34px">WhatsApp +33 7 58 18 15 15</span></span></div></div>`,
-{title:'Comment commander',sub:'Simple comme un sourire',f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS'});
+{title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- Tarifs ---------- */
 const row=(n,p)=>`<div style="display:flex;align-items:baseline;gap:14px;font-size:27px;color:#f4e6d3;padding:4px 0"><span>${n}</span><span style="flex:1;border-bottom:2px dotted rgba(226,187,108,.55);transform:translateY(-8px)"></span><b class="gold" style="font:800 30px Montserrat">${p}</b></div>`;
@@ -59,7 +59,7 @@ const tarifs=page(`<div style="position:absolute;top:680px;left:100px;right:100p
 ${grp('Tasses & photos sur métal',[['Tasse photo','10 €'],['Photo 5,5 × 8,5 cm','2 €'],['Photo 10 × 15 cm','4 €'],['Photo 15 × 20 cm','6 €'],['Photo 20 × 30 cm','8 €'],['Photo 30 × 40 cm','dès 25 €']])}
 ${grp('Porte-clés & magnets',[['Magnet photo','3 €'],['Porte-clés plastique / métal','2 € / 4 €'],['Porte-clés double face','5 €'],['Pendentif photo','8 €']])}
 <div style="text-align:center;font:italic 600 38px 'Cormorant Garamond',serif;color:#e9c47e">Coffrets cadeaux dès 12 €</div></div>`,
-{title:'Nos tarifs',sub:'Avec votre photo ou votre texte',f1:'APERÇU GRATUIT  ✦  FAIT MAIN À PARIS'});
+{title:'Nos tarifs',sub:'Avec votre photo ou votre texte',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- mug mockup ---------- */
 let MID=0;
@@ -112,14 +112,13 @@ const HUMOUR=[
  ['Fragile',T(91,82,'FRAGILE','Bebas Neue',52,'#b8323f','letter-spacing="4"')+`<rect x="34" y="40" width="114" height="54" fill="none" stroke="#b8323f" stroke-width="3"/>`+T(91,134,'avant le café','Cormorant Garamond',22,'#2a1a1a','font-style="italic"')]
 ];
 const catalogue=(items,o)=>page(`<div style="position:absolute;top:680px;left:80px;right:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px 6px">
-${items.map(([n,d])=>`<div style="text-align:center">${mug(d,208)}<div style="font:italic 600 26px 'Cormorant Garamond',serif;color:#f4e6d3;margin-top:-6px">${n}</div></div>`).join('')}</div>
-<div style="position:absolute;top:1405px;left:0;right:0;text-align:center"><span class="pill"><span class="gold" style="font-size:32px">Tasse personnalisée · 10 €</span></span></div>`,o);
+${items.map(([n,d])=>`<div style="text-align:center">${mug(d,208)}<div style="font:italic 600 26px 'Cormorant Garamond',serif;color:#f4e6d3;margin-top:-6px">${n}</div></div>`).join('')}</div>`,o);
 (async()=>{require('fs').mkdirSync(OUT,{recursive:true});const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  const shot=async(html,f,vp)=>{if(vp)await p.setViewportSize(vp);await p.setContent(html,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:OUT+f})};
  await shot(avatar,'avatar_MV.png',{width:1080,height:1080});
  await p.setViewportSize({width:1080,height:1920});
  await shot(commander,'commander.png');await shot(tarifs,'tarifs.png');
- await shot(catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE TEXTE OU VOTRE PHOTO  ✦  APERÇU GRATUIT'}),'tasses_proches.png');
- await shot(catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  APERÇU GRATUIT'}),'tasses_gaming.png');
- await shot(catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE OU VOTRE PHOTO  ✦  APERÇU GRATUIT'}),'tasses_humour.png');
+ await shot(catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE TEXTE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_proches.png');
+ await shot(catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_gaming.png');
+ await shot(catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_humour.png');
  await b.close()})();
