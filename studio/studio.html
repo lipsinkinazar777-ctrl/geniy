@@ -71,8 +71,10 @@ const SL=[
   el:[{t:'slot',x:85,y:670,w:430,h:320,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:990,txt:'{p1}',sz:44},{t:'slot',x:565,y:670,w:430,h:320,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:990,txt:'{p2}',sz:44},
       {t:'slot',x:85,y:1045,w:430,h:320,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1365,txt:'{p3}',sz:44},{t:'slot',x:565,y:1045,w:430,h:320,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1365,txt:'{p4}',sz:44},{t:'small',x:540,y:1450,txt:'{small}'}]},
  {id:'creations',name:'✨ Наши работы',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок',sb:'Подзаголовок'},
-  el:[{t:'slot',x:210,y:660,w:660,h:800,k:'gold'}]},
+  el:[{t:'slot',x:95,y:640,w:890,h:840,k:'gold'}]},
  {id:'fond',name:'🎨 Пустой фон',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок (можно стереть)',sb:'Подзаголовок (можно стереть)'},el:[]},
+ {id:'avistxt',name:'💬 Отзыв текстом',title:'Vos avis',sub:'Merci pour vos mots doux',ta:['mot'],f:{mot:'Écrivez ici le commentaire de votre client.',nom:'— Prénom du client'},fl:{mot:'Комментарий клиента (вставь текст)',nom:'Подпись: имя клиента'},
+  el:[{t:'quote',x:90,y:660,w:900,h:640,txt:'{mot}'},{t:'stars',x:540,y:1370},{t:'small',x:540,y:1445,txt:'{nom}'}]},
  {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{nom:'— Prénom du client',mot:'Collez ici les mots de votre client'},fl:{nom:'Подпись: имя настоящего клиента',mot:'Цитата из его настоящего отзыва'},
   el:[{t:'it',x:540,y:700,txt:'« {mot} »',s:40},{t:'slot',x:150,y:740,w:780,h:560,k:'gold'},{t:'stars',x:540,y:1365},{t:'small',x:540,y:1445,txt:'{nom}'}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige',p1:'',n2:'Coffret Famille',p2:'',n3:'Coffret Noël',p3:''},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
@@ -142,6 +144,14 @@ function draw(){
   else if(e.t=='size'){ctx.font='600 48px '+DISP;ctx.fillStyle=goldGrad(e.y-44,e.y);ctx.textAlign='left';ctx.fillText(fill(s,e.txt),e.x,e.y)}
   else if(e.t=='arrow'){if(e.need&&!String(s.f[e.need]||'').trim())continue;ctx.strokeStyle='#e2bb6c';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(e.x1,e.y1);ctx.lineTo(e.x2,e.y2);ctx.moveTo(e.x2-16,e.y2-11);ctx.lineTo(e.x2,e.y2);ctx.lineTo(e.x2-16,e.y2+11);ctx.stroke()}
   else if(e.t=='it'){ctx.font=ITAL.replace('{s}',e.s||32);ctx.fillStyle='#f3d996';ctx.textAlign='center';ctx.fillText(fill(s,e.txt),e.x,e.y)}
+  else if(e.t=='quote'){const t=fill(s,e.txt).trim();
+   ctx.save();ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=36;ctx.shadowOffsetY=16;rr(e.x,e.y,e.w,e.h,28);const g=ctx.createLinearGradient(e.x,e.y,e.x+e.w,e.y+e.h);g.addColorStop(0,'rgba(70,14,30,.92)');g.addColorStop(1,'rgba(30,5,12,.92)');ctx.fillStyle=g;ctx.fill();ctx.restore();
+   ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';rr(e.x,e.y,e.w,e.h,28);ctx.stroke();ctx.lineWidth=1;ctx.strokeStyle='rgba(243,217,150,.55)';rr(e.x+10,e.y+10,e.w-20,e.h-20,20);ctx.stroke();
+   ctx.font='600 200px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='rgba(226,187,108,.35)';ctx.textAlign='left';ctx.fillText('“',e.x+40,e.y+190);ctx.textAlign='right';ctx.fillText('”',e.x+e.w-40,e.y+e.h+60);
+   const padX=90,maxW=e.w-padX*2,areaH=e.h-170;let fs=56,lines=[];
+   const wrap=f=>{ctx.font=`italic 500 ${f}px "Cormorant Garamond",Georgia,serif`;const out=[];t.split('\n').forEach(par=>{let ln='';par.split(/\s+/).filter(Boolean).forEach(w=>{const tr=ln?ln+' '+w:w;if(ctx.measureText(tr).width>maxW&&ln){out.push(ln);ln=w}else ln=tr});out.push(ln)});return out};
+   while(fs>26){lines=wrap(fs);if(lines.length*fs*1.25<=areaH)break;fs-=2}
+   const lh=fs*1.25,top=e.y+e.h/2-lines.length*lh/2+fs*0.8;ctx.fillStyle='#f6e9d6';ctx.textAlign='center';lines.forEach((l,i)=>ctx.fillText(l,e.x+e.w/2,top+i*lh));}
   else if(e.t=='stars'){for(let k=0;k<5;k++){const cx=e.x+(k-2)*70,cy=e.y;ctx.beginPath();for(let j=0;j<10;j++){const r=j%2?13:30,an=-Math.PI/2+j*Math.PI/5;ctx.lineTo(cx+r*Math.cos(an),cy+r*Math.sin(an))}ctx.closePath();ctx.fillStyle=goldGrad(cy-30,cy+30);ctx.save();ctx.shadowColor='rgba(243,217,150,.6)';ctx.shadowBlur=18;ctx.fill();ctx.restore()}}
   else if(e.t=='small'){ctx.font='500 24px '+SANS;ctx.fillStyle='#f6e9d6';ctx.textAlign='center';ctx.fillText(fill(s,e.txt),e.x,e.y)}
  }
@@ -155,7 +165,7 @@ $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b
 function panel(){
  const s=SL[cur];
  $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="1" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"></div>`:''}</div>`}).join('')}
- <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label><input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}"></div>`).join('')}
+ <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label>${(s.ta||[]).includes(k)?`<textarea id="f_${k}" rows="6" data-f="${k}" style="width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#1f070b;color:var(--ink);font:inherit;resize:vertical">${esc(s.f[k])}</textarea>`:`<input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}">`}</div>`).join('')}
  <div><label for="ft1">Нижняя полоса, строка 1</label><input type="text" id="ft1" value="${esc(FOOT.f1)}" data-foot="f1"></div><div><label for="ft2">Нижняя полоса, строка 2</label><input type="text" id="ft2" value="${esc(FOOT.f2)}" data-foot="f2"></div>
  <button class="btn main" id="save">Сохранить PNG</button><div class="msg" id="msg" role="status"></div>`;
 }
