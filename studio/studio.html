@@ -74,7 +74,7 @@ const SL=[
   el:[{t:'slot',x:95,y:640,w:890,h:840,k:'gold'}]},
  {id:'fond',name:'🎨 Пустой фон',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок (можно стереть)',sb:'Подзаголовок (можно стереть)'},el:[]},
  {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{m:'Son message',c:'Sa commande'},fl:{m:'Подпись над скриншотом',c:'Подпись над фото заказа'},
-  el:[{t:'slot',x:76,y:650,w:344,h:746,k:'gold',tag:'{m}',fit:'contain'},{t:'slot',x:444,y:650,w:560,h:746,k:'gold',tag:'{c}'}]},
+  el:[{t:'slot',x:76,y:700,w:344,h:746,k:'gold',tag:'{m}',fit:'contain',above:1},{t:'slot',x:444,y:700,w:560,h:746,k:'gold',tag:'{c}',above:1}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige',p1:'',n2:'Coffret Famille',p2:'',n3:'Coffret Noël',p3:''},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
   el:[{t:'slot',x:80,y:670,w:920,h:360,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1080,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1370,txt:'{p2}',sz:44},{t:'slot',x:560,y:1080,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1370,txt:'{p3}',sz:44}]}
 ];
@@ -126,7 +126,8 @@ function slot(s,e,i){
  ctx.restore();
  if(e.k!='metal'){ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';rr(e.x,e.y,e.w,e.h,r);ctx.stroke();if(e.k=='gold'){ctx.lineWidth=1;ctx.strokeStyle='rgba(243,217,150,.6)';rr(e.x+8,e.y+8,e.w-16,e.h-16,Math.max(2,r-6));ctx.stroke()}}
  else{ctx.lineWidth=1.5;ctx.strokeStyle='rgba(0,0,0,.35)';ctx.strokeRect(e.x,e.y,e.w,e.h)}
- if(e.tag){const t=fill(s,e.tag);ctx.font='600 22px '+SANS;const tw=ctx.measureText(t).width;ctx.fillStyle='rgba(26,4,9,.78)';rr(e.x+18,e.y+18,tw+32,44,22);ctx.fill();ctx.strokeStyle='#e2bb6c';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#f6e9d6';ctx.textAlign='left';ctx.fillText(t,e.x+34,e.y+48)}
+ if(e.tag&&e.above){const t=fill(s,e.tag);ctx.font=ITAL.replace('{s}',30);ctx.fillStyle='#e9c47e';ctx.textAlign='center';ctx.fillText(t,e.x+e.w/2,e.y-16)}
+ else if(e.tag){const t=fill(s,e.tag);ctx.font='600 22px '+SANS;const tw=ctx.measureText(t).width;ctx.fillStyle='rgba(26,4,9,.78)';rr(e.x+18,e.y+18,tw+32,44,22);ctx.fill();ctx.strokeStyle='#e2bb6c';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#f6e9d6';ctx.textAlign='left';ctx.fillText(t,e.x+34,e.y+48)}
 }
 function pill(s,e){
  const t=fill(s,e.txt);if(!t.trim())return;const sz=e.sz||56;ctx.font=`800 ${sz}px ${SANS}`;const tw=ctx.measureText(t).width,h=sz*1.7,w=tw+sz*1.3,x=e.x-w/2,y=e.y-h/2;
@@ -162,7 +163,7 @@ function tabs(){$('#tabs').innerHTML=SL.map((s,i)=>`<button role="tab" aria-sele
 $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=+b.dataset.i;tabs();panel();draw()});
 function panel(){
  const s=SL[cur];
- $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="0.5" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"></div>`:''}</div>`}).join('')}
+ $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="0.5" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"><label for="ox${i}">Влево ↔ вправо</label><input type="range" id="ox${i}" min="${-e.w}" max="${e.w}" step="1" value="${d.ox}" data-ox="${i}"><label for="oy${i}">Вверх ↕ вниз</label><input type="range" id="oy${i}" min="${-e.h}" max="${e.h}" step="1" value="${d.oy}" data-oy="${i}"></div>`:''}</div>`}).join('')}
  <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label>${(s.ta||[]).includes(k)?`<textarea id="f_${k}" rows="6" data-f="${k}" style="width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#1f070b;color:var(--ink);font:inherit;resize:vertical">${esc(s.f[k])}</textarea>`:`<input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}">`}</div>`).join('')}
  <div><label for="ft1">Нижняя полоса, строка 1</label><input type="text" id="ft1" value="${esc(FOOT.f1)}" data-foot="f1"></div><div><label for="ft2">Нижняя полоса, строка 2</label><input type="text" id="ft2" value="${esc(FOOT.f2)}" data-foot="f2"></div>
  <button class="btn main" id="save">Сохранить PNG</button><div class="msg" id="msg" role="status"></div>`;
@@ -174,7 +175,9 @@ $('#panel').addEventListener('click',e=>{const p=e.target.closest('[data-pick]')
 $('#panel').addEventListener('input',e=>{const t=e.target;
  if(t.dataset.f){SL[cur].f[t.dataset.f]=t.value;draw()}
  if(t.dataset.foot){FOOT[t.dataset.foot]=t.value;draw()}
- if(t.dataset.zoom){const d=IM[SL[cur].id+'.'+t.dataset.zoom];if(d){d.zoom=+t.value;draw()}}});
+ if(t.dataset.zoom){const d=IM[SL[cur].id+'.'+t.dataset.zoom];if(d){d.zoom=+t.value;draw()}}
+ if(t.dataset.ox){const d=IM[SL[cur].id+'.'+t.dataset.ox];if(d){d.ox=+t.value;draw()}}
+ if(t.dataset.oy){const d=IM[SL[cur].id+'.'+t.dataset.oy];if(d){d.oy=+t.value;draw()}}});
 function loadInto(i,url){return new Promise(res=>{const im=new Image();im.onload=()=>{IM[SL[cur].id+'.'+i]={img:im,zoom:1,ox:0,oy:0};panel();draw();res()};im.onerror=()=>{$('#msg')&&($('#msg').textContent='Не удалось открыть это фото. Попробуй JPG или PNG.');res()};im.src=url})}
 $('#file').addEventListener('change',e=>{const f=e.target.files[0];if(!f||pick==null)return;loadInto(pick,URL.createObjectURL(f))});
 /* drag & tap on canvas */
@@ -183,7 +186,7 @@ function pt(ev){const r=cv.getBoundingClientRect();return{x:(ev.clientX-r.left)*
 function hit(p){const ss=slotsOf(SL[cur]);for(let i=0;i<ss.length;i++){const e=ss[i];if(p.x>=e.x&&p.x<=e.x+e.w&&p.y>=e.y&&p.y<=e.y+e.h)return i}return -1}
 cv.addEventListener('pointerdown',ev=>{const p=pt(ev),i=hit(p);if(i<0)return;const d=IM[SL[cur].id+'.'+i];if(!d){pick=i;$('#file').value='';$('#file').click();return}drag={i,x:p.x,y:p.y,ox:d.ox,oy:d.oy};cv.setPointerCapture(ev.pointerId)});
 cv.addEventListener('pointermove',ev=>{if(!drag)return;const p=pt(ev),d=IM[SL[cur].id+'.'+drag.i];d.ox=drag.ox+(p.x-drag.x);d.oy=drag.oy+(p.y-drag.y);draw()});
-cv.addEventListener('pointerup',()=>drag=null);cv.addEventListener('pointercancel',()=>drag=null);
+cv.addEventListener('pointerup',()=>{if(drag){const d=IM[SL[cur].id+'.'+drag.i],a=document.getElementById('ox'+drag.i),b=document.getElementById('oy'+drag.i);if(d&&a)a.value=d.ox;if(d&&b)b.value=d.oy}drag=null});cv.addEventListener('pointercancel',()=>drag=null);
 /* save */
 let DL;
 async function save(){
