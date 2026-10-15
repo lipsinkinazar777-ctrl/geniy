@@ -36,6 +36,7 @@ ${STAR(800,300,34,.95)}</svg></body></html>`;
 
 /* ---------- Commander ---------- */
 const STEP_IC={
+ wa:`<path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/><path d="M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z"/>`,
  photo:`<rect x="8" y="16" width="48" height="36" rx="6"/><circle cx="32" cy="34" r="10"/><path d="M22 16l4-7h12l4 7"/>`,
  eye:`<path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/>`,
  gift:`<rect x="10" y="28" width="44" height="28" rx="2"/><rect x="6" y="18" width="52" height="11" rx="2"/><path d="M32 18v38M32 18c-6-11-18-8-14-1 3 3 9 1 14 1zM32 18c6-11 18-8 14-1-3 3-9 1-14 1z"/>`
@@ -46,8 +47,8 @@ const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;bor
 <span style="position:absolute;top:-10px;left:-10px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font:800 24px Montserrat;display:grid;place-items:center">${n}</span></div>
 <div><div class="gold" style="font:600 46px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:24px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
 const commander=page(`<div style="position:absolute;top:700px;left:100px;right:100px;display:grid;gap:34px">
-${step(1,'photo','Envoyez votre photo','Sur WhatsApp, avec votre idée et la date souhaitée.')}
-${step(2,'eye','Validez la maquette','Nous vous montrons le rendu avant l’impression.')}
+${step(1,'wa','Ouvrez WhatsApp','Trouvez notre contact « Maison Volodymyr ».')}
+${step(2,'photo','Envoyez votre photo','Avec votre idée et la date souhaitée.')}
 ${step(3,'gift','Récupérez votre cadeau','Fait main, prêt à offrir, dans son coffret.')}
 <div style="text-align:center;margin-top:8px"><span class="pill"><span class="gold" style="font-size:34px">WhatsApp +33 7 58 18 15 15</span></span></div></div>`,
 {title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
