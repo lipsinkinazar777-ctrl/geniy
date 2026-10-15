@@ -47,10 +47,10 @@ const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;bor
 <span style="position:absolute;top:-10px;left:-10px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font:800 24px Montserrat;display:grid;place-items:center">${n}</span></div>
 <div><div class="gold" style="font:600 46px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:24px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
 const commander=page(`<div style="position:absolute;top:700px;left:100px;right:100px;display:grid;gap:34px">
-${step(1,'wa','Ouvrez WhatsApp','Trouvez notre contact « Maison Volodymyr ».')}
-${step(2,'photo','Envoyez votre photo','Avec votre idée et la date souhaitée.')}
-${step(3,'gift','Récupérez votre cadeau','Fait main, prêt à offrir, dans son coffret.')}
-<div style="text-align:center;margin-top:8px"><span class="pill"><span class="gold" style="font-size:34px">WhatsApp +33 7 58 18 15 15</span></span></div></div>`,
+${step(1,'wa','Ouvrez WhatsApp','Écrivez-nous ce que vous souhaitez commander.')}
+${step(2,'photo','Envoyez votre photo','Celle que vous voulez sur votre cadeau.')}
+${step(3,'gift','Récupérez votre cadeau','Fait main, avec amour.')}
+</div>`,
 {title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- Tarifs ---------- */
