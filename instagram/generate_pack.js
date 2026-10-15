@@ -46,11 +46,12 @@ const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;bor
 <svg viewBox="0 0 64 64" width="64" height="64"><g fill="none" stroke="#f0cf88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${STEP_IC[ic]}</g></svg>
 <span style="position:absolute;top:-10px;left:-10px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font:800 24px Montserrat;display:grid;place-items:center">${n}</span></div>
 <div><div class="gold" style="font:600 46px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:24px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
-const commander=page(`<div style="position:absolute;top:700px;left:100px;right:100px;display:grid;gap:34px">
+const commander=page(`<div style="position:absolute;top:690px;left:100px;right:100px;display:grid;gap:24px">
 ${step(1,'wa','Ouvrez WhatsApp','Écrivez-nous ce que vous souhaitez commander.')}
 ${step(2,'photo','Envoyez votre photo','Celle que vous voulez sur votre cadeau.')}
 ${step(3,'gift','Récupérez votre cadeau','Fait main, avec amour.')}
-</div>`,
+<div style="text-align:center;margin-top:4px"><div style="font:italic 500 28px 'Cormorant Garamond',serif;color:#e9c47e">Écrivez-nous sur WhatsApp</div>
+<div class="gold" style="font:600 50px/1.15 Cinzel,serif;letter-spacing:.06em;margin-top:2px">+33 7 58 18 15 15</div></div></div>`,
 {title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- Tarifs ---------- */
