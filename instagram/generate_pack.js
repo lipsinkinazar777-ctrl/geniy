@@ -17,17 +17,17 @@ const CSS=`<style>*{box-sizing:border-box;margin:0}body{width:1080px;height:1920
 h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 14px rgba(0,0,0,.35)}.sub{font:italic 500 46px "Cormorant Garamond",serif;color:#e9c47e;margin-top:14px}
 .gold{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .pill{display:inline-block;border:2.5px solid #e2bb6c;border-radius:99px;background:linear-gradient(#3a0911,#16030a);padding:6px 26px;font:800 40px Montserrat,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.45)}
-.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
+.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.foot.soft{top:1478px}.foot.soft .line{margin:0 auto 26px;width:420px}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.soft .f1{margin-top:0;font-size:22px}.soft .f2{font-size:34px;margin-top:10px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
 .cta{display:inline-flex;align-items:center;gap:24px;padding:16px 50px 16px 18px;border:3px solid #e2bb6c;border-radius:99px;background:linear-gradient(#4a0c18,#1a040a);box-shadow:0 0 0 7px rgba(226,187,108,.14),0 14px 34px rgba(0,0,0,.5),0 0 60px rgba(243,217,150,.18);text-align:left}
 .cta .ic{flex:none;width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#fbe7b0,#c9963f);display:grid;place-items:center}
 .cta .b1{font:700 31px Montserrat,sans-serif;color:#f6e9d6;letter-spacing:.01em}.cta .b2{font:600 40px/1.1 Cinzel,serif;letter-spacing:.05em;margin-top:4px}
 </style>`;
 const CTA=`<div class="cta"><div class="ic"><svg viewBox="0 0 64 64" width="56" height="56"><g fill="none" stroke="#3a0911" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/><path d="M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z"/></g></svg></div><div><div class="b1">Commandez sur WhatsApp</div><div class="b2 gold">+33 7 58 18 15 15</div></div></div>`;
-const page=(inner,{title,sub,f1})=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}${CSS}</head><body>${BG}
+const page=(inner,{title,sub,f1,cta})=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}${CSS}</head><body>${BG}
 <svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 ${inner}
-<div class="foot">${CTA}<div class="f1">${f1}</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
+${cta?`<div class="foot">${CTA}`:`<div class="foot soft"><div class="line"></div>`}<div class="f1">${f1}</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 
 /* ---------- avatar ---------- */
 const avatar=`<!doctype html><html><head><meta charset="utf-8">${FONTS}</head><body style="margin:0;width:1080px;height:1080px;overflow:hidden;position:relative;background:#25060e">
@@ -54,7 +54,7 @@ ${step(1,'wa','Ouvrez WhatsApp','Écrivez-nous ce que vous souhaitez commander.'
 ${step(2,'photo','Envoyez votre photo','Celle que vous voulez sur votre cadeau.')}
 ${step(3,'gift','Récupérez votre cadeau','Fait main, avec amour.')}
 <div style="text-align:center;font:italic 500 38px 'Cormorant Garamond',serif;color:#e9c47e;margin-top:6px">Une question ? On vous répond vite ✦</div></div>`,
-{title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
+{title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS',cta:1});
 
 /* ---------- Tarifs ---------- */
 const row=(n,p)=>`<div style="display:flex;align-items:baseline;gap:14px;font-size:30px;color:#f4e6d3;padding:3px 0"><span>${n}</span><span style="flex:1;border-bottom:2px dotted rgba(226,187,108,.55);transform:translateY(-8px)"></span><b class="gold" style="font:800 34px Montserrat">${p}</b></div>`;

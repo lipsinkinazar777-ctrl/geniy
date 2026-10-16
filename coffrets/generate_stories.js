@@ -37,7 +37,7 @@ const SETS=[
  ['Coffret Prestige','Le grand cadeau','Photo 30×40 · tasse · pendentif · porte-clés double · magnet','51 €','Prestige','56 €'],
  ['Prestige Duo','Pour deux familles','Photo 30×40 · 2 tasses · 2 pendentifs · 2 magnets','66 €','Prestige','72 €']
 ];
-const story=(title,sub,list)=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>
+const story=(title,sub,list,cta)=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>
 *{box-sizing:border-box;margin:0}body{width:1080px;height:1920px;overflow:hidden;position:relative;background:#25060e;font-family:Montserrat,sans-serif;color:#f4e6d3}
 .top{position:absolute;top:196px;left:0;right:0;text-align:center}
 .mono{width:116px;height:116px;margin:0 auto;border-radius:50%;background:#5a0f22;border:3px solid #e2bb6c;box-shadow:0 0 0 7px #5a0f22,0 0 0 8.5px rgba(226,187,108,.8),0 0 50px rgba(255,200,170,.35);display:grid;place-items:center;font:600 44px Cinzel,serif;color:#f0cf88;letter-spacing:-4px}
@@ -52,7 +52,7 @@ h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 
 .p{flex:none;border:2.5px solid #e2bb6c;border-radius:99px;background:linear-gradient(#3a0911,#16030a);padding:6px 24px;font:800 40px Montserrat,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.45)}
 .p span{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rib{position:absolute;top:-14px;right:26px;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font-size:15px;font-weight:700;padding:3px 14px;border-radius:99px;letter-spacing:.08em;text-transform:uppercase}
-.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
+.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.foot.soft{top:1478px}.foot.soft .line{margin:0 auto 26px;width:420px;height:1.6px;background:linear-gradient(90deg,transparent,#e2bb6c,transparent)}.soft .f1{margin-top:0;font-size:22px}.soft .f2{font-size:34px;margin-top:10px}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
 .gold{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .cta{display:inline-flex;align-items:center;gap:24px;padding:16px 50px 16px 18px;border:3px solid #e2bb6c;border-radius:99px;background:linear-gradient(#4a0c18,#1a040a);box-shadow:0 0 0 7px rgba(226,187,108,.14),0 14px 34px rgba(0,0,0,.5),0 0 60px rgba(243,217,150,.18);text-align:left}
 .cta .ic{flex:none;width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#fbe7b0,#c9963f);display:grid;place-items:center}
@@ -61,9 +61,9 @@ h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 
 </style></head><body>${BG}<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 <div class="list">${list.map(s=>`<div class="c ${s[4]?'hl':''}">${s[4]?`<span class="rib">${s[4]}</span>`:''}<div class="tx"><div class="n">${s[0]}</div><div class="o">${s[1]}</div><div class="ct">${s[2]}</div></div><div class="pw">${s[5]?`<span class="was">${s[5]}</span>`:''}<div class="p"><span>${s[3]}</span></div></div></div>`).join('')}</div>
-<div class="foot">${CTA}<div class="f1">COFFRET INCLUS  ✦  FAIT MAIN À PARIS</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
+${cta?`<div class="foot">${CTA}`:`<div class="foot soft"><div class="line"></div>`}<div class="f1">COFFRET INCLUS  ✦  FAIT MAIN À PARIS</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  for(const k of Object.keys(ICONS)){await p.setContent(cover(k),{waitUntil:'networkidle'});await p.screenshot({path:`/home/user/geniy/instagram/covers/${k}.png`});}
  await p.setContent(story('Coffrets cadeaux','Personnalisés avec vos photos',SETS.slice(0,5)),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_1.png'});
- await p.setContent(story('Nos grands coffrets','Pour les plus beaux cadeaux',SETS.slice(5)),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_2.png'});
+ await p.setContent(story('Nos grands coffrets','Pour les plus beaux cadeaux',SETS.slice(5),1),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_2.png'});
  await b.close()})();

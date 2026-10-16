@@ -58,7 +58,7 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <script>
 const W=1080,H=1920,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const DISP='"Cinzel",Georgia,serif',ITAL='italic 600 {s}px "Cormorant Garamond",Georgia,serif',SANS='Montserrat,Arial,sans-serif';
-const FOOT={c1:'Commandez sur WhatsApp',c2:'+33 7 58 18 15 15',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS',f2:'@maison.volodymyr'};
+const FOOT={on:false,c1:'Commandez sur WhatsApp',c2:'+33 7 58 18 15 15',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS',f2:'@maison.volodymyr'};
 const SL=[
  {id:'tasses',name:'☕ Кружки',title:'Tasses photo',sub:'Votre photo, votre cadeau',f:{p:'',cap:'La tasse personnalisée'},fl:{p:'Цена кружки',cap:'Подпись'},
   el:[{t:'slot',x:80,y:670,w:580,h:690,k:'mug'},{t:'slot',x:690,y:670,w:310,h:330,k:'mug'},{t:'slot',x:690,y:1030,w:310,h:330,k:'mug'},{t:'pill',x:370,y:1360,txt:'{p}'},{t:'it',x:540,y:1450,txt:'{cap}',s:36}]},
@@ -105,7 +105,7 @@ function header(s){
 }
 const WA=[new Path2D('M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z'),new Path2D('M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z')];
 function footer(){
- const c1=FOOT.c1.trim(),c2=FOOT.c2.trim();let fy=1548;
+ const c1=FOOT.on?FOOT.c1.trim():'',c2=FOOT.on?FOOT.c2.trim():'';let fy=1548;
  if(c1||c2){
   const f1='700 31px '+SANS,f2='600 40px '+DISP;ctx.font=f1;let tw=ctx.measureText(c1).width;ctx.font=f2;tw=Math.max(tw,ctx.measureText(c2).width+c2.length*2);
   const h=124,w=18+92+24+tw+50,x=540-w/2,y=1500;
@@ -179,7 +179,8 @@ function panel(){
  const s=SL[cur];
  $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="0.5" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"><label for="ox${i}">Влево ↔ вправо</label><input type="range" id="ox${i}" min="${-e.w}" max="${e.w}" step="1" value="${d.ox}" data-ox="${i}"><label for="oy${i}">Вверх ↕ вниз</label><input type="range" id="oy${i}" min="${-e.h}" max="${e.h}" step="1" value="${d.oy}" data-oy="${i}"></div>`:''}</div>`}).join('')}
  <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label>${(s.ta||[]).includes(k)?`<textarea id="f_${k}" rows="6" data-f="${k}" style="width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#1f070b;color:var(--ink);font:inherit;resize:vertical">${esc(s.f[k])}</textarea>`:`<input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}">`}</div>`).join('')}
- <div><label for="fc1">Кнопка, строка 1 (сотри обе строки — кнопка исчезнет)</label><input type="text" id="fc1" value="${esc(FOOT.c1)}" data-foot="c1"></div><div><label for="fc2">Кнопка, строка 2</label><input type="text" id="fc2" value="${esc(FOOT.c2)}" data-foot="c2"></div>
+ <label style="display:flex;gap:10px;align-items:center;cursor:pointer"><input type="checkbox" id="fon" data-foot-on ${FOOT.on?'checked':''} style="width:22px;height:22px">Кнопка WhatsApp внизу (только на 1 сторис из серии)</label>
+ <div><label for="fc1">Кнопка, строка 1</label><input type="text" id="fc1" value="${esc(FOOT.c1)}" data-foot="c1"></div><div><label for="fc2">Кнопка, строка 2</label><input type="text" id="fc2" value="${esc(FOOT.c2)}" data-foot="c2"></div>
  <div><label for="ft1">Нижняя полоса, строка 1</label><input type="text" id="ft1" value="${esc(FOOT.f1)}" data-foot="f1"></div><div><label for="ft2">Нижняя полоса, строка 2</label><input type="text" id="ft2" value="${esc(FOOT.f2)}" data-foot="f2"></div>
  <button class="btn main" id="save">Сохранить PNG</button><div class="msg" id="msg" role="status"></div>`;
 }
@@ -190,6 +191,7 @@ $('#panel').addEventListener('click',e=>{const p=e.target.closest('[data-pick]')
 $('#panel').addEventListener('input',e=>{const t=e.target;
  if(t.dataset.f){SL[cur].f[t.dataset.f]=t.value;draw()}
  if(t.dataset.foot){FOOT[t.dataset.foot]=t.value;draw()}
+ if('footOn' in t.dataset){FOOT.on=t.checked;draw()}
  if(t.dataset.zoom){const d=IM[SL[cur].id+'.'+t.dataset.zoom];if(d){d.zoom=+t.value;draw()}}
  if(t.dataset.ox){const d=IM[SL[cur].id+'.'+t.dataset.ox];if(d){d.ox=+t.value;draw()}}
  if(t.dataset.oy){const d=IM[SL[cur].id+'.'+t.dataset.oy];if(d){d.oy=+t.value;draw()}}});
