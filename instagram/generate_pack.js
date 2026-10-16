@@ -10,20 +10,24 @@ const BG=`<div style="position:absolute;inset:0;background:radial-gradient(70% 4
 <div style="position:absolute;left:0;right:0;bottom:0;height:620px;background:radial-gradient(50% 60% at 50% 100%,rgba(255,190,150,.1),transparent)"></div>`;
 const FONTS=`<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Montserrat:wght@500;600;700;800&family=Dancing+Script:wght@600;700&family=Bebas+Neue&family=Press+Start+2P&display=swap" rel="stylesheet">`;
 const CSS=`<style>*{box-sizing:border-box;margin:0}body{width:1080px;height:1920px;overflow:hidden;position:relative;background:#25060e;font-family:Montserrat,sans-serif;color:#f4e6d3}
-.top{position:absolute;top:232px;left:0;right:0;text-align:center}
+.top{position:absolute;top:196px;left:0;right:0;text-align:center}
 .mono{width:116px;height:116px;margin:0 auto;border-radius:50%;background:#5a0f22;border:3px solid #e2bb6c;box-shadow:0 0 0 7px #5a0f22,0 0 0 8.5px rgba(226,187,108,.8),0 0 50px rgba(255,200,170,.35);display:grid;place-items:center;font:600 44px Cinzel,serif;color:#f0cf88;letter-spacing:-4px}
 .brand{font:500 36px "Cormorant Garamond",serif;letter-spacing:.32em;color:#ecdcc6;margin-top:34px}
 .line{width:480px;height:1.6px;margin:18px auto 0;background:linear-gradient(90deg,transparent,#e2bb6c,transparent)}
 h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 14px rgba(0,0,0,.35)}.sub{font:italic 500 46px "Cormorant Garamond",serif;color:#e9c47e;margin-top:14px}
 .gold{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .pill{display:inline-block;border:2.5px solid #e2bb6c;border-radius:99px;background:linear-gradient(#3a0911,#16030a);padding:6px 26px;font:800 40px Montserrat,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.45)}
-.foot{position:absolute;top:1500px;left:0;right:0;text-align:center}.foot .line{margin:0 auto 26px;width:420px}.f1{font-weight:600;font-size:22px;letter-spacing:.18em;color:#e9cf98}.f2{font:italic 500 34px "Cormorant Garamond",serif;margin-top:10px}
+.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
+.cta{display:inline-flex;align-items:center;gap:24px;padding:16px 50px 16px 18px;border:3px solid #e2bb6c;border-radius:99px;background:linear-gradient(#4a0c18,#1a040a);box-shadow:0 0 0 7px rgba(226,187,108,.14),0 14px 34px rgba(0,0,0,.5),0 0 60px rgba(243,217,150,.18);text-align:left}
+.cta .ic{flex:none;width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#fbe7b0,#c9963f);display:grid;place-items:center}
+.cta .b1{font:700 31px Montserrat,sans-serif;color:#f6e9d6;letter-spacing:.01em}.cta .b2{font:600 40px/1.1 Cinzel,serif;letter-spacing:.05em;margin-top:4px}
 </style>`;
+const CTA=`<div class="cta"><div class="ic"><svg viewBox="0 0 64 64" width="56" height="56"><g fill="none" stroke="#3a0911" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/><path d="M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z"/></g></svg></div><div><div class="b1">Commandez sur WhatsApp</div><div class="b2 gold">+33 7 58 18 15 15</div></div></div>`;
 const page=(inner,{title,sub,f1})=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}${CSS}</head><body>${BG}
 <svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 ${inner}
-<div class="foot"><div class="line"></div><div class="f1">${f1}</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
+<div class="foot">${CTA}<div class="f1">${f1}</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 
 /* ---------- avatar ---------- */
 const avatar=`<!doctype html><html><head><meta charset="utf-8">${FONTS}</head><body style="margin:0;width:1080px;height:1080px;overflow:hidden;position:relative;background:#25060e">
@@ -40,26 +44,25 @@ const STEP_IC={
  eye:`<path d="M4 32s10-18 28-18 28 18 28 18-10 18-28 18S4 32 4 32z"/><circle cx="32" cy="32" r="8"/>`,
  gift:`<rect x="10" y="28" width="44" height="28" rx="2"/><rect x="6" y="18" width="52" height="11" rx="2"/><path d="M32 18v38M32 18c-6-11-18-8-14-1 3 3 9 1 14 1zM32 18c6-11 18-8 14-1-3 3-9 1-14 1z"/>`
 };
-const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;border:1.5px solid rgba(226,187,108,.65);border-radius:26px;padding:28px 34px;background:rgba(26,4,9,.45)">
+const step=(n,ic,t,d)=>`<div style="display:flex;align-items:center;gap:30px;border:1.5px solid rgba(226,187,108,.65);border-radius:26px;padding:38px 36px;background:rgba(26,4,9,.45)">
 <div style="flex:none;width:120px;height:120px;border-radius:50%;border:2.5px solid #e2bb6c;display:grid;place-items:center;background:rgba(90,15,34,.7);position:relative">
 <svg viewBox="0 0 64 64" width="64" height="64"><g fill="none" stroke="#f0cf88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${STEP_IC[ic]}</g></svg>
 <span style="position:absolute;top:-10px;left:-10px;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font:800 24px Montserrat;display:grid;place-items:center">${n}</span></div>
-<div><div class="gold" style="font:600 46px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:24px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
-const commander=page(`<div style="position:absolute;top:690px;left:100px;right:100px;display:grid;gap:24px">
+<div><div class="gold" style="font:600 50px/1.05 'Cormorant Garamond',serif">${t}</div><div style="font-size:27px;line-height:1.35;color:#f0e2cc;margin-top:8px">${d}</div></div></div>`;
+const commander=page(`<div style="position:absolute;top:660px;left:96px;right:96px;display:grid;gap:34px">
 ${step(1,'wa','Ouvrez WhatsApp','Écrivez-nous ce que vous souhaitez commander.')}
 ${step(2,'photo','Envoyez votre photo','Celle que vous voulez sur votre cadeau.')}
 ${step(3,'gift','Récupérez votre cadeau','Fait main, avec amour.')}
-<div style="text-align:center;margin-top:4px"><div style="font:italic 500 28px 'Cormorant Garamond',serif;color:#e9c47e">Écrivez-nous sur WhatsApp</div>
-<div class="gold" style="font:600 50px/1.15 Cinzel,serif;letter-spacing:.06em;margin-top:2px">+33 7 58 18 15 15</div></div></div>`,
+<div style="text-align:center;font:italic 500 38px 'Cormorant Garamond',serif;color:#e9c47e;margin-top:6px">Une question ? On vous répond vite ✦</div></div>`,
 {title:'Comment commander',sub:'Simple comme un sourire',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- Tarifs ---------- */
-const row=(n,p)=>`<div style="display:flex;align-items:baseline;gap:14px;font-size:27px;color:#f4e6d3;padding:4px 0"><span>${n}</span><span style="flex:1;border-bottom:2px dotted rgba(226,187,108,.55);transform:translateY(-8px)"></span><b class="gold" style="font:800 30px Montserrat">${p}</b></div>`;
-const grp=(t,rows)=>`<div style="border:1.5px solid rgba(226,187,108,.6);border-radius:24px;padding:16px 34px;background:rgba(26,4,9,.45)"><div style="font:italic 600 36px 'Cormorant Garamond',serif;color:#e9c47e;margin-bottom:6px">${t}</div>${rows.map(r=>row(r[0],r[1])).join('')}</div>`;
-const tarifs=page(`<div style="position:absolute;top:680px;left:100px;right:100px;display:grid;gap:16px">
+const row=(n,p)=>`<div style="display:flex;align-items:baseline;gap:14px;font-size:30px;color:#f4e6d3;padding:3px 0"><span>${n}</span><span style="flex:1;border-bottom:2px dotted rgba(226,187,108,.55);transform:translateY(-8px)"></span><b class="gold" style="font:800 34px Montserrat">${p}</b></div>`;
+const grp=(t,rows)=>`<div style="border:1.5px solid rgba(226,187,108,.6);border-radius:24px;padding:14px 38px;background:rgba(26,4,9,.45)"><div style="font:italic 600 42px 'Cormorant Garamond',serif;color:#e9c47e;margin-bottom:6px">${t}</div>${rows.map(r=>row(r[0],r[1])).join('')}</div>`;
+const tarifs=page(`<div style="position:absolute;top:626px;left:80px;right:80px;display:grid;gap:16px">
 ${grp('Tasses & photos sur métal',[['Tasse photo','10 €'],['Photo 5,5 × 8,5 cm','2 €'],['Photo 10 × 15 cm','4 €'],['Photo 15 × 20 cm','6 €'],['Photo 20 × 30 cm','8 €'],['Photo 30 × 40 cm','dès 25 €']])}
 ${grp('Porte-clés & magnets',[['Magnet photo','3 €'],['Porte-clés plastique / métal','2 € / 4 €'],['Porte-clés double face','5 €'],['Pendentif photo','8 €']])}
-<div style="text-align:center;font:italic 600 38px 'Cormorant Garamond',serif;color:#e9c47e">Coffrets cadeaux dès 12 €</div></div>`,
+<div style="text-align:center;font:italic 600 44px 'Cormorant Garamond',serif;color:#e9c47e">Coffrets cadeaux dès 12 €</div></div>`,
 {title:'Nos tarifs',sub:'Avec votre photo ou votre texte',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 
 /* ---------- mug mockup ---------- */
@@ -125,18 +128,18 @@ const HUMOUR=[
  ['Café d’abord',T(91,80,'Café d’abord,','Dancing Script',38,'#6b3a1f','font-weight="700"')+T(91,124,'questions','Cormorant Garamond',24,'#2a1a1a','font-weight="600"')+T(91,150,'après','Cormorant Garamond',24,'#2a1a1a','font-weight="600"')],
  ['Fragile',T(91,82,'FRAGILE','Bebas Neue',52,'#b8323f','letter-spacing="4"')+`<rect x="34" y="40" width="114" height="54" fill="none" stroke="#b8323f" stroke-width="3"/>`+T(91,134,'avant le café','Cormorant Garamond',22,'#2a1a1a','font-style="italic"')]
 ];
-const catalogue=(items,o)=>page(`<div style="position:absolute;top:680px;left:80px;right:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px 6px">
-${items.map(([n,d])=>`<div style="text-align:center">${mug(d,208)}<div style="font:italic 600 26px 'Cormorant Garamond',serif;color:#f4e6d3;margin-top:-6px">${n}</div></div>`).join('')}</div>`,o);
-const heroSunset=page(`<div style="position:absolute;top:690px;left:100px;right:100px;height:300px;border-radius:22px;overflow:hidden;border:2.5px solid #e2bb6c;box-shadow:0 18px 40px rgba(0,0,0,.45)"><svg viewBox="0 0 880 300" width="880" height="300">${SUNSET(880,300)}</svg></div>
-<div style="position:absolute;top:1015px;left:0;right:0;display:flex;justify-content:center">${mug(SUNSET(182,188),500)}</div>`,{title:'Tasse Sunset Drive',sub:'L’esprit road trip au coucher du soleil',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'});
-module.exports={mug,SUNSET,PROCHES,GAMING,HUMOUR,BG,DEFS,dots,STAR,FONTS};
+const catalogue=(items,o)=>page(`<div style="position:absolute;top:626px;left:50px;right:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px 0">
+${items.map(([n,d])=>`<div style="text-align:center">${mug(d,232)}<div style="font:600 32px/1 'Cormorant Garamond',serif;color:#fbefdc;margin-top:-4px;text-shadow:0 2px 8px rgba(0,0,0,.5)">${n}</div></div>`).join('')}</div>`,o);
+const heroSunset=page(`<div style="position:absolute;top:640px;left:100px;right:100px;height:300px;border-radius:22px;overflow:hidden;border:2.5px solid #e2bb6c;box-shadow:0 18px 40px rgba(0,0,0,.45)"><svg viewBox="0 0 880 300" width="880" height="300">${SUNSET(880,300)}</svg></div>
+<div style="position:absolute;top:968px;left:0;right:0;display:flex;justify-content:center">${mug(SUNSET(182,188),440)}</div>`,{title:'Tasse Sunset Drive',sub:'L’esprit road trip au coucher du soleil',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'});
+module.exports={CTA,mug,SUNSET,PROCHES,GAMING,HUMOUR,BG,DEFS,dots,STAR,FONTS};
 if(require.main===module)(async()=>{require('fs').mkdirSync(OUT,{recursive:true});const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  const shot=async(html,f,vp)=>{if(vp)await p.setViewportSize(vp);await p.setContent(html,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:OUT+f})};
  await shot(avatar,'avatar_MV.png',{width:1080,height:1080});
  await p.setViewportSize({width:1080,height:1920});
  await shot(commander,'commander.png');await shot(tarifs,'tarifs.png');
- await shot(catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE TEXTE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_proches.png');
- await shot(catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_gaming.png');
- await shot(catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'}),'tasses_humour.png');
+ await shot(catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE IDÉE ? ON LA CRÉE POUR VOUS'}),'tasses_proches.png');
+ await shot(catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO ? ON LE MET SUR LA TASSE'}),'tasses_gaming.png');
+ await shot(catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE ? ON LA CRÉE POUR VOUS'}),'tasses_humour.png');
  await shot(heroSunset,'tasse_sunset_drive.png');
  await b.close()})();

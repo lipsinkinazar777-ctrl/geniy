@@ -1,4 +1,5 @@
 const {chromium}=require('/opt/node-tools/node_modules/playwright');
+const {CTA}=require('/home/user/geniy/instagram/generate_pack.js');
 const ICONS={
  commander:`<path d="M20 28h60a6 6 0 0 1 6 6v28a6 6 0 0 1-6 6H48L32 82V68h-12a6 6 0 0 1-6-6V34a6 6 0 0 1 6-6z"/><circle cx="36" cy="48" r="2.6" fill="currentColor"/><circle cx="50" cy="48" r="2.6" fill="currentColor"/><circle cx="64" cy="48" r="2.6" fill="currentColor"/>`,
  tarifs:`<path d="M18 22h34l30 30a6 6 0 0 1 0 8L60 82a6 6 0 0 1-8 0L18 48z"/><circle cx="34" cy="38" r="5"/><text x="56" y="62" font-size="22" font-weight="600" text-anchor="middle" fill="currentColor" stroke="none" font-family="Georgia,serif" transform="rotate(45 56 54)">€</text>`,
@@ -33,29 +34,34 @@ const SETS=[
  ['Bébé','Naissance','Tasse photo · photo 10×15 · porte-clés · magnet','25 €'],
  ['Coffret Famille','Notre best-seller','Tasse · photo 15×20 · porte-clés double · magnet','28 €','Best-seller'],
  ['Coffret Noël','Noël & Nouvel An','2 tasses · photo 15×20 · porte-clés · 2 magnets','41 €'],
- ['Coffret Prestige','Valeur 56 €','Photo 30×40 · tasse · pendentif · porte-clés double · magnet','51 €','Prestige'],
- ['Prestige Duo','Valeur 72 €','Photo 30×40 · 2 tasses · 2 pendentifs · 2 magnets','66 €','Prestige']
+ ['Coffret Prestige','Le grand cadeau','Photo 30×40 · tasse · pendentif · porte-clés double · magnet','51 €','Prestige','56 €'],
+ ['Prestige Duo','Pour deux familles','Photo 30×40 · 2 tasses · 2 pendentifs · 2 magnets','66 €','Prestige','72 €']
 ];
 const story=(title,sub,list)=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}<style>
 *{box-sizing:border-box;margin:0}body{width:1080px;height:1920px;overflow:hidden;position:relative;background:#25060e;font-family:Montserrat,sans-serif;color:#f4e6d3}
-.top{position:absolute;top:232px;left:0;right:0;text-align:center}
+.top{position:absolute;top:196px;left:0;right:0;text-align:center}
 .mono{width:116px;height:116px;margin:0 auto;border-radius:50%;background:#5a0f22;border:3px solid #e2bb6c;box-shadow:0 0 0 7px #5a0f22,0 0 0 8.5px rgba(226,187,108,.8),0 0 50px rgba(255,200,170,.35);display:grid;place-items:center;font:600 44px Cinzel,serif;color:#f0cf88;letter-spacing:-4px}
 .brand{font:500 36px "Cormorant Garamond",serif;letter-spacing:.32em;color:#ecdcc6;margin-top:34px}
 .line{width:480px;height:1.6px;margin:18px auto 0;background:linear-gradient(90deg,transparent,#e2bb6c,transparent)}
 h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 14px rgba(0,0,0,.35)}.sub{font:italic 500 46px "Cormorant Garamond",serif;color:#e9c47e;margin-top:14px}
-.list{position:absolute;top:690px;left:90px;right:90px;display:grid;gap:20px}
-.c{position:relative;border:1.5px solid rgba(226,187,108,.65);border-radius:22px;padding:20px 26px;background:rgba(26,4,9,.45);display:flex;align-items:center;gap:20px}
+.list{position:absolute;top:650px;left:80px;right:80px;display:grid;gap:18px}
+.c{position:relative;border:1.5px solid rgba(226,187,108,.65);border-radius:22px;padding:13px 28px;background:rgba(26,4,9,.45);display:flex;align-items:center;gap:20px}
 .c.hl{border:2.5px solid #e2bb6c;background:linear-gradient(135deg,rgba(243,217,150,.15),rgba(26,4,9,.5))}
 .tx{flex:1;min-width:0}.n{font:600 42px/1.05 "Cormorant Garamond",serif;background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
-.o{font:italic 500 26px "Cormorant Garamond",serif;color:#e9c47e}.ct{font-size:18px;color:#f0e2cc;margin-top:4px;line-height:1.3}
+.o{font:italic 500 26px "Cormorant Garamond",serif;color:#e9c47e}.ct{font-size:20px;color:#f0e2cc;margin-top:4px;line-height:1.3}
 .p{flex:none;border:2.5px solid #e2bb6c;border-radius:99px;background:linear-gradient(#3a0911,#16030a);padding:6px 24px;font:800 40px Montserrat,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.45)}
 .p span{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
 .rib{position:absolute;top:-14px;right:26px;background:linear-gradient(135deg,#f3d996,#c9963f);color:#2a0b10;font-size:15px;font-weight:700;padding:3px 14px;border-radius:99px;letter-spacing:.08em;text-transform:uppercase}
-.foot{position:absolute;top:1500px;left:0;right:0;text-align:center}.foot .line{margin:0 auto 26px;width:420px}.f1{font-weight:600;font-size:22px;letter-spacing:.18em;color:#e9cf98}.f2{font:italic 500 34px "Cormorant Garamond",serif;margin-top:10px}
+.foot{position:absolute;top:1452px;left:0;right:0;text-align:center}.f1{font-weight:600;font-size:21px;letter-spacing:.18em;color:#e9cf98;margin-top:30px}.f2{font:italic 500 32px "Cormorant Garamond",serif;margin-top:6px}
+.gold{background:linear-gradient(#fbe7b0,#e2bb6c 55%,#b8863a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta{display:inline-flex;align-items:center;gap:24px;padding:16px 50px 16px 18px;border:3px solid #e2bb6c;border-radius:99px;background:linear-gradient(#4a0c18,#1a040a);box-shadow:0 0 0 7px rgba(226,187,108,.14),0 14px 34px rgba(0,0,0,.5),0 0 60px rgba(243,217,150,.18);text-align:left}
+.cta .ic{flex:none;width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#fbe7b0,#c9963f);display:grid;place-items:center}
+.cta .b1{font:700 31px Montserrat,sans-serif;color:#f6e9d6;letter-spacing:.01em}.cta .b2{font:600 40px/1.1 Cinzel,serif;letter-spacing:.05em;margin-top:4px}
+.pw{flex:none;text-align:center}.was{display:block;font:600 24px Montserrat,sans-serif;color:rgba(244,230,211,.75);text-decoration:line-through;text-decoration-color:#e2bb6c;text-decoration-thickness:3px;margin-bottom:0}
 </style></head><body>${BG}<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
-<div class="list">${list.map(s=>`<div class="c ${s[4]?'hl':''}">${s[4]?`<span class="rib">${s[4]}</span>`:''}<div class="tx"><div class="n">${s[0]}</div><div class="o">${s[1]}</div><div class="ct">${s[2]}</div></div><div class="p"><span>${s[3]}</span></div></div>`).join('')}</div>
-<div class="foot"><div class="line"></div><div class="f1">COFFRET INCLUS  ✦  FAIT MAIN À PARIS</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
+<div class="list">${list.map(s=>`<div class="c ${s[4]?'hl':''}">${s[4]?`<span class="rib">${s[4]}</span>`:''}<div class="tx"><div class="n">${s[0]}</div><div class="o">${s[1]}</div><div class="ct">${s[2]}</div></div><div class="pw">${s[5]?`<span class="was">${s[5]}</span>`:''}<div class="p"><span>${s[3]}</span></div></div></div>`).join('')}</div>
+<div class="foot">${CTA}<div class="f1">COFFRET INCLUS  ✦  FAIT MAIN À PARIS</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  for(const k of Object.keys(ICONS)){await p.setContent(cover(k),{waitUntil:'networkidle'});await p.screenshot({path:`/home/user/geniy/instagram/covers/${k}.png`});}
  await p.setContent(story('Coffrets cadeaux','Personnalisés avec vos photos',SETS.slice(0,5)),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_1.png'});

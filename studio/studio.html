@@ -58,25 +58,25 @@ input[type=range]{width:100%;accent-color:var(--gold)}
 <script>
 const W=1080,H=1920,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 const DISP='"Cinzel",Georgia,serif',ITAL='italic 600 {s}px "Cormorant Garamond",Georgia,serif',SANS='Montserrat,Arial,sans-serif';
-const FOOT={f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS',f2:'@maison.volodymyr'};
+const FOOT={c1:'Commandez sur WhatsApp',c2:'+33 7 58 18 15 15',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS',f2:'@maison.volodymyr'};
 const SL=[
  {id:'tasses',name:'☕ Кружки',title:'Tasses photo',sub:'Votre photo, votre cadeau',f:{p:'',cap:'La tasse personnalisée'},fl:{p:'Цена кружки',cap:'Подпись'},
   el:[{t:'slot',x:80,y:670,w:580,h:690,k:'mug'},{t:'slot',x:690,y:670,w:310,h:330,k:'mug'},{t:'slot',x:690,y:1030,w:310,h:330,k:'mug'},{t:'pill',x:370,y:1360,txt:'{p}'},{t:'it',x:540,y:1450,txt:'{cap}',s:36}]},
  {id:'metal',name:'🖼 Фото на металле',title:'Photo sur métal',sub:'Votre photo, sublimée',f:{s1:'15 × 20 cm',p1:'',s2:'20 × 30 cm',p2:''},fl:{s1:'Формат 1',p1:'Цена 1',s2:'Формат 2',p2:'Цена 2'},
   el:[{t:'slot',x:120,y:680,w:280,h:360,k:'metal'},{t:'size',x:470,y:820,txt:'{s1}'},{t:'arrow',x1:472,y1:885,x2:640,y2:885,need:'p1'},{t:'pill',x:830,y:885,txt:'{p1}'},
       {t:'slot',x:120,y:1085,w:280,h:360,k:'metal'},{t:'size',x:470,y:1225,txt:'{s2}'},{t:'arrow',x1:472,y1:1290,x2:640,y2:1290,need:'p2'},{t:'pill',x:830,y:1290,txt:'{p2}'}]},
- {id:'grand',name:'🖼 Большой формат',title:'Grand format',sub:'Photo sur métal 30 × 40 cm',f:{p:'',small:'Aussi en 10 × 15 et 5,5 × 8,5 cm'},fl:{p:'Цена 30×40',small:'Строка про другие форматы'},
-  el:[{t:'slot',x:285,y:680,w:510,h:680,k:'metal'},{t:'pill',x:540,y:1365,txt:'{p}'},{t:'small',x:540,y:1450,txt:'{small}'}]},
+ {id:'grand',name:'🖼 Большой формат',title:'Grand format',sub:'Photo sur métal 30 × 40 cm',f:{p:'',small:'Le cadeau parfait pour le salon'},fl:{p:'Цена 30×40',small:'Строка снизу'},
+  el:[{t:'slot',x:285,y:680,w:510,h:680,k:'metal'},{t:'pill',x:540,y:1365,txt:'{p}'},{t:'it',x:540,y:1458,txt:'{small}',s:38}]},
  {id:'cles',name:'🔑 Брелки и магниты',title:'Porte-clés & magnets',sub:'Petits cadeaux, grands souvenirs',f:{n1:'Porte-clés métal',p1:'',n2:'Double face',p2:'',n3:'Pendentif',p3:'',n4:'Magnet photo',p4:'',small:'Aussi en plastique'},fl:{n1:'Название 1',p1:'Цена 1',n2:'Название 2',p2:'Цена 2',n3:'Название 3',p3:'Цена 3',n4:'Название 4',p4:'Цена 4',small:'Нижняя строка'},
-  el:[{t:'slot',x:85,y:670,w:430,h:320,k:'gold',tag:'{n1}'},{t:'pill',x:300,y:990,txt:'{p1}',sz:44},{t:'slot',x:565,y:670,w:430,h:320,k:'gold',tag:'{n2}'},{t:'pill',x:780,y:990,txt:'{p2}',sz:44},
-      {t:'slot',x:85,y:1045,w:430,h:320,k:'gold',tag:'{n3}'},{t:'pill',x:300,y:1365,txt:'{p3}',sz:44},{t:'slot',x:565,y:1045,w:430,h:320,k:'gold',tag:'{n4}'},{t:'pill',x:780,y:1365,txt:'{p4}',sz:44},{t:'small',x:540,y:1450,txt:'{small}'}]},
+  el:[{t:'slot',x:85,y:700,w:430,h:280,k:'gold',tag:'{n1}',above:1},{t:'pill',x:300,y:980,txt:'{p1}',sz:44},{t:'slot',x:565,y:700,w:430,h:280,k:'gold',tag:'{n2}',above:1},{t:'pill',x:780,y:980,txt:'{p2}',sz:44},
+      {t:'slot',x:85,y:1100,w:430,h:280,k:'gold',tag:'{n3}',above:1},{t:'pill',x:300,y:1380,txt:'{p3}',sz:44},{t:'slot',x:565,y:1100,w:430,h:280,k:'gold',tag:'{n4}',above:1},{t:'pill',x:780,y:1380,txt:'{p4}',sz:44},{t:'small',x:540,y:1462,txt:'{small}'}]},
  {id:'creations',name:'✨ Наши работы',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок',sb:'Подзаголовок'},
   el:[{t:'slot',x:95,y:640,w:890,h:840,k:'gold'}]},
  {id:'fond',name:'🎨 Пустой фон',title:'{t}',sub:'{sb}',f:{t:'Nos créations',sb:'Fait main, avec amour'},fl:{t:'Заголовок (можно стереть)',sb:'Подзаголовок (можно стереть)'},el:[]},
  {id:'avis',name:'⭐ Отзывы',title:'Vos avis',sub:'Merci pour vos mots doux',f:{m:'Son message',c:'Sa commande'},fl:{m:'Подпись над скриншотом',c:'Подпись над фото заказа'},
   el:[{t:'slot',x:76,y:700,w:344,h:746,k:'gold',tag:'{m}',fit:'contain',above:1},{t:'slot',x:444,y:700,w:560,h:746,k:'gold',tag:'{c}',above:1}]},
  {id:'coffrets',name:'🎁 Наборы',title:'Coffrets cadeaux',sub:'Prêts à offrir, coffret inclus',f:{n1:'Coffret Prestige',p1:'',n2:'Coffret Famille',p2:'',n3:'Coffret Noël',p3:''},fl:{n1:'Набор 1',p1:'Цена 1',n2:'Набор 2',p2:'Цена 2',n3:'Набор 3',p3:'Цена 3'},
-  el:[{t:'slot',x:80,y:670,w:920,h:360,k:'gold',tag:'{n1}'},{t:'pill',x:830,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1080,w:440,h:290,k:'gold',tag:'{n2}'},{t:'pill',x:300,y:1370,txt:'{p2}',sz:44},{t:'slot',x:560,y:1080,w:440,h:290,k:'gold',tag:'{n3}'},{t:'pill',x:780,y:1370,txt:'{p3}',sz:44}]}
+  el:[{t:'slot',x:80,y:700,w:920,h:330,k:'gold',tag:'{n1}',above:1},{t:'pill',x:540,y:1030,txt:'{p1}'},{t:'slot',x:80,y:1120,w:440,h:260,k:'gold',tag:'{n2}',above:1},{t:'pill',x:300,y:1380,txt:'{p2}',sz:44},{t:'slot',x:560,y:1120,w:440,h:260,k:'gold',tag:'{n3}',above:1},{t:'pill',x:780,y:1380,txt:'{p3}',sz:44}]}
 ];
 let cur=0;const IM={};// key "slide.slot" -> {img,zoom,ox,oy}
 const slotsOf=s=>s.el.filter(e=>e.t=='slot');
@@ -103,10 +103,24 @@ function header(s){
  ctx.font='600 78px "Cormorant Garamond",Georgia,serif';ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.save();ctx.shadowColor='rgba(0,0,0,.35)';ctx.shadowBlur=14;ctx.fillText(fill(s,s.title),540,545);ctx.restore();
  ctx.font=ITAL.replace('{s}',46);ctx.fillStyle='#e9c47e';ctx.fillText(fill(s,s.sub),540,605);
 }
+const WA=[new Path2D('M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z'),new Path2D('M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z')];
 function footer(){
- const lg=ctx.createLinearGradient(330,0,750,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(330,1500,420,1.6);
- ctx.font='600 22px '+SANS;ctx.fillStyle='#e9cf98';ctx.textAlign='left';spaced(FOOT.f1,540,1548,3,'center');
- ctx.font=ITAL.replace('{s}',34);ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.fillText(FOOT.f2,540,1598);
+ const c1=FOOT.c1.trim(),c2=FOOT.c2.trim();let fy=1548;
+ if(c1||c2){
+  const f1='700 31px '+SANS,f2='600 40px '+DISP;ctx.font=f1;let tw=ctx.measureText(c1).width;ctx.font=f2;tw=Math.max(tw,ctx.measureText(c2).width+c2.length*2);
+  const h=124,w=18+92+24+tw+50,x=540-w/2,y=1500;
+  ctx.save();ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=34;ctx.shadowOffsetY=14;rr(x,y,w,h,h/2);const g=ctx.createLinearGradient(0,y,0,y+h);g.addColorStop(0,'#4a0c18');g.addColorStop(1,'#1a040a');ctx.fillStyle=g;ctx.fill();ctx.restore();
+  ctx.lineWidth=7;ctx.strokeStyle='rgba(226,187,108,.14)';rr(x-5,y-5,w+10,h+10,h/2+5);ctx.stroke();
+  ctx.lineWidth=3;ctx.strokeStyle='#e2bb6c';rr(x,y,w,h,h/2);ctx.stroke();
+  const ix=x+18+46,iy=y+h/2,ig=ctx.createLinearGradient(ix-46,iy-46,ix+46,iy+46);ig.addColorStop(0,'#fbe7b0');ig.addColorStop(1,'#c9963f');ctx.beginPath();ctx.arc(ix,iy,46,0,7);ctx.fillStyle=ig;ctx.fill();
+  ctx.save();ctx.translate(ix-28,iy-28);ctx.scale(56/64,56/64);ctx.lineWidth=4.5;ctx.strokeStyle='#3a0911';ctx.lineCap='round';ctx.lineJoin='round';WA.forEach(p=>ctx.stroke(p));ctx.restore();
+  const tx=x+18+92+24;ctx.textAlign='left';
+  if(c1&&c2){ctx.font=f1;ctx.fillStyle='#f6e9d6';ctx.fillText(c1,tx,y+52);ctx.font=f2;ctx.fillStyle=goldGrad(y+62,y+102);spaced(c2,tx,y+100,2,'left')}
+  else{ctx.font=c1?f1:f2;ctx.fillStyle=c1?'#f6e9d6':goldGrad(y+40,y+84);ctx.fillText(c1||c2,tx,y+h/2+12)}
+  fy=1678;
+ }else{const lg=ctx.createLinearGradient(330,0,750,0);lg.addColorStop(0,'rgba(226,187,108,0)');lg.addColorStop(.5,'#e2bb6c');lg.addColorStop(1,'rgba(226,187,108,0)');ctx.fillStyle=lg;ctx.fillRect(330,1500,420,1.6)}
+ ctx.font='600 21px '+SANS;ctx.fillStyle='#e9cf98';ctx.textAlign='left';spaced(FOOT.f1,540,fy,3,'center');
+ ctx.font=ITAL.replace('{s}',32);ctx.fillStyle='#f4e6d3';ctx.textAlign='center';ctx.fillText(FOOT.f2,540,fy+42);
 }
 function placeholder(e){
  const g=ctx.createLinearGradient(e.x,e.y,e.x+e.w,e.y+e.h);g.addColorStop(0,'#46101d');g.addColorStop(1,'#2a070f');ctx.fillStyle=g;ctx.fill();
@@ -140,7 +154,7 @@ function draw(){
  let si=0;for(const e of s.el){
   if(e.t=='slot')slot(s,e,si++);
   else if(e.t=='pill')pill(s,e);
-  else if(e.t=='size'){ctx.font='600 48px '+DISP;ctx.fillStyle=goldGrad(e.y-44,e.y);ctx.textAlign='left';ctx.fillText(fill(s,e.txt),e.x,e.y)}
+  else if(e.t=='size'){ctx.font='600 54px "Cormorant Garamond",Georgia,serif';ctx.fillStyle=goldGrad(e.y-44,e.y);ctx.textAlign='left';ctx.fillText(fill(s,e.txt),e.x,e.y)}
   else if(e.t=='arrow'){if(e.need&&!String(s.f[e.need]||'').trim())continue;ctx.strokeStyle='#e2bb6c';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(e.x1,e.y1);ctx.lineTo(e.x2,e.y2);ctx.moveTo(e.x2-16,e.y2-11);ctx.lineTo(e.x2,e.y2);ctx.lineTo(e.x2-16,e.y2+11);ctx.stroke()}
   else if(e.t=='it'){ctx.font=ITAL.replace('{s}',e.s||32);ctx.fillStyle='#f3d996';ctx.textAlign='center';ctx.fillText(fill(s,e.txt),e.x,e.y)}
   else if(e.t=='quote'){const t=fill(s,e.txt).trim();
@@ -165,6 +179,7 @@ function panel(){
  const s=SL[cur];
  $('#panel').innerHTML=`<h2>Фото</h2>${slotsOf(s).map((e,i)=>{const d=IM[s.id+'.'+i];return `<div class="slot"><div class="row"><b>Рамка ${i+1}${e.tag?' · '+esc(fill(s,e.tag)):''}</b><button class="btn" data-pick="${i}">${d?'Заменить':'Вставить фото'}</button>${d?`<button class="btn x" data-del="${i}" aria-label="Убрать фото">×</button>`:''}</div>${d?`<div><label for="z${i}">Масштаб</label><input type="range" id="z${i}" min="0.5" max="3" step="0.01" value="${d.zoom}" data-zoom="${i}"><label for="ox${i}">Влево ↔ вправо</label><input type="range" id="ox${i}" min="${-e.w}" max="${e.w}" step="1" value="${d.ox}" data-ox="${i}"><label for="oy${i}">Вверх ↕ вниз</label><input type="range" id="oy${i}" min="${-e.h}" max="${e.h}" step="1" value="${d.oy}" data-oy="${i}"></div>`:''}</div>`}).join('')}
  <h2>Тексты и цены</h2>${Object.keys(s.f).map(k=>`<div><label for="f_${k}">${esc(s.fl[k]||k)}</label>${(s.ta||[]).includes(k)?`<textarea id="f_${k}" rows="6" data-f="${k}" style="width:100%;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#1f070b;color:var(--ink);font:inherit;resize:vertical">${esc(s.f[k])}</textarea>`:`<input type="text" id="f_${k}" value="${esc(s.f[k])}" data-f="${k}">`}</div>`).join('')}
+ <div><label for="fc1">Кнопка, строка 1 (сотри обе строки — кнопка исчезнет)</label><input type="text" id="fc1" value="${esc(FOOT.c1)}" data-foot="c1"></div><div><label for="fc2">Кнопка, строка 2</label><input type="text" id="fc2" value="${esc(FOOT.c2)}" data-foot="c2"></div>
  <div><label for="ft1">Нижняя полоса, строка 1</label><input type="text" id="ft1" value="${esc(FOOT.f1)}" data-foot="f1"></div><div><label for="ft2">Нижняя полоса, строка 2</label><input type="text" id="ft2" value="${esc(FOOT.f2)}" data-foot="f2"></div>
  <button class="btn main" id="save">Сохранить PNG</button><div class="msg" id="msg" role="status"></div>`;
 }
