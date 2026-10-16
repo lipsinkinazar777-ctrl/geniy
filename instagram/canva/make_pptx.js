@@ -1,4 +1,4 @@
-// Editable Canva/PowerPoint project for the mug catalogue stories (9:16)
+// Editable Canva/PowerPoint project for the stories (9:16): mug catalogues editable, other stories as images
 const pptxgen=require('pptxgenjs');
 const {chromium}=require('/opt/node-tools/node_modules/playwright');
 const fs=require('fs');
@@ -15,7 +15,7 @@ const slug=s=>s.normalize('NFD').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').toL
  // monogram (transparent)
  const tp=await b.newPage({viewport:{width:400,height:400},deviceScaleFactor:2});
  const shotEl=async(html,file,w,h)=>{await tp.setViewportSize({width:w,height:h});await tp.setContent(`<!doctype html><html><head><meta charset="utf-8">${P.FONTS}</head><body style="margin:0;background:transparent">${html}</body></html>`,{waitUntil:'networkidle'});await tp.evaluate(()=>document.fonts.ready);await tp.screenshot({path:file,omitBackground:true,clip:{x:0,y:0,width:w,height:h}})};
- await shotEl(`<div style="width:160px;height:160px;display:grid;place-items:center"><div style="width:116px;height:116px;border-radius:50%;background:#5a0f22;border:3px solid #e2bb6c;box-shadow:0 0 0 7px #5a0f22,0 0 0 8.5px rgba(226,187,108,.8),0 0 30px rgba(255,200,170,.35);display:grid;place-items:center;font:600 44px Cinzel,serif;color:#f0cf88;letter-spacing:-4px;box-sizing:border-box">MV</div></div>`,IMG+'monogramme.png',160,160);
+ await shotEl(`<div style="width:160px;height:160px;display:grid;place-items:center"><div style="width:116px;height:116px;border-radius:50%;background:#5a0f22;border:3px solid #e2bb6c;box-shadow:0 0 0 7px #5a0f22,0 0 0 8.5px rgba(226,187,108,.8),0 0 30px rgba(255,200,170,.35);display:grid;place-items:center;font:600 44px Cinzel,serif;color:#f0cf88;box-sizing:border-box">MV</div></div>`,IMG+'monogramme.png',160,160);
  // mugs
  const sets={gaming:P.GAMING,proches:P.PROCHES,humour:P.HUMOUR};const files={};
  for(const [k,list] of Object.entries(sets)){files[k]=[];for(const [n,d] of list){const f=`${IMG}tasse-${k}-${slug(n)}.png`;await shotEl(`<div style="width:300px;height:290px">${P.mug(d,300)}</div>`,f,300,290);files[k].push([n,f])}}
@@ -24,33 +24,36 @@ const slug=s=>s.normalize('NFD').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').toL
  await b.close();
 
  const pres=new pptxgen();pres.defineLayout({name:'STORY',width:7.5,height:13.333});pres.layout='STORY';
- pres.title='Maison Volodymyr – tasses';
+ pres.title='Maison Volodymyr – stories';
  const SERIF='Cormorant Garamond',SANS='Montserrat';
  const head=(s,title,sub)=>{
   s.background={path:IMG+'fond.png'};
-  s.addImage({path:IMG+'monogramme.png',x:i(460),y:i(210),w:i(160),h:i(160),objectName:'Monogramme MV'});
-  s.addText('MAISON VOLODYMYR',{x:i(140),y:i(380),w:i(800),h:i(50),fontFace:SERIF,fontSize:18,color:'ECDCC6',charSpacing:6,align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Marque'});
-  s.addShape(pres.shapes.LINE,{x:i(300),y:i(441),w:i(480),h:0,line:{color:'E2BB6C',width:0.75},objectName:'Ligne or haut'});
-  s.addText(title,{x:i(40),y:i(478),w:i(1000),h:i(100),fontFace:SERIF,fontSize:36,color:'F4E6D3',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Titre'});
-  s.addText(sub,{x:i(90),y:i(578),w:i(900),h:i(60),fontFace:SERIF,fontSize:23,italic:true,color:'E9C47E',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Sous-titre'});
+  s.addImage({path:IMG+'monogramme.png',x:i(460),y:i(174),w:i(160),h:i(160),objectName:'Monogramme MV'});
+  s.addText('MAISON VOLODYMYR',{x:i(140),y:i(344),w:i(800),h:i(50),fontFace:SERIF,fontSize:18,color:'ECDCC6',charSpacing:6,align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Marque'});
+  s.addShape(pres.shapes.LINE,{x:i(300),y:i(405),w:i(480),h:0,line:{color:'E2BB6C',width:0.75},objectName:'Ligne or haut'});
+  s.addText(title,{x:i(40),y:i(442),w:i(1000),h:i(100),fontFace:SERIF,fontSize:36,color:'F4E6D3',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Titre'});
+  s.addText(sub,{x:i(90),y:i(542),w:i(900),h:i(60),fontFace:SERIF,fontSize:23,italic:true,color:'E9C47E',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Sous-titre'});
  };
  const foot=(s,f1)=>{
-  s.addShape(pres.shapes.LINE,{x:i(330),y:i(1500),w:i(420),h:0,line:{color:'E2BB6C',width:0.75},objectName:'Ligne or bas'});
-  s.addText(f1,{x:i(60),y:i(1520),w:i(960),h:i(40),fontFace:SANS,fontSize:11,bold:true,color:'E9CF98',charSpacing:3,align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Pied 1'});
-  s.addText('@maison.volodymyr',{x:i(240),y:i(1562),w:i(600),h:i(50),fontFace:SERIF,fontSize:17,italic:true,color:'F4E6D3',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Pied 2'});
+  s.addShape(pres.shapes.LINE,{x:i(330),y:i(1478),w:i(420),h:0,line:{color:'E2BB6C',width:0.75},objectName:'Ligne or bas'});
+  s.addText(f1,{x:i(60),y:i(1500),w:i(960),h:i(40),fontFace:SANS,fontSize:11,bold:true,color:'E9CF98',charSpacing:3,align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Pied 1'});
+  s.addText('@maison.volodymyr',{x:i(240),y:i(1542),w:i(600),h:i(50),fontFace:SERIF,fontSize:17,italic:true,color:'F4E6D3',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Pied 2'});
  };
  const cat=(k,title,sub,f1)=>{const s=pres.addSlide();head(s,title,sub);
-  files[k].forEach(([n,f],idx)=>{const c=idx%3,r=Math.floor(idx/3),cx=233+306*c,top=680+238*r;
-   s.addImage({path:f,x:i(cx-104),y:i(top),w:i(208),h:i(201),objectName:'Tasse '+n});
-   s.addText(n,{x:i(cx-150),y:i(top+190),w:i(300),h:i(40),fontFace:SERIF,fontSize:13,italic:true,color:'F4E6D3',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Légende '+n})});
+  files[k].forEach(([n,f],idx)=>{const c=idx%3,r=Math.floor(idx/3),cx=213+327*c,top=626+250*r;
+   s.addImage({path:f,x:i(cx-116),y:i(top),w:i(232),h:i(224),objectName:'Tasse '+n});
+   s.addText(n,{x:i(cx-160),y:i(top+208),w:i(320),h:i(42),fontFace:SERIF,fontSize:16,bold:true,color:'FBEFDC',align:'center',valign:'middle',margin:0,isTextBox:true,objectName:'Légende '+n})});
   foot(s,f1);s.addNotes('Remplacez une tasse : clic sur l’image > Remplacer. Les textes se modifient directement.');};
- cat('gaming','Tasses gaming','Pour les joueurs de la famille','VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS');
- cat('proches','Tasses pour vos proches','Un mot doux pour chaque jour','VOTRE TEXTE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS');
- cat('humour','Tasses avec humour','Le café, mais avec le sourire','VOTRE PHRASE OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS');
+ cat('gaming','Tasses gaming','Pour les joueurs de la famille','VOTRE PSEUDO ? ON LE MET SUR LA TASSE');
+ cat('proches','Tasses pour vos proches','Un mot doux pour chaque jour','VOTRE IDÉE ? ON LA CRÉE POUR VOUS');
+ cat('humour','Tasses avec humour','Le café, mais avec le sourire','VOTRE PHRASE ? ON LA CRÉE POUR VOUS');
  const s=pres.addSlide();head(s,'Tasse Sunset Drive','L’esprit road trip au coucher du soleil');
- s.addImage({path:banner,x:i(100),y:i(690),w:i(880),h:i(300),rounding:false,objectName:'Bandeau (motif à plat)'});
- s.addImage({path:sunMug,x:i(280),y:i(1010),w:i(520),h:i(500)*0.95,objectName:'Tasse Sunset Drive'});
+ s.addImage({path:banner,x:i(100),y:i(640),w:i(880),h:i(300),rounding:false,objectName:'Bandeau (motif à plat)'});
+ s.addImage({path:sunMug,x:i(320),y:i(968),w:i(440),h:i(423),objectName:'Tasse Sunset Drive'});
  foot(s,'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS');
+ // other ready stories as full images (text is part of the picture)
+ for(const [f,t] of [['/home/user/geniy/instagram/stories/commander.png','Comment commander'],['/home/user/geniy/instagram/stories/tarifs.png','Nos tarifs'],['/home/user/geniy/coffrets/story_coffrets_1.png','Coffrets 1'],['/home/user/geniy/coffrets/story_coffrets_2.png','Coffrets 2']]){
+  const s2=pres.addSlide();s2.addImage({path:f,x:0,y:0,w:7.5,h:13.333,objectName:t});s2.addNotes('Image prête (non modifiable). Les textes se changent dans le studio / sur demande.');}
  await pres.writeFile({fileName:OUT+'Maison_Volodymyr_tasses_EDITABLE.pptx'});
  console.log('done');
 })();
