@@ -30,6 +30,9 @@ const PAD=14;
   const h2=html.replace(/<link href="https:\/\/fonts\.googleapis\.com[^>]*>/,`<style>${STATIC}</style>`);
   await p.setContent(h2,{waitUntil:'networkidle'});
   await p.addStyleTag({content:ONLYTEXT+`body{background:url(data:image/jpeg;base64,${bg}) 0 0/1080px 1920px no-repeat!important}`});
+  // Canva drops normal spaces in some lines: use no-break spaces + extra room between the two footer lines
+  await p.evaluate(()=>{const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let t;while(t=w.nextNode()){if(!t.parentElement.closest('svg'))t.nodeValue=t.nodeValue.replace(/ /g,'\u00a0')}});
+  await p.addStyleTag({content:'.f2{margin-top:22px!important}'});
   await p.evaluate(pics=>{for(const q of pics){const im=document.createElement('img');im.className='cv';im.src='data:image/png;base64,'+q.src;im.style.cssText=`position:absolute;left:${q.x}px;top:${q.y}px;width:${q.width}px;height:${q.height}px;z-index:1`;document.body.appendChild(im)}},pics);
   await p.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode()))});
   await p.pdf({path:`${out}/${String(i+1).padStart(2,'0')}-${n}.pdf`,width:'1080px',height:'1920px',printBackground:true,preferCSSPageSize:true,margin:{top:0,right:0,bottom:0,left:0}})}
