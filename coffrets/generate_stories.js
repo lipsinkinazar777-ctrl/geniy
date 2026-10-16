@@ -62,7 +62,8 @@ h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 
 <div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 <div class="list">${list.map(s=>`<div class="c ${s[4]?'hl':''}">${s[4]?`<span class="rib">${s[4]}</span>`:''}<div class="tx"><div class="n">${s[0]}</div><div class="o">${s[1]}</div><div class="ct">${s[2]}</div></div><div class="pw">${s[5]?`<span class="was">${s[5]}</span>`:''}<div class="p"><span>${s[3]}</span></div></div></div>`).join('')}</div>
 ${cta?`<div class="foot">${CTA}`:`<div class="foot soft"><div class="line"></div>`}<div class="f1">COFFRET INCLUS  ✦  FAIT MAIN À PARIS</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
-(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
+module.exports={PAGES:()=>[['coffrets_1',story('Coffrets cadeaux','Personnalisés avec vos photos',SETS.slice(0,5))],['coffrets_2',story('Nos grands coffrets','Pour les plus beaux cadeaux',SETS.slice(5),1)]]};
+if(require.main===module)(async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  for(const k of Object.keys(ICONS)){await p.setContent(cover(k),{waitUntil:'networkidle'});await p.screenshot({path:`/home/user/geniy/instagram/covers/${k}.png`});}
  await p.setContent(story('Coffrets cadeaux','Personnalisés avec vos photos',SETS.slice(0,5)),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_1.png'});
  await p.setContent(story('Nos grands coffrets','Pour les plus beaux cadeaux',SETS.slice(5),1),{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:'/home/user/geniy/coffrets/story_coffrets_2.png'});
