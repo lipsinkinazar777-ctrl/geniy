@@ -14,6 +14,8 @@ const ICONS={
  'tasses-gaming':`<path d="M30 34h40c12 0 20 26 14 36-4 6-12 4-18-6H34c-6 10-14 12-18 6-6-10 2-36 14-36z"/><path d="M33 44v12M27 50h12"/><circle cx="62" cy="46" r="2.6"/><circle cx="70" cy="54" r="2.6"/>`,
  'tasses-heros':`<path d="M56 12L26 56h22l-6 32 32-46H52z"/>`,
  'tasses-humour':`<circle cx="50" cy="50" r="34"/><path d="M36 58c6 10 22 10 28 0"/><path d="M36 40q4-5 8 0M56 40q4-5 8 0"/>`,
+ 'cine-series':`<rect x="16" y="40" width="68" height="44" rx="3"/><path d="M16 40l64-16 3 12-64 16z"/><path d="M30 36l8 12M46 32l8 12M62 28l8 12"/><path d="M28 62h44M28 72h28"/>`,
+ 'dessins-animes':`<circle cx="50" cy="56" r="26"/><circle cx="28" cy="28" r="13"/><circle cx="72" cy="28" r="13"/><circle cx="41" cy="52" r="3"/><circle cx="59" cy="52" r="3"/><path d="M42 64q8 7 16 0"/>`,
  'tasses-fetes':`<path d="M50 14v72M14 50h72M24 24l52 52M76 24L24 76" opacity=".35"/><path d="M50 22l7 21 21 7-21 7-7 21-7-21-21-7 21-7z"/>`
 };
 const STAR=(x,y,r,o=1)=>`<g transform="translate(${x} ${y})" opacity="${o}"><circle r="${r*1.7}" fill="url(#glow)"/><path d="M0 ${-r} Q0 0 ${r*.16} 0 Q0 0 0 ${r} Q0 0 ${-r*.16} 0 Q0 0 0 ${-r}Z M${-r*.75} 0 Q0 0 0 ${-r*.12} Q0 0 ${r*.75} 0 Q0 0 0 ${r*.12} Q0 0 ${-r*.75} 0Z" fill="#fff3d6"/></g>`;
