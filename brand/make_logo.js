@@ -1,23 +1,25 @@
-// Maison Volodymyr round logo (ruby disc, gold rings, ivory M + V), vector redraw for high-res PNG
+// Maison Volodymyr round logo: glossy thin gold ring, dark bevel band, ruby disc, metallic ivory M + V
 const {chromium}=require('/opt/node-tools/node_modules/playwright');
-const FONT=process.argv[2]||'Playfair Display',W=process.argv[3]||'500',OUT=process.argv[4]||'logo_MV_2000.png';
+const OUT=process.argv[2]||'logo_MV_2000.png';
 const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
 <defs>
- <radialGradient id="disc" cx=".42" cy=".36" r=".75"><stop offset="0" stop-color="#b02a40"/><stop offset=".55" stop-color="#7e1626"/><stop offset="1" stop-color="#4d0a16"/></radialGradient>
- <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0b8"/><stop offset=".25" stop-color="#e6b24a"/><stop offset=".5" stop-color="#a8701f"/><stop offset=".75" stop-color="#f3cf6e"/><stop offset="1" stop-color="#9a6417"/></linearGradient>
- <linearGradient id="ivory" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffaf0"/><stop offset=".6" stop-color="#efe3cf"/><stop offset="1" stop-color="#cdbb9f"/></linearGradient>
- <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#2a0008" flood-opacity=".55"/></filter>
+ <linearGradient id="gold" x1="0.1" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#fff6cc"/><stop offset=".18" stop-color="#f2c862"/><stop offset=".42" stop-color="#a9721c"/><stop offset=".62" stop-color="#e9bd55"/><stop offset=".8" stop-color="#fbe39a"/><stop offset="1" stop-color="#8a5812"/></linearGradient>
+ <radialGradient id="band" cx=".5" cy=".5" r=".5"><stop offset=".86" stop-color="#2a030a"/><stop offset=".93" stop-color="#4a0815"/><stop offset="1" stop-color="#22020a"/></radialGradient>
+ <radialGradient id="disc" cx=".4" cy=".33" r=".78"><stop offset="0" stop-color="#b02a3e"/><stop offset=".35" stop-color="#8c1a2c"/><stop offset=".75" stop-color="#6e1020"/><stop offset="1" stop-color="#4c0915"/></radialGradient>
+ <linearGradient id="metal" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#f4ecdf"/><stop offset=".55" stop-color="#cbbca5"/><stop offset=".7" stop-color="#f7f0e4"/><stop offset="1" stop-color="#b9a68a"/></linearGradient>
+ <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="2" dy="8" stdDeviation="8" flood-color="#1f0006" flood-opacity=".6"/></filter>
+ <filter id="glow"><feGaussianBlur stdDeviation="6"/></filter>
 </defs>
-<circle cx="500" cy="500" r="490" fill="url(#gold)"/>
-<circle cx="500" cy="500" r="460" fill="#3a0610"/>
-<circle cx="500" cy="500" r="434" fill="url(#disc)"/>
-<circle cx="500" cy="500" r="416" fill="none" stroke="url(#gold)" stroke-width="5"/>
-<g filter="url(#sh)" font-family="${FONT}" font-weight="${W}" fill="url(#ivory)">
- <text x="262" y="598" font-size="360">M</text>
- <text x="486" y="708" font-size="385">V</text>
+<circle cx="500" cy="500" r="492" fill="url(#gold)"/>
+<circle cx="500" cy="500" r="468" fill="url(#band)"/>
+<circle cx="500" cy="500" r="424" fill="none" stroke="url(#gold)" stroke-width="10"/>
+<circle cx="500" cy="500" r="419" fill="url(#disc)"/>
+<g filter="url(#sh)" font-family="Playfair Display" font-weight="600" fill="url(#metal)" stroke="#6b4a32" stroke-width="1.2" paint-order="stroke">
+ <text x="232" y="600" font-size="370">M</text>
+ <text x="488" y="722" font-size="390">V</text>
 </g></svg>`;
 (async()=>{const b=await chromium.launch();const p=await b.newPage({viewport:{width:1000,height:1000},deviceScaleFactor:2});
- await p.setContent(`<!doctype html><html><head><link href="https://fonts.googleapis.com/css2?family=${FONT.replace(/ /g,'+')}:wght@${W}&display=swap" rel="stylesheet"></head><body style="margin:0;background:transparent">${svg}</body></html>`,{waitUntil:'networkidle'});
+ await p.setContent(`<!doctype html><html><head><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet"></head><body style="margin:0;background:transparent">${svg}</body></html>`,{waitUntil:'networkidle'});
  await p.evaluate(()=>document.fonts.ready);
  await p.screenshot({path:__dirname+'/'+OUT,omitBackground:true,clip:{x:0,y:0,width:1000,height:1000}});
  require('fs').writeFileSync(__dirname+'/logo_MV.svg',svg);
