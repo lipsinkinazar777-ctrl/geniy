@@ -8,7 +8,13 @@ const ICONS={
  'porte-cles':`<circle cx="30" cy="50" r="15"/><circle cx="30" cy="50" r="5"/><path d="M45 50h40M72 50v11M81 50v8"/>`,
  coffrets:`<rect x="20" y="46" width="60" height="34" rx="2"/><rect x="16" y="34" width="68" height="13" rx="2"/><path d="M50 34v46"/><path d="M50 34c-8-14-24-10-18-1 3 3 12 1 18 1zM50 34c8-14 24-10 18-1-3 3-12 1-18 1z"/>`,
  atelier:`<path d="M14 48L50 18l36 30"/><path d="M24 42v40h52V42"/><rect x="42" y="58" width="16" height="24"/><path d="M62 54h8v8h-8z"/>`,
- avis:`<path d="M50 14l11 24 26 3-19 18 5 26-23-13-23 13 5-26-19-18 26-3z"/>`
+ avis:`<path d="M50 14l11 24 26 3-19 18 5 26-23-13-23 13 5-26-19-18 26-3z"/>`,
+ 'tasses-photo':`<path d="M18 30h46v34a14 14 0 0 1-14 14H32a14 14 0 0 1-14-14z"/><path d="M64 38h7a10 10 0 0 1 0 20h-7"/><rect x="27" y="38" width="28" height="24" rx="2"/><path d="M29 58l8-8 6 6 4-4 6 6"/><circle cx="48" cy="45" r="2.5"/><path d="M28 86h30"/>`,
+ 'tasses-proches':`<path d="M50 80C30 66 16 54 16 38a16 16 0 0 1 34-6 16 16 0 0 1 34 6c0 16-14 28-34 42z"/><path d="M50 52c-6-5-12-9-12-15a6 6 0 0 1 12-2 6 6 0 0 1 12 2c0 6-6 10-12 15z"/>`,
+ 'tasses-gaming':`<path d="M30 34h40c12 0 20 26 14 36-4 6-12 4-18-6H34c-6 10-14 12-18 6-6-10 2-36 14-36z"/><path d="M33 44v12M27 50h12"/><circle cx="62" cy="46" r="2.6"/><circle cx="70" cy="54" r="2.6"/>`,
+ 'tasses-heros':`<path d="M56 12L26 56h22l-6 32 32-46H52z"/>`,
+ 'tasses-humour':`<circle cx="50" cy="50" r="34"/><path d="M36 58c6 10 22 10 28 0"/><path d="M36 40q4-5 8 0M56 40q4-5 8 0"/>`,
+ 'tasses-fetes':`<path d="M50 14v72M14 50h72M24 24l52 52M76 24L24 76" opacity=".35"/><path d="M50 22l7 21 21 7-21 7-7 21-7-21-21-7 21-7z"/>`
 };
 const STAR=(x,y,r,o=1)=>`<g transform="translate(${x} ${y})" opacity="${o}"><circle r="${r*1.7}" fill="url(#glow)"/><path d="M0 ${-r} Q0 0 ${r*.16} 0 Q0 0 0 ${r} Q0 0 ${-r*.16} 0 Q0 0 0 ${-r}Z M${-r*.75} 0 Q0 0 0 ${-r*.12} Q0 0 ${r*.75} 0 Q0 0 0 ${r*.12} Q0 0 ${-r*.75} 0Z" fill="#fff3d6"/></g>`;
 const DEFS=`<defs><radialGradient id="glow"><stop offset="0" stop-color="rgba(255,240,205,.85)"/><stop offset=".3" stop-color="rgba(243,217,150,.3)"/><stop offset="1" stop-color="rgba(243,217,150,0)"/></radialGradient>
