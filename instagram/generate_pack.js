@@ -23,9 +23,10 @@ h1{font:600 78px/1 "Cormorant Garamond",serif;margin-top:46px;text-shadow:0 4px 
 .cta .b1{font:700 31px Montserrat,sans-serif;color:#f6e9d6;letter-spacing:.01em}.cta .b2{font:600 40px/1.1 Cinzel,serif;letter-spacing:.05em;margin-top:4px}
 </style>`;
 const CTA=`<div class="cta"><div class="ic"><svg viewBox="0 0 64 64" width="56" height="56"><g fill="none" stroke="#3a0911" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/><path d="M23 21c1-2 3-2 4 0l2 5c.4 1-.2 2-1 3l-1.5 1.5c1.8 3.8 4.8 6.8 8.6 8.6L36.6 37c1-.8 2-1.4 3-1l5 2c2 1 2 3 0 4-3 3-8 3-14-2-5-4-9-9-10-13-.6-3 .4-5 2.4-6z"/></g></svg></div><div><div class="b1">Commandez sur WhatsApp</div><div class="b2 gold">+33 7 58 18 15 15</div></div></div>`;
+const LOGO='data:image/png;base64,'+require('fs').readFileSync('/home/user/geniy/brand/logo_MV_1000.png').toString('base64');
 const page=(inner,{title,sub,f1,cta})=>`<!doctype html><html><head><meta charset="utf-8">${FONTS}${CSS}</head><body>${BG}
 <svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${DEFS}${dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${STAR(71,640,46)}${STAR(71,1330,34,.9)}${STAR(1010,250,22,.7)}</svg>
-<div class="top"><div class="mono">MV</div><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
+<div class="top"><img src="${LOGO}" style="width:150px;height:150px;display:block;margin:-30px auto -4px;filter:drop-shadow(0 0 30px rgba(255,200,170,.3))"><div class="brand">MAISON VOLODYMYR</div><div class="line"></div><h1>${title}</h1><div class="sub">${sub}</div></div>
 ${inner}
 ${cta?`<div class="foot">${CTA}`:`<div class="foot soft"><div class="line"></div>`}<div class="f1">${f1}</div><div class="f2">@maison.volodymyr</div></div></body></html>`;
 
@@ -143,11 +144,29 @@ const photoPage=page(`<div style="position:absolute;top:640px;left:50px;right:50
 ${PHOTO.map(([n,d])=>`<div style="text-align:center">${mug(d,272)}<div style="font:600 34px/1 'Cormorant Garamond',serif;color:#fbefdc;margin-top:-2px;text-shadow:0 2px 8px rgba(0,0,0,.5)">${n}</div></div>`).join('')}</div>
 <div style="position:absolute;top:1262px;left:90px;right:90px;text-align:center;border:1.5px solid rgba(226,187,108,.6);border-radius:26px;padding:22px 30px;background:rgba(26,4,9,.45)"><div style="font:italic 600 40px/1.2 'Cormorant Garamond',serif;color:#e9c47e">Envoyez-nous votre photo,</div><div style="font:500 27px Montserrat,sans-serif;color:#f0e2cc;margin-top:8px">on s’occupe du reste ✦</div></div>`,
 {title:'Tasses avec votre photo',sub:'Votre photo, votre cadeau',f1:'VOTRE PHOTO ? ON LA MET SUR LA TASSE'});
+// intro of the "Votre photo" highlight: photo -> mug, then pointer to the other mug highlights
+const pills=['Gaming','Ciné & séries','Dessins animés','Couple','Chats'];
+const photoIntro=page(`
+<div style="position:absolute;top:628px;left:100px;width:330px;height:380px;background:#fbf7f0;border-radius:8px;padding:18px 18px 0;transform:rotate(-8deg);box-shadow:0 22px 50px rgba(0,0,0,.55)">
+ <svg viewBox="0 0 182 188" width="294" height="300" style="display:block;border-radius:3px">${PHOTO[0][1]}</svg>
+ <div style="font:600 30px 'Dancing Script',cursive;color:#5a2a2a;text-align:center;margin-top:8px">Nous ♡</div></div>
+<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0;pointer-events:none">${DEFS}
+ <path d="M440 735 C520 665 600 675 640 735" fill="none" stroke="url(#gold)" stroke-width="5" stroke-dasharray="2 14" stroke-linecap="round"/>
+ <path d="M622 713l22 26-32 6" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div style="position:absolute;top:705px;left:545px">${mug(PHOTO[0][1],430)}</div>
+<div style="position:absolute;top:1128px;left:60px;right:60px;text-align:center">
+ <div style="font:600 66px/1.05 'Cormorant Garamond',serif;color:#f6e6cf;text-shadow:0 4px 14px rgba(0,0,0,.4)">Nous créons votre tasse</div>
+ <div style="font:italic 500 54px/1.15 'Cormorant Garamond',serif;color:#e9c47e;margin-top:4px">avec n’importe quelle photo</div>
+ <div style="font:500 25px Montserrat,sans-serif;color:#f0e2cc;letter-spacing:.06em;margin-top:14px">Famille · Couple · Enfants · Animaux · Souvenirs</div></div>
+<div style="position:absolute;top:1322px;left:70px;right:70px;text-align:center;border:1.5px solid rgba(226,187,108,.65);border-radius:26px;padding:14px 20px 16px;background:rgba(26,4,9,.5)">
+ <div style="font:italic 600 34px 'Cormorant Garamond',serif;color:#e9c47e">Découvrez aussi nos modèles dans nos stories à la une</div>
+ <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px">${pills.map(t=>`<span style="border:1.5px solid #e2bb6c;border-radius:99px;padding:5px 18px;font:600 22px Montserrat,sans-serif;color:#f6e9d6;background:rgba(90,15,34,.6)">${t}</span>`).join('')}</div></div>`,
+{title:'Votre photo, votre tasse',sub:'Un cadeau unique, fait main à Paris',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
 const catalogue=(items,o)=>page(`<div style="position:absolute;top:626px;left:50px;right:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px 0">
 ${items.map(([n,d])=>`<div style="text-align:center">${mug(d,232)}<div style="font:600 32px/1 'Cormorant Garamond',serif;color:#fbefdc;margin-top:-4px;text-shadow:0 2px 8px rgba(0,0,0,.5)">${n}</div></div>`).join('')}</div>`,o);
 const heroSunset=page(`<div style="position:absolute;top:640px;left:100px;right:100px;height:300px;border-radius:22px;overflow:hidden;border:2.5px solid #e2bb6c;box-shadow:0 18px 40px rgba(0,0,0,.45)"><svg viewBox="0 0 880 300" width="880" height="300">${SUNSET(880,300)}</svg></div>
 <div style="position:absolute;top:968px;left:0;right:0;display:flex;justify-content:center">${mug(SUNSET(182,188),440)}</div>`,{title:'Tasse Sunset Drive',sub:'L’esprit road trip au coucher du soleil',f1:'VOTRE PSEUDO OU VOTRE PHOTO  ✦  FAIT MAIN À PARIS'});
-module.exports={PAGES:()=>[['tasses_photo',photoPage],['commander',commander],['tarifs',tarifs],['tasses_proches',catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE IDÉE ? ON LA CRÉE POUR VOUS'})],['tasses_gaming',catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO ? ON LE MET SUR LA TASSE'})],['tasses_humour',catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE ? ON LA CRÉE POUR VOUS'})],['tasse_sunset_drive',heroSunset]],CTA,mug,SUNSET,PROCHES,GAMING,HUMOUR,BG,DEFS,dots,STAR,FONTS};
+module.exports={PAGES:()=>[['tasses_photo_intro',photoIntro],['tasses_photo',photoPage],['commander',commander],['tarifs',tarifs],['tasses_proches',catalogue(PROCHES,{title:'Tasses pour vos proches',sub:'Un mot doux pour chaque jour',f1:'VOTRE IDÉE ? ON LA CRÉE POUR VOUS'})],['tasses_gaming',catalogue(GAMING,{title:'Tasses gaming',sub:'Pour les joueurs de la famille',f1:'VOTRE PSEUDO ? ON LE MET SUR LA TASSE'})],['tasses_humour',catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE ? ON LA CRÉE POUR VOUS'})],['tasse_sunset_drive',heroSunset]],CTA,mug,SUNSET,PROCHES,GAMING,HUMOUR,BG,DEFS,dots,STAR,FONTS};
 if(require.main===module)(async()=>{require('fs').mkdirSync(OUT,{recursive:true});const b=await chromium.launch();const p=await b.newPage({viewport:{width:1080,height:1920}});
  const shot=async(html,f,vp)=>{if(vp)await p.setViewportSize(vp);await p.setContent(html,{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.screenshot({path:OUT+f})};
  await shot(avatar,'avatar_MV.png',{width:1080,height:1080});
@@ -158,4 +177,5 @@ if(require.main===module)(async()=>{require('fs').mkdirSync(OUT,{recursive:true}
  await shot(catalogue(HUMOUR,{title:'Tasses avec humour',sub:'Le café, mais avec le sourire',f1:'VOTRE PHRASE ? ON LA CRÉE POUR VOUS'}),'tasses_humour.png');
  await shot(heroSunset,'tasse_sunset_drive.png');
  await shot(photoPage,'tasses_photo.png');
+ await shot(photoIntro,'tasses_photo_intro.png');
  await b.close()})();
