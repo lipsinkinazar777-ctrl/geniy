@@ -162,6 +162,10 @@ const photoIntro=page(`
  <div style="font:italic 600 34px 'Cormorant Garamond',serif;color:#e9c47e">Découvrez aussi nos modèles dans nos stories à la une</div>
  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px">${pills.map(t=>`<span style="border:1.5px solid #e2bb6c;border-radius:99px;padding:5px 18px;font:600 22px Montserrat,sans-serif;color:#f6e9d6;background:rgba(90,15,34,.6)">${t}</span>`).join('')}</div></div>`,
 {title:'Votre photo, votre tasse',sub:'Un cadeau unique, fait main à Paris',f1:'FAIT MAIN À PARIS  ✦  AVEC VOS PHOTOS'});
+// "Vos avis" template: iPhone-screenshot frame + order-photo frame, labels above (empty, filled in Canva)
+const frame=(x,y,w,h,lab)=>`<div style="position:absolute;left:${x}px;top:${y-64}px;width:${w}px;text-align:center"><span style="display:inline-block;border:1.5px solid #e2bb6c;border-radius:99px;background:rgba(26,4,9,.78);padding:8px 24px;font:600 26px Montserrat,sans-serif;color:#f6e9d6">${lab}</span></div>
+<div style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border:3px solid #e2bb6c;border-radius:26px;background:linear-gradient(135deg,#46101d,#2a070f);box-shadow:0 18px 40px rgba(0,0,0,.45)"><div style="position:absolute;inset:8px;border:1px solid rgba(243,217,150,.6);border-radius:20px"></div></div>`;
+const avisPage=page(frame(75,690,341,740,'Son message')+frame(444,690,560,740,'Sa commande'),{title:'Vos avis',sub:'Merci pour vos mots doux',f1:'MERCI DE VOTRE CONFIANCE  ✦  FAIT MAIN À PARIS'});
 const catalogue=(items,o)=>page(`<div style="position:absolute;top:626px;left:50px;right:50px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px 0">
 ${items.map(([n,d])=>`<div style="text-align:center">${mug(d,232)}<div style="font:600 32px/1 'Cormorant Garamond',serif;color:#fbefdc;margin-top:-4px;text-shadow:0 2px 8px rgba(0,0,0,.5)">${n}</div></div>`).join('')}</div>`,o);
 const heroSunset=page(`<div style="position:absolute;top:640px;left:100px;right:100px;height:300px;border-radius:22px;overflow:hidden;border:2.5px solid #e2bb6c;box-shadow:0 18px 40px rgba(0,0,0,.45)"><svg viewBox="0 0 880 300" width="880" height="300">${SUNSET(880,300)}</svg></div>
@@ -178,4 +182,5 @@ if(require.main===module)(async()=>{require('fs').mkdirSync(OUT,{recursive:true}
  await shot(heroSunset,'tasse_sunset_drive.png');
  await shot(photoPage,'tasses_photo.png');
  await shot(photoIntro,'tasses_photo_intro.png');
+ await shot(avisPage,'avis_vide.png');
  await b.close()})();
