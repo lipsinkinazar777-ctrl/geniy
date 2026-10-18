@@ -1,0 +1,349 @@
+<title>Maison Volodymyr</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: an atelier vitrine — asymmetric hero still-life (metal print behind, mug in front),
+   then alternating wine bands framed by gold hairlines, like a jeweller's display case. */
+:root{
+  --wine:#22060d; --wine-2:#3a0a16; --ruby:#7d1730; --ruby-hi:#a3263f;
+  --gold:#e2bb6c; --gold-hi:#f7dfa4; --gold-lo:#a9782e;
+  --cream:#f5e8d6; --muted:#c9ae9c; --line:rgba(226,187,108,.32);
+  --display:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+  --body:"Montserrat","Helvetica Neue",Arial,sans-serif;
+  --label:"Cinzel","Trajan Pro",Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--wine);color:var(--cream);font:400 16px/1.65 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--wine)}
+a{color:inherit}
+img{max-width:100%;display:block}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.label{font:600 12px/1 var(--label);letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;color:var(--cream)}
+h2{font-size:clamp(34px,4.6vw,56px);line-height:1.04}
+h3{font-size:28px;line-height:1.1}
+p{margin:0}
+.gold{background:linear-gradient(180deg,var(--gold-hi),var(--gold) 55%,var(--gold-lo));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:15px 26px;border-radius:999px;font:600 14px/1 var(--body);letter-spacing:.06em;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-gold{background:linear-gradient(180deg,var(--gold-hi),var(--gold) 60%,#c9963f);color:#2a0710;box-shadow:0 10px 30px rgba(226,187,108,.25)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(226,187,108,.35)}
+.btn-line{border:1px solid var(--line);color:var(--cream)}
+.btn-line:hover{border-color:var(--gold);background:rgba(226,187,108,.08)}
+.btn:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px}
+.wa-ico{width:18px;height:18px;flex:none}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(34,6,13,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand img{width:46px;height:46px}
+.brand span{font:500 15px/1 var(--display);letter-spacing:.32em;text-transform:uppercase}
+.nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0}
+.nav ul a{font:500 13px/1 var(--body);letter-spacing:.08em;text-decoration:none;color:var(--muted)}
+.nav ul a:hover{color:var(--gold-hi)}
+.nav .btn{padding:11px 18px;font-size:12px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:radial-gradient(70% 90% at 75% 40%,#6a1228 0%,#3a0a16 45%,var(--wine) 100%)}
+.hero::after{content:"";position:absolute;inset:-40%;background:repeating-linear-gradient(115deg,transparent 0 220px,rgba(255,220,200,.035) 220px 300px);pointer-events:none}
+.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-block:72px 80px}
+.hero-copy{display:grid;gap:26px;min-width:0}
+.hero h1{font-size:clamp(46px,6.8vw,92px);line-height:.98;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;font-weight:500}
+.lede{font-size:18px;color:var(--muted);max-width:34em}
+.hero .actions{display:flex;flex-wrap:wrap;gap:14px}
+.still{position:relative;aspect-ratio:1/1;max-width:100%}
+.still .plate{position:absolute;width:62%;left:0;top:2%}
+.still .mug{position:absolute;width:74%;right:-2%;bottom:2%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+.still .halo{position:absolute;inset:12% 6% 6% 14%;border-radius:50%;border:1px solid var(--line)}
+.still .halo::after{content:"";position:absolute;inset:16px;border-radius:50%;border:1px solid rgba(226,187,108,.16)}
+.spark{position:absolute;width:44px;height:44px;background:radial-gradient(circle,rgba(255,240,205,.9) 0 6%,rgba(243,217,150,.25) 30%,transparent 65%)}
+.spark::before,.spark::after{content:"";position:absolute;left:50%;top:50%;background:#fff3d6;transform:translate(-50%,-50%)}
+.spark::before{width:2px;height:100%}.spark::after{width:60%;height:2px}
+
+/* ribbon */
+.ribbon{border-block:1px solid var(--line);background:var(--wine-2)}
+.ribbon .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 42px;padding-block:18px}
+.ribbon span{font:600 12px/1 var(--label);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+
+section{padding-block:96px}
+.head{display:grid;gap:16px;max-width:720px;margin-bottom:48px}
+.head p{color:var(--muted);font-size:17px}
+
+/* creations */
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.card{position:relative;display:grid;grid-template-rows:auto 1fr;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(125,23,48,.35),rgba(34,6,13,.6));overflow:hidden;transition:border-color .25s,transform .25s}
+.card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.card .pic{aspect-ratio:1/1;display:grid;place-items:center;background:radial-gradient(60% 60% at 50% 45%,rgba(163,38,63,.55),transparent 70%)}
+.card .pic img{width:78%}
+.card .txt{display:grid;gap:8px;align-content:start;padding:4px 22px 24px}
+.card p{color:var(--muted);font-size:14.5px}
+
+/* metal formats */
+.metal{background:var(--wine-2);border-block:1px solid var(--line)}
+.metal-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.metal-vis{position:relative;aspect-ratio:5/4}
+.metal-vis img{position:absolute}
+.metal-vis .a{width:52%;left:2%;top:0}
+.metal-vis .b{width:52%;right:0;top:8%}
+.metal-vis .c{width:36%;left:34%;bottom:0}
+.formats{display:grid;gap:0;margin-top:30px;border-top:1px solid var(--line)}
+.formats div{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-block:14px;border-bottom:1px solid var(--line)}
+.formats b{font:600 22px/1 var(--display);color:var(--cream);font-variant-numeric:tabular-nums}
+.formats span{font-size:13px;letter-spacing:.06em;color:var(--muted);text-align:right}
+
+/* collections */
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.shelf figure{margin:0;display:grid;gap:10px;justify-items:center;padding:18px 10px 20px;border-radius:18px;background:radial-gradient(70% 60% at 50% 40%,rgba(125,23,48,.45),transparent 75%)}
+.shelf img{width:86%}
+.shelf figcaption{font:italic 500 20px/1.1 var(--display);color:var(--cream);text-align:center}
+.shelf small{display:block;font:600 10.5px/1 var(--label);letter-spacing:.22em;color:var(--gold);font-style:normal;margin-top:6px;text-transform:uppercase}
+
+/* magic mug */
+.magic{background:radial-gradient(60% 80% at 30% 50%,#4a0d1c,var(--wine) 75%)}
+.magic-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:center}
+.cup{position:relative;aspect-ratio:300/290;max-width:460px;width:100%;justify-self:center}
+.cup img{position:absolute;inset:0;width:100%;transition:opacity 1.6s ease}
+.cup .hot{opacity:0}
+.cup.on .hot{opacity:1}
+.cup.on .cold{opacity:0}
+.steam{position:absolute;left:30%;top:-6%;width:30%;height:30%;pointer-events:none;opacity:0;transition:opacity .8s}
+.cup.on .steam{opacity:1}
+.steam i{position:absolute;bottom:0;width:10px;height:70%;border-radius:50%;border-left:3px solid rgba(245,232,214,.55);filter:blur(1.5px);animation:rise 2.6s ease-in-out infinite}
+.steam i:nth-child(1){left:15%}.steam i:nth-child(2){left:45%;animation-delay:.6s}.steam i:nth-child(3){left:75%;animation-delay:1.2s}
+@keyframes rise{0%{transform:translateY(20%) scaleY(.7);opacity:0}40%{opacity:1}100%{transform:translateY(-40%) scaleY(1.1);opacity:0}}
+.magic .copy{display:grid;gap:22px;min-width:0}
+.magic .copy p{color:var(--muted);font-size:17px;max-width:32em}
+.toggle{justify-self:start;cursor:pointer;border:0}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;counter-reset:s}
+.step{position:relative;padding:34px 28px 30px;border:1px solid var(--line);border-radius:22px;background:rgba(58,10,22,.55);display:grid;gap:12px;align-content:start}
+.step::before{counter-increment:s;content:counter(s);font:600 48px/1 var(--label);color:transparent;-webkit-text-stroke:1px var(--gold)}
+.step p{color:var(--muted);font-size:15px}
+
+/* atelier */
+.atelier{border-top:1px solid var(--line)}
+.atelier-grid{display:grid;grid-template-columns:auto 1fr;gap:56px;align-items:center}
+.seal{width:220px;max-width:100%}
+.atelier blockquote{margin:0;font:italic 500 clamp(26px,3vw,38px)/1.25 var(--display);color:var(--cream);max-width:24em}
+.atelier .sig{margin-top:20px;font:600 12px/1 var(--label);letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+
+/* contact */
+.contact{background:linear-gradient(180deg,var(--wine-2),var(--wine));border-top:1px solid var(--line);text-align:center}
+.contact .inner{display:grid;gap:22px;justify-items:center;max-width:720px;margin:0 auto}
+.phone{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px}
+.phone output{font:600 clamp(28px,4vw,40px)/1 var(--label);letter-spacing:.06em;font-variant-numeric:tabular-nums;user-select:all}
+.copy-btn{cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:8px 14px;font:600 11px/1 var(--body);letter-spacing:.1em;text-transform:uppercase}
+.copy-btn:hover{color:var(--gold-hi);border-color:var(--gold)}
+.contact .meta{color:var(--muted);font-size:15px}
+footer{border-top:1px solid var(--line);padding-block:28px;color:var(--muted);font-size:12.5px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between}
+
+@media (max-width:980px){
+  .cards,.shelf{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nav ul{display:none}
+}
+@media (max-width:820px){
+  .hero-grid,.metal-grid,.magic-grid,.atelier-grid{grid-template-columns:1fr}
+  .hero-grid{padding-block:44px 56px}
+  .still{max-width:520px;width:100%;justify-self:center}
+  .steps{grid-template-columns:1fr}
+  .atelier-grid{justify-items:center;text-align:center}
+  .seal{width:150px}
+  section{padding-block:68px}
+}
+@media (max-width:460px){
+  .brand span{display:none}
+  .cards,.shelf{grid-template-columns:1fr 1fr;gap:12px}
+  .card .txt{padding:2px 14px 18px}
+  .card p{font-size:13px}
+  h3{font-size:23px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><img src="img/logo.png" alt="Monogramme MV"><span>Maison Volodymyr</span></a>
+    <ul>
+      <li><a href="#creations">Créations</a></li>
+      <li><a href="#metal">Photo sur métal</a></li>
+      <li><a href="#magique">Tasse magique</a></li>
+      <li><a href="#commander">Commander</a></li>
+    </ul>
+    <a class="btn btn-gold" href="https://wa.me/33758181515" target="_blank" rel="noopener">
+      <svg class="wa-ico" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/></g></svg>WhatsApp</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="label">Atelier familial · Paris</span>
+        <h1>Vos souvenirs,<br><em class="gold">gravés pour toujours.</em></h1>
+        <p class="lede">Tasses, photos sur métal, porte-clés et coffrets personnalisés avec vos photos et vos prénoms. Fabriqués à la main, un par un, à Paris.</p>
+        <div class="actions">
+          <a class="btn btn-gold" href="https://wa.me/33758181515" target="_blank" rel="noopener">
+            <svg class="wa-ico" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/></g></svg>Commander sur WhatsApp</a>
+          <a class="btn btn-line" href="#creations">Voir nos créations</a>
+        </div>
+      </div>
+      <div class="still" aria-hidden="true">
+        <div class="halo"></div>
+        <img class="plate" src="img/metal-famille.png" alt="">
+        <img class="mug" src="img/hero-tasse.png" alt="">
+        <i class="spark" style="right:10%;top:8%"></i>
+        <i class="spark" style="left:46%;bottom:6%;transform:scale(.7)"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="ribbon"><div class="wrap">
+    <span>Fait main à Paris</span><span>Avec vos photos</span><span>Prénom sur demande</span><span>Sur commande</span>
+  </div></div>
+
+  <section id="creations">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">Nos créations</span>
+        <h2>Un cadeau qui porte <span class="gold">votre histoire</span></h2>
+        <p>Envoyez une photo, un prénom ou une idée. Nous la transformons en un objet que l’on garde.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><div class="pic"><img src="img/tasse-famille.png" alt="Tasse avec une photo de famille"></div>
+          <div class="txt"><h3>Tasses photo</h3><p>Votre photo, votre texte ou votre prénom, sur une tasse en céramique.</p></div></article>
+        <article class="card"><div class="pic"><img src="img/metal-animal.png" alt="Photo imprimée sur une plaque de métal"></div>
+          <div class="txt"><h3>Photo sur métal</h3><p>Des couleurs profondes et un reflet métallique. Du mini format au grand tableau.</p></div></article>
+        <article class="card"><div class="pic"><img src="img/tasse-lundi.png" alt="Tasse avec une phrase humoristique"></div>
+          <div class="txt"><h3>Porte-clés &amp; magnets</h3><p>Avec un prénom, un drapeau ou une photo. Le petit cadeau qui fait plaisir.</p></div></article>
+        <article class="card"><div class="pic"><img src="img/tasse-couple.png" alt="Tasse pour un couple"></div>
+          <div class="txt"><h3>Coffrets cadeaux</h3><p>Tasse, photo et magnet réunis dans un coffret prêt à offrir.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="metal" class="metal">
+    <div class="wrap metal-grid">
+      <div class="metal-vis" aria-hidden="true">
+        <img class="a" src="img/metal-famille.png" alt="">
+        <img class="b" src="img/metal-route.png" alt="">
+        <img class="c" src="img/metal-animal.png" alt="">
+      </div>
+      <div>
+        <span class="label">Photo sur métal</span>
+        <h2 style="margin-top:16px">Un souvenir <span class="gold">pour toujours</span></h2>
+        <p style="color:var(--muted);margin-top:18px;max-width:30em">Votre photo imprimée directement sur une plaque de métal : les couleurs ressortent, l’image ne se déforme pas avec le temps.</p>
+        <div class="formats" role="list">
+          <div role="listitem"><b>5,5 × 8,5 cm</b><span>format portefeuille</span></div>
+          <div role="listitem"><b>10 × 15 cm</b><span>à poser sur un bureau</span></div>
+          <div role="listitem"><b>15 × 20 cm</b><span>cadre classique</span></div>
+          <div role="listitem"><b>20 × 30 cm</b><span>pour le mur</span></div>
+          <div role="listitem"><b>30 × 40 cm</b><span>grand format, pour le salon</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="collections">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">Nos tasses</span>
+        <h2>Une tasse pour <span class="gold">chaque personne</span></h2>
+        <p>Pour maman, pour papa, pour les gamers ou pour ceux qui détestent le lundi. Ou avec votre propre photo.</p>
+      </div>
+      <div class="shelf">
+        <figure><img src="img/tasse-maman.png" alt="Tasse Meilleure maman"><figcaption>Meilleure maman<small>Proches</small></figcaption></figure>
+        <figure><img src="img/tasse-papa.png" alt="Tasse Super papa"><figcaption>Super papa<small>Proches</small></figcaption></figure>
+        <figure><img src="img/tasse-level.png" alt="Tasse gaming Level up"><figcaption>Level up<small>Gaming</small></figcaption></figure>
+        <figure><img src="img/tasse-bebe.png" alt="Tasse avec une photo de bébé"><figcaption>Votre bébé<small>Votre photo</small></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="magique" class="magic">
+    <div class="wrap magic-grid">
+      <div class="cup" id="cup">
+        <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
+        <img class="cold" src="img/magique-froid.png" alt="Tasse magique noire, à froid">
+        <img class="hot" src="img/magique-chaud.png" alt="La même tasse à chaud : la photo est apparue">
+      </div>
+      <div class="copy">
+        <span class="label">Tasse magique</span>
+        <h2>Versez du chaud, <span class="gold">la photo apparaît</span></h2>
+        <p>Noire à froid. Dès qu’on verse un café ou un thé, votre photo se révèle. Une surprise à chaque matin.</p>
+        <button class="btn btn-gold toggle" id="pour" type="button" aria-pressed="false">Verser du café</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="commander">
+    <div class="wrap">
+      <div class="head">
+        <span class="label">Comment commander</span>
+        <h2>Trois messages, <span class="gold">et c’est fait</span></h2>
+      </div>
+      <div class="steps">
+        <div class="step"><h3>Écrivez-nous sur WhatsApp</h3><p>Dites-nous ce que vous souhaitez : tasse, photo sur métal, porte-clés ou coffret.</p></div>
+        <div class="step"><h3>Envoyez votre photo</h3><p>Celle que vous voulez voir sur votre cadeau, avec un prénom ou un texte si vous le souhaitez.</p></div>
+        <div class="step"><h3>Récupérez votre cadeau</h3><p>Fait main, avec soin. Nous convenons ensemble du jour où vous le récupérez.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="atelier">
+    <div class="wrap atelier-grid">
+      <img class="seal" src="img/logo.png" alt="Monogramme Maison Volodymyr">
+      <div>
+        <blockquote>« Chaque objet sort de nos mains. Une photo qui dort dans un téléphone devient un cadeau que l’on garde. »</blockquote>
+        <p class="sig">Maison Volodymyr · atelier familial</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap inner">
+      <span class="label">Contact</span>
+      <h2>Parlons de <span class="gold">votre cadeau</span></h2>
+      <div class="phone">
+        <output id="num">+33 7 58 18 15 15</output>
+        <button class="copy-btn" id="copy" type="button">Copier</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+        <a class="btn btn-gold" href="https://wa.me/33758181515" target="_blank" rel="noopener">
+          <svg class="wa-ico" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M32 6a26 26 0 0 0-22.4 39.2L6 58l13.2-3.5A26 26 0 1 0 32 6z"/></g></svg>Écrire sur WhatsApp</a>
+        <a class="btn btn-line" href="https://www.instagram.com/maison.volodymyr/" target="_blank" rel="noopener">Instagram @maison.volodymyr</a>
+      </div>
+      <p class="meta">Retrouvez-nous le week-end à Paris. Écrivez-nous pour l’adresse et les horaires.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Maison Volodymyr · Cadeaux personnalisés faits main à Paris</span>
+    <span>Mentions légales : entreprise individuelle · SIRET à compléter</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var cup=document.getElementById('cup'),pour=document.getElementById('pour');
+  pour.addEventListener('click',function(){
+    var on=!cup.classList.contains('on');
+    cup.classList.toggle('on',on);
+    pour.setAttribute('aria-pressed',on);
+    pour.textContent=on?'Laisser refroidir':'Verser du café';
+  });
+  var copy=document.getElementById('copy'),num=document.getElementById('num');
+  copy.addEventListener('click',function(){
+    var t=num.textContent,done=function(){copy.textContent='Copié';setTimeout(function(){copy.textContent='Copier'},1800)};
+    try{navigator.clipboard.writeText(t).then(done,function(){sel()})}catch(e){sel()}
+    function sel(){var r=document.createRange();r.selectNodeContents(num);var s=getSelection();s.removeAllRanges();s.addRange(r);copy.textContent='Sélectionné'}
+  });
+})();
+</script>
