@@ -6,8 +6,7 @@ const STATIC=fs.readFileSync(__dirname+'/fonts_static.css','utf8');
 const caps=[['FORTNITE','RED DEAD II','COUNTER STRIKE'],['ROBLOX','BATMAN','BRAWL STARS']];
 const cols=[220,540,860],rows=[1045,1450];
 const logo=`<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${P.DEFS}
-<circle cx="540" cy="240" r="74" fill="#5a0f22"/><circle cx="540" cy="240" r="74" fill="none" stroke="url(#gold)" stroke-width="4"/><circle cx="540" cy="240" r="64" fill="none" stroke="url(#gold)" stroke-width="1.6" opacity=".85"/>
-<text x="540" y="262" text-anchor="middle" font-family="Cinzel" font-weight="600" font-size="60" fill="url(#gold)">MV</text>
+<image href="data:image/png;base64,${fs.readFileSync(__dirname+'/template/logo_MV.png').toString('base64')}" x="460" y="160" width="160" height="160"/>
 <rect x="300" y="404" width="480" height="1.8" fill="url(#lg)"/><defs><linearGradient id="lg"><stop offset="0" stop-color="#e2bb6c" stop-opacity="0"/><stop offset=".5" stop-color="#e2bb6c"/><stop offset="1" stop-color="#e2bb6c" stop-opacity="0"/></linearGradient></defs>
 <rect x="400" y="1530" width="280" height="1.6" fill="url(#lg)"/></svg>`;
 const deco=`<svg viewBox="0 0 1080 1920" width="1080" height="1920" style="position:absolute;inset:0">${P.DEFS}${P.dots()}<rect x="70" y="560" width="1.4" height="900" fill="rgba(243,217,150,.5)"/>${P.STAR(71,640,46)}${P.STAR(71,1330,34,.9)}${P.STAR(1010,250,22,.7)}</svg>`;
