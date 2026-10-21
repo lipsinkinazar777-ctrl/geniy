@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Maison Volodymyr — Cadeaux personnalisés, Paris</title>
+<meta name="description" content="Tasses photo, photos sur métal, aimants et porte-clés faits main à Paris. Composez votre commande et envoyez-la sur WhatsApp.">
+<meta name="theme-color" content="#060102">
+<meta property="og:title" content="Maison Volodymyr — Cadeaux personnalisés, Paris">
+<meta property="og:description" content="Vos photos sur tasse, métal, aimant et porte-clés. Faits main à Paris.">
+<meta property="og:image" content="assets/hero-scene.jpg">
+<link rel="icon" href="assets/logo-mv-256.webp" type="image/webp">
+<link rel="preload" as="image" href="assets/hero-bg.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 2D icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-mug" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14h24v17a8 8 0 0 1-8 8h-8a8 8 0 0 1-8-8V14z"/><path d="M33 18h4a4 4 0 0 1 0 12h-4"/><path d="M15 9c0-2 2-2 2-4M21 9c0-2 2-2 2-4M27 9c0-2 2-2 2-4"/></g></symbol>
+    <symbol id="i-frame" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="7" width="32" height="34" rx="2"/><circle cx="31" cy="17" r="3"/><path d="M8 33l10-9 8 7 6-5 8 7"/></g></symbol>
+    <symbol id="i-magnet" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v18a12 12 0 0 0 24 0V8"/><path d="M12 8h8v18a4 4 0 0 0 8 0V8h8"/><path d="M12 15h8M28 15h8"/></g></symbol>
+    <symbol id="i-key" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="24" r="8"/><circle cx="15" cy="24" r="2.5"/><path d="M23 24h19M35 24v7M41 24v5"/></g></symbol>
+    <symbol id="i-gift" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="18" width="34" height="8" rx="1.5"/><path d="M10 26v14h28V26M24 18v22"/><path d="M24 18c-4 0-9-1-9-5s6-4 9 5zM24 18c4 0 9-1 9-5s-6-4-9 5z"/></g></symbol>
+    <symbol id="i-heart" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 40S7 30 7 18a8.5 8.5 0 0 1 17-2 8.5 8.5 0 0 1 17 2c0 12-17 22-17 22z"/></g></symbol>
+    <symbol id="i-laser" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h14l4 6h-8l-4-6zM20 12v-4"/><path d="M24 18l-3 9M30 24l12 0M30 30l9 5M30 18l9-5"/><path d="M10 40h28"/></g></symbol>
+    <symbol id="i-star" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M24 5l4 15 15 4-15 4-4 15-4-15-15-4 15-4z"/></g></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></g></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></g></symbol>
+    <symbol id="i-arrow-ur" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></g></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M9 6.5v11l9-5.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-insta" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.7"/><circle cx="16.8" cy="7.2" r=".6" fill="currentColor"/></g></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5a8.5 8.5 0 0 0-7.3 12.8L3.5 20.5l4.3-1.1A8.5 8.5 0 1 0 12 3.5z"/><path d="M9 8.5c.3 3 2.6 5.6 6 6.5l1.3-1.5-2-1-.9.8c-.9-.4-1.9-1.4-2.3-2.3l.8-.9-1-2z"/></g></symbol>
+    <symbol id="i-bow" viewBox="0 0 40 20"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 4l14 6L3 16zM37 4L23 10l14 6zM17 10h6"/></g></symbol>
+    <symbol id="i-seal" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4l5 4 6-1 2 6 5 3-2 6 2 6-5 3-2 6-6-1-5 4-5-4-6 1-2-6-5-3 2-6-2-6 5-3 2-6 6 1z"/><path d="M17 24l5 5 9-10"/></g></symbol>
+  </defs>
+</svg>
+
+<div class="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"><span class="cursor__label"></span></span></div>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- =============== HEADER =============== -->
+<header class="top" id="top">
+  <a class="brand" href="#hero" aria-label="Maison Volodymyr — accueil">
+    <img src="assets/logo-mv-256.webp" width="44" height="44" alt="">
+    <span>MAISON VOLODYMYR</span>
+  </a>
+  <nav class="nav" aria-label="Navigation principale">
+    <a href="#creations" class="roll" data-cursor="Voir"><span data-t="Créations">Créations</span></a>
+    <a href="#boutique" class="roll"><span data-t="Boutique">Boutique</span></a>
+    <a href="#coffrets" class="roll"><span data-t="Coffrets">Coffrets</span></a>
+    <a href="#atelier" class="roll"><span data-t="Atelier">Atelier</span></a>
+  </nav>
+  <div class="top__right">
+    <a class="btn btn--gold btn--sm" href="#boutique" data-magnet><span class="btn__t">Commander</span></a>
+    <button class="bagbtn" id="openCart" aria-label="Ouvrir le panier" data-magnet>
+      <svg class="ico"><use href="#i-bag"/></svg><span class="bagbtn__n" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+<!-- =============== HERO =============== -->
+<section class="hero" id="hero">
+  <div class="stage" id="stage">
+    <img class="stage__bg" src="assets/hero-bg.jpg" alt="" width="2560" height="1600" fetchpriority="high">
+    <div class="stage__shade"></div>
+  </div>
+
+  <!-- headline sits between the scene and the product layers -->
+  <h1 class="headline" aria-label="Votre cadeau">
+    <span class="headline__w headline__w--a" data-split>VOTRE</span>
+    <span class="headline__w headline__w--b" data-split>CADEAU</span>
+  </h1>
+
+  <!-- product layers: same camera as the background → they overlay pixel for pixel -->
+  <div class="stage stage--fx" id="stageFx" aria-hidden="true">
+    <div class="mugclip"><img class="layer layer--mug" src="assets/hero-mug.webp" alt="" width="2560" height="1600"></div>
+    <img class="layer layer--base" src="assets/hero-box-base.webp" alt="" width="2560" height="1600">
+    <img class="layer layer--lid" src="assets/hero-box-lid.webp" alt="" width="2560" height="1600">
+    <div class="sparks" id="sparks"></div>
+  </div>
+  <button class="hit" id="hit" aria-pressed="false" aria-label="Ouvrir le coffret : découvrir la tasse" data-cursor="Ouvrir"></button>
+  <p class="hint" id="hint"><span class="hint__dot"></span><span class="hint__t" data-fine="Survolez le coffret" data-coarse="Touchez le coffret">Survolez le coffret</span></p>
+
+  <aside class="tag">
+    <svg class="ico ico--ember" viewBox="0 0 40 20"><use href="#i-bow"/></svg>
+    <p>TASSES, PHOTOS SUR MÉTAL, AIMANTS ET PORTE-CLÉS. FAITS MAIN À PARIS.</p>
+  </aside>
+
+  <button class="about" id="aboutOpen" data-cursor="Lire">
+    <span class="about__img"><img src="assets/card-key.webp" alt="" loading="eager"><span class="about__play"><svg class="ico"><use href="#i-play"/></svg></span></span>
+    <span class="about__cap">L’ATELIER</span>
+  </button>
+
+  <p class="lead">
+    <span class="lead__dot"></span>
+    <span>Cadeaux personnalisés avec vos photos.<br>Imprimés et gravés à la main,<br>prêts à offrir.</span>
+  </p>
+
+  <div class="plaques">
+    <a class="plaque plaque--img" href="#boutique" data-cursor="Voir" data-tilt>
+      <span class="plaque__top"><span>Nouveau</span><svg class="ico"><use href="#i-arrow-ur"/></svg></span>
+      <span class="plaque__sub">Photo sur métal 30×40</span>
+      <img src="assets/card-photo.webp" alt="" loading="eager">
+    </a>
+    <a class="plaque plaque--cream" href="#offre" data-cursor="Voir" data-tilt>
+      <svg class="ico ico--gold plaque__ico"><use href="#i-seal"/></svg>
+      <span class="plaque__lbl">1ÈRE COMMANDE</span>
+      <span class="plaque__big">−20&nbsp;%</span>
+    </a>
+  </div>
+  <div class="scrollhint" aria-hidden="true"><span></span></div>
+</section>
+
+<!-- =============== MARQUEE =============== -->
+<section class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marquee">
+    <span>Tasses photo</span><i></i><span>Photos sur métal</span><i></i><span>Aimants</span><i></i><span>Porte-clés</span><i></i><span>Coffrets cadeaux</span><i></i><span>Fait main à Paris</span><i></i>
+    <span>Tasses photo</span><i></i><span>Photos sur métal</span><i></i><span>Aimants</span><i></i><span>Porte-clés</span><i></i><span>Coffrets cadeaux</span><i></i><span>Fait main à Paris</span><i></i>
+  </div>
+</section>
+
+<!-- =============== CRÉATIONS (index with floating preview) =============== -->
+<section class="sec creations" id="creations">
+  <header class="sec__head">
+    <p class="eyebrow">01 — Créations</p>
+    <h2 class="h2 grad" data-split-lines>Ce que nous fabriquons</h2>
+  </header>
+  <ul class="index" id="index">
+    <li><a href="#boutique" data-img="assets/card-mug.webp" data-filter="tasse">
+      <span class="index__n">01</span><span class="index__t">Tasse photo</span>
+      <span class="index__d">Votre photo ou votre dessin, imprimé sur tout le tour</span><span class="index__p">10 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+    <li><a href="#boutique" data-img="assets/card-metal.webp" data-filter="metal">
+      <span class="index__n">02</span><span class="index__t">Photo sur métal</span>
+      <span class="index__d">De 10×15 à 30×40 cm, plaque brillante</span><span class="index__p">dès 4 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+    <li><a href="#boutique" data-img="assets/card-magnet.webp" data-filter="aimant">
+      <span class="index__n">03</span><span class="index__t">Aimant photo</span>
+      <span class="index__d">Pour le frigo, avec la photo du moment</span><span class="index__p">3 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+    <li><a href="#boutique" data-img="assets/card-key.webp" data-filter="cles">
+      <span class="index__n">04</span><span class="index__t">Porte-clés</span>
+      <span class="index__d">Simple ou double face</span><span class="index__p">dès 2 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+    <li><a href="#coffrets" data-img="assets/card-coffret.webp">
+      <span class="index__n">05</span><span class="index__t">Coffrets cadeaux</span>
+      <span class="index__d">Plusieurs articles, boîte noire, ruban doré</span><span class="index__p">dès 22 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+  </ul>
+  <div class="float" id="float" aria-hidden="true"><img alt=""><img alt=""></div>
+</section>
+
+<!-- =============== BOUTIQUE =============== -->
+<section class="sec shop" id="boutique">
+  <header class="sec__head sec__head--row">
+    <div>
+      <p class="eyebrow">02 — Boutique</p>
+      <h2 class="h2 grad" data-split-lines>Composez votre commande</h2>
+    </div>
+    <p class="sec__lede">Ajoutez vos articles au panier, puis envoyez la commande sur WhatsApp. Vous nous envoyez la photo, nous vous montrons un aperçu avant de fabriquer.</p>
+  </header>
+  <div class="chips" id="chips" role="tablist" aria-label="Filtrer les articles">
+    <button class="chip is-on" data-f="all" role="tab" aria-selected="true">Tout</button>
+    <button class="chip" data-f="tasse" role="tab" aria-selected="false">Tasses</button>
+    <button class="chip" data-f="metal" role="tab" aria-selected="false">Photos sur métal</button>
+    <button class="chip" data-f="aimant" role="tab" aria-selected="false">Aimants</button>
+    <button class="chip" data-f="cles" role="tab" aria-selected="false">Porte-clés</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- =============== COFFRETS =============== -->
+<section class="sec box" id="coffrets">
+  <div class="box__visual" id="boxVisual" data-cursor="Ouvrir">
+    <img class="box__img" src="assets/card-coffret.webp" alt="Coffret cadeau noir avec ruban doré et médaillon MV" loading="lazy">
+    <span class="box__glow"></span>
+  </div>
+  <div class="box__body">
+    <p class="eyebrow">03 — Coffrets</p>
+    <h2 class="h2 grad" data-split-lines>Prêts à offrir</h2>
+    <p class="sec__lede">Plusieurs articles dans une boîte noire nouée d’un ruban doré. Choisissez l’occasion, nous préparons le reste.</p>
+    <ul class="coffs" id="coffs"></ul>
+  </div>
+</section>
+
+<!-- =============== ATELIER =============== -->
+<section class="sec atelier" id="atelier">
+  <header class="sec__head">
+    <p class="eyebrow">04 — Atelier</p>
+    <h2 class="h2 grad" data-split-lines>Un atelier de famille,<br>à Paris 18e</h2>
+  </header>
+  <div class="atelier__cols">
+    <p class="atelier__txt">Maison Volodymyr est un atelier familial. Nous imprimons, gravons et assemblons chaque cadeau nous-mêmes, avec les photos de nos clients. Nous réalisons aussi des commandes en quantité pour les écoles, les associations et les entreprises.</p>
+    <ul class="info">
+      <li><svg class="ico"><use href="#i-pin"/></svg><span>Stand à la Porte de Clignancourt<br>75018 Paris</span></li>
+      <li><svg class="ico"><use href="#i-clock"/></svg><span>Samedi et dimanche<br>de 10 h à 18 h</span></li>
+      <li><svg class="ico"><use href="#i-wa"/></svg><span><a href="https://wa.me/33758181515" target="_blank" rel="noopener">+33 7 58 18 15 15</a><br>WhatsApp</span></li>
+    </ul>
+  </div>
+  <ol class="steps">
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-wa"/></svg><b>01</b><h3>Envoyez votre photo</h3><p>Sur WhatsApp, en haute qualité. Si vous hésitez entre plusieurs, envoyez-les toutes.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-frame"/></svg><b>02</b><h3>Validez l’aperçu</h3><p>Nous préparons un aperçu gratuit. Vous répondez « OK », ou nous corrigeons.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-laser"/></svg><b>03</b><h3>Fabrication à la main</h3><p>Impression, gravure laser sur métal, assemblage dans notre atelier.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-gift"/></svg><b>04</b><h3>Prêt à offrir</h3><p>Votre cadeau est emballé, avec un coffret si vous le souhaitez.</p></li>
+  </ol>
+</section>
+
+<!-- =============== OFFRE =============== -->
+<section class="sec offre" id="offre">
+  <div class="offre__in" data-tilt>
+    <p class="eyebrow">Première commande</p>
+    <p class="offre__big grad">−20&nbsp;%</p>
+    <p class="offre__t">Cochez la case dans le panier, ou écrivez-le dans votre message WhatsApp.</p>
+    <a class="btn btn--gold" href="#boutique" data-magnet><span class="btn__t">Choisir mes articles</span><svg class="ico"><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+</main>
+
+<!-- =============== FOOTER =============== -->
+<footer class="foot">
+  <div class="foot__big grad" aria-hidden="true">MAISON VOLODYMYR</div>
+  <div class="foot__row">
+    <div><img src="assets/logo-mv-256.webp" width="56" height="56" alt=""><p>Cadeaux personnalisés<br>pour toute la famille.</p></div>
+    <div>
+      <p class="foot__h">Contact</p>
+      <a class="lnk" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span>WhatsApp +33 7 58 18 15 15</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a>
+      <a class="lnk" href="https://www.instagram.com/maison.volodymyr" target="_blank" rel="noopener"><span>@maison.volodymyr</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a>
+    </div>
+    <div>
+      <p class="foot__h">Stand</p>
+      <p>Porte de Clignancourt, 75018 Paris<br>Samedi et dimanche, 10 h – 18 h</p>
+    </div>
+  </div>
+  <p class="foot__copy">© <span id="yr">2026</span> Maison Volodymyr. Fait main à Paris.</p>
+</footer>
+
+<!-- =============== ABOUT DIALOG =============== -->
+<dialog class="dlg" id="aboutDlg" aria-labelledby="aboutT">
+  <button class="dlg__x" data-close aria-label="Fermer"><svg class="ico"><use href="#i-close"/></svg></button>
+  <img src="assets/logo-mv-256.webp" width="64" height="64" alt="">
+  <h3 id="aboutT">L’atelier</h3>
+  <p>Tout commence avec une photo. Nous l’imprimons sur une tasse, la gravons sur du métal ou la glissons dans un porte-clés, puis nous emballons le tout à la main.</p>
+  <p>Vous nous trouvez à la Porte de Clignancourt le week-end, ou sur WhatsApp toute la semaine.</p>
+  <a class="btn btn--gold" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span class="btn__t">Écrire sur WhatsApp</span></a>
+</dialog>
+
+<!-- =============== CART =============== -->
+<div class="veil" id="veil"></div>
+<aside class="cart" id="cart" aria-hidden="true" aria-labelledby="cartT">
+  <header class="cart__head"><h3 id="cartT">Votre panier</h3><button class="iconbtn" id="closeCart" aria-label="Fermer le panier"><svg class="ico"><use href="#i-close"/></svg></button></header>
+  <div class="cart__body" id="cartBody"></div>
+  <footer class="cart__foot" id="cartFoot">
+    <label class="field"><span>Prénom</span><input id="cName" type="text" autocomplete="given-name" placeholder="Votre prénom"></label>
+    <label class="field"><span>Précisions (texte à graver, date, couleurs)</span><textarea id="cNote" rows="2" placeholder="Facultatif"></textarea></label>
+    <label class="check"><input type="checkbox" id="cFirst"><span class="check__box"><svg class="ico"><use href="#i-check"/></svg></span><span>C’est ma première commande (−20 %)</span></label>
+    <dl class="sum">
+      <div><dt>Sous-total</dt><dd id="sSub">0 €</dd></div>
+      <div id="sDiscRow" hidden><dt>Remise −20 %</dt><dd id="sDisc">0 €</dd></div>
+      <div class="sum__tot"><dt>Total estimé</dt><dd id="sTot">0 €</dd></div>
+    </dl>
+    <a class="btn btn--gold btn--block" id="sendWa" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-wa"/></svg><span class="btn__t">Envoyer la commande sur WhatsApp</span></a>
+    <p class="cart__fine">Le message s’ouvre dans WhatsApp, prêt à envoyer. Vous y joignez vos photos. Le prix final est confirmé par l’atelier.</p>
+  </footer>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

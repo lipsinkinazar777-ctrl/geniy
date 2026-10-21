@@ -1,0 +1,11 @@
+import { chromium } from 'playwright-core'; import http from 'http'; import fs from 'fs'; import path from 'path';
+const site = path.resolve(new URL('..', import.meta.url).pathname); const SP = '/tmp/claude-0/-home-user-geniy/9d6c210a-1d40-575b-b4e9-4f41d3869cb9/scratchpad';
+const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); if (u === '/') u = '/index.html'; const f = path.join(site, u); if (!fs.existsSync(f)) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': mime[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(0);
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+const pg = await b.newPage({ viewport: { width: 1440, height: 900 } }); await pg.goto(`http://localhost:${srv.address().port}/`); await pg.waitForTimeout(2500);
+await pg.evaluate(() => scrollTo(0, document.querySelector('#index').getBoundingClientRect().top + scrollY - 160)); await pg.waitForTimeout(1800);
+const row = pg.locator('#index li').nth(1); const bb = await row.boundingBox(); await pg.mouse.move(700, bb.y + 40); await pg.mouse.move(760, bb.y + 50, { steps: 8 }); await pg.waitForTimeout(900); await pg.screenshot({ path: SP + '/hv-index.png' });
+await pg.evaluate(() => document.querySelector('#grid').scrollIntoView({ block: 'center' })); await pg.waitForTimeout(1500);
+const c = pg.locator('#grid .card').nth(1); const cb = await c.boundingBox(); await pg.mouse.move(cb.x + cb.width * .8, cb.y + cb.height * .3, { steps: 6 }); await pg.waitForTimeout(900); await pg.screenshot({ path: SP + '/hv-card.png' });
+await b.close(); srv.close();
