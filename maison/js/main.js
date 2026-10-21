@@ -25,17 +25,48 @@ const PRODUCTS = [
     opts: [{ l: 'Simple face', p: 2, from: true }, { l: 'Double face', p: 5 }] }
 ];
 const COFFRETS = [
-  { id: 'c-maman', name: 'Pour Maman', occ: 'Fête des mères', c: 'Tasse photo · photo 15×20 · aimant', p: 23 },
-  { id: 'c-papa', name: 'Pour Papa', occ: 'Fête des pères', c: 'Tasse photo · porte-clés double · aimant', p: 22 },
-  { id: 'c-duo', name: 'Duo Amoureux', occ: 'Saint-Valentin', c: '2 tasses photo · photo 10×15 · aimant', p: 31 },
-  { id: 'c-gp', name: 'Grands-parents', occ: 'Papi & Mamie', c: 'Photo 20×30 · tasse photo · aimant', p: 26 },
-  { id: 'c-bebe', name: 'Bébé', occ: 'Naissance', c: 'Tasse photo · photo 10×15 · porte-clés · aimant', p: 25 },
-  { id: 'c-fam', name: 'Coffret Famille', occ: 'Pour toute la famille', c: 'Tasse photo · photo 15×20 · porte-clés double · aimant', p: 28, rib: 'Best-seller' },
-  { id: 'c-noel', name: 'Coffret Noël', occ: 'Noël & Nouvel An', c: '2 tasses photo · photo 15×20 · porte-clés · 2 aimants', p: 41 },
-  { id: 'c-prest', name: 'Coffret Prestige', occ: 'Le grand cadeau', c: 'Photo 30×40 · tasse photo · pendentif · porte-clés double · aimant', p: 51, was: 56, rib: 'Prestige' },
-  { id: 'c-duo2', name: 'Prestige Duo', occ: 'Pour deux familles', c: 'Photo 30×40 · 2 tasses photo · 2 pendentifs · 2 aimants', p: 66, was: 72, rib: 'Prestige' }
+  { id: 'c-maman', name: 'Pour Maman', occ: 'Fête des mères', p: 23, items: [['tasse', 0], ['metal', 1], ['aimant', 0]] },
+  { id: 'c-papa', name: 'Pour Papa', occ: 'Fête des pères', p: 22, items: [['tasse', 0], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-duo', name: 'Duo Amoureux', occ: 'Saint-Valentin', p: 31, items: [['tasse', 0], ['tasse', 0], ['metal', 0], ['aimant', 0]] },
+  { id: 'c-gp', name: 'Grands-parents', occ: 'Papi & Mamie', p: 26, items: [['metal', 2], ['tasse', 0], ['aimant', 0]] },
+  { id: 'c-bebe', name: 'Bébé', occ: 'Naissance', p: 25, items: [['tasse', 0], ['metal', 0], ['cles', 0], ['aimant', 0]] },
+  { id: 'c-fam', name: 'Coffret Famille', occ: 'Pour toute la famille', p: 28, rib: 'Best-seller', items: [['tasse', 0], ['metal', 1], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-noel', name: 'Coffret Noël', occ: 'Noël & Nouvel An', p: 41, items: [['tasse', 0], ['tasse', 0], ['metal', 1], ['cles', 0], ['aimant', 0], ['aimant', 0]] },
+  { id: 'c-prest', name: 'Coffret Prestige', occ: 'Le grand cadeau', p: 51, was: 56, rib: 'Prestige', items: [['metal', 3], ['tasse', 0], ['pendant', 0], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-duo2', name: 'Prestige Duo', occ: 'Pour deux familles', p: 66, was: 72, rib: 'Prestige', items: [['metal', 3], ['tasse', 0], ['tasse', 0], ['pendant', 0], ['pendant', 0], ['aimant', 0], ['aimant', 0]] }
 ];
 const eur = n => (Math.round(n * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: n % 1 ? 2 : 0 }) + ' €';
+
+/* ---------------------------------------------------------------- items inside a box (builder + coffret showcase) */
+// opts: label, price, s = relative size of the cut-out in the box
+const ITEMS = {
+  tasse: { name: 'Tasse photo', img: 'assets/cut-mug.webp', size: .98, ar: 1.31, opts: [{ l: 'Tasse', p: 10, s: 1 }] },
+  metal: { name: 'Photo sur métal', img: 'assets/cut-metal.webp', size: 1, ar: .73, opts: [{ l: '10×15', p: 4, s: .62 }, { l: '15×20', p: 6, s: .76 }, { l: '20×30', p: 8, s: .92 }, { l: '30×40', p: 25, s: 1.1 }] },
+  aimant: { name: 'Aimant photo', img: 'assets/cut-magnet.webp', size: .62, ar: .98, opts: [{ l: 'Aimant', p: 3, s: 1 }] },
+  cles: { name: 'Porte-clés', img: 'assets/cut-key.webp', size: .98, ar: .52, opts: [{ l: 'Simple face', p: 2, s: 1 }, { l: 'Double face', p: 5, s: 1 }] },
+  pendant: { name: 'Pendentif photo', img: 'assets/cut-pendant.webp', size: .86, ar: .75, opts: [{ l: 'Pendentif', p: 8, s: 1 }] }
+};
+Object.values(ITEMS).forEach(d => { const i = new Image(); i.onload = () => { if (i.naturalHeight) d.ar = i.naturalWidth / i.naturalHeight; }; i.src = d.img; });
+const itemLabel = (pid, o) => { const d = ITEMS[pid]; return (d.opts.length > 1 ? `${d.name} ${d.opts[o].l}` : d.name).toLowerCase(); };
+const STAGE_AR = 1400 / 1100;
+/* Packs items in one or two rows by their real widths, so nothing overlaps badly.
+   Returns {x,b,h,z} in % of the stage for each item (same order as the input). */
+function pack(list) {
+  const n = list.length, out = new Array(n);
+  const rows = n <= 3 ? [list.map((_, i) => i), []] : [list.map((_, i) => i).filter(i => i % 2 === 0), list.map((_, i) => i).filter(i => i % 2 === 1).reverse()]; // back row reversed so same items do not stack
+  [[rows[0], 60, 27, 1, 0], [rows[1], 52, 22, 0, 1]].forEach(([idx, b, base, zb, back]) => {
+    if (!idx.length) return;
+    const hs = idx.map(i => { const d = ITEMS[list[i].pid]; return base * d.size * d.opts[list[i].o].s; });
+    const ws = idx.map((i, k) => hs[k] * ITEMS[list[i].pid].ar / STAGE_AR);
+    const gap = 1.4, total = ws.reduce((a, v) => a + v, 0) + gap * (idx.length - 1), fit = Math.min(1, 45 / total);
+    let x = 50 - total * fit / 2 + (back ? 2.2 : 0);
+    idx.forEach((i, k) => { const w = ws[k] * fit; out[i] = { x: x + w / 2, b, h: Math.min(hs[k] * fit, 31), z: zb * 100 + Math.round(b * 4) + k }; x += w + gap * fit; });
+  });
+  return out;
+}
+function place(it, pos) { const el = it.el; el.style.left = pos.x + '%'; el.style.bottom = (100 - pos.b) + '%'; el.style.height = pos.h + '%'; el.style.zIndex = pos.z; }
+function makeEl(pid) { const el = document.createElement('img'); el.className = 'slot'; el.src = ITEMS[pid].img; el.alt = ''; return el; }
+
 
 /* ---------------------------------------------------------------- split text */
 $$('[data-split]').forEach(el => {
@@ -118,7 +149,9 @@ if (fine && !reduce) {
   hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); tx = (e.clientX / r.width - .5); ty = (e.clientY / r.height - .5); });
   (function loop() { px += (tx - px) * .06; py += (ty - py) * .06; hl.style.transform = `translate(${px * -18}px,${py * -10}px)`; requestAnimationFrame(loop); })();
 }
-$('#aboutOpen').addEventListener('click', () => $('#aboutDlg').showModal());
+const aboutDlg = $('#aboutDlg');
+$('#aboutOpen').addEventListener('click', () => { document.documentElement.classList.remove('has-cursor'); const c = $('.cursor'); if (c) c.style.display = 'none'; aboutDlg.showModal(); });
+aboutDlg.addEventListener('close', () => { if (fine) { document.documentElement.classList.add('has-cursor'); const c = $('.cursor'); if (c) c.style.display = ''; } });
 $$('[data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
 $('#aboutDlg').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
 
@@ -213,14 +246,22 @@ $('#chips').addEventListener('click', e => { const c = e.target.closest('.chip')
 $$('#index a[data-filter]').forEach(a => a.addEventListener('click', () => filter(a.dataset.filter)));
 $$('#index a:not([data-filter])').forEach(a => a.addEventListener('click', () => filter('all')));
 
-$('#coffs').innerHTML = COFFRETS.map(c => `<li class="coff" data-id="${c.id}">
-  <div><span class="coff__n">${c.name}${c.rib ? `<em class="coff__r">${c.rib}</em>` : ''}</span><span class="coff__c">${c.c}</span><span class="coff__o">${c.occ}</span></div>
+$('#coffs').innerHTML = COFFRETS.map(c => `<li class="coff" data-id="${c.id}" tabindex="0">
+  <div><span class="coff__n">${c.name}${c.rib ? `<em class="coff__r">${c.rib}</em>` : ''}</span>
+    <span class="coff__ic">${chips(c.items)}</span><span class="coff__o">${c.occ}</span></div>
   <div class="coff__p">${c.was ? `<s>${eur(c.was)}</s>` : ''}${eur(c.p)}</div>
   <button class="add" aria-label="Ajouter ${c.name} au panier" data-cursor="Ajouter"><svg class="ico"><use href="#i-plus"/></svg><span>Ajouter</span></button></li>`).join('');
+function chips(items) {
+  const n = {}; items.forEach(([pid, o]) => { const k = pid + ':' + o; n[k] = n[k] || { pid, o, n: 0 }; n[k].n++; });
+  return Object.values(n).map(x => { const d = ITEMS[x.pid]; return `<span class="ic" title="${itemLabel(x.pid, x.o)}"><img src="${d.img}" alt="" loading="lazy"><span>${x.n > 1 ? x.n + ' × ' : ''}${itemLabel(x.pid, x.o)}</span></span>`; }).join('');
+}
 $('#coffs').addEventListener('click', e => {
-  const b = e.target.closest('.add'); if (!b) return; const c = COFFRETS.find(x => x.id === b.closest('.coff').dataset.id);
+  const li = e.target.closest('.coff'); if (!li) return; const c = COFFRETS.find(x => x.id === li.dataset.id);
+  const b = e.target.closest('.add');
+  if (!b) return showcase(c.id);
   addToCart({ key: c.id, name: c.name, opt: '', price: c.p, from: false, img: 'assets/card-coffret.webp' }); flash(b);
 });
+$$('.coff').forEach(li => { li.addEventListener('pointerenter', () => showcase(li.dataset.id)); li.addEventListener('focus', () => showcase(li.dataset.id)); });
 function flash(btn) { const s = $('span', btn), t = s.textContent; btn.classList.add('done'); s.textContent = 'Ajouté'; setTimeout(() => { btn.classList.remove('done'); s.textContent = t; }, 1300); }
 
 /* ---------------------------------------------------------------- cart */
@@ -273,31 +314,39 @@ function closeCart() { cartEl.classList.remove('on'); veil.classList.remove('on'
 $('#openCart').addEventListener('click', openCart); $('#closeCart').addEventListener('click', closeCart); veil.addEventListener('click', closeCart);
 addEventListener('keydown', e => { if (e.key === 'Escape' && cartEl.classList.contains('on')) closeCart(); });
 
+/* ---------------------------------------------------------------- coffret showcase: its own open box with its own items */
+const showBox = $('#bsShow'), showSlots = $('#bsShowSlots');
+let showId = null, showItems = [];
+function showcase(id) {
+  if (!showBox || id === showId) return; showId = id; const c = COFFRETS.find(x => x.id === id);
+  $$('.coff').forEach(li => li.classList.toggle('is-active', li.dataset.id === id));
+  $('#bsShowName').textContent = c.name; $('#bsShowOcc').textContent = c.occ; $('#bsShowP').textContent = eur(c.p);
+  const old = showItems; showItems = [];
+  old.forEach(it => { it.el.style.transition = 'none'; it.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: 'forwards' }).finished.then(() => it.el.remove()); });
+  const list = c.items.map(([pid, o]) => ({ pid, o, el: makeEl(pid) })), pos = pack(list);
+  list.forEach((it, i) => {
+    it.el.style.opacity = 0; place(it, pos[i]); it.el.style.transition = 'none'; showSlots.appendChild(it.el); showItems.push(it);
+    if (reduce) { it.el.style.opacity = 1; return; }
+    it.el.animate([{ transform: 'translateX(-50%) translateY(-90px) rotate(-8deg)', opacity: 0 }, { transform: 'translateX(-50%) translateY(6px) rotate(1deg)', opacity: 1, offset: .65 }, { transform: 'translateX(-50%)', opacity: 1 }], { duration: 620, delay: 120 + i * 95, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'both' });
+    setTimeout(() => { it.el.style.opacity = 1; it.el.style.transition = ''; }, 120 + i * 95 + 700);
+  });
+}
+if (showBox) showcase('c-fam');
+
 /* ---------------------------------------------------------------- gift builder ("Composez votre coffret") */
 const BOX_FEE = 4; // black box + gold ribbon: derived from the set prices (e.g. Coffret Famille 28 € = 10 + 6 + 5 + 3 + 4)
 const MAXITEMS = 6;
-const PICK = [
-  { id: 'tasse', name: 'Tasse photo', img: 'assets/cut-mug.webp', size: .92, opts: [{ l: 'Tasse', p: 10 }] },
-  { id: 'metal', name: 'Photo sur métal', img: 'assets/cut-metal.webp', size: .9, opts: [{ l: '10×15', p: 4 }, { l: '15×20', p: 6 }, { l: '20×30', p: 8 }, { l: '30×40', p: 25 }] },
-  { id: 'aimant', name: 'Aimant photo', img: 'assets/cut-magnet.webp', size: .6, opts: [{ l: 'Aimant', p: 3 }] },
-  { id: 'cles', name: 'Porte-clés', img: 'assets/cut-key.webp', size: .98, opts: [{ l: 'Simple face', p: 2 }, { l: 'Double face', p: 5 }] }
-];
-// where items sit inside the open box (x = centre %, b = bottom edge % of the stage, h = height % of the stage)
-const SLOTS = [{ x: 37, b: 59, h: 26 }, { x: 63, b: 59, h: 26 }, { x: 50, b: 57, h: 27 }, { x: 42, b: 53, h: 22 }, { x: 58, b: 53, h: 22 }, { x: 50, b: 51, h: 20 }];
+const PICK = ['tasse', 'metal', 'aimant', 'cles', 'pendant'];
 const bs = $('#bs'), bsSlots = $('#bsSlots'), bsLid = $('#bsLid'), bsStatus = $('#bsStatus'), pickEl = $('#pick'), bClose = $('#bClose'), bReset = $('#bReset');
 let bItems = [], bClosed = false, bBusy = false, uid = 0; const bSel = {};
-pickEl.innerHTML = PICK.map(p => { bSel[p.id] = 0; return `<li class="pk" data-id="${p.id}">
+pickEl.innerHTML = PICK.map(id => { const p = ITEMS[id]; bSel[id] = 0; return `<li class="pk" data-id="${id}">
   <img class="pk__img" src="${p.img}" alt="" width="56" height="56" loading="lazy">
   <div class="pk__m"><span class="pk__n">${p.name}</span>
     ${p.opts.length > 1 ? `<span class="pk__o" role="radiogroup" aria-label="${p.name}">${p.opts.map((o, i) => `<button class="pk__opt${i ? '' : ' is-on'}" role="radio" aria-checked="${i === 0}" data-i="${i}">${o.l}</button>`).join('')}</span>` : `<span class="pk__sub">${p.opts[0].l}</span>`}</div>
   <span class="pk__p">${eur(p.opts[0].p)}</span>
   <div class="qty pk__q"><button data-a="rm" aria-label="Retirer ${p.name}"><svg class="ico"><use href="#i-minus"/></svg></button><span>0</span><button data-a="add" aria-label="Ajouter ${p.name}"><svg class="ico"><use href="#i-plus"/></svg></button></div></li>`; }).join('');
-const pBy = id => PICK.find(p => p.id === id);
-function layout() {
-  bItems.forEach((it, i) => { const sl = SLOTS[i], p = pBy(it.pid), el = it.el;
-    el.style.left = sl.x + '%'; el.style.bottom = (100 - sl.b) + '%'; el.style.height = (sl.h * p.size) + '%'; el.style.zIndex = Math.round(sl.b * 10) + i; });
-}
-function bTotals() { const sum = bItems.reduce((t, i) => t + pBy(i.pid).opts[i.o].p, 0); return { sum, tot: sum + (bItems.length ? BOX_FEE : 0) }; }
+function layout() { const pos = pack(bItems); bItems.forEach((it, i) => place(it, pos[i])); }
+function bTotals() { const sum = bItems.reduce((t, i) => t + ITEMS[i.pid].opts[i.o].p, 0); return { sum, tot: sum + (bItems.length ? BOX_FEE : 0) }; }
 function bRefresh() {
   const { sum, tot } = bTotals(); $('#bCount').textContent = bItems.length; $('#bItems').textContent = eur(sum); $('#bTot').textContent = eur(tot);
   $$('.pk', pickEl).forEach(li => { const n = bItems.filter(i => i.pid === li.dataset.id).length; $('.qty span', li).textContent = n; $('[data-a="rm"]', li).disabled = !n || bClosed || bBusy; $('[data-a="add"]', li).disabled = bClosed || bBusy || bItems.length >= MAXITEMS; li.classList.toggle('has', n > 0); });
@@ -321,8 +370,8 @@ function flyIn(it, srcImg) {
   return a.finished.then(() => { it.el.style.opacity = 1; c.remove(); it.el.animate([{ transform: 'translateX(-50%) translateY(-14px) scaleY(.94)' }, { transform: 'translateX(-50%) translateY(3px) scaleY(1.03)', offset: .6 }, { transform: 'translateX(-50%)' }], { duration: 420, easing: 'ease-out' }); bs.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(5px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 380, easing: 'ease-out' }); });
 }
 async function bAdd(pid, srcImg) {
-  if (bClosed || bBusy || bItems.length >= MAXITEMS) return; const p = pBy(pid);
-  const el = document.createElement('img'); el.className = 'slot'; el.src = p.img; el.alt = ''; el.style.opacity = 0; bsSlots.appendChild(el);
+  if (bClosed || bBusy || bItems.length >= MAXITEMS) return;
+  const el = makeEl(pid); el.style.opacity = 0; bsSlots.appendChild(el);
   const it = { id: ++uid, pid, o: bSel[pid], el }; bItems.push(it); layout(); bBusy = true; bRefresh();
   await flyIn(it, srcImg); bBusy = false; bRefresh();
 }
@@ -350,7 +399,7 @@ async function bOpenBox(reset) {
   bClosed = false; bs.dataset.state = 'open'; if (reset) { bItems.forEach(i => i.el.remove()); bItems = []; } bRefresh();
 }
 pickEl.addEventListener('click', e => {
-  const li = e.target.closest('.pk'); if (!li) return; const id = li.dataset.id, p = pBy(id);
+  const li = e.target.closest('.pk'); if (!li) return; const id = li.dataset.id, p = ITEMS[id];
   const opt = e.target.closest('.pk__opt');
   if (opt) { bSel[id] = +opt.dataset.i; $$('.pk__opt', li).forEach(b => { b.classList.toggle('is-on', b === opt); b.setAttribute('aria-checked', b === opt); }); $('.pk__p', li).textContent = eur(p.opts[bSel[id]].p); return; }
   const a = e.target.closest('[data-a]'); if (!a) return;
@@ -358,8 +407,8 @@ pickEl.addEventListener('click', e => {
 });
 bClose.addEventListener('click', () => {
   if (!bClosed) return bCloseBox();
-  const { tot } = bTotals(), names = {}; bItems.forEach(i => { const p = pBy(i.pid), k = p.name + (p.opts.length > 1 ? ' ' + p.opts[i.o].l : ''); names[k] = (names[k] || 0) + 1; });
-  const list = Object.entries(names).map(([k, n]) => (n > 1 ? n + ' × ' : '') + k.toLowerCase()).join(', ');
+  const { tot } = bTotals(), names = {}; bItems.forEach(i => { const k = itemLabel(i.pid, i.o); names[k] = (names[k] || 0) + 1; });
+  const list = Object.entries(names).map(([k, n]) => (n > 1 ? n + ' × ' : '') + k).join(', ');
   addToCart({ key: 'custom:' + list, name: 'Coffret sur mesure', opt: list, price: tot, from: false, img: 'assets/card-coffret.webp' });
   bOpenBox(true);
 });

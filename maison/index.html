@@ -179,9 +179,16 @@
 
 <!-- =============== COFFRETS =============== -->
 <section class="sec box" id="coffrets">
-  <div class="box__visual" id="boxVisual" data-cursor="Ouvrir">
-    <img class="box__img" src="assets/card-coffret.webp" alt="Coffret cadeau noir avec ruban doré et médaillon MV" loading="lazy">
-    <span class="box__glow"></span>
+  <div class="box__visual" id="boxVisual">
+    <div class="bs bs--show" id="bsShow" data-state="open">
+      <span class="bs__glow"></span>
+      <div class="bs__in">
+        <img class="bs__back" src="assets/build-box-back.webp" alt="" width="1400" height="1100" loading="lazy">
+        <div class="bs__slots" id="bsShowSlots"></div>
+        <img class="bs__front" src="assets/build-box-front.webp" alt="Coffret cadeau noir au médaillon MV, ouvert" width="1400" height="1100" loading="lazy">
+      </div>
+      <p class="bs__cap"><span class="bs__capn" id="bsShowName"></span><span class="bs__capo" id="bsShowOcc"></span><span class="bs__capp" id="bsShowP"></span></p>
+    </div>
   </div>
   <div class="box__body">
     <p class="eyebrow">03 — Coffrets</p>
@@ -201,12 +208,14 @@
     <div class="build__stage">
       <div class="bs" id="bs" data-state="open">
         <span class="bs__glow"></span>
-        <img class="bs__back" src="assets/build-box-back.webp" alt="" width="1400" height="1100" loading="lazy">
-        <div class="bs__slots" id="bsSlots"></div>
-        <img class="bs__front" src="assets/build-box-front.webp" alt="" width="1400" height="1100" loading="lazy">
-        <img class="bs__lid" id="bsLid" src="assets/build-box-lid.webp" alt="" width="1400" height="1100" loading="lazy">
-        <span class="bs__shine" id="bsShine"></span>
-        <div class="bs__sparks" id="bsSparks"></div>
+        <div class="bs__in">
+          <img class="bs__back" src="assets/build-box-back.webp" alt="" width="1400" height="1100" loading="lazy">
+          <div class="bs__slots" id="bsSlots"></div>
+          <img class="bs__front" src="assets/build-box-front.webp" alt="" width="1400" height="1100" loading="lazy">
+          <img class="bs__lid" id="bsLid" src="assets/build-box-lid.webp" alt="" width="1400" height="1100" loading="lazy">
+          <span class="bs__shine" id="bsShine"></span>
+          <div class="bs__sparks" id="bsSparks"></div>
+        </div>
         <p class="bs__status" id="bsStatus" role="status" aria-live="polite">Ajoutez un premier article</p>
       </div>
     </div>
