@@ -95,11 +95,22 @@ function setOpen(v) {
   hit.dataset.cursor = v ? 'Fermer' : 'Ouvrir'; const cl = $('.cursor__label'); if (cl && cl.textContent) cl.textContent = hit.dataset.cursor;
   if (v) burst();
 }
+// open when the pointer is over the box (rect test on mousemove: more reliable in Safari than enter/leave on a button)
+let pinned = false;
+const inHit = e => { const r = hit.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
 if (fine) {
-  hit.addEventListener('pointerenter', () => { clearTimeout(closeTimer); setOpen(true); });
-  hit.addEventListener('pointerleave', () => { closeTimer = setTimeout(() => setOpen(false), 350); });
-  hit.addEventListener('focus', () => setOpen(true)); hit.addEventListener('blur', () => setOpen(false));
-} else hit.addEventListener('click', () => setOpen(!opened));
+  const move = e => {
+    if (pinned && !inHit(e)) pinned = false;
+    if (pinned) return;
+    if (inHit(e)) { clearTimeout(closeTimer); setOpen(true); }
+    else if (opened) { clearTimeout(closeTimer); closeTimer = setTimeout(() => setOpen(false), 350); }
+  };
+  hero.addEventListener('mousemove', move); hero.addEventListener('pointermove', move);
+  hero.addEventListener('mouseleave', () => { if (!pinned) { clearTimeout(closeTimer); closeTimer = setTimeout(() => setOpen(false), 350); } });
+  hit.addEventListener('focus', () => setOpen(true)); hit.addEventListener('blur', () => { if (!pinned) setOpen(false); });
+}
+// click toggles and keeps it open (works with mouse, touch and keyboard)
+hit.addEventListener('click', () => { if (fine) { pinned = true; clearTimeout(closeTimer); setOpen(true); } else setOpen(!opened); });
 hit.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!opened); } });
 // parallax of the headline against the scene
 if (fine && !reduce) {
