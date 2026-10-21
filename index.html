@@ -96,6 +96,12 @@
   .opt.on .ic{color:var(--g1);transform:scale(1.1)}
   .opt.on::after{content:"";position:absolute;top:9px;right:9px;width:18px;height:18px;border-radius:50%;background:var(--grad) ;box-shadow:inset 0 0 0 0}
   .opt.on::before{content:"";position:absolute;top:14px;right:15px;width:5px;height:9px;border:solid #0a1405;border-width:0 2px 2px 0;transform:rotate(45deg) scale(.9);z-index:1;margin-top:-3px}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip2{background:rgba(255,255,255,.035);border:1.5px solid var(--line);color:var(--text);border-radius:12px;padding:10px 15px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+  .chip2:hover{border-color:rgba(166,242,58,.5);transform:translateY(-2px)}
+  .chip2.on{border-color:var(--g1);background:rgba(166,242,58,.14);color:var(--g1);box-shadow:0 0 0 3px rgba(166,242,58,.1)}
+  .chip2.oth{border-style:dashed}
+  .hint0{color:var(--muted);font-size:14px;padding:6px 2px}
   .quote{position:sticky;top:96px;background:linear-gradient(160deg,#16222b,#0c141b);border:1px solid rgba(166,242,58,.25);border-radius:28px;padding:30px;text-align:center;overflow:hidden}
   .quote::before{content:"";position:absolute;inset:-40% -30% auto auto;width:260px;height:260px;background:radial-gradient(circle,rgba(166,242,58,.28),transparent 65%)}
   .quote>*{position:relative}
@@ -175,7 +181,9 @@
   .tbl{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:18px}
   .tbl th{color:var(--muted);font-weight:600;text-align:left;padding:8px 6px;font-size:12px}
   .tbl td{padding:6px}
-  .tbl td:first-child{font-weight:700}
+  .tbl td:first-child{font-weight:700;white-space:nowrap}
+  .tbl .x{background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px}
+  .tbl .x:hover{color:#ff6b6b}
   .tbl input,.pin{width:100%;min-width:70px;background:#0a1017;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font:inherit;font-weight:700}
   .tbl input:focus,.pin:focus{outline:2px solid var(--g1)}
   .arow{display:flex;gap:10px;flex-wrap:wrap}
@@ -321,7 +329,11 @@
           <div class="opts" id="devices"></div>
         </div>
         <div class="step">
-          <h3><span class="num">2</span>Quelle est la panne ?</h3>
+          <h3><span class="num">2</span>Quel modèle ?</h3>
+          <div class="chips" id="models"></div>
+        </div>
+        <div class="step">
+          <h3><span class="num">3</span>Quelle est la panne ?</h3>
           <div class="opts" id="issues"></div>
         </div>
       </div>
@@ -330,7 +342,7 @@
         <div class="sum" id="summary">Sélectionnez une panne</div>
         <div class="price grad" id="price">— €</div>
         <div class="note" id="note">Prix indicatif TTC, pose incluse</div>
-        <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>Réserver cette réparation</a>
+        <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg><span id="bookTxt">Réserver cette réparation</span></a>
         <div class="perks">
           <div><svg class="ic"><use href="#i-check"/></svg>Prix final confirmé après diagnostic</div>
           <div><svg class="ic"><use href="#i-check"/></svg>Réparation par un technicien</div>
@@ -456,8 +468,13 @@
     </div>
     <div id="editor" hidden>
       <h3>Modifier les prix (€)</h3>
-      <p>Laissez une case vide ou à 0 pour afficher « Sur devis ».</p>
+      <p>Choisissez l'appareil, puis réglez le prix de chaque modèle. Case vide ou 0 = « Sur devis ».</p>
+      <select class="pin" id="admDev" style="margin-bottom:14px"></select>
       <div style="overflow:auto"><table class="tbl" id="tbl"></table></div>
+      <div class="arow" style="margin-bottom:18px">
+        <input class="pin" id="newModel" placeholder="Ajouter un modèle (ex : iPhone 16 Pro Max)" style="flex:1;min-width:200px">
+        <button class="btn btn-o" id="addModel" type="button">+ Ajouter</button>
+      </div>
       <div class="arow">
         <button class="btn btn-g" id="save" type="button">Enregistrer</button>
         <button class="btn btn-o" id="copy" type="button">Copier pour le code</button>
@@ -488,34 +505,101 @@ const ISSUES = {
   charge:   {n:"Connecteur de charge", i:"plug"},
   oxyd:     {n:"Désoxydation",         i:"drop"}
 };
-/* Prix en € (0 = « Sur devis »). Ce sont les prix par défaut. */
+/* Prix en € par modèle : mk(écran, batterie, connecteur de charge, désoxydation).
+   0 = « Sur devis ». Ce sont les prix par défaut (exemples à ajuster). */
+const mk = (e,b,c,o) => ({ecran:e, batterie:b, charge:c, oxyd:o});
 const DEFAULT_PRICES = {
-  iphone:  {ecran:89,  batterie:59,  charge:59, oxyd:49},
-  samsung: {ecran:99,  batterie:59,  charge:55, oxyd:49},
-  macbook: {ecran:249, batterie:129, charge:99, oxyd:89},
-  pc:      {ecran:109, batterie:79,  charge:69, oxyd:69}
+  iphone: {
+    "iPhone 8":          mk(59, 39, 49, 49),
+    "iPhone X":          mk(89, 49, 49, 49),
+    "iPhone XR":         mk(79, 49, 49, 49),
+    "iPhone 11":         mk(89, 49, 55, 49),
+    "iPhone 11 Pro":     mk(119,55, 59, 59),
+    "iPhone 11 Pro Max": mk(129,59, 59, 59),
+    "iPhone 12":         mk(119,59, 59, 59),
+    "iPhone 12 Pro":     mk(129,65, 65, 59),
+    "iPhone 12 Pro Max": mk(149,69, 65, 59),
+    "iPhone 13":         mk(139,69, 65, 59),
+    "iPhone 13 Pro":     mk(179,79, 69, 69),
+    "iPhone 13 Pro Max": mk(199,85, 69, 69),
+    "iPhone 14":         mk(159,79, 69, 69),
+    "iPhone 14 Pro":     mk(219,89, 79, 69),
+    "iPhone 14 Pro Max": mk(249,95, 79, 69),
+    "iPhone 15":         mk(189,89, 79, 69),
+    "iPhone 15 Pro":     mk(249,99, 89, 79),
+    "iPhone 15 Pro Max": mk(279,109,89, 79)
+  },
+  samsung: {
+    "Galaxy A14": mk(79, 45, 49, 49),
+    "Galaxy A34": mk(99, 49, 55, 49),
+    "Galaxy A54": mk(119,55, 59, 49),
+    "Galaxy S21": mk(149,59, 65, 59),
+    "Galaxy S22": mk(169,65, 69, 59),
+    "Galaxy S23": mk(189,69, 75, 69),
+    "Galaxy S24": mk(219,79, 79, 69)
+  },
+  macbook: {
+    "MacBook Air M1":  mk(249,129,99, 89),
+    "MacBook Air M2":  mk(299,139,109,89),
+    "MacBook Pro 13\"": mk(279,139,109,89),
+    "MacBook Pro 14\"": mk(399,169,129,99),
+    "MacBook Pro 16\"": mk(449,189,139,99)
+  },
+  pc: {
+    "HP":     mk(109,79,69,69),
+    "Dell":   mk(119,85,69,69),
+    "Lenovo": mk(109,79,69,69),
+    "Asus":   mk(109,79,69,69),
+    "Acer":   mk(99, 75,65,65)
+  }
 };
 /* ====================================================== */
 
 const $ = id => document.getElementById(id);
-const KEY = "arc_prices_v1";
-let prices = JSON.parse(JSON.stringify(DEFAULT_PRICES));
+const KEY = "arc_prices_v2";
+const clone = o => JSON.parse(JSON.stringify(o));
+let prices = clone(DEFAULT_PRICES);
 try{
   const s = JSON.parse(localStorage.getItem(KEY)||"null");
-  if(s) for(const d in prices) for(const k in prices[d]) if(s[d] && s[d][k]!==undefined) prices[d][k]=+s[d][k]||0;
+  if(s && typeof s==="object") for(const d in DEVICES) if(s[d]) prices[d]=s[d];
 }catch(e){}
 
 $("hours").textContent = HOURS; $("hours2").textContent = HOURS;
 const ico = n => `<svg class="ic"><use href="#i-${n}"/></svg>`;
-let dev=null, iss=null;
+const esc = s => s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const OTHER = "__other";
+let dev=null, model=null, iss=null;
 
-function build(id, data, kind){
-  const box=$(id);
-  for(const [k,v] of Object.entries(data)){
+function buildDevices(){
+  const box=$("devices");
+  for(const [k,v] of Object.entries(DEVICES)){
     const b=document.createElement("button");
     b.type="button"; b.className="opt"; b.innerHTML=ico(v.i)+v.n;
-    b.onclick=()=>{ if(kind==="d")dev=k; else iss=k;
-      [...box.children].forEach(x=>x.classList.toggle("on",x===b)); update(); };
+    b.onclick=()=>{ dev=k; model=null;
+      [...box.children].forEach(x=>x.classList.toggle("on",x===b));
+      renderModels(); update(); };
+    box.appendChild(b);
+  }
+}
+function renderModels(){
+  const box=$("models");
+  if(!dev){ box.innerHTML='<div class="hint0">Choisissez d\'abord un appareil</div>'; return; }
+  box.innerHTML="";
+  const add=(key,label,cls)=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="chip2 "+(cls||"")+(model===key?" on":""); b.textContent=label;
+    b.onclick=()=>{ model=key; [...box.children].forEach(x=>x.classList.toggle("on",x===b)); update(); };
+    box.appendChild(b);
+  };
+  Object.keys(prices[dev]).forEach(m=>add(m,m));
+  add(OTHER,"Autre modèle","oth");
+}
+function buildIssues(){
+  const box=$("issues");
+  for(const [k,v] of Object.entries(ISSUES)){
+    const b=document.createElement("button");
+    b.type="button"; b.className="opt"; b.innerHTML=ico(v.i)+v.n;
+    b.onclick=()=>{ iss=k; [...box.children].forEach(x=>x.classList.toggle("on",x===b)); update(); };
     box.appendChild(b);
   }
 }
@@ -525,27 +609,38 @@ function countTo(el, to){
   const from = parseInt(el.dataset.v||0)||0, t0=performance.now(), dur=500;
   const step=t=>{ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
     el.textContent="à partir de "+Math.round(from+(to-from)*e)+" €"; if(p<1)anim=requestAnimationFrame(step); };
-  el.dataset.v=to; el.classList.remove("small");
-  el.innerHTML=""; anim=requestAnimationFrame(step);
+  el.dataset.v=to; anim=requestAnimationFrame(step);
+}
+function setPriceText(t,small){
+  const p=$("price"); cancelAnimationFrame(anim); p.dataset.v=0; p.textContent=t; p.classList.toggle("small",!!small);
 }
 function update(){
-  const p=$("price"), b=$("book"), s=$("summary");
-  if(!dev||!iss){
-    s.textContent = !dev ? "Sélectionnez un appareil" : "Sélectionnez une panne";
-    p.classList.remove("small"); p.textContent="— €"; p.dataset.v=0;
+  const p=$("price"), b=$("book"), s=$("summary"), note=$("note"), bt=$("bookTxt");
+  note.textContent="Prix indicatif TTC, pose incluse"; bt.textContent="Réserver cette réparation";
+  if(!dev||!model||!iss){
+    s.textContent = !dev ? "Sélectionnez un appareil" : !model ? "Sélectionnez un modèle" : "Sélectionnez une panne";
+    setPriceText("— €",false);
     b.href="#"; b.setAttribute("aria-disabled","true"); return;
   }
-  const v=prices[dev][iss]||0;
-  s.textContent=DEVICES[dev].n+" · "+ISSUES[iss].n;
-  if(v>0){ countTo(p,v); p.classList.add("small"); p.classList.remove("small");
-    p.style.fontSize=""; }
-  else { cancelAnimationFrame(anim); p.dataset.v=0; p.classList.add("small"); p.textContent="Sur devis"; }
-  const txt = v>0 ? v+" €" : "sur devis";
-  const msg=`Bonjour, je souhaite réserver une réparation :\n• Appareil : ${DEVICES[dev].n}\n• Panne : ${ISSUES[iss].n}\n• Prix estimé : ${txt}\nQuand puis-je passer ?`;
+  const other = model===OTHER;
+  const mname = other ? DEVICES[dev].n+" (autre modèle)" : model;
+  s.textContent = mname+" · "+ISSUES[iss].n;
+  let txt, msg;
+  if(other){
+    setPriceText("Sur WhatsApp",true);
+    note.textContent="Votre modèle n'est pas dans la liste : écrivez-nous, on vous répond avec le prix.";
+    bt.textContent="Demander le prix sur WhatsApp";
+    msg=`Bonjour, je souhaite connaître le prix d'une réparation :\n• Appareil : ${DEVICES[dev].n}\n• Modèle : (je précise ici)\n• Panne : ${ISSUES[iss].n}`;
+  } else {
+    const v=(prices[dev][model]||{})[iss]||0;
+    if(v>0){ countTo(p,v); p.classList.remove("small"); } else setPriceText("Sur devis",true);
+    txt = v>0 ? v+" €" : "sur devis";
+    msg=`Bonjour, je souhaite réserver une réparation :\n• Appareil : ${mname}\n• Panne : ${ISSUES[iss].n}\n• Prix estimé : ${txt}\nQuand puis-je passer ?`;
+  }
   b.href=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
   b.removeAttribute("aria-disabled");
 }
-build("devices",DEVICES,"d"); build("issues",ISSUES,"i"); update();
+buildDevices(); renderModels(); buildIssues(); update();
 
 /* nav + reveal */
 const nav=$("nav");
@@ -555,28 +650,40 @@ document.querySelectorAll(".rv").forEach(el=>io.observe(el));
 
 /* admin */
 const modal=$("modal");
+let draft, admDev="iphone";
 function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2200)}
+function syncDraft(){
+  document.querySelectorAll("#tbl input").forEach(i=>{
+    const m=draft[admDev][i.dataset.m]; if(m) m[i.dataset.k]=Math.max(0,Math.round(+i.value||0));
+  });
+}
 function buildTable(){
-  let h="<tr><th>Appareil</th>"+Object.values(ISSUES).map(i=>`<th>${i.n}</th>`).join("")+"</tr>";
-  for(const d in DEVICES){
-    h+=`<tr><td>${DEVICES[d].n}</td>`+Object.keys(ISSUES).map(k=>`<td><input type="number" min="0" step="1" data-d="${d}" data-k="${k}" value="${prices[d][k]||""}"></td>`).join("")+"</tr>";
+  $("admDev").innerHTML=Object.entries(DEVICES).map(([k,v])=>`<option value="${k}"${k===admDev?" selected":""}>${v.n}</option>`).join("");
+  let h="<tr><th>Modèle</th>"+Object.values(ISSUES).map(i=>`<th>${i.n}</th>`).join("")+"<th></th></tr>";
+  for(const m in draft[admDev]){
+    h+=`<tr><td>${esc(m)}</td>`+Object.keys(ISSUES).map(k=>`<td><input type="number" min="0" step="1" data-m="${esc(m)}" data-k="${k}" value="${draft[admDev][m][k]||""}"></td>`).join("")+`<td><button class="x" type="button" data-del="${esc(m)}" aria-label="Supprimer">×</button></td></tr>`;
   }
   $("tbl").innerHTML=h;
-}
-function readTable(){
-  const o=JSON.parse(JSON.stringify(prices));
-  document.querySelectorAll("#tbl input").forEach(i=>{o[i.dataset.d][i.dataset.k]=Math.max(0,Math.round(+i.value||0))});
-  return o;
 }
 function openAdmin(){ modal.classList.add("open"); $("login").hidden=false; $("editor").hidden=true; $("pin").value=""; setTimeout(()=>$("pin").focus(),50); }
 $("admBtn").onclick=openAdmin;
 if(location.hash==="#admin") openAdmin();
 modal.addEventListener("click",e=>{ if(e.target===modal||e.target.hasAttribute("data-close")) modal.classList.remove("open"); });
-function tryPin(){ if($("pin").value===ADMIN_PIN){ $("login").hidden=true; $("editor").hidden=false; buildTable(); } else { toast("Code incorrect"); $("pin").value=""; } }
+function tryPin(){ if($("pin").value===ADMIN_PIN){ $("login").hidden=true; $("editor").hidden=false; draft=clone(prices); buildTable(); } else { toast("Code incorrect"); $("pin").value=""; } }
 $("pinOk").onclick=tryPin; $("pin").addEventListener("keydown",e=>{if(e.key==="Enter")tryPin()});
-$("save").onclick=()=>{ prices=readTable(); try{localStorage.setItem(KEY,JSON.stringify(prices))}catch(e){} update(); toast("Prix enregistrés ✓"); };
-$("reset").onclick=()=>{ prices=JSON.parse(JSON.stringify(DEFAULT_PRICES)); try{localStorage.removeItem(KEY)}catch(e){} buildTable(); update(); toast("Prix par défaut restaurés"); };
-$("copy").onclick=()=>{ const code="const DEFAULT_PRICES = "+JSON.stringify(readTable(),null,2)+";";
+$("admDev").onchange=e=>{ syncDraft(); admDev=e.target.value; buildTable(); };
+$("tbl").addEventListener("click",e=>{ const m=e.target.dataset&&e.target.dataset.del; if(m){ syncDraft(); delete draft[admDev][m]; buildTable(); } });
+$("addModel").onclick=()=>{ const n=$("newModel").value.trim(); if(!n) return; syncDraft();
+  if(draft[admDev][n]) return toast("Ce modèle existe déjà");
+  draft[admDev][n]=mk(0,0,0,0); $("newModel").value=""; buildTable(); toast("Modèle ajouté, entrez les prix"); };
+function applyPrices(){
+  prices=clone(draft);
+  if(model && model!==OTHER && dev && !prices[dev][model]) model=null;
+  renderModels(); update();
+}
+$("save").onclick=()=>{ syncDraft(); try{localStorage.setItem(KEY,JSON.stringify(draft))}catch(e){} applyPrices(); toast("Prix enregistrés ✓"); };
+$("reset").onclick=()=>{ draft=clone(DEFAULT_PRICES); try{localStorage.removeItem(KEY)}catch(e){} applyPrices(); buildTable(); toast("Prix par défaut restaurés"); };
+$("copy").onclick=()=>{ syncDraft(); const code="const DEFAULT_PRICES = "+JSON.stringify(draft,null,2)+";";
   (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(()=>toast("Copié ✓"),()=>{prompt("Copiez ce code :",code)}); };
 </script>
 </body>
