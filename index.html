@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier Réparation Clinique – Paris 17</title>
+<meta name="description" content="Réparation rapide et garantie de smartphones et ordinateurs à Paris 17. Devis gratuit.">
+<style>
+  :root{--dark:#141b24;--dark2:#1d2733;--green:#7ac70c;--green2:#5a9a00;--light:#f4f7f2;--text:#1a2230;--muted:#6b7686}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:#fff;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1050px;margin:0 auto;padding:0 20px}
+  header{background:var(--dark);color:#fff;position:sticky;top:0;z-index:10}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{font-weight:800;letter-spacing:.5px}
+  .logo span{color:var(--green)}
+  header a.tel{background:var(--green);color:#10200a;font-weight:700;padding:8px 14px;border-radius:999px;font-size:14px}
+  .hero{background:linear-gradient(135deg,var(--dark) 55%,#24341a);color:#fff;padding:70px 0 80px}
+  .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+  .hero h1{font-size:clamp(28px,4.5vw,46px);line-height:1.15;margin-bottom:16px}
+  .hero h1 em{font-style:normal;color:var(--green)}
+  .hero p{color:#c5cdd8;margin-bottom:26px}
+  .btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:26px}
+  .btn{display:inline-block;padding:14px 22px;border-radius:12px;font-weight:700;border:0;cursor:pointer;font-size:16px}
+  .btn-g{background:var(--green);color:#10200a}
+  .btn-g:hover{background:#8be00f}
+  .btn-w{background:#25d366;color:#fff}
+  .info{display:flex;flex-direction:column;gap:6px;color:#dfe5ec;font-size:15px}
+  .badge{background:var(--dark2);border:1px solid #2c3a49;border-radius:20px;padding:30px;text-align:center}
+  .badge .ico{font-size:64px}
+  .badge ul{list-style:none;margin-top:14px;text-align:left;display:grid;gap:8px}
+  .badge li::before{content:"✓ ";color:var(--green);font-weight:800}
+  section{padding:64px 0}
+  h2{font-size:clamp(24px,3.5vw,34px);margin-bottom:8px}
+  .sub{color:var(--muted);margin-bottom:30px}
+  #calc{background:var(--light)}
+  .card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,.07)}
+  .step{margin-bottom:24px}
+  .step h3{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--green2);margin-bottom:12px}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .opt{border:2px solid #e2e7de;background:#fff;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:600;cursor:pointer;transition:.15s;text-align:center}
+  .opt .e{display:block;font-size:26px;margin-bottom:4px}
+  .opt:hover{border-color:var(--green)}
+  .opt.on{border-color:var(--green);background:#f0fadf;box-shadow:0 0 0 3px rgba(122,199,12,.25)}
+  .result{background:var(--dark);color:#fff;border-radius:16px;padding:24px;text-align:center}
+  .result .lbl{color:#aab4c1;font-size:14px}
+  .price{font-size:44px;font-weight:800;color:var(--green);margin:6px 0}
+  .result small{display:block;color:#8d98a7;margin-bottom:16px}
+  .result .btn{width:100%;max-width:360px}
+  .result .btn[aria-disabled=true]{opacity:.4;pointer-events:none}
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .f{border:1px solid #e6eadf;border-radius:16px;padding:22px}
+  .f .e{font-size:30px}
+  .f h3{margin:8px 0 4px}
+  .f p{color:var(--muted);font-size:15px}
+  #contact{background:var(--light)}
+  .cgrid{display:grid;grid-template-columns:1fr 1.3fr;gap:24px}
+  .clist{display:grid;gap:12px;align-content:start}
+  .clist a,.clist div{background:#fff;border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.05);font-weight:600}
+  .clist a:hover{outline:2px solid var(--green)}
+  iframe{width:100%;height:100%;min-height:340px;border:0;border-radius:18px}
+  footer{background:var(--dark);color:#8d98a7;text-align:center;padding:22px;font-size:14px}
+  .fab{position:fixed;right:16px;bottom:16px;background:#25d366;color:#fff;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:28px;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:20}
+  @media(max-width:760px){.hero .wrap,.cgrid{grid-template-columns:1fr}.hero{padding:44px 0 50px}.badge{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">ATELIER <span>RÉPARATION</span> CLINIQUE</div>
+    <a class="tel" href="tel:+33961095707">📞 Appeler</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Réparation <em>rapide et garantie</em> de vos smartphones &amp; ordinateurs à Paris 17</h1>
+      <p>iPhone, Samsung, MacBook, PC : diagnostic gratuit, pièces de qualité, réparation souvent le jour même.</p>
+      <div class="btns">
+        <a class="btn btn-g" href="#calc">Demander un devis gratuit</a>
+        <a class="btn btn-w" href="https://wa.me/33767494822?text=Bonjour%2C%20je%20souhaite%20un%20devis%20de%20r%C3%A9paration." target="_blank" rel="noopener">💬 WhatsApp</a>
+      </div>
+      <div class="info">
+        <span>📍 11 Rue Pouchet, 75017 Paris</span>
+        <span>🕘 Lun–Sam : 10h00 – 19h00</span>
+      </div>
+    </div>
+    <div class="badge">
+      <div class="ico">📱💻</div>
+      <ul>
+        <li>Devis gratuit et sans engagement</li>
+        <li>Garantie sur chaque réparation</li>
+        <li>Réparation express</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section id="calc">
+  <div class="wrap">
+    <h2>Calculez le prix de votre réparation</h2>
+    <p class="sub">Estimation indicative en 3 étapes. Le prix final est confirmé après diagnostic.</p>
+    <div class="card">
+      <div class="step">
+        <h3>1. Votre appareil</h3>
+        <div class="opts" id="devices"></div>
+      </div>
+      <div class="step">
+        <h3>2. La panne</h3>
+        <div class="opts" id="issues"></div>
+      </div>
+      <div class="step" style="margin:0">
+        <h3>3. Estimation</h3>
+        <div class="result">
+          <div class="lbl" id="summary">Choisissez un appareil et une panne</div>
+          <div class="price" id="price">— €</div>
+          <small>Prix indicatif TTC, pose incluse</small>
+          <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener">Réserver cette réparation</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Pourquoi nous choisir ?</h2>
+    <p class="sub">Un atelier de quartier, des réparations fiables.</p>
+    <div class="features">
+      <div class="f"><div class="e">⚡</div><h3>Rapide</h3><p>La plupart des réparations sont faites en moins d'une heure ou dans la journée.</p></div>
+      <div class="f"><div class="e">🛡️</div><h3>Garantie</h3><p>Pièces de qualité et garantie sur chaque intervention.</p></div>
+      <div class="f"><div class="e">💶</div><h3>Prix clairs</h3><p>Devis gratuit, aucune mauvaise surprise.</p></div>
+      <div class="f"><div class="e">🔧</div><h3>Experts</h3><p>Smartphones, ordinateurs portables, MacBook, PC fixes.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Contact &amp; accès</h2>
+    <p class="sub">Passez à l'atelier ou contactez-nous directement.</p>
+    <div class="cgrid">
+      <div class="clist">
+        <a href="tel:+33961095707">📞 09 61 09 57 07</a>
+        <a href="https://wa.me/33767494822" target="_blank" rel="noopener">💬 WhatsApp +33 7 67 49 48 22</a>
+        <a href="mailto:arc.paris17@gmail.com">✉️ arc.paris17@gmail.com</a>
+        <div>📍 11 Rue Pouchet, 75017 Paris</div>
+      </div>
+      <iframe loading="lazy" title="Carte" src="https://maps.google.com/maps?q=11+Rue+Pouchet,+75017+Paris&output=embed"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>© Atelier Réparation Clinique – 11 Rue Pouchet, 75017 Paris</footer>
+<a class="fab" href="https://wa.me/33767494822" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+<script>
+  const WA = "33767494822";
+  const devices = {
+    iphone:  {n:"iPhone",  e:"📱"},
+    samsung: {n:"Samsung", e:"📱"},
+    macbook: {n:"MacBook", e:"💻"},
+    pc:      {n:"PC portable", e:"🖥️"}
+  };
+  const issues = {
+    ecran:   {n:"Écran cassé",         e:"💥"},
+    batterie:{n:"Batterie",            e:"🔋"},
+    charge:  {n:"Connecteur de charge",e:"🔌"},
+    oxyd:    {n:"Désoxydation",        e:"💧"}
+  };
+  // prix indicatifs (€)
+  const prices = {
+    iphone:  {ecran:89,  batterie:59, charge:59, oxyd:49},
+    samsung: {ecran:99,  batterie:59, charge:55, oxyd:49},
+    macbook: {ecran:249, batterie:129,charge:99, oxyd:89},
+    pc:      {ecran:109, batterie:79, charge:69, oxyd:69}
+  };
+  let dev = null, iss = null;
+
+  function build(id, data, key){
+    const box = document.getElementById(id);
+    Object.entries(data).forEach(([k,v])=>{
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "opt"; b.dataset.k = k;
+      b.innerHTML = `<span class="e">${v.e}</span>${v.n}`;
+      b.onclick = ()=>{
+        if(key==="dev") dev = k; else iss = k;
+        box.querySelectorAll(".opt").forEach(x=>x.classList.toggle("on", x===b));
+        update();
+      };
+      box.appendChild(b);
+    });
+  }
+  function update(){
+    const priceEl = document.getElementById("price");
+    const book = document.getElementById("book");
+    const sum = document.getElementById("summary");
+    if(dev && iss){
+      const p = prices[dev][iss];
+      priceEl.textContent = "à partir de " + p + " €";
+      sum.textContent = devices[dev].n + " – " + issues[iss].n;
+      const msg = `Bonjour, je souhaite réserver une réparation :\n• Appareil : ${devices[dev].n}\n• Panne : ${issues[iss].n}\n• Prix estimé : ${p} €\nQuand puis-je passer ?`;
+      book.href = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
+      book.removeAttribute("aria-disabled");
+    } else {
+      priceEl.textContent = "— €";
+      sum.textContent = "Choisissez un appareil et une panne";
+      book.href = "#";
+      book.setAttribute("aria-disabled","true");
+    }
+  }
+  build("devices", devices, "dev");
+  build("issues", issues, "iss");
+</script>
+</body>
+</html>
