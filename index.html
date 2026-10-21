@@ -5,216 +5,538 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atelier Réparation Clinique – Paris 17</title>
 <meta name="description" content="Réparation rapide et garantie de smartphones et ordinateurs à Paris 17. Devis gratuit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--dark:#141b24;--dark2:#1d2733;--green:#7ac70c;--green2:#5a9a00;--light:#f4f7f2;--text:#1a2230;--muted:#6b7686}
+  :root{
+    --bg:#080d13; --bg2:#0d141c; --card:rgba(255,255,255,.04); --line:rgba(255,255,255,.09);
+    --text:#eef2f6; --muted:#8f9bab;
+    --g1:#a6f23a; --g2:#4cc40b; --wa:#25d366;
+    --grad:linear-gradient(135deg,var(--g1),var(--g2));
+    --r:22px;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:#fff;line-height:1.5}
+  body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1050px;margin:0 auto;padding:0 20px}
-  header{background:var(--dark);color:#fff;position:sticky;top:0;z-index:10}
-  header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
-  .logo{font-weight:800;letter-spacing:.5px}
-  .logo span{color:var(--green)}
-  header a.tel{background:var(--green);color:#10200a;font-weight:700;padding:8px 14px;border-radius:999px;font-size:14px}
-  .hero{background:linear-gradient(135deg,var(--dark) 55%,#24341a);color:#fff;padding:70px 0 80px}
-  .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
-  .hero h1{font-size:clamp(28px,4.5vw,46px);line-height:1.15;margin-bottom:16px}
-  .hero h1 em{font-style:normal;color:var(--green)}
-  .hero p{color:#c5cdd8;margin-bottom:26px}
-  .btns{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:26px}
-  .btn{display:inline-block;padding:14px 22px;border-radius:12px;font-weight:700;border:0;cursor:pointer;font-size:16px}
-  .btn-g{background:var(--green);color:#10200a}
-  .btn-g:hover{background:#8be00f}
-  .btn-w{background:#25d366;color:#fff}
-  .info{display:flex;flex-direction:column;gap:6px;color:#dfe5ec;font-size:15px}
-  .badge{background:var(--dark2);border:1px solid #2c3a49;border-radius:20px;padding:30px;text-align:center}
-  .badge .ico{font-size:64px}
-  .badge ul{list-style:none;margin-top:14px;text-align:left;display:grid;gap:8px}
-  .badge li::before{content:"✓ ";color:var(--green);font-weight:800}
-  section{padding:64px 0}
-  h2{font-size:clamp(24px,3.5vw,34px);margin-bottom:8px}
-  .sub{color:var(--muted);margin-bottom:30px}
-  #calc{background:var(--light)}
-  .card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,.07)}
-  .step{margin-bottom:24px}
-  .step h3{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--green2);margin-bottom:12px}
-  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-  .opt{border:2px solid #e2e7de;background:#fff;border-radius:14px;padding:16px 10px;font-size:16px;font-weight:600;cursor:pointer;transition:.15s;text-align:center}
-  .opt .e{display:block;font-size:26px;margin-bottom:4px}
-  .opt:hover{border-color:var(--green)}
-  .opt.on{border-color:var(--green);background:#f0fadf;box-shadow:0 0 0 3px rgba(122,199,12,.25)}
-  .result{background:var(--dark);color:#fff;border-radius:16px;padding:24px;text-align:center}
-  .result .lbl{color:#aab4c1;font-size:14px}
-  .price{font-size:44px;font-weight:800;color:var(--green);margin:6px 0}
-  .result small{display:block;color:#8d98a7;margin-bottom:16px}
-  .result .btn{width:100%;max-width:360px}
-  .result .btn[aria-disabled=true]{opacity:.4;pointer-events:none}
-  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
-  .f{border:1px solid #e6eadf;border-radius:16px;padding:22px}
-  .f .e{font-size:30px}
-  .f h3{margin:8px 0 4px}
-  .f p{color:var(--muted);font-size:15px}
-  #contact{background:var(--light)}
-  .cgrid{display:grid;grid-template-columns:1fr 1.3fr;gap:24px}
+  button{font-family:inherit}
+  .ic{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:.3s}
+  nav.sc{background:rgba(8,13,19,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;letter-spacing:.3px;line-height:1.1}
+  .logo i{width:38px;height:38px;border-radius:12px;background:var(--grad);display:grid;place-items:center;color:#0a1405;font-size:20px}
+  .logo small{display:block;font-weight:600;color:var(--muted);font-size:10.5px;letter-spacing:2px}
+  .links{display:flex;gap:28px;font-size:14.5px;font-weight:600;color:#c3ccd7}
+  .links a:hover{color:var(--g1)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 24px;border-radius:14px;font-weight:700;font-size:15.5px;border:0;cursor:pointer;transition:.25s}
+  .btn .ic{font-size:19px}
+  .btn-g{background:var(--grad);color:#0a1405;box-shadow:0 10px 30px -8px rgba(124,224,30,.55)}
+  .btn-g:hover{transform:translateY(-2px);box-shadow:0 16px 36px -8px rgba(124,224,30,.7)}
+  .btn-w{background:var(--wa);color:#04210f;box-shadow:0 10px 30px -10px rgba(37,211,102,.6)}
+  .btn-w:hover{transform:translateY(-2px)}
+  .btn-o{background:var(--card);border:1px solid var(--line);color:var(--text)}
+  .btn-o:hover{border-color:var(--g1);color:var(--g1)}
+  .nav-cta{padding:10px 18px;font-size:14px}
+
+  /* HERO */
+  .hero{position:relative;padding:150px 0 90px;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0;animation:drift 14s ease-in-out infinite alternate}
+  .b1{width:480px;height:480px;background:#3f9d08;top:-120px;right:-80px}
+  .b2{width:380px;height:380px;background:#14507a;bottom:-140px;left:-100px;animation-delay:-6s;opacity:.4}
+  @keyframes drift{to{transform:translate(40px,30px) scale(1.12)}}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(166,242,58,.1);border:1px solid rgba(166,242,58,.28);color:var(--g1);padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;margin-bottom:22px}
+  .pill b{width:8px;height:8px;border-radius:50%;background:var(--g1);box-shadow:0 0 0 0 rgba(166,242,58,.7);animation:pulse 1.8s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(166,242,58,0)}100%{box-shadow:0 0 0 0 rgba(166,242,58,0)}}
+  h1{font-size:clamp(34px,5.4vw,60px);line-height:1.06;font-weight:800;letter-spacing:-1.5px;margin-bottom:20px}
+  .lead{font-size:18px;color:#b7c1cd;max-width:520px;margin-bottom:32px}
+  .btns{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:34px}
+  .meta{display:flex;flex-wrap:wrap;gap:12px 28px;color:#c3ccd7;font-size:14.5px;font-weight:500}
+  .meta span{display:flex;align-items:center;gap:9px}
+  .meta .ic{color:var(--g1);font-size:18px}
+  .visual{position:relative;display:grid;place-items:center}
+  .visual svg{width:100%;max-width:440px;height:auto;filter:drop-shadow(0 30px 50px rgba(0,0,0,.5));animation:float 6s ease-in-out infinite}
+  @keyframes float{50%{transform:translateY(-14px)}}
+  .chip{position:absolute;background:rgba(18,26,36,.85);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:16px;padding:12px 16px;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:700;animation:float 7s ease-in-out infinite}
+  .chip .ic{color:var(--g1);font-size:22px}
+  .chip small{display:block;color:var(--muted);font-weight:500;font-size:11.5px}
+  .c1{left:-4px;top:12%;animation-delay:-2s}
+  .c2{right:-6px;bottom:10%;animation-delay:-4s}
+
+  /* STATS */
+  .stats{border-block:1px solid var(--line);background:var(--bg2)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-block:30px;text-align:center}
+  .stats b{display:block;font-size:30px;font-weight:800}
+  .stats span{color:var(--muted);font-size:13.5px}
+
+  section{padding:96px 0;position:relative}
+  .eyebrow{color:var(--g1);font-weight:700;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
+  h2{font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .sub{color:var(--muted);font-size:17px;max-width:560px;margin-bottom:44px}
+  .center{text-align:center}.center .sub{margin-inline:auto}
+
+  /* CALC */
+  #calc{background:radial-gradient(900px 500px at 50% 0,rgba(76,196,11,.12),transparent 70%),var(--bg)}
+  .calc{display:grid;grid-template-columns:1.35fr .65fr;gap:22px;align-items:start}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:30px;backdrop-filter:blur(8px)}
+  .step+.step{margin-top:30px}
+  .step h3{display:flex;align-items:center;gap:12px;font-size:17px;margin-bottom:16px}
+  .num{width:30px;height:30px;border-radius:10px;background:var(--grad);color:#0a1405;display:grid;place-items:center;font-size:14px;font-weight:800}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
+  .opt{position:relative;background:rgba(255,255,255,.035);border:1.5px solid var(--line);color:var(--text);border-radius:18px;padding:20px 10px 16px;font-size:14.5px;font-weight:700;cursor:pointer;transition:.22s;text-align:center}
+  .opt .ic{display:block;margin:0 auto 10px;font-size:30px;color:#9fb0c2;transition:.22s}
+  .opt:hover{transform:translateY(-3px);border-color:rgba(166,242,58,.5)}
+  .opt.on{border-color:var(--g1);background:rgba(166,242,58,.1);box-shadow:0 0 0 4px rgba(166,242,58,.1),0 14px 30px -14px rgba(124,224,30,.5)}
+  .opt.on .ic{color:var(--g1);transform:scale(1.1)}
+  .opt.on::after{content:"";position:absolute;top:9px;right:9px;width:18px;height:18px;border-radius:50%;background:var(--grad) ;box-shadow:inset 0 0 0 0}
+  .opt.on::before{content:"";position:absolute;top:14px;right:15px;width:5px;height:9px;border:solid #0a1405;border-width:0 2px 2px 0;transform:rotate(45deg) scale(.9);z-index:1;margin-top:-3px}
+  .quote{position:sticky;top:96px;background:linear-gradient(160deg,#16222b,#0c141b);border:1px solid rgba(166,242,58,.25);border-radius:28px;padding:30px;text-align:center;overflow:hidden}
+  .quote::before{content:"";position:absolute;inset:-40% -30% auto auto;width:260px;height:260px;background:radial-gradient(circle,rgba(166,242,58,.28),transparent 65%)}
+  .quote>*{position:relative}
+  .quote .lbl{color:var(--muted);font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+  .sum{margin:10px 0 4px;font-weight:700;font-size:16px;min-height:26px}
+  .price{font-size:60px;font-weight:800;letter-spacing:-2px;line-height:1.1;margin:10px 0 4px}
+  .price.small{font-size:34px;letter-spacing:-1px;padding:14px 0}
+  .quote .note{color:var(--muted);font-size:12.5px;margin-bottom:22px}
+  .quote .btn{width:100%}
+  .quote .btn[aria-disabled=true]{opacity:.35;pointer-events:none;filter:grayscale(.6)}
+  .perks{margin-top:20px;display:grid;gap:8px;text-align:left;font-size:13px;color:#b7c1cd}
+  .perks div{display:flex;gap:9px;align-items:center}
+  .perks .ic{color:var(--g1);font-size:16px}
+
+  /* FEATURES */
+  .features{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .f{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:28px 24px;transition:.3s}
+  .f:hover{transform:translateY(-6px);border-color:rgba(166,242,58,.4);background:rgba(166,242,58,.05)}
+  .f i{width:52px;height:52px;border-radius:16px;background:rgba(166,242,58,.12);color:var(--g1);display:grid;place-items:center;font-size:26px;margin-bottom:18px}
+  .f h3{font-size:18px;margin-bottom:6px}
+  .f p{color:var(--muted);font-size:14.5px}
+
+  /* STEPS */
+  #how{background:var(--bg2);border-block:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
+  .s{position:relative;padding:30px;border-radius:var(--r);background:var(--bg);border:1px solid var(--line)}
+  .s::before{counter-increment:s;content:"0" counter(s);font-size:54px;font-weight:800;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9;display:block;margin-bottom:14px}
+  .s h3{margin-bottom:6px}.s p{color:var(--muted);font-size:14.5px}
+
+  /* FAQ */
+  .faq{max-width:760px;margin:0 auto;display:grid;gap:12px}
+  details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 22px;transition:.2s}
+  details[open]{border-color:rgba(166,242,58,.4)}
+  summary{list-style:none;cursor:pointer;padding:20px 0;font-weight:700;display:flex;justify-content:space-between;gap:14px;align-items:center}
+  summary::-webkit-details-marker{display:none}
+  summary .ic{transition:.25s;color:var(--g1)}
+  details[open] summary .ic{transform:rotate(180deg)}
+  details p{color:var(--muted);padding-bottom:20px;font-size:15px}
+
+  /* CONTACT */
+  #contact{background:var(--bg2);border-top:1px solid var(--line)}
+  .cgrid{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px}
   .clist{display:grid;gap:12px;align-content:start}
-  .clist a,.clist div{background:#fff;border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.05);font-weight:600}
-  .clist a:hover{outline:2px solid var(--green)}
-  iframe{width:100%;height:100%;min-height:340px;border:0;border-radius:18px}
-  footer{background:var(--dark);color:#8d98a7;text-align:center;padding:22px;font-size:14px}
-  .fab{position:fixed;right:16px;bottom:16px;background:#25d366;color:#fff;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:28px;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:20}
-  @media(max-width:760px){.hero .wrap,.cgrid{grid-template-columns:1fr}.hero{padding:44px 0 50px}.badge{display:none}}
+  .ci{display:flex;gap:16px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:16px 18px;transition:.25s}
+  a.ci:hover{border-color:var(--g1);transform:translateX(5px)}
+  .ci i{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:22px;background:rgba(166,242,58,.12);color:var(--g1);flex:none}
+  .ci.w i{background:rgba(37,211,102,.14);color:var(--wa)}
+  .ci small{display:block;color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.5px}
+  .ci b{font-size:16px}
+  .map{border-radius:26px;overflow:hidden;border:1px solid var(--line);min-height:380px}
+  .map iframe{width:100%;height:100%;min-height:380px;border:0;filter:invert(.92) hue-rotate(180deg) saturate(.8)}
+
+  footer{padding:30px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+  .adm-link{background:none;border:0;color:var(--muted);cursor:pointer;display:flex;gap:6px;align-items:center;font-size:13px;opacity:.6}
+  .adm-link:hover{opacity:1;color:var(--g1)}
+
+  .fab{position:fixed;right:18px;bottom:18px;z-index:40;width:60px;height:60px;border-radius:50%;background:var(--wa);color:#04210f;display:grid;place-items:center;font-size:30px;box-shadow:0 10px 30px rgba(37,211,102,.5)}
+  .fab::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--wa);animation:ring 2s infinite}
+  @keyframes ring{to{transform:scale(1.6);opacity:0}}
+
+  /* ADMIN */
+  .modal{position:fixed;inset:0;z-index:100;background:rgba(3,6,9,.8);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}
+  .modal.open{display:flex}
+  .box{background:#0f1720;border:1px solid var(--line);border-radius:26px;padding:28px;width:100%;max-width:760px;max-height:92vh;overflow:auto}
+  .box h3{font-size:22px;margin-bottom:4px}
+  .box>p{color:var(--muted);font-size:14px;margin-bottom:20px}
+  .tbl{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:18px}
+  .tbl th{color:var(--muted);font-weight:600;text-align:left;padding:8px 6px;font-size:12px}
+  .tbl td{padding:6px}
+  .tbl td:first-child{font-weight:700}
+  .tbl input,.pin{width:100%;min-width:70px;background:#0a1017;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:10px 12px;font:inherit;font-weight:700}
+  .tbl input:focus,.pin:focus{outline:2px solid var(--g1)}
+  .arow{display:flex;gap:10px;flex-wrap:wrap}
+  .arow .btn{padding:11px 18px;font-size:14px}
+  .hint{font-size:12.5px;color:var(--muted);margin-top:14px}
+  .toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,30px);background:var(--g1);color:#0a1405;font-weight:700;padding:12px 20px;border-radius:12px;opacity:0;transition:.3s;z-index:200;pointer-events:none}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s,transform .7s}
+  .rv.in{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .links{display:none}
+    .hero{padding:118px 0 60px}
+    .hero .wrap,.calc,.cgrid{grid-template-columns:1fr}
+    .visual{order:-1;max-width:320px;margin:0 auto}
+    .chip{display:none}
+    .features{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr}
+    .stats .wrap{grid-template-columns:1fr 1fr;row-gap:22px}
+    .quote{position:static}
+    section{padding:70px 0}
+  }
+  @media(max-width:520px){
+    .features{grid-template-columns:1fr}
+    .panel{padding:20px}
+    .nav-cta span{display:none}
+    .btns .btn{width:100%}
+    .logo small{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<header>
+<!-- ICONS -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M12 18h.01"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-crack" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M13 3l-3 5 3 3-3 5 2 6"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 11v2M9 10l-2 4h4l-2 4" /></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7l5.7 5.7a8 8 0 11-11.4 0z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></symbol>
+  <symbol id="i-euro" viewBox="0 0 24 24"><path d="M18 7a7 7 0 100 10M4 10h10M4 14h10"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.8-3.8a6 6 0 01-7.9 7.9l-6.9 6.9a2.1 2.1 0 01-3-3l6.9-6.9a6 6 0 017.9-7.9z"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a3.5 3.5 0 01-1.6-1.6l.8-1-1-2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M22 6l-10 7L2 6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-call" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+</svg>
+
+<nav id="nav">
   <div class="wrap">
-    <div class="logo">ATELIER <span>RÉPARATION</span> CLINIQUE</div>
-    <a class="tel" href="tel:+33961095707">📞 Appeler</a>
+    <a href="#top" class="logo"><i><svg class="ic"><use href="#i-tool"/></svg></i><div>ATELIER RÉPARATION<small>CLINIQUE · PARIS 17</small></div></a>
+    <div class="links"><a href="#calc">Tarifs</a><a href="#why">Pourquoi nous</a><a href="#how">Comment ça marche</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
+    <a class="btn btn-g nav-cta" href="tel:+33961095707"><svg class="ic"><use href="#i-call"/></svg><span>09 61 09 57 07</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap">
+    <div>
+      <div class="pill"><b></b> Ouvert · Diagnostic gratuit</div>
+      <h1>Réparation <span class="grad">rapide et garantie</span> de vos smartphones &amp; ordinateurs à Paris 17</h1>
+      <p class="lead">iPhone, Samsung, MacBook, PC : on diagnostique, on répare et on vous garantit le résultat. Souvent le jour même.</p>
+      <div class="btns">
+        <a class="btn btn-g" href="#calc"><svg class="ic"><use href="#i-euro"/></svg>Demander un devis gratuit</a>
+        <a class="btn btn-w" href="https://wa.me/33767494822?text=Bonjour%2C%20je%20souhaite%20un%20devis%20de%20r%C3%A9paration." target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</a>
+      </div>
+      <div class="meta">
+        <span><svg class="ic"><use href="#i-pin"/></svg>11 Rue Pouchet, 75017 Paris</span>
+        <span><svg class="ic"><use href="#i-clock"/></svg><span id="hours">Lun–Sam · 10h00 – 19h00</span></span>
+      </div>
+    </div>
+    <div class="visual">
+      <svg viewBox="0 0 440 400" fill="none">
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a6f23a"/><stop offset="1" stop-color="#4cc40b"/></linearGradient>
+          <linearGradient id="d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2a36"/><stop offset="1" stop-color="#0e161e"/></linearGradient>
+        </defs>
+        <!-- laptop -->
+        <rect x="20" y="70" width="300" height="196" rx="16" fill="url(#d)" stroke="#2c3d4d" stroke-width="2"/>
+        <rect x="36" y="86" width="268" height="164" rx="8" fill="#0a1118"/>
+        <rect x="52" y="104" width="120" height="10" rx="5" fill="url(#g)"/>
+        <rect x="52" y="126" width="200" height="7" rx="3.5" fill="#22323f"/>
+        <rect x="52" y="142" width="170" height="7" rx="3.5" fill="#22323f"/>
+        <rect x="52" y="170" width="76" height="60" rx="10" fill="#14212c" stroke="#2c3d4d"/>
+        <rect x="140" y="170" width="76" height="60" rx="10" fill="#14212c" stroke="#2c3d4d"/>
+        <rect x="228" y="170" width="60" height="60" rx="10" fill="url(#g)" opacity=".9"/>
+        <path d="M0 266h340l-18 28H18z" fill="#16222d" stroke="#2c3d4d" stroke-width="2"/>
+        <rect x="140" y="272" width="60" height="6" rx="3" fill="#0a1118"/>
+        <!-- phone -->
+        <rect x="262" y="120" width="150" height="270" rx="28" fill="url(#d)" stroke="#34495c" stroke-width="3"/>
+        <rect x="274" y="134" width="126" height="242" rx="20" fill="#0a1118"/>
+        <rect x="316" y="142" width="42" height="8" rx="4" fill="#1c2a36"/>
+        <circle cx="337" cy="238" r="38" fill="url(#g)"/>
+        <path d="M337 216a22 22 0 100 44 22 22 0 000-44zm0 14a8 8 0 110 16 8 8 0 010-16z" fill="#0a1405" opacity=".85"/>
+        <rect x="294" y="296" width="86" height="9" rx="4.5" fill="#22323f"/>
+        <rect x="308" y="314" width="58" height="9" rx="4.5" fill="#1a2733"/>
+        <rect x="294" y="340" width="86" height="22" rx="11" fill="#14212c" stroke="#2c3d4d"/>
+      </svg>
+      <div class="chip c1"><svg class="ic"><use href="#i-shield"/></svg><div>Garantie<small>sur chaque réparation</small></div></div>
+      <div class="chip c2"><svg class="ic"><use href="#i-bolt"/></svg><div>Express<small>souvent en 1 heure</small></div></div>
+    </div>
   </div>
 </header>
 
-<div class="hero">
+<div class="stats">
   <div class="wrap">
-    <div>
-      <h1>Réparation <em>rapide et garantie</em> de vos smartphones &amp; ordinateurs à Paris 17</h1>
-      <p>iPhone, Samsung, MacBook, PC : diagnostic gratuit, pièces de qualité, réparation souvent le jour même.</p>
-      <div class="btns">
-        <a class="btn btn-g" href="#calc">Demander un devis gratuit</a>
-        <a class="btn btn-w" href="https://wa.me/33767494822?text=Bonjour%2C%20je%20souhaite%20un%20devis%20de%20r%C3%A9paration." target="_blank" rel="noopener">💬 WhatsApp</a>
-      </div>
-      <div class="info">
-        <span>📍 11 Rue Pouchet, 75017 Paris</span>
-        <span>🕘 Lun–Sam : 10h00 – 19h00</span>
-      </div>
-    </div>
-    <div class="badge">
-      <div class="ico">📱💻</div>
-      <ul>
-        <li>Devis gratuit et sans engagement</li>
-        <li>Garantie sur chaque réparation</li>
-        <li>Réparation express</li>
-      </ul>
-    </div>
+    <div class="rv"><b class="grad">0 €</b><span>Devis &amp; diagnostic</span></div>
+    <div class="rv"><b class="grad">1 h</b><span>Réparation express</span></div>
+    <div class="rv"><b class="grad">4+</b><span>Types d'appareils</span></div>
+    <div class="rv"><b class="grad">100%</b><span>Pièces garanties</span></div>
   </div>
 </div>
 
 <section id="calc">
   <div class="wrap">
-    <h2>Calculez le prix de votre réparation</h2>
-    <p class="sub">Estimation indicative en 3 étapes. Le prix final est confirmé après diagnostic.</p>
-    <div class="card">
-      <div class="step">
-        <h3>1. Votre appareil</h3>
-        <div class="opts" id="devices"></div>
-      </div>
-      <div class="step">
-        <h3>2. La panne</h3>
-        <div class="opts" id="issues"></div>
-      </div>
-      <div class="step" style="margin:0">
-        <h3>3. Estimation</h3>
-        <div class="result">
-          <div class="lbl" id="summary">Choisissez un appareil et une panne</div>
-          <div class="price" id="price">— €</div>
-          <small>Prix indicatif TTC, pose incluse</small>
-          <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener">Réserver cette réparation</a>
+    <div class="center rv">
+      <div class="eyebrow">Calculateur de prix</div>
+      <h2>Combien coûte votre <span class="grad">réparation</span> ?</h2>
+      <p class="sub">Choisissez votre appareil et la panne : le tarif s'affiche instantanément.</p>
+    </div>
+    <div class="calc rv">
+      <div class="panel">
+        <div class="step">
+          <h3><span class="num">1</span>Votre appareil</h3>
+          <div class="opts" id="devices"></div>
+        </div>
+        <div class="step">
+          <h3><span class="num">2</span>Quelle est la panne ?</h3>
+          <div class="opts" id="issues"></div>
         </div>
       </div>
+      <aside class="quote">
+        <div class="lbl">Votre estimation</div>
+        <div class="sum" id="summary">Sélectionnez une panne</div>
+        <div class="price grad" id="price">— €</div>
+        <div class="note" id="note">Prix indicatif TTC, pose incluse</div>
+        <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>Réserver cette réparation</a>
+        <div class="perks">
+          <div><svg class="ic"><use href="#i-check"/></svg>Devis final gratuit après diagnostic</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Garantie sur la pièce et la main-d'œuvre</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Réponse rapide sur WhatsApp</div>
+        </div>
+      </aside>
     </div>
   </div>
 </section>
 
-<section>
+<section id="why">
   <div class="wrap">
-    <h2>Pourquoi nous choisir ?</h2>
-    <p class="sub">Un atelier de quartier, des réparations fiables.</p>
+    <div class="center rv">
+      <div class="eyebrow">Pourquoi nous</div>
+      <h2>Un atelier de quartier, <span class="grad">un service pro</span></h2>
+      <p class="sub">Des réparations soignées, des prix clairs, un vrai suivi.</p>
+    </div>
     <div class="features">
-      <div class="f"><div class="e">⚡</div><h3>Rapide</h3><p>La plupart des réparations sont faites en moins d'une heure ou dans la journée.</p></div>
-      <div class="f"><div class="e">🛡️</div><h3>Garantie</h3><p>Pièces de qualité et garantie sur chaque intervention.</p></div>
-      <div class="f"><div class="e">💶</div><h3>Prix clairs</h3><p>Devis gratuit, aucune mauvaise surprise.</p></div>
-      <div class="f"><div class="e">🔧</div><h3>Experts</h3><p>Smartphones, ordinateurs portables, MacBook, PC fixes.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-bolt"/></svg></i><h3>Rapide</h3><p>La plupart des réparations sont terminées en moins d'une heure ou dans la journée.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-shield"/></svg></i><h3>Garantie</h3><p>Pièces de qualité et garantie sur chaque intervention.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-euro"/></svg></i><h3>Prix clairs</h3><p>Devis gratuit, aucune mauvaise surprise au moment de payer.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-tool"/></svg></i><h3>Experts</h3><p>Smartphones, MacBook, PC portables et fixes : on s'occupe de tout.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="center rv">
+      <div class="eyebrow">Comment ça marche</div>
+      <h2>3 étapes, <span class="grad">c'est tout</span></h2>
+      <p class="sub">Simple, transparent et sans rendez-vous compliqué.</p>
+    </div>
+    <div class="steps">
+      <div class="s rv"><h3>Estimez &amp; réservez</h3><p>Utilisez le calculateur puis envoyez votre demande en un clic sur WhatsApp.</p></div>
+      <div class="s rv"><h3>Passez à l'atelier</h3><p>Déposez votre appareil au 11 Rue Pouchet. Le diagnostic est gratuit.</p></div>
+      <div class="s rv"><h3>Récupérez-le réparé</h3><p>Souvent dans l'heure, toujours avec une garantie.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="center rv">
+      <div class="eyebrow">FAQ</div>
+      <h2>Questions <span class="grad">fréquentes</span></h2>
+      <p class="sub">Les réponses aux questions les plus posées.</p>
+    </div>
+    <div class="faq rv">
+      <details><summary>Le devis est-il vraiment gratuit ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Oui. Le diagnostic et le devis sont gratuits et sans engagement. Vous ne payez que si vous acceptez la réparation.</p></details>
+      <details><summary>Combien de temps dure une réparation ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Un écran ou une batterie sont souvent remplacés en moins d'une heure. Les cas plus complexes (carte mère, désoxydation) peuvent demander plus de temps.</p></details>
+      <details><summary>Mes données sont-elles conservées ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Dans la grande majorité des réparations, vos données ne sont pas touchées. Nous vous conseillons tout de même de faire une sauvegarde avant.</p></details>
+      <details><summary>Y a-t-il une garantie ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Oui, chaque réparation est garantie. Demandez-nous les détails à l'atelier.</p></details>
     </div>
   </div>
 </section>
 
 <section id="contact">
   <div class="wrap">
-    <h2>Contact &amp; accès</h2>
-    <p class="sub">Passez à l'atelier ou contactez-nous directement.</p>
-    <div class="cgrid">
+    <div class="rv">
+      <div class="eyebrow">Contact &amp; accès</div>
+      <h2>Venez nous <span class="grad">voir</span></h2>
+      <p class="sub">Passez à l'atelier ou écrivez-nous directement.</p>
+    </div>
+    <div class="cgrid rv">
       <div class="clist">
-        <a href="tel:+33961095707">📞 09 61 09 57 07</a>
-        <a href="https://wa.me/33767494822" target="_blank" rel="noopener">💬 WhatsApp +33 7 67 49 48 22</a>
-        <a href="mailto:arc.paris17@gmail.com">✉️ arc.paris17@gmail.com</a>
-        <div>📍 11 Rue Pouchet, 75017 Paris</div>
+        <a class="ci" href="tel:+33961095707"><i><svg class="ic"><use href="#i-call"/></svg></i><div><small>TÉLÉPHONE</small><b>09 61 09 57 07</b></div></a>
+        <a class="ci w" href="https://wa.me/33767494822" target="_blank" rel="noopener"><i><svg class="ic"><use href="#i-wa"/></svg></i><div><small>WHATSAPP</small><b>+33 7 67 49 48 22</b></div></a>
+        <a class="ci" href="mailto:arc.paris17@gmail.com"><i><svg class="ic"><use href="#i-mail"/></svg></i><div><small>EMAIL</small><b>arc.paris17@gmail.com</b></div></a>
+        <a class="ci" href="https://maps.google.com/?q=11+Rue+Pouchet,+75017+Paris" target="_blank" rel="noopener"><i><svg class="ic"><use href="#i-pin"/></svg></i><div><small>ADRESSE</small><b>11 Rue Pouchet, 75017 Paris</b></div></a>
+        <div class="ci"><i><svg class="ic"><use href="#i-clock"/></svg></i><div><small>HORAIRES</small><b id="hours2">Lun–Sam · 10h00 – 19h00</b></div></div>
       </div>
-      <iframe loading="lazy" title="Carte" src="https://maps.google.com/maps?q=11+Rue+Pouchet,+75017+Paris&output=embed"></iframe>
+      <div class="map"><iframe loading="lazy" title="Carte" src="https://maps.google.com/maps?q=11+Rue+Pouchet,+75017+Paris&output=embed"></iframe></div>
     </div>
   </div>
 </section>
 
-<footer>© Atelier Réparation Clinique – 11 Rue Pouchet, 75017 Paris</footer>
-<a class="fab" href="https://wa.me/33767494822" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+<footer>
+  <div class="wrap">
+    <span>© Atelier Réparation Clinique · 11 Rue Pouchet, 75017 Paris</span>
+    <button class="adm-link" id="admBtn" type="button"><svg class="ic"><use href="#i-sliders"/></svg>Gérer les prix</button>
+  </div>
+</footer>
+
+<a class="fab" href="https://wa.me/33767494822" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ic"><use href="#i-wa"/></svg></a>
+
+<!-- ADMIN -->
+<div class="modal" id="modal">
+  <div class="box">
+    <div id="login">
+      <h3>Espace gérant</h3>
+      <p>Entrez le code pour modifier les prix.</p>
+      <input class="pin" id="pin" type="password" inputmode="numeric" placeholder="Code" autocomplete="off">
+      <div class="arow" style="margin-top:14px">
+        <button class="btn btn-g" id="pinOk" type="button">Entrer</button>
+        <button class="btn btn-o" data-close type="button">Annuler</button>
+      </div>
+    </div>
+    <div id="editor" hidden>
+      <h3>Modifier les prix (€)</h3>
+      <p>Laissez une case vide ou à 0 pour afficher « Sur devis ».</p>
+      <div style="overflow:auto"><table class="tbl" id="tbl"></table></div>
+      <div class="arow">
+        <button class="btn btn-g" id="save" type="button">Enregistrer</button>
+        <button class="btn btn-o" id="copy" type="button">Copier pour le code</button>
+        <button class="btn btn-o" id="reset" type="button">Réinitialiser</button>
+        <button class="btn btn-o" data-close type="button">Fermer</button>
+      </div>
+      <p class="hint">« Enregistrer » applique les prix sur cet appareil/navigateur immédiatement. Pour les rendre définitifs pour tous les visiteurs : « Copier pour le code » puis coller à la place de <b>DEFAULT_PRICES</b> dans le fichier.</p>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
 
 <script>
-  const WA = "33767494822";
-  const devices = {
-    iphone:  {n:"iPhone",  e:"📱"},
-    samsung: {n:"Samsung", e:"📱"},
-    macbook: {n:"MacBook", e:"💻"},
-    pc:      {n:"PC portable", e:"🖥️"}
-  };
-  const issues = {
-    ecran:   {n:"Écran cassé",         e:"💥"},
-    batterie:{n:"Batterie",            e:"🔋"},
-    charge:  {n:"Connecteur de charge",e:"🔌"},
-    oxyd:    {n:"Désoxydation",        e:"💧"}
-  };
-  // prix indicatifs (€)
-  const prices = {
-    iphone:  {ecran:89,  batterie:59, charge:59, oxyd:49},
-    samsung: {ecran:99,  batterie:59, charge:55, oxyd:49},
-    macbook: {ecran:249, batterie:129,charge:99, oxyd:89},
-    pc:      {ecran:109, batterie:79, charge:69, oxyd:69}
-  };
-  let dev = null, iss = null;
+/* ============ CONFIGURATION (modifiable) ============ */
+const WA_NUMBER = "33767494822";
+const ADMIN_PIN = "1234";            // code pour « Gérer les prix »
+const HOURS     = "Lun–Sam · 10h00 – 19h00";
 
-  function build(id, data, key){
-    const box = document.getElementById(id);
-    Object.entries(data).forEach(([k,v])=>{
-      const b = document.createElement("button");
-      b.type = "button"; b.className = "opt"; b.dataset.k = k;
-      b.innerHTML = `<span class="e">${v.e}</span>${v.n}`;
-      b.onclick = ()=>{
-        if(key==="dev") dev = k; else iss = k;
-        box.querySelectorAll(".opt").forEach(x=>x.classList.toggle("on", x===b));
-        update();
-      };
-      box.appendChild(b);
-    });
+const DEVICES = {
+  iphone:  {n:"iPhone",      i:"phone"},
+  samsung: {n:"Samsung",     i:"phone"},
+  macbook: {n:"MacBook",     i:"laptop"},
+  pc:      {n:"PC portable", i:"monitor"}
+};
+const ISSUES = {
+  ecran:    {n:"Écran cassé",          i:"crack"},
+  batterie: {n:"Batterie",             i:"battery"},
+  charge:   {n:"Connecteur de charge", i:"plug"},
+  oxyd:     {n:"Désoxydation",         i:"drop"}
+};
+/* Prix en € (0 = « Sur devis »). Ce sont les prix par défaut. */
+const DEFAULT_PRICES = {
+  iphone:  {ecran:89,  batterie:59,  charge:59, oxyd:49},
+  samsung: {ecran:99,  batterie:59,  charge:55, oxyd:49},
+  macbook: {ecran:249, batterie:129, charge:99, oxyd:89},
+  pc:      {ecran:109, batterie:79,  charge:69, oxyd:69}
+};
+/* ====================================================== */
+
+const $ = id => document.getElementById(id);
+const KEY = "arc_prices_v1";
+let prices = JSON.parse(JSON.stringify(DEFAULT_PRICES));
+try{
+  const s = JSON.parse(localStorage.getItem(KEY)||"null");
+  if(s) for(const d in prices) for(const k in prices[d]) if(s[d] && s[d][k]!==undefined) prices[d][k]=+s[d][k]||0;
+}catch(e){}
+
+$("hours").textContent = HOURS; $("hours2").textContent = HOURS;
+const ico = n => `<svg class="ic"><use href="#i-${n}"/></svg>`;
+let dev=null, iss=null;
+
+function build(id, data, kind){
+  const box=$(id);
+  for(const [k,v] of Object.entries(data)){
+    const b=document.createElement("button");
+    b.type="button"; b.className="opt"; b.innerHTML=ico(v.i)+v.n;
+    b.onclick=()=>{ if(kind==="d")dev=k; else iss=k;
+      [...box.children].forEach(x=>x.classList.toggle("on",x===b)); update(); };
+    box.appendChild(b);
   }
-  function update(){
-    const priceEl = document.getElementById("price");
-    const book = document.getElementById("book");
-    const sum = document.getElementById("summary");
-    if(dev && iss){
-      const p = prices[dev][iss];
-      priceEl.textContent = "à partir de " + p + " €";
-      sum.textContent = devices[dev].n + " – " + issues[iss].n;
-      const msg = `Bonjour, je souhaite réserver une réparation :\n• Appareil : ${devices[dev].n}\n• Panne : ${issues[iss].n}\n• Prix estimé : ${p} €\nQuand puis-je passer ?`;
-      book.href = `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`;
-      book.removeAttribute("aria-disabled");
-    } else {
-      priceEl.textContent = "— €";
-      sum.textContent = "Choisissez un appareil et une panne";
-      book.href = "#";
-      book.setAttribute("aria-disabled","true");
-    }
+}
+let anim;
+function countTo(el, to){
+  cancelAnimationFrame(anim);
+  const from = parseInt(el.dataset.v||0)||0, t0=performance.now(), dur=500;
+  const step=t=>{ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+    el.textContent="à partir de "+Math.round(from+(to-from)*e)+" €"; if(p<1)anim=requestAnimationFrame(step); };
+  el.dataset.v=to; el.classList.remove("small");
+  el.innerHTML=""; anim=requestAnimationFrame(step);
+}
+function update(){
+  const p=$("price"), b=$("book"), s=$("summary");
+  if(!dev||!iss){
+    s.textContent = !dev ? "Sélectionnez un appareil" : "Sélectionnez une panne";
+    p.classList.remove("small"); p.textContent="— €"; p.dataset.v=0;
+    b.href="#"; b.setAttribute("aria-disabled","true"); return;
   }
-  build("devices", devices, "dev");
-  build("issues", issues, "iss");
+  const v=prices[dev][iss]||0;
+  s.textContent=DEVICES[dev].n+" · "+ISSUES[iss].n;
+  if(v>0){ countTo(p,v); p.classList.add("small"); p.classList.remove("small");
+    p.style.fontSize=""; }
+  else { cancelAnimationFrame(anim); p.dataset.v=0; p.classList.add("small"); p.textContent="Sur devis"; }
+  const txt = v>0 ? v+" €" : "sur devis";
+  const msg=`Bonjour, je souhaite réserver une réparation :\n• Appareil : ${DEVICES[dev].n}\n• Panne : ${ISSUES[iss].n}\n• Prix estimé : ${txt}\nQuand puis-je passer ?`;
+  b.href=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  b.removeAttribute("aria-disabled");
+}
+build("devices",DEVICES,"d"); build("issues",ISSUES,"i"); update();
+
+/* nav + reveal */
+const nav=$("nav");
+addEventListener("scroll",()=>nav.classList.toggle("sc",scrollY>20),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+
+/* admin */
+const modal=$("modal");
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2200)}
+function buildTable(){
+  let h="<tr><th>Appareil</th>"+Object.values(ISSUES).map(i=>`<th>${i.n}</th>`).join("")+"</tr>";
+  for(const d in DEVICES){
+    h+=`<tr><td>${DEVICES[d].n}</td>`+Object.keys(ISSUES).map(k=>`<td><input type="number" min="0" step="1" data-d="${d}" data-k="${k}" value="${prices[d][k]||""}"></td>`).join("")+"</tr>";
+  }
+  $("tbl").innerHTML=h;
+}
+function readTable(){
+  const o=JSON.parse(JSON.stringify(prices));
+  document.querySelectorAll("#tbl input").forEach(i=>{o[i.dataset.d][i.dataset.k]=Math.max(0,Math.round(+i.value||0))});
+  return o;
+}
+function openAdmin(){ modal.classList.add("open"); $("login").hidden=false; $("editor").hidden=true; $("pin").value=""; setTimeout(()=>$("pin").focus(),50); }
+$("admBtn").onclick=openAdmin;
+if(location.hash==="#admin") openAdmin();
+modal.addEventListener("click",e=>{ if(e.target===modal||e.target.hasAttribute("data-close")) modal.classList.remove("open"); });
+function tryPin(){ if($("pin").value===ADMIN_PIN){ $("login").hidden=true; $("editor").hidden=false; buildTable(); } else { toast("Code incorrect"); $("pin").value=""; } }
+$("pinOk").onclick=tryPin; $("pin").addEventListener("keydown",e=>{if(e.key==="Enter")tryPin()});
+$("save").onclick=()=>{ prices=readTable(); try{localStorage.setItem(KEY,JSON.stringify(prices))}catch(e){} update(); toast("Prix enregistrés ✓"); };
+$("reset").onclick=()=>{ prices=JSON.parse(JSON.stringify(DEFAULT_PRICES)); try{localStorage.removeItem(KEY)}catch(e){} buildTable(); update(); toast("Prix par défaut restaurés"); };
+$("copy").onclick=()=>{ const code="const DEFAULT_PRICES = "+JSON.stringify(readTable(),null,2)+";";
+  (navigator.clipboard?navigator.clipboard.writeText(code):Promise.reject()).then(()=>toast("Copié ✓"),()=>{prompt("Copiez ce code :",code)}); };
 </script>
 </body>
 </html>
