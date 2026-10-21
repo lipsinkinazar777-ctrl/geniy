@@ -241,7 +241,7 @@ function waMessage() {
   const L = ['Bonjour Maison Volodymyr 🌿', '', 'Je souhaite commander :'];
   cart.forEach(i => L.push(`• ${i.qty} × ${i.name}${i.opt ? ' (' + i.opt + ')' : ''} — ${i.from ? 'dès ' : ''}${eur(i.price * i.qty)}`));
   L.push('', `Sous-total : ${eur(sub)}`);
-  if (disc) L.push(`Première commande (−20 %) : −${eur(disc)}`);
+  if (disc) L.push(`Carte de visite Maison Volodymyr (−20 % 1ère commande) : −${eur(disc)}`, 'Je présente la carte / son QR code.');
   L.push(`Total estimé : ${eur(tot)}`);
   if (name) L.push('', `Prénom : ${name}`);
   if (note) L.push(`Précisions : ${note}`);
@@ -272,5 +272,98 @@ function openCart() { cartEl.classList.add('on'); veil.classList.add('on'); cart
 function closeCart() { cartEl.classList.remove('on'); veil.classList.remove('on'); cartEl.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
 $('#openCart').addEventListener('click', openCart); $('#closeCart').addEventListener('click', closeCart); veil.addEventListener('click', closeCart);
 addEventListener('keydown', e => { if (e.key === 'Escape' && cartEl.classList.contains('on')) closeCart(); });
+
+/* ---------------------------------------------------------------- gift builder ("Composez votre coffret") */
+const BOX_FEE = 4; // black box + gold ribbon: derived from the set prices (e.g. Coffret Famille 28 € = 10 + 6 + 5 + 3 + 4)
+const MAXITEMS = 6;
+const PICK = [
+  { id: 'tasse', name: 'Tasse photo', img: 'assets/cut-mug.webp', size: .92, opts: [{ l: 'Tasse', p: 10 }] },
+  { id: 'metal', name: 'Photo sur métal', img: 'assets/cut-metal.webp', size: .9, opts: [{ l: '10×15', p: 4 }, { l: '15×20', p: 6 }, { l: '20×30', p: 8 }, { l: '30×40', p: 25 }] },
+  { id: 'aimant', name: 'Aimant photo', img: 'assets/cut-magnet.webp', size: .6, opts: [{ l: 'Aimant', p: 3 }] },
+  { id: 'cles', name: 'Porte-clés', img: 'assets/cut-key.webp', size: .98, opts: [{ l: 'Simple face', p: 2 }, { l: 'Double face', p: 5 }] }
+];
+// where items sit inside the open box (x = centre %, b = bottom edge % of the stage, h = height % of the stage)
+const SLOTS = [{ x: 37, b: 59, h: 26 }, { x: 63, b: 59, h: 26 }, { x: 50, b: 57, h: 27 }, { x: 42, b: 53, h: 22 }, { x: 58, b: 53, h: 22 }, { x: 50, b: 51, h: 20 }];
+const bs = $('#bs'), bsSlots = $('#bsSlots'), bsLid = $('#bsLid'), bsStatus = $('#bsStatus'), pickEl = $('#pick'), bClose = $('#bClose'), bReset = $('#bReset');
+let bItems = [], bClosed = false, bBusy = false, uid = 0; const bSel = {};
+pickEl.innerHTML = PICK.map(p => { bSel[p.id] = 0; return `<li class="pk" data-id="${p.id}">
+  <img class="pk__img" src="${p.img}" alt="" width="56" height="56" loading="lazy">
+  <div class="pk__m"><span class="pk__n">${p.name}</span>
+    ${p.opts.length > 1 ? `<span class="pk__o" role="radiogroup" aria-label="${p.name}">${p.opts.map((o, i) => `<button class="pk__opt${i ? '' : ' is-on'}" role="radio" aria-checked="${i === 0}" data-i="${i}">${o.l}</button>`).join('')}</span>` : `<span class="pk__sub">${p.opts[0].l}</span>`}</div>
+  <span class="pk__p">${eur(p.opts[0].p)}</span>
+  <div class="qty pk__q"><button data-a="rm" aria-label="Retirer ${p.name}"><svg class="ico"><use href="#i-minus"/></svg></button><span>0</span><button data-a="add" aria-label="Ajouter ${p.name}"><svg class="ico"><use href="#i-plus"/></svg></button></div></li>`; }).join('');
+const pBy = id => PICK.find(p => p.id === id);
+function layout() {
+  bItems.forEach((it, i) => { const sl = SLOTS[i], p = pBy(it.pid), el = it.el;
+    el.style.left = sl.x + '%'; el.style.bottom = (100 - sl.b) + '%'; el.style.height = (sl.h * p.size) + '%'; el.style.zIndex = Math.round(sl.b * 10) + i; });
+}
+function bTotals() { const sum = bItems.reduce((t, i) => t + pBy(i.pid).opts[i.o].p, 0); return { sum, tot: sum + (bItems.length ? BOX_FEE : 0) }; }
+function bRefresh() {
+  const { sum, tot } = bTotals(); $('#bCount').textContent = bItems.length; $('#bItems').textContent = eur(sum); $('#bTot').textContent = eur(tot);
+  $$('.pk', pickEl).forEach(li => { const n = bItems.filter(i => i.pid === li.dataset.id).length; $('.qty span', li).textContent = n; $('[data-a="rm"]', li).disabled = !n || bClosed || bBusy; $('[data-a="add"]', li).disabled = bClosed || bBusy || bItems.length >= MAXITEMS; li.classList.toggle('has', n > 0); });
+  bClose.disabled = !bItems.length || bBusy;
+  const full = bItems.length >= MAXITEMS;
+  bsStatus.textContent = bClosed ? 'Coffret fermé, prêt à offrir' : !bItems.length ? 'Ajoutez un premier article' : full ? 'Coffret plein : fermez-le' : `${bItems.length} article${bItems.length > 1 ? 's' : ''} dans le coffret`;
+  const t = $('.btn__t', bClose); t.textContent = bClosed ? `Ajouter au panier · ${eur(tot)}` : 'Fermer le coffret';
+  $('use', $('.ico', bClose)).setAttribute('href', bClosed ? '#i-bag' : '#i-gift'); bReset.hidden = !bItems.length;
+}
+function flyIn(it, srcImg) {
+  const t = it.el.getBoundingClientRect(), s = srcImg.getBoundingClientRect();
+  if (reduce || !t.width) { it.el.style.opacity = 1; return Promise.resolve(); }
+  const c = document.createElement('img'); c.src = it.el.src; c.alt = '';
+  Object.assign(c.style, { position: 'fixed', left: s.left + 'px', top: s.top + 'px', width: s.width + 'px', height: s.height + 'px', objectFit: 'contain', zIndex: 130, pointerEvents: 'none', filter: 'drop-shadow(0 18px 24px rgba(0,0,0,.5))' });
+  document.body.appendChild(c);
+  const dx = t.left + t.width / 2 - (s.left + s.width / 2), dy = t.top + t.height / 2 - (s.top + s.height / 2), k = Math.min(t.width / s.width, t.height / s.height), lift = Math.min(260, 120 + Math.abs(dy) * .25);
+  const a = c.animate([
+    { transform: 'translate(0,0) scale(1) rotate(0deg)', offset: 0 },
+    { transform: `translate(${dx * .45}px,${dy * .45 - lift}px) scale(${1 + (k - 1) * .35}) rotate(-12deg)`, offset: .45, easing: 'cubic-bezier(.4,0,.8,.6)' },
+    { transform: `translate(${dx}px,${dy}px) scale(${k}) rotate(0deg)`, offset: 1 }], { duration: 950, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'forwards' });
+  return a.finished.then(() => { it.el.style.opacity = 1; c.remove(); it.el.animate([{ transform: 'translateX(-50%) translateY(-14px) scaleY(.94)' }, { transform: 'translateX(-50%) translateY(3px) scaleY(1.03)', offset: .6 }, { transform: 'translateX(-50%)' }], { duration: 420, easing: 'ease-out' }); bs.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(5px)', offset: .35 }, { transform: 'translateY(0)' }], { duration: 380, easing: 'ease-out' }); });
+}
+async function bAdd(pid, srcImg) {
+  if (bClosed || bBusy || bItems.length >= MAXITEMS) return; const p = pBy(pid);
+  const el = document.createElement('img'); el.className = 'slot'; el.src = p.img; el.alt = ''; el.style.opacity = 0; bsSlots.appendChild(el);
+  const it = { id: ++uid, pid, o: bSel[pid], el }; bItems.push(it); layout(); bBusy = true; bRefresh();
+  await flyIn(it, srcImg); bBusy = false; bRefresh();
+}
+function bRemove(pid) {
+  if (bClosed || bBusy) return; const i = bItems.map(x => x.pid).lastIndexOf(pid); if (i < 0) return; const [it] = bItems.splice(i, 1);
+  it.el.style.transition = 'none'; const a = it.el.animate([{ transform: 'translateX(-50%) translateY(0) rotate(0)', opacity: 1 }, { transform: 'translateX(-50%) translateY(-90px) rotate(8deg)', opacity: 0 }], { duration: 420, easing: 'ease-in', fill: 'forwards' });
+  a.finished.then(() => it.el.remove()); layout(); bRefresh();
+}
+function bSparks() {
+  if (reduce) return; const box = $('#bsSparks');
+  for (let i = 0; i < 36; i++) { const p = document.createElement('i'); box.appendChild(p); const a = Math.random() * Math.PI * 2, d = 60 + Math.random() * 240;
+    p.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d * .7 - 80}px) scale(.1)`, opacity: 0 }], { duration: 900 + Math.random() * 900, delay: Math.random() * 200, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }).onfinish = () => p.remove(); }
+}
+async function bCloseBox() {
+  if (!bItems.length || bBusy) return; bBusy = true; bRefresh();
+  if (reduce) { bsLid.style.opacity = 1; } else {
+    await bsLid.animate([{ transform: 'translateY(-125%) rotate(-7deg)', opacity: 0 }, { opacity: 1, offset: .15 }, { transform: 'translateY(3%) rotate(.6deg)', opacity: 1, offset: .74 }, { transform: 'translateY(-1%)', opacity: 1, offset: .88 }, { transform: 'translateY(0)', opacity: 1 }], { duration: 1000, easing: 'cubic-bezier(.4,0,.3,1)', fill: 'forwards' }).finished;
+    bs.animate([{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(6px) scale(1.012)', offset: .4 }, { transform: 'none' }], { duration: 450, easing: 'ease-out' });
+    $('#bsShine').classList.remove('go'); void $('#bsShine').offsetWidth; $('#bsShine').classList.add('go'); bSparks();
+  }
+  bClosed = true; bBusy = false; bs.dataset.state = 'closed'; bRefresh();
+}
+async function bOpenBox(reset) {
+  if (reduce) bsLid.style.opacity = 0; else await bsLid.animate([{ transform: 'translateY(0)', opacity: 1 }, { transform: 'translateY(-125%) rotate(6deg)', opacity: 0 }], { duration: 650, easing: 'cubic-bezier(.5,0,.8,.4)', fill: 'forwards' }).finished;
+  bClosed = false; bs.dataset.state = 'open'; if (reset) { bItems.forEach(i => i.el.remove()); bItems = []; } bRefresh();
+}
+pickEl.addEventListener('click', e => {
+  const li = e.target.closest('.pk'); if (!li) return; const id = li.dataset.id, p = pBy(id);
+  const opt = e.target.closest('.pk__opt');
+  if (opt) { bSel[id] = +opt.dataset.i; $$('.pk__opt', li).forEach(b => { b.classList.toggle('is-on', b === opt); b.setAttribute('aria-checked', b === opt); }); $('.pk__p', li).textContent = eur(p.opts[bSel[id]].p); return; }
+  const a = e.target.closest('[data-a]'); if (!a) return;
+  if (a.dataset.a === 'add') bAdd(id, $('.pk__img', li)); else bRemove(id);
+});
+bClose.addEventListener('click', () => {
+  if (!bClosed) return bCloseBox();
+  const { tot } = bTotals(), names = {}; bItems.forEach(i => { const p = pBy(i.pid), k = p.name + (p.opts.length > 1 ? ' ' + p.opts[i.o].l : ''); names[k] = (names[k] || 0) + 1; });
+  const list = Object.entries(names).map(([k, n]) => (n > 1 ? n + ' × ' : '') + k.toLowerCase()).join(', ');
+  addToCart({ key: 'custom:' + list, name: 'Coffret sur mesure', opt: list, price: tot, from: false, img: 'assets/card-coffret.webp' });
+  bOpenBox(true);
+});
+bReset.addEventListener('click', () => { if (!bBusy) { if (bClosed) bOpenBox(true); else { bItems.forEach(i => i.el.remove()); bItems = []; bRefresh(); } } });
+bRefresh();
 renderCart(); observeReveals();
 })();

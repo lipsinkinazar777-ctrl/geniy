@@ -59,6 +59,7 @@
     <a href="#creations" class="roll" data-cursor="Voir"><span data-t="Créations">Créations</span></a>
     <a href="#boutique" class="roll"><span data-t="Boutique">Boutique</span></a>
     <a href="#coffrets" class="roll"><span data-t="Coffrets">Coffrets</span></a>
+    <a href="#composer" class="roll"><span data-t="Sur mesure">Sur mesure</span></a>
     <a href="#atelier" class="roll"><span data-t="Atelier">Atelier</span></a>
   </nav>
   <div class="top__right">
@@ -116,7 +117,7 @@
     </a>
     <a class="plaque plaque--cream" href="#offre" data-cursor="Voir" data-tilt>
       <svg class="ico ico--gold plaque__ico"><use href="#i-seal"/></svg>
-      <span class="plaque__lbl">1ÈRE COMMANDE</span>
+      <span class="plaque__lbl">AVEC NOTRE CARTE</span>
       <span class="plaque__big">−20&nbsp;%</span>
     </a>
   </div>
@@ -190,10 +191,45 @@
   </div>
 </section>
 
+<!-- =============== COFFRET SUR MESURE (gift builder) =============== -->
+<section class="sec build" id="composer">
+  <header class="sec__head">
+    <p class="eyebrow">04 — Sur mesure</p>
+    <h2 class="h2 grad" data-split-lines>Composez votre coffret</h2>
+  </header>
+  <div class="build__grid">
+    <div class="build__stage">
+      <div class="bs" id="bs" data-state="open">
+        <span class="bs__glow"></span>
+        <img class="bs__back" src="assets/build-box-back.webp" alt="" width="1400" height="1100" loading="lazy">
+        <div class="bs__slots" id="bsSlots"></div>
+        <img class="bs__front" src="assets/build-box-front.webp" alt="" width="1400" height="1100" loading="lazy">
+        <img class="bs__lid" id="bsLid" src="assets/build-box-lid.webp" alt="" width="1400" height="1100" loading="lazy">
+        <span class="bs__shine" id="bsShine"></span>
+        <div class="bs__sparks" id="bsSparks"></div>
+        <p class="bs__status" id="bsStatus" role="status" aria-live="polite">Ajoutez un premier article</p>
+      </div>
+    </div>
+    <div class="build__panel">
+      <p class="sec__lede">Choisissez jusqu’à six articles. Ils prennent place dans la boîte, puis vous fermez le coffret : ruban doré compris.</p>
+      <ul class="pick" id="pick"></ul>
+      <dl class="bsum">
+        <div><dt>Articles <span id="bCount">0</span>/6</dt><dd id="bItems">0 €</dd></div>
+        <div><dt>Boîte noire et ruban doré</dt><dd>4 €</dd></div>
+        <div class="bsum__tot"><dt>Total du coffret</dt><dd id="bTot">0 €</dd></div>
+      </dl>
+      <div class="bact">
+        <button class="btn btn--gold" id="bClose" disabled data-magnet><span class="btn__t">Fermer le coffret</span><svg class="ico"><use href="#i-gift"/></svg></button>
+        <button class="btn btn--ghost" id="bReset" hidden><span class="btn__t">Recommencer</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- =============== ATELIER =============== -->
 <section class="sec atelier" id="atelier">
   <header class="sec__head">
-    <p class="eyebrow">04 — Atelier</p>
+    <p class="eyebrow">05 — Atelier</p>
     <h2 class="h2 grad" data-split-lines>Un atelier de famille,<br>à Paris 18e</h2>
   </header>
   <div class="atelier__cols">
@@ -215,9 +251,9 @@
 <!-- =============== OFFRE =============== -->
 <section class="sec offre" id="offre">
   <div class="offre__in" data-tilt>
-    <p class="eyebrow">Première commande</p>
+    <p class="eyebrow">Carte de visite Maison Volodymyr</p>
     <p class="offre__big grad">−20&nbsp;%</p>
-    <p class="offre__t">Cochez la case dans le panier, ou écrivez-le dans votre message WhatsApp.</p>
+    <p class="offre__t">Sur la première commande, sur présentation de notre carte de visite ou de son QR code. Sans la carte, la remise ne s’applique pas.</p>
     <a class="btn btn--gold" href="#boutique" data-magnet><span class="btn__t">Choisir mes articles</span><svg class="ico"><use href="#i-arrow"/></svg></a>
   </div>
 </section>
@@ -259,14 +295,14 @@
   <footer class="cart__foot" id="cartFoot">
     <label class="field"><span>Prénom</span><input id="cName" type="text" autocomplete="given-name" placeholder="Votre prénom"></label>
     <label class="field"><span>Précisions (texte à graver, date, couleurs)</span><textarea id="cNote" rows="2" placeholder="Facultatif"></textarea></label>
-    <label class="check"><input type="checkbox" id="cFirst"><span class="check__box"><svg class="ico"><use href="#i-check"/></svg></span><span>C’est ma première commande (−20 %)</span></label>
+    <label class="check"><input type="checkbox" id="cFirst"><span class="check__box"><svg class="ico"><use href="#i-check"/></svg></span><span>J’ai la carte de visite Maison Volodymyr (−20 % sur la 1ère commande)</span></label>
     <dl class="sum">
       <div><dt>Sous-total</dt><dd id="sSub">0 €</dd></div>
-      <div id="sDiscRow" hidden><dt>Remise −20 %</dt><dd id="sDisc">0 €</dd></div>
+      <div id="sDiscRow" hidden><dt>Carte de visite −20 %</dt><dd id="sDisc">0 €</dd></div>
       <div class="sum__tot"><dt>Total estimé</dt><dd id="sTot">0 €</dd></div>
     </dl>
     <a class="btn btn--gold btn--block" id="sendWa" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-wa"/></svg><span class="btn__t">Envoyer la commande sur WhatsApp</span></a>
-    <p class="cart__fine">Le message s’ouvre dans WhatsApp, prêt à envoyer. Vous y joignez vos photos. Le prix final est confirmé par l’atelier.</p>
+    <p class="cart__fine">Le message s’ouvre dans WhatsApp, prêt à envoyer. Vous y joignez vos photos. La remise est vérifiée avec la carte, le prix final est confirmé par l’atelier.</p>
   </footer>
 </aside>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
