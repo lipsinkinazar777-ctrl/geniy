@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atelier Réparation Clinique – Paris 17</title>
-<meta name="description" content="Réparation rapide et garantie de smartphones et ordinateurs à Paris 17. Devis gratuit.">
+<meta name="description" content="Atelier de réparation de smartphones et ordinateurs à Paris 17 : écran, batterie, carte mère, micro-soudure, récupération de données.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -118,6 +118,15 @@
   .f h3{font-size:18px;margin-bottom:6px}
   .f p{color:var(--muted);font-size:14.5px}
 
+  /* SERVICES */
+  #services{background:var(--bg2);border-block:1px solid var(--line)}
+  .svcs{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+  .sv{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:26px 14px;background:var(--bg);border:1px solid var(--line);border-radius:20px;transition:.3s}
+  .sv i{width:58px;height:58px;border-radius:18px;background:rgba(166,242,58,.1);color:var(--g1);display:grid;place-items:center;font-size:28px;transition:.3s}
+  .sv b{font-size:14.5px;line-height:1.3}
+  .sv:hover{transform:translateY(-6px);border-color:rgba(166,242,58,.45)}
+  .sv:hover i{background:var(--grad);color:#0a1405;transform:rotate(-6deg) scale(1.06)}
+
   /* STEPS */
   #how{background:var(--bg2);border-block:1px solid var(--line)}
   .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s}
@@ -185,6 +194,7 @@
     .visual{order:-1;max-width:320px;margin:0 auto}
     .chip{display:none}
     .features{grid-template-columns:1fr 1fr}
+    .svcs{grid-template-columns:repeat(2,1fr)}
     .steps{grid-template-columns:1fr}
     .stats .wrap{grid-template-columns:1fr 1fr;row-gap:22px}
     .quote{position:static}
@@ -222,13 +232,19 @@
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.7-4 3-9 3s-9-1.3-9-3M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 019.9-1"/></symbol>
   <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
 </svg>
 
 <nav id="nav">
   <div class="wrap">
     <a href="#top" class="logo"><i><svg class="ic"><use href="#i-tool"/></svg></i><div>ATELIER RÉPARATION<small>CLINIQUE · PARIS 17</small></div></a>
-    <div class="links"><a href="#calc">Tarifs</a><a href="#why">Pourquoi nous</a><a href="#how">Comment ça marche</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
+    <div class="links"><a href="#calc">Tarifs</a><a href="#services">Services</a><a href="#why">Pourquoi nous</a><a href="#how">Comment ça marche</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
     <a class="btn btn-g nav-cta" href="tel:+33961095707"><svg class="ic"><use href="#i-call"/></svg><span>09 61 09 57 07</span></a>
   </div>
 </nav>
@@ -237,11 +253,11 @@
   <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div>
-      <div class="pill"><b></b> Ouvert · Diagnostic gratuit</div>
-      <h1>Réparation <span class="grad">rapide et garantie</span> de vos smartphones &amp; ordinateurs à Paris 17</h1>
-      <p class="lead">iPhone, Samsung, MacBook, PC : on diagnostique, on répare et on vous garantit le résultat. Souvent le jour même.</p>
+      <div class="pill"><b></b> Atelier de réparation · Paris 17</div>
+      <h1>Réparation <span class="grad">rapide</span> de vos smartphones &amp; ordinateurs à Paris 17</h1>
+      <p class="lead">iPhone, Samsung, MacBook, PC : écran, batterie, carte mère, micro-soudure, récupération de données. Un vrai atelier, des vrais techniciens.</p>
       <div class="btns">
-        <a class="btn btn-g" href="#calc"><svg class="ic"><use href="#i-euro"/></svg>Demander un devis gratuit</a>
+        <a class="btn btn-g" href="#calc"><svg class="ic"><use href="#i-euro"/></svg>Obtenir un devis</a>
         <a class="btn btn-w" href="https://wa.me/33767494822?text=Bonjour%2C%20je%20souhaite%20un%20devis%20de%20r%C3%A9paration." target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>WhatsApp</a>
       </div>
       <div class="meta">
@@ -276,18 +292,18 @@
         <rect x="308" y="314" width="58" height="9" rx="4.5" fill="#1a2733"/>
         <rect x="294" y="340" width="86" height="22" rx="11" fill="#14212c" stroke="#2c3d4d"/>
       </svg>
-      <div class="chip c1"><svg class="ic"><use href="#i-shield"/></svg><div>Garantie<small>sur chaque réparation</small></div></div>
-      <div class="chip c2"><svg class="ic"><use href="#i-bolt"/></svg><div>Express<small>souvent en 1 heure</small></div></div>
+      <div class="chip c1"><svg class="ic"><use href="#i-cpu"/></svg><div>Micro-soudure<small>réparation de carte mère</small></div></div>
+      <div class="chip c2"><svg class="ic"><use href="#i-db"/></svg><div>Données<small>récupération possible</small></div></div>
     </div>
   </div>
 </header>
 
 <div class="stats">
   <div class="wrap">
-    <div class="rv"><b class="grad">0 €</b><span>Devis &amp; diagnostic</span></div>
-    <div class="rv"><b class="grad">1 h</b><span>Réparation express</span></div>
-    <div class="rv"><b class="grad">4+</b><span>Types d'appareils</span></div>
-    <div class="rv"><b class="grad">100%</b><span>Pièces garanties</span></div>
+    <div class="rv"><b class="grad">10</b><span>Services proposés</span></div>
+    <div class="rv"><b class="grad">4</b><span>Types d'appareils</span></div>
+    <div class="rv"><b class="grad">Paris 17</b><span>11 Rue Pouchet</span></div>
+    <div class="rv"><b class="grad">WhatsApp</b><span>Contact direct</span></div>
   </div>
 </div>
 
@@ -316,11 +332,36 @@
         <div class="note" id="note">Prix indicatif TTC, pose incluse</div>
         <a class="btn btn-w" id="book" aria-disabled="true" href="#" target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>Réserver cette réparation</a>
         <div class="perks">
-          <div><svg class="ic"><use href="#i-check"/></svg>Devis final gratuit après diagnostic</div>
-          <div><svg class="ic"><use href="#i-check"/></svg>Garantie sur la pièce et la main-d'œuvre</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Prix final confirmé après diagnostic</div>
+          <div><svg class="ic"><use href="#i-check"/></svg>Réparation par un technicien</div>
           <div><svg class="ic"><use href="#i-check"/></svg>Réponse rapide sur WhatsApp</div>
         </div>
       </aside>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="center rv">
+      <div class="eyebrow">Nos services</div>
+      <h2>Tout pour vos <span class="grad">appareils</span></h2>
+      <p class="sub">De la simple réparation à la micro-soudure, l'atelier prend tout en charge.</p>
+    </div>
+    <div class="svcs">
+      <div class="sv rv"><i><svg class="ic"><use href="#i-phone"/></svg></i><b>Réparation téléphone</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-laptop"/></svg></i><b>Réparation ordinateurs</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-cpu"/></svg></i><b>Réparation de carte mère</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-bolt"/></svg></i><b>Micro-soudage</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-db"/></svg></i><b>Récupération des données</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-disc"/></svg></i><b>Installation système</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-grid"/></svg></i><b>Installation logiciels</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-unlock"/></svg></i><b>Déblocage GSM</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-monitor"/></svg></i><b>Montage PC</b></div>
+      <div class="sv rv"><i><svg class="ic"><use href="#i-bag"/></svg></i><b>Achat / Vente téléphones &amp; ordinateurs</b></div>
+    </div>
+    <div class="center rv" style="margin-top:36px">
+      <a class="btn btn-w" href="https://wa.me/33767494822?text=Bonjour%2C%20j%27ai%20une%20question%20sur%20un%20service." target="_blank" rel="noopener"><svg class="ic"><use href="#i-wa"/></svg>Poser une question sur WhatsApp</a>
     </div>
   </div>
 </section>
@@ -333,9 +374,9 @@
       <p class="sub">Des réparations soignées, des prix clairs, un vrai suivi.</p>
     </div>
     <div class="features">
-      <div class="f rv"><i><svg class="ic"><use href="#i-bolt"/></svg></i><h3>Rapide</h3><p>La plupart des réparations sont terminées en moins d'une heure ou dans la journée.</p></div>
-      <div class="f rv"><i><svg class="ic"><use href="#i-shield"/></svg></i><h3>Garantie</h3><p>Pièces de qualité et garantie sur chaque intervention.</p></div>
-      <div class="f rv"><i><svg class="ic"><use href="#i-euro"/></svg></i><h3>Prix clairs</h3><p>Devis gratuit, aucune mauvaise surprise au moment de payer.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-bolt"/></svg></i><h3>Rapide</h3><p>Intervention rapide, selon la panne et la disponibilité des pièces.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-cpu"/></svg></i><h3>Micro-soudure</h3><p>Réparation de carte mère et de composants, là où d'autres abandonnent.</p></div>
+      <div class="f rv"><i><svg class="ic"><use href="#i-euro"/></svg></i><h3>Prix clairs</h3><p>Estimation en ligne, prix final confirmé avant la réparation.</p></div>
       <div class="f rv"><i><svg class="ic"><use href="#i-tool"/></svg></i><h3>Experts</h3><p>Smartphones, MacBook, PC portables et fixes : on s'occupe de tout.</p></div>
     </div>
   </div>
@@ -350,8 +391,8 @@
     </div>
     <div class="steps">
       <div class="s rv"><h3>Estimez &amp; réservez</h3><p>Utilisez le calculateur puis envoyez votre demande en un clic sur WhatsApp.</p></div>
-      <div class="s rv"><h3>Passez à l'atelier</h3><p>Déposez votre appareil au 11 Rue Pouchet. Le diagnostic est gratuit.</p></div>
-      <div class="s rv"><h3>Récupérez-le réparé</h3><p>Souvent dans l'heure, toujours avec une garantie.</p></div>
+      <div class="s rv"><h3>Passez à l'atelier</h3><p>Déposez votre appareil au 11 Rue Pouchet, nous confirmons le prix final.</p></div>
+      <div class="s rv"><h3>Récupérez-le réparé</h3><p>Nous vous prévenons dès que votre appareil est prêt.</p></div>
     </div>
   </div>
 </section>
@@ -364,10 +405,10 @@
       <p class="sub">Les réponses aux questions les plus posées.</p>
     </div>
     <div class="faq rv">
-      <details><summary>Le devis est-il vraiment gratuit ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Oui. Le diagnostic et le devis sont gratuits et sans engagement. Vous ne payez que si vous acceptez la réparation.</p></details>
-      <details><summary>Combien de temps dure une réparation ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Un écran ou une batterie sont souvent remplacés en moins d'une heure. Les cas plus complexes (carte mère, désoxydation) peuvent demander plus de temps.</p></details>
-      <details><summary>Mes données sont-elles conservées ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Dans la grande majorité des réparations, vos données ne sont pas touchées. Nous vous conseillons tout de même de faire une sauvegarde avant.</p></details>
-      <details><summary>Y a-t-il une garantie ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Oui, chaque réparation est garantie. Demandez-nous les détails à l'atelier.</p></details>
+      <details><summary>Comment connaître le prix de ma réparation ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Utilisez le calculateur ci-dessus pour une estimation. Le prix final est confirmé après diagnostic de votre appareil.</p></details>
+      <details><summary>Combien de temps dure une réparation ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Cela dépend de la panne et de la disponibilité des pièces. Contactez-nous sur WhatsApp pour un délai précis.</p></details>
+      <details><summary>Mes données sont-elles conservées ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Dans la plupart des réparations, vos données ne sont pas touchées. Nous vous conseillons tout de même de faire une sauvegarde avant.</p></details>
+      <details><summary>Réparez-vous aussi les cartes mères ?<svg class="ic"><use href="#i-down"/></svg></summary><p>Oui, nous faisons de la micro-soudure et de la réparation de carte mère, ainsi que la récupération de données.</p></details>
     </div>
   </div>
 </section>
