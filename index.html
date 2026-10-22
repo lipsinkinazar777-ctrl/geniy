@@ -275,7 +275,7 @@
   .hero .blob{opacity:.28}
   .mega{position:absolute;left:0;right:0;top:12.5vh;z-index:1;text-align:center;font-weight:800;line-height:.9;margin:0;letter-spacing:0;display:flex;flex-direction:column;align-items:center;text-transform:uppercase}
   .mega .t1{font-size:clamp(34px,6vw,96px);letter-spacing:-.01em;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:.1em}
-  .mega .t2{font-size:clamp(46px,13.6vw,230px);letter-spacing:-.025em;color:#fff;filter:url(#chip);text-shadow:0 10px 40px rgba(0,0,0,.25)}
+  .mega .t2{font-size:clamp(46px,13.6vw,230px);letter-spacing:-.025em;color:#fff;text-shadow:0 10px 40px rgba(0,0,0,.25)}
   .mega .t3{align-self:flex-end;margin-right:7.5vw;margin-top:.4vw;font-size:clamp(11px,1.5vw,22px);font-weight:700;letter-spacing:.85em;color:var(--g1);display:flex;align-items:center;gap:1.4em}
   .mega .t3::before{content:"";width:5vw;height:2px;background:var(--g1)}
   .mega .w{padding-top:.3em;margin-top:-.3em}
@@ -286,7 +286,7 @@
     background:radial-gradient(60% 120% at 50% 0%,rgba(139,224,42,.22),transparent 70%),repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 2px,transparent 2px 7px),linear-gradient(180deg,#14201a 0%,#0a110d 40%,#050806 100%);
     border-top:1px solid rgba(255,255,255,.1);box-shadow:0 -30px 80px rgba(0,0,0,.35)}
   .pstage{position:absolute;z-index:2;left:50%;bottom:-9vh;height:min(78vh,800px);aspect-ratio:800/780;transform:translateX(-50%);transition:transform .35s ease-out}
-  .pstage>svg{width:100%;height:100%;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45));animation:float 7s ease-in-out infinite}
+  .pstage>svg{width:100%;height:100%;display:block;}
   .hpill{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:10px 20px 10px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);font-weight:700;font-size:15px;animation:float 6s ease-in-out infinite;transition:.3s}
   .hpill:hover{border-color:var(--g1);transform:translateY(-4px) scale(1.04)}
   .hpill i{width:36px;height:36px;border-radius:50%;background:#fff;color:#0b1218;display:grid;place-items:center;font-size:19px}
@@ -327,18 +327,14 @@
   /* ===== WOW HERO / LUXURY ===== */
   .hero{background:radial-gradient(60% 46% at 50% 102%,rgba(139,224,42,.34),transparent 70%),radial-gradient(34% 40% at 50% 0%,rgba(190,255,215,.10),transparent 70%),linear-gradient(180deg,#07110b 0%,#050906 55%,#030504 100%)}
   .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,transparent 52%,rgba(0,0,0,.7) 100%)}
-  .beam{position:absolute;z-index:1;left:50%;top:-6%;width:62vw;height:112%;transform:translateX(calc(-50% + var(--bx,0%)));transition:transform .9s ease-out;background:linear-gradient(180deg,rgba(215,255,228,.30),rgba(215,255,228,.07) 62%,transparent);clip-path:polygon(43% 0,57% 0,88% 100%,12% 100%);filter:blur(26px);opacity:0;animation:beamIn 2.4s .1s ease forwards,beamPulse 7s 2.6s ease-in-out infinite}
+  .beam{position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;transform:translateX(var(--bx,0%));transition:transform .9s ease-out;background:conic-gradient(from 148deg at 50% -4%,transparent 0deg,rgba(215,255,228,.09) 12deg,rgba(215,255,228,.34) 32deg,rgba(215,255,228,.09) 52deg,transparent 64deg,transparent 360deg);-webkit-mask-image:linear-gradient(180deg,#000,transparent 92%);mask-image:linear-gradient(180deg,#000 30%,transparent 95%);opacity:0;animation:beamIn 2.4s .1s ease forwards,beamPulse 7s 2.6s ease-in-out infinite;will-change:opacity,transform}
   @keyframes beamIn{to{opacity:1}}
   @keyframes beamPulse{50%{opacity:.7}}
   #dust{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
   .pstage{bottom:0;height:min(70vh,760px);aspect-ratio:800/830}
-  .pstage>svg{animation:none}
-  .hov{animation:hov 6.5s ease-in-out infinite}
+  .pstage>svg.pphone{position:absolute;left:0;top:0;animation:hov 6.5s ease-in-out infinite;will-change:transform}
   @keyframes hov{50%{transform:translateY(-16px)}}
-  .sweep{animation:sweep 6.5s 2.4s ease-in-out infinite}
-  @keyframes sweep{0%{transform:translateX(0)}40%,100%{transform:translateX(560px)}}
-  .mega .t2 .wi{background:none;color:#fff;-webkit-text-fill-color:#fff;animation:wordUp .95s cubic-bezier(.2,.8,.2,1) both,glow 6s 3s ease-in-out infinite}
-  @keyframes glow{0%,60%,100%{text-shadow:0 10px 40px rgba(0,0,0,.25)}78%{text-shadow:0 0 34px rgba(190,255,120,.7),0 0 3px #fff}}
+  .mega .t2 .wi{background:none;color:#fff;-webkit-text-fill-color:#fff}
   body:not(.go) .hero,body:not(.go) .hero *{animation-play-state:paused!important}
   #intro{position:fixed;inset:0;z-index:300;pointer-events:none;display:grid;place-items:center;animation:gone 0s 2.4s forwards}
   @keyframes gone{to{visibility:hidden}}
@@ -363,6 +359,22 @@
   .hero .pill,.hero .lead,.hero .btns,.hero .meta{display:none}
   .price{font-size:clamp(34px,3.3vw,46px);letter-spacing:-1px}
   .price.small{font-size:30px}
+  /* ===== PERFORMANCE OVERRIDES ===== */
+  *,*::before,*::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  body::after{display:none}
+  #cur{mix-blend-mode:normal}
+  .rv,.rv.in{filter:none}
+  .blob{filter:none}
+  .b1{background:radial-gradient(circle,rgba(63,157,8,.85),transparent 68%)}
+  .b2{background:radial-gradient(circle,rgba(20,80,122,.8),transparent 68%)}
+  .grad,.grad .wi{animation:none}
+  .grad .wi{animation:wordUp .95s cubic-bezier(.2,.8,.2,1) forwards}
+  .btn::after{left:0;transform:translateX(-130%) skewX(-20deg);transition:transform .8s ease}
+  .btn:hover::after{left:0;transform:translateX(280%) skewX(-20deg)}
+  .btn-g::after{animation:sheen 5s 2s infinite}
+  @keyframes sheen{0%,70%{transform:translateX(-130%) skewX(-20deg)}100%{transform:translateX(280%) skewX(-20deg)}}
+  .quote .btn-w:not([aria-disabled=true]){animation:none;box-shadow:0 0 0 6px rgba(37,211,102,.14),0 12px 32px -8px rgba(37,211,102,.6)}
+  .mega .t2{-webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='160'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .09' numOctaves='3' seed='9'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 -16 12.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='160'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .09' numOctaves='3' seed='9'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 -16 12.6'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");-webkit-mask-size:420px 160px;mask-size:420px 160px}
 @media(max-width:900px){
     .links{display:none}
     .hero{padding:118px 0 60px}
@@ -513,7 +525,9 @@
       </g>
       <ellipse cx="400" cy="738" rx="170" ry="20" fill="#8be02a" opacity=".38" filter="url(#p-blur)"/>
 
-      <g transform="translate(0 -36)"><g class="hov"><g transform="rotate(-6 400 420)">
+      </svg>
+    <svg class="pphone" viewBox="0 0 800 830" style="overflow:visible" aria-hidden="true">
+      <g transform="translate(0 -36)"><g transform="rotate(-6 400 420)">
         <g transform="translate(220 100)">
           <!-- side buttons -->
           <rect x="34" y="150" width="6" height="44" rx="3" fill="url(#p-ti)"/>
@@ -527,7 +541,7 @@
           <!-- screen glow + gear -->
           <circle cx="180" cy="360" r="150" fill="url(#p-glow)"/>
           <g transform="translate(180 360)">
-            <g style="transform-box:fill-box;transform-origin:center;animation:spin 18s linear infinite">
+            <g>
               <circle r="56" fill="none" stroke="#8be02a" stroke-width="18" stroke-dasharray="11 11.9"/>
               <circle r="46" fill="none" stroke="#8be02a" stroke-width="14"/>
               <circle r="17" fill="#07140b"/>
@@ -550,7 +564,6 @@
           <circle cx="210" cy="39.5" r="5" fill="#0d1a24"/>
           <!-- glass shine -->
           <path d="M50 12 H190 L50 340 Z" fill="url(#p-shine)"/>
-          <g clip-path="url(#p-clip)"><g class="sweep"><rect x="-140" y="-40" width="80" height="720" fill="url(#p-sw)" transform="skewX(-14)"/></g></g>
           <rect x="49" y="11" width="262" height="618" rx="42" fill="none" stroke="#fff" stroke-opacity=".12"/>
           <path d="M318 90 Q322 320 318 560" stroke="#fff" stroke-opacity=".5" stroke-width="1.4" fill="none"/>
         </g>
@@ -572,7 +585,7 @@
         <rect x="-16" y="-560" width="4" height="210" rx="2" fill="#fff" opacity=".16"/>
         <circle cx="0" cy="-566" r="9" fill="#05080b" stroke="#8be02a" stroke-opacity=".6"/>
       </g>
-      </g></g>
+      </g>
     </svg>
   <div class="hpill hp1"><i><svg class="ic"><use href="#i-check"/></svg></i>Micro-soudure</div>
   <div class="hpill hp2"><i><svg class="ic"><use href="#i-tool"/></svg></i>Écran · Batterie · Charge</div>
@@ -986,22 +999,26 @@ document.querySelectorAll(".f,.sv,.panel,.ci,.s").forEach(el=>{ el.classList.add
 if(fine && !reduce){
   const cur=$("cur"), hero=document.querySelector(".hero");
   addEventListener("mousemove",e=>{ cur.style.transform=`translate(${e.clientX-250}px,${e.clientY-250}px)`; cur.style.opacity=1; },{passive:true});
-  hero.addEventListener("mousemove",e=>{ hero.style.setProperty("--bx",((e.clientX/innerWidth-.5)*8)+"%"); });
+  let bq=0; const beam=document.querySelector(".beam");
+  hero.addEventListener("mousemove",e=>{ if(bq)return; bq=requestAnimationFrame(()=>{ beam.style.setProperty("--bx",((e.clientX/innerWidth-.5)*8)+"%"); bq=0; }); });
   document.querySelectorAll(".btn-g,.btn-w").forEach(b=>{
     b.addEventListener("mousemove",e=>{ if(b.getAttribute("aria-disabled")==="true")return; const r=b.getBoundingClientRect();
       b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28}px)`; });
     b.addEventListener("mouseleave",()=>b.style.transform=""); });
 }
 
-/* gold-dust particles */
-(function(){ const c=$("dust"); if(!c||reduce)return; const x=c.getContext("2d"); let W,H; const P=[];
+/* gold-dust particles (sprite based, paused when hidden) */
+(function(){ const c=$("dust"); if(!c||reduce)return; const x=c.getContext("2d"); let W,H,vis=true; const P=[];
   const rs=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}; rs(); addEventListener("resize",rs);
-  for(let i=0;i<70;i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.4,v:Math.random()*.00022+.00006,a:Math.random()*.6+.25,p:Math.random()*6.28});
-  (function f(t){ x.clearRect(0,0,W,H);
+  const sp=document.createElement("canvas"); sp.width=sp.height=24; const g=sp.getContext("2d");
+  const gr=g.createRadialGradient(12,12,0,12,12,12); gr.addColorStop(0,"rgba(200,255,140,1)"); gr.addColorStop(.35,"rgba(139,224,42,.45)"); gr.addColorStop(1,"rgba(139,224,42,0)");
+  g.fillStyle=gr; g.fillRect(0,0,24,24);
+  for(let i=0;i<36;i++)P.push({x:Math.random(),y:Math.random(),s:Math.random()*7+4,v:Math.random()*.00022+.00006,a:Math.random()*.6+.3,p:Math.random()*6.28});
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(c);
+  (function f(t){ requestAnimationFrame(f); if(!vis||document.hidden)return; x.clearRect(0,0,W,H);
     for(const q of P){ q.y-=q.v*16; if(q.y<0){q.y=1;q.x=Math.random()}
-      x.beginPath(); x.fillStyle=`rgba(190,255,120,${q.a*(.5+.5*Math.sin(t/700+q.p))})`; x.shadowBlur=8; x.shadowColor="#8be02a";
-      x.arc(q.x*W+Math.sin(t/1500+q.p)*14,q.y*H,q.r,0,6.283); x.fill(); }
-    requestAnimationFrame(f); })(0); })();
+      x.globalAlpha=q.a*(.5+.5*Math.sin(t/700+q.p));
+      x.drawImage(sp,q.x*W+Math.sin(t/1500+q.p)*14,q.y*H,q.s,q.s); } })(0); })();
 
 /* admin */
 const modal=$("modal");
