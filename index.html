@@ -327,9 +327,9 @@
   /* ===== WOW HERO / LUXURY ===== */
   .hero{background:radial-gradient(60% 46% at 50% 102%,rgba(139,224,42,.34),transparent 70%),radial-gradient(34% 40% at 50% 0%,rgba(190,255,215,.10),transparent 70%),linear-gradient(180deg,#07110b 0%,#050906 55%,#030504 100%)}
   .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,transparent 52%,rgba(0,0,0,.7) 100%)}
-  .beam{position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;transform:translateX(var(--bx,0%));transition:transform .9s ease-out;background:conic-gradient(from 148deg at 50% -4%,transparent 0deg,rgba(215,255,228,.09) 12deg,rgba(215,255,228,.34) 32deg,rgba(215,255,228,.09) 52deg,transparent 64deg,transparent 360deg);-webkit-mask-image:linear-gradient(180deg,#000,transparent 92%);mask-image:linear-gradient(180deg,#000 30%,transparent 95%);opacity:0;animation:beamIn 2.4s .1s ease forwards,beamPulse 7s 2.6s ease-in-out infinite;will-change:opacity,transform}
+  .beam{position:absolute;z-index:1;left:0;top:0;width:100%;height:100%;transform:translateX(var(--bx,0%));transition:transform .9s ease-out;background:radial-gradient(ellipse 26% 16% at 50% 0%,rgba(240,255,245,.75),transparent 70%),conic-gradient(from 166deg at 50% -4%,transparent 0deg,rgba(235,255,242,.34) 14deg,transparent 28deg,transparent 360deg),conic-gradient(from 146deg at 50% -4%,transparent 0deg,rgba(215,255,228,.05) 8deg,rgba(215,255,228,.30) 15deg,rgba(215,255,228,.30) 53deg,rgba(215,255,228,.05) 60deg,transparent 68deg,transparent 360deg);-webkit-mask-image:linear-gradient(180deg,#000,transparent 92%);mask-image:linear-gradient(180deg,#000 60%,transparent 100%);opacity:0;animation:beamIn 2.4s .1s ease forwards,beamPulse 7s 2.6s ease-in-out infinite;will-change:opacity,transform}
   @keyframes beamIn{to{opacity:1}}
-  @keyframes beamPulse{50%{opacity:.7}}
+  @keyframes beamPulse{50%{opacity:.85}}
   #dust{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
   .pstage{bottom:0;height:min(70vh,760px);aspect-ratio:800/830}
   .pstage>svg.pphone{position:absolute;left:0;top:0;animation:hov 6.5s ease-in-out infinite;will-change:transform}
@@ -505,6 +505,7 @@
         <filter id="p-blur"><feGaussianBlur stdDeviation="14"/></filter>
         <filter id="p-stone" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".035 .06" numOctaves="5" seed="7" result="n"/><feDiffuseLighting in="n" surfaceScale="2.8" diffuseConstant="1.05" lighting-color="#b4c2ba" result="l"><feDistantLight azimuth="225" elevation="48"/></feDiffuseLighting><feComposite in="l" in2="SourceAlpha" operator="in" result="s"/><feColorMatrix in="s" type="matrix" values=".5 0 0 0 0  0 .56 0 0 0  0 0 .52 0 0  0 0 0 1 0"/></filter>
         <filter id="p-vg"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="p-pool" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f2fff4" stop-opacity=".85"/><stop offset=".5" stop-color="#cfffc0" stop-opacity=".3"/><stop offset="1" stop-color="#cfffc0" stop-opacity="0"/></radialGradient>
         <radialGradient id="p-halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8be02a" stop-opacity=".55"/><stop offset="1" stop-color="#8be02a" stop-opacity="0"/></radialGradient>
         <linearGradient id="p-sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
         <clipPath id="p-clip"><rect x="50" y="12" width="260" height="616" rx="41"/></clipPath>
@@ -524,6 +525,7 @@
         <path d="M430 790 l10 -8 l22 6" stroke-width="1" opacity=".5"/>
       </g>
       <ellipse cx="400" cy="738" rx="170" ry="20" fill="#8be02a" opacity=".38" filter="url(#p-blur)"/>
+      <ellipse cx="400" cy="740" rx="250" ry="38" fill="url(#p-pool)"/>
 
       </svg>
     <svg class="pphone" viewBox="0 0 800 830" style="overflow:visible" aria-hidden="true">
