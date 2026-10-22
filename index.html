@@ -290,7 +290,7 @@
   .hpill{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;padding:10px 20px 10px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);font-weight:700;font-size:15px;animation:float 6s ease-in-out infinite;transition:.3s}
   .hpill:hover{border-color:var(--g1);transform:translateY(-4px) scale(1.04)}
   .hpill i{width:36px;height:36px;border-radius:50%;background:#fff;color:#0b1218;display:grid;place-items:center;font-size:19px}
-  .pstage .hp1{left:-4%;bottom:47%;white-space:nowrap}
+  .pstage .hp1{left:-6%;bottom:48%;white-space:nowrap}
   .pstage .hp2{right:-4%;bottom:34%;white-space:nowrap}
   @media(max-width:1280px){.hpill{display:none}}
   .hstat{position:absolute;z-index:3;text-align:center;bottom:31vh}
@@ -324,6 +324,45 @@
   .mega .t2{letter-spacing:-.04em}
   .btn,.nlog,.hcta,.hpill,.npill a,.eyebrow,.opt,.chip2,.ctag,summary,.sum,.f h3,.s h3,.sv b,.ci b,.logo{font-weight:500!important}
   .mega .t3{letter-spacing:.85em}
+  /* ===== WOW HERO / LUXURY ===== */
+  .hero{background:radial-gradient(60% 46% at 50% 102%,rgba(139,224,42,.34),transparent 70%),radial-gradient(34% 40% at 50% 0%,rgba(190,255,215,.10),transparent 70%),linear-gradient(180deg,#07110b 0%,#050906 55%,#030504 100%)}
+  .hero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 58%,transparent 52%,rgba(0,0,0,.7) 100%)}
+  .beam{position:absolute;z-index:1;left:50%;top:-6%;width:62vw;height:112%;transform:translateX(calc(-50% + var(--bx,0%)));transition:transform .9s ease-out;background:linear-gradient(180deg,rgba(215,255,228,.30),rgba(215,255,228,.07) 62%,transparent);clip-path:polygon(43% 0,57% 0,88% 100%,12% 100%);filter:blur(26px);opacity:0;animation:beamIn 2.4s .1s ease forwards,beamPulse 7s 2.6s ease-in-out infinite}
+  @keyframes beamIn{to{opacity:1}}
+  @keyframes beamPulse{50%{opacity:.7}}
+  #dust{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+  .pstage{bottom:0;height:min(70vh,760px);aspect-ratio:800/830}
+  .pstage>svg{animation:none}
+  .hov{animation:hov 6.5s ease-in-out infinite}
+  @keyframes hov{50%{transform:translateY(-16px)}}
+  .sweep{animation:sweep 6.5s 2.4s ease-in-out infinite}
+  @keyframes sweep{0%{transform:translateX(0)}40%,100%{transform:translateX(560px)}}
+  .mega .t2 .wi{background:none;color:#fff;-webkit-text-fill-color:#fff;animation:wordUp .95s cubic-bezier(.2,.8,.2,1) both,glow 6s 3s ease-in-out infinite}
+  @keyframes glow{0%,60%,100%{text-shadow:0 10px 40px rgba(0,0,0,.25)}78%{text-shadow:0 0 34px rgba(190,255,120,.7),0 0 3px #fff}}
+  body:not(.go) .hero,body:not(.go) .hero *{animation-play-state:paused!important}
+  #intro{position:fixed;inset:0;z-index:300;pointer-events:none;display:grid;place-items:center;animation:gone 0s 2.4s forwards}
+  @keyframes gone{to{visibility:hidden}}
+  #intro::before,#intro::after{content:"";position:absolute;left:0;right:0;height:50.5%;background:#030504}
+  #intro::before{top:0;animation:curT 1.05s cubic-bezier(.8,0,.2,1) 1.25s forwards}
+  #intro::after{bottom:0;animation:curB 1.05s cubic-bezier(.8,0,.2,1) 1.25s forwards}
+  @keyframes curT{to{transform:translateY(-101%)}}
+  @keyframes curB{to{transform:translateY(101%)}}
+  #intro .il{position:relative;z-index:1;text-align:center;animation:ilOut .55s ease 1.05s forwards}
+  @keyframes ilOut{to{opacity:0;transform:scale(1.18)}}
+  #intro .il svg{width:88px;animation:spin 7s linear infinite}
+  #intro .il i{display:block;margin:22px auto 0;width:140px;height:1px;background:linear-gradient(90deg,transparent,#8be02a,transparent);transform:scaleX(0);animation:ln 1s ease .1s forwards}
+  @keyframes ln{to{transform:scaleX(1)}}
+  #intro .il p{margin-top:18px;font-size:11px;letter-spacing:.62em;color:#8be02a;text-transform:uppercase;font-weight:400}
+  section+section::before{content:"";position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(166,242,58,.45),transparent)}
+  .panel,.f,.sv,.ci,.s,details,.quote{box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 24px 60px -34px rgba(0,0,0,.9)}
+  h2{letter-spacing:-.025em}
+  .eyebrow{display:flex;align-items:center;gap:14px}
+  .center .eyebrow{justify-content:center}
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--g1)}
+  .opt.ent{opacity:0;animation:chipIn .5s cubic-bezier(.2,.7,.2,1) forwards}
+  .hero .pill,.hero .lead,.hero .btns,.hero .meta{display:none}
+  .price{font-size:clamp(34px,3.3vw,46px);letter-spacing:-1px}
+  .price.small{font-size:30px}
 @media(max-width:900px){
     .links{display:none}
     .hero{padding:118px 0 60px}
@@ -353,7 +392,7 @@
     .hero{height:auto;min-height:100svh;max-height:none}
     .mega{top:14vh}
     .mega .t2{font-size:clamp(46px,15.2vw,230px)}
-    .pstage{height:58vh;bottom:11vh}
+    .pstage{height:52vh;bottom:10vh}
     .bench{height:24%}
     .hpill{display:none}
     .hstat{bottom:auto;top:46vh;transform:scale(.8)}
@@ -364,11 +403,13 @@
     .hcta{right:86px;bottom:3vh;padding:14px 18px;font-size:14px}
     .htag{display:none}
   }
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.wi{transform:none}.hero .pill,.hero .lead,.hero .btns,.hero .meta,.visual,.chip2.ent{opacity:1}.rv{opacity:1;transform:none;filter:none}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.wi{transform:none}.hero .pill,.hero .lead,.hero .btns,.hero .meta,.visual,.chip2.ent,.opt.ent,.hcontact,.hcta,.hstat,.hpill,.pstage,.beam{opacity:1}#intro{display:none}.rv{opacity:1;transform:none;filter:none}}
 </style>
 </head>
 <body>
 <div id="prog"></div><div id="cur"></div>
+<div id="intro"><div class="il"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="none" stroke="#8be02a" stroke-width="1.2" stroke-dasharray="2 5"/><circle cx="50" cy="50" r="30" fill="none" stroke="#8be02a" stroke-width="10" stroke-dasharray="7 6.4"/><circle cx="50" cy="50" r="24" fill="none" stroke="#8be02a" stroke-width="7"/><circle cx="50" cy="50" r="9" fill="#030504"/></svg><i></i><p>Atelier Réparation Clinique</p></div></div>
+<script>setTimeout(function(){document.body.classList.add("go")},1150)</script>
 
 <!-- ICONS -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -396,6 +437,11 @@
   <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
   <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 019.9-1"/></symbol>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"/></symbol>
+  <symbol id="i-kb" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+  <symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 10c0-4 1-7 4-7 2 0 3 2 2 4-1 2-3 3-6 3zM14 12c4 0 7 1 7 4 0 2-2 3-4 2-2-1-3-3-3-6zM12 14c0 4-1 7-4 7-2 0-3-2-2-4 1-2 3-3 6-3zM10 12c-4 0-7-1-7-4 0-2 2-3 4-2 2 1 3 3 3 6z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="3"/><rect x="8" y="5" width="7" height="7" rx="2"/><circle cx="11.5" cy="8.5" r="1.4"/></symbol>
   <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
 </svg>
 
@@ -431,11 +477,11 @@
     </filter>
   </defs></svg>
   <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="beam"></div><canvas id="dust"></canvas>
   <h1 class="mega"><span class="t1">Atelier</span><span class="t2">Réparation</span><span class="t3">Clinique</span></h1>
-  <div class="bench"></div>
 
   <div class="pstage">
-    <svg viewBox="0 0 800 780" style="overflow:visible" aria-hidden="true">
+    <svg viewBox="0 0 800 830" style="overflow:visible" aria-hidden="true">
       <defs>
         <linearGradient id="p-ti" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3e6ea"/><stop offset=".35" stop-color="#8d939b"/><stop offset=".7" stop-color="#c7cbd1"/><stop offset="1" stop-color="#5d636b"/></linearGradient>
         <linearGradient id="p-scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1b26"/><stop offset=".55" stop-color="#0c2a1d"/><stop offset="1" stop-color="#143a14"/></linearGradient>
@@ -445,11 +491,29 @@
         <linearGradient id="p-hand" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#05080b"/><stop offset=".28" stop-color="#2a3640"/><stop offset=".6" stop-color="#0c1218"/><stop offset="1" stop-color="#06090c"/></linearGradient>
         <linearGradient id="p-grn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3f8f08"/><stop offset=".35" stop-color="#c2ff6e"/><stop offset="1" stop-color="#4cc40b"/></linearGradient>
         <filter id="p-blur"><feGaussianBlur stdDeviation="14"/></filter>
+        <filter id="p-stone" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".035 .06" numOctaves="5" seed="7" result="n"/><feDiffuseLighting in="n" surfaceScale="2.8" diffuseConstant="1.05" lighting-color="#b4c2ba" result="l"><feDistantLight azimuth="225" elevation="48"/></feDiffuseLighting><feComposite in="l" in2="SourceAlpha" operator="in" result="s"/><feColorMatrix in="s" type="matrix" values=".5 0 0 0 0  0 .56 0 0 0  0 0 .52 0 0  0 0 0 1 0"/></filter>
+        <filter id="p-vg"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <radialGradient id="p-halo" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8be02a" stop-opacity=".55"/><stop offset="1" stop-color="#8be02a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="p-sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+        <clipPath id="p-clip"><rect x="50" y="12" width="260" height="616" rx="41"/></clipPath>
       </defs>
 
-      <ellipse cx="400" cy="752" rx="230" ry="26" fill="#000" opacity=".55" filter="url(#p-blur)"/>
+      <ellipse cx="400" cy="770" rx="360" ry="70" fill="url(#p-halo)"/>
+      <path d="M130 740 V774 A270 42 0 0 0 670 774 V740 Z" fill="#222a26" filter="url(#p-stone)"/>
+      <path d="M130 740 V774 A270 42 0 0 0 670 774 V740 Z" fill="#000" opacity=".4"/>
+      <ellipse cx="400" cy="740" rx="270" ry="42" fill="#2c3630" filter="url(#p-stone)"/>
+      <ellipse cx="400" cy="740" rx="270" ry="42" fill="none" stroke="#8be02a" stroke-opacity=".55" stroke-width="1.6" filter="url(#p-vg)"/>
+      <g fill="none" stroke="#8be02a" stroke-linecap="round" stroke-linejoin="round" filter="url(#p-vg)">
+        <path d="M168 752 l26 7 l18 -5 l34 9 l14 -4" stroke-width="1.5" opacity=".8"/>
+        <path d="M520 770 l22 -6 l30 8 l24 -10 l40 6" stroke-width="1.4" opacity=".75"/>
+        <path d="M300 722 l18 6 l28 -4 l16 7" stroke-width="1.2" opacity=".6"/>
+        <path d="M205 770 l12 14 l-6 14" stroke-width="1.2" opacity=".6"/>
+        <path d="M600 748 l-10 16 l8 14 l-6 10" stroke-width="1.2" opacity=".6"/>
+        <path d="M430 790 l10 -8 l22 6" stroke-width="1" opacity=".5"/>
+      </g>
+      <ellipse cx="400" cy="738" rx="170" ry="20" fill="#8be02a" opacity=".38" filter="url(#p-blur)"/>
 
-      <g transform="rotate(-6 400 420)">
+      <g transform="translate(0 -36)"><g class="hov"><g transform="rotate(-6 400 420)">
         <g transform="translate(220 100)">
           <!-- side buttons -->
           <rect x="34" y="150" width="6" height="44" rx="3" fill="url(#p-ti)"/>
@@ -486,6 +550,7 @@
           <circle cx="210" cy="39.5" r="5" fill="#0d1a24"/>
           <!-- glass shine -->
           <path d="M50 12 H190 L50 340 Z" fill="url(#p-shine)"/>
+          <g clip-path="url(#p-clip)"><g class="sweep"><rect x="-140" y="-40" width="80" height="720" fill="url(#p-sw)" transform="skewX(-14)"/></g></g>
           <rect x="49" y="11" width="262" height="618" rx="42" fill="none" stroke="#fff" stroke-opacity=".12"/>
           <path d="M318 90 Q322 320 318 560" stroke="#fff" stroke-opacity=".5" stroke-width="1.4" fill="none"/>
         </g>
@@ -507,6 +572,7 @@
         <rect x="-16" y="-560" width="4" height="210" rx="2" fill="#fff" opacity=".16"/>
         <circle cx="0" cy="-566" r="9" fill="#05080b" stroke="#8be02a" stroke-opacity=".6"/>
       </g>
+      </g></g>
     </svg>
   <div class="hpill hp1"><i><svg class="ic"><use href="#i-check"/></svg></i>Micro-soudure</div>
   <div class="hpill hp2"><i><svg class="ic"><use href="#i-tool"/></svg></i>Écran · Batterie · Charge</div>
@@ -715,69 +781,89 @@ const ADMIN_PIN = "1234";            // code pour « Gérer les prix »
 const HOURS     = "Lun–Sam · 10h00 – 19h00";
 
 const DEVICES = {
-  iphone:  {n:"iPhone",      i:"phone"},
-  samsung: {n:"Samsung",     i:"phone"},
-  macbook: {n:"MacBook",     i:"laptop"},
-  pc:      {n:"PC portable", i:"monitor"}
+  iphone:  {n:"iPhone",      i:"phone",   k:"phone"},
+  samsung: {n:"Samsung",     i:"phone",   k:"phone"},
+  macbook: {n:"MacBook",     i:"laptop",  k:"laptop"},
+  pc:      {n:"PC portable", i:"monitor", k:"laptop"}
 };
+/* Les pannes dépendent du type d'appareil (téléphone ou ordinateur) */
 const ISSUES = {
-  ecran:    {n:"Écran cassé",          i:"crack"},
-  batterie: {n:"Batterie",             i:"battery"},
-  charge:   {n:"Connecteur de charge", i:"plug"},
-  oxyd:     {n:"Désoxydation",         i:"drop"}
+  phone: {
+    ecran:    {n:"Écran cassé",          i:"crack"},
+    vitre:    {n:"Vitre arrière",        i:"back"},
+    batterie: {n:"Batterie",             i:"battery"},
+    charge:   {n:"Connecteur de charge", i:"plug"},
+    camera:   {n:"Caméra",               i:"cam"},
+    hp:       {n:"Haut-parleur / micro", i:"vol"},
+    oxyd:     {n:"Désoxydation",         i:"drop"}
+  },
+  laptop: {
+    ecran:      {n:"Écran cassé",             i:"monitor"},
+    batterie:   {n:"Batterie",                i:"battery"},
+    clavier:    {n:"Clavier",                 i:"kb"},
+    charge:     {n:"Port de charge",          i:"plug"},
+    surchauffe: {n:"Surchauffe / ventilateur",i:"fan"},
+    ssd:        {n:"SSD / disque dur",        i:"db"},
+    os:         {n:"Installation système",    i:"disc"},
+    oxyd:       {n:"Liquide renversé",        i:"drop"},
+    carte:      {n:"Carte mère",              i:"cpu"}
+  }
 };
-/* Prix en € par modèle : mk(écran, batterie, connecteur de charge, désoxydation).
-   0 = « Sur devis ». Ce sont les prix par défaut (exemples à ajuster). */
-const mk = (e,b,c,o) => ({ecran:e, batterie:b, charge:c, oxyd:o});
+/* Prix en € par modèle. 0 = « Sur devis ». Valeurs par défaut (exemples à ajuster).
+   mkp(écran, batterie, connecteur, désoxydation) pour les téléphones,
+   mkl(écran, batterie, port de charge, liquide, coef) pour les ordinateurs. */
+const r5 = n => Math.round(n/5)*5;
+const mkp = (e,b,c,o) => ({ecran:e, vitre:r5(e*.8), batterie:b, charge:c, camera:r5(e*.6), hp:r5(c*.8), oxyd:o});
+const mkl = (e,b,c,o,x=1) => ({ecran:e, batterie:b, clavier:r5(e*.6), charge:c, surchauffe:r5(o*.9*x), ssd:r5(79*x), os:49, oxyd:o, carte:0});
 const DEFAULT_PRICES = {
   iphone: {
-    "iPhone 8":          mk(59, 39, 49, 49),
-    "iPhone X":          mk(89, 49, 49, 49),
-    "iPhone XR":         mk(79, 49, 49, 49),
-    "iPhone 11":         mk(89, 49, 55, 49),
-    "iPhone 11 Pro":     mk(119,55, 59, 59),
-    "iPhone 11 Pro Max": mk(129,59, 59, 59),
-    "iPhone 12":         mk(119,59, 59, 59),
-    "iPhone 12 Pro":     mk(129,65, 65, 59),
-    "iPhone 12 Pro Max": mk(149,69, 65, 59),
-    "iPhone 13":         mk(139,69, 65, 59),
-    "iPhone 13 Pro":     mk(179,79, 69, 69),
-    "iPhone 13 Pro Max": mk(199,85, 69, 69),
-    "iPhone 14":         mk(159,79, 69, 69),
-    "iPhone 14 Pro":     mk(219,89, 79, 69),
-    "iPhone 14 Pro Max": mk(249,95, 79, 69),
-    "iPhone 15":         mk(189,89, 79, 69),
-    "iPhone 15 Pro":     mk(249,99, 89, 79),
-    "iPhone 15 Pro Max": mk(279,109,89, 79)
+    "iPhone 8":          mkp(59, 39, 49, 49),
+    "iPhone X":          mkp(89, 49, 49, 49),
+    "iPhone XR":         mkp(79, 49, 49, 49),
+    "iPhone 11":         mkp(89, 49, 55, 49),
+    "iPhone 11 Pro":     mkp(119,55, 59, 59),
+    "iPhone 11 Pro Max": mkp(129,59, 59, 59),
+    "iPhone 12":         mkp(119,59, 59, 59),
+    "iPhone 12 Pro":     mkp(129,65, 65, 59),
+    "iPhone 12 Pro Max": mkp(149,69, 65, 59),
+    "iPhone 13":         mkp(139,69, 65, 59),
+    "iPhone 13 Pro":     mkp(179,79, 69, 69),
+    "iPhone 13 Pro Max": mkp(199,85, 69, 69),
+    "iPhone 14":         mkp(159,79, 69, 69),
+    "iPhone 14 Pro":     mkp(219,89, 79, 69),
+    "iPhone 14 Pro Max": mkp(249,95, 79, 69),
+    "iPhone 15":         mkp(189,89, 79, 69),
+    "iPhone 15 Pro":     mkp(249,99, 89, 79),
+    "iPhone 15 Pro Max": mkp(279,109,89, 79)
   },
   samsung: {
-    "Galaxy A14": mk(79, 45, 49, 49),
-    "Galaxy A34": mk(99, 49, 55, 49),
-    "Galaxy A54": mk(119,55, 59, 49),
-    "Galaxy S21": mk(149,59, 65, 59),
-    "Galaxy S22": mk(169,65, 69, 59),
-    "Galaxy S23": mk(189,69, 75, 69),
-    "Galaxy S24": mk(219,79, 79, 69)
+    "Galaxy A14": mkp(79, 45, 49, 49),
+    "Galaxy A34": mkp(99, 49, 55, 49),
+    "Galaxy A54": mkp(119,55, 59, 49),
+    "Galaxy S21": mkp(149,59, 65, 59),
+    "Galaxy S22": mkp(169,65, 69, 59),
+    "Galaxy S23": mkp(189,69, 75, 69),
+    "Galaxy S24": mkp(219,79, 79, 69)
   },
   macbook: {
-    "MacBook Air M1":  mk(249,129,99, 89),
-    "MacBook Air M2":  mk(299,139,109,89),
-    "MacBook Pro 13\"": mk(279,139,109,89),
-    "MacBook Pro 14\"": mk(399,169,129,99),
-    "MacBook Pro 16\"": mk(449,189,139,99)
+    "MacBook Air M1":  mkl(249,129,99, 89),
+    "MacBook Air M2":  mkl(299,139,109,89),
+    "MacBook Pro 13\"": mkl(279,139,109,89),
+    "MacBook Pro 14\"": mkl(399,169,129,99),
+    "MacBook Pro 16\"": mkl(449,189,139,99)
   },
   pc: {
-    "HP":     mk(109,79,69,69),
-    "Dell":   mk(119,85,69,69),
-    "Lenovo": mk(109,79,69,69),
-    "Asus":   mk(109,79,69,69),
-    "Acer":   mk(99, 75,65,65)
+    "HP":     mkl(109,79,69,69),
+    "Dell":   mkl(119,85,69,69),
+    "Lenovo": mkl(109,79,69,69),
+    "Asus":   mkl(109,79,69,69),
+    "Acer":   mkl(99, 75,65,65)
   }
 };
 /* ====================================================== */
 
 const $ = id => document.getElementById(id);
-const KEY = "arc_prices_v2";
+const KEY = "arc_prices_v3";
 const clone = o => JSON.parse(JSON.stringify(o));
 let prices = clone(DEFAULT_PRICES);
 try{
@@ -796,9 +882,9 @@ function buildDevices(){
   for(const [k,v] of Object.entries(DEVICES)){
     const b=document.createElement("button");
     b.type="button"; b.className="opt"; b.innerHTML=ico(v.i)+v.n;
-    b.onclick=()=>{ dev=k; model=null;
+    b.onclick=()=>{ dev=k; model=null; iss=null;
       [...box.children].forEach(x=>x.classList.toggle("on",x===b));
-      renderModels(); update(); };
+      renderModels(); renderIssues(); update(); };
     box.appendChild(b);
   }
 }
@@ -817,15 +903,19 @@ function renderModels(){
   Object.keys(prices[dev]).forEach(m=>add(m,m));
   add(OTHER,"Autre modèle","oth");
 }
-function buildIssues(){
+function renderIssues(){
   const box=$("issues");
-  for(const [k,v] of Object.entries(ISSUES)){
+  if(!dev){ box.innerHTML='<div class="hint0">Choisissez d\'abord un appareil</div>'; return; }
+  box.innerHTML="";
+  Object.entries(ISSUES[DEVICES[dev].k]).forEach(([k,v],n)=>{
     const b=document.createElement("button");
-    b.type="button"; b.className="opt"; b.innerHTML=ico(v.i)+v.n;
+    b.type="button"; b.className="opt ent"; b.innerHTML=ico(v.i)+v.n; b.style.animationDelay=(n*45)+"ms";
+    b.addEventListener("animationend",()=>b.classList.remove("ent"),{once:true});
     b.onclick=()=>{ iss=k; [...box.children].forEach(x=>x.classList.toggle("on",x===b)); update(); };
     box.appendChild(b);
-  }
+  });
 }
+const IS=()=>ISSUES[DEVICES[dev].k];
 let anim;
 function countTo(el, to){
   cancelAnimationFrame(anim);
@@ -847,24 +937,24 @@ function update(){
   }
   const other = model===OTHER;
   const mname = other ? DEVICES[dev].n+" (autre modèle)" : model;
-  s.textContent = mname+" · "+ISSUES[iss].n;
+  s.textContent = mname+" · "+IS()[iss].n;
   let txt, msg;
   if(other){
     setPriceText("Sur WhatsApp",true);
     note.textContent="Votre modèle n'est pas dans la liste : écrivez-nous, on vous répond avec le prix.";
     bt.textContent="Demander le prix sur WhatsApp";
-    msg=`Bonjour, je souhaite connaître le prix d'une réparation :\n• Appareil : ${DEVICES[dev].n}\n• Modèle : (je précise ici)\n• Panne : ${ISSUES[iss].n}`;
+    msg=`Bonjour, je souhaite connaître le prix d'une réparation :\n• Appareil : ${DEVICES[dev].n}\n• Modèle : (je précise ici)\n• Panne : ${IS()[iss].n}`;
   } else {
     const v=(prices[dev][model]||{})[iss]||0;
     if(v>0){ countTo(p,v); p.classList.remove("small"); } else setPriceText("Sur devis",true);
     txt = v>0 ? v+" €" : "sur devis";
-    msg=`Bonjour, je souhaite réserver une réparation :\n• Appareil : ${mname}\n• Panne : ${ISSUES[iss].n}\n• Prix estimé : ${txt}\nQuand puis-je passer ?`;
+    msg=`Bonjour, je souhaite réserver une réparation :\n• Appareil : ${mname}\n• Panne : ${IS()[iss].n}\n• Prix estimé : ${txt}\nQuand puis-je passer ?`;
   }
   b.href=`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
   b.removeAttribute("aria-disabled");
   p.classList.remove("pop"); void p.offsetWidth; p.classList.add("pop");
 }
-buildDevices(); renderModels(); buildIssues(); update();
+buildDevices(); renderModels(); renderIssues(); update();
 
 $("menuBtn").onclick=()=>$("npill").classList.toggle("open");
 /* nav + reveal */
@@ -894,16 +984,24 @@ addEventListener("scroll",()=>{ if(tk)return; tk=true; requestAnimationFrame(()=
 document.querySelectorAll(".f,.sv,.panel,.ci,.s").forEach(el=>{ el.classList.add("spot");
   el.addEventListener("pointermove",e=>{ const r=el.getBoundingClientRect(); el.style.setProperty("--mx",(e.clientX-r.left)+"px"); el.style.setProperty("--my",(e.clientY-r.top)+"px"); }); });
 if(fine && !reduce){
-  const cur=$("cur"), vis=document.querySelector(".pstage"), hero=document.querySelector(".hero");
+  const cur=$("cur"), hero=document.querySelector(".hero");
   addEventListener("mousemove",e=>{ cur.style.transform=`translate(${e.clientX-250}px,${e.clientY-250}px)`; cur.style.opacity=1; },{passive:true});
-  hero.addEventListener("mousemove",e=>{ const r=vis.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-    vis.style.transform=`perspective(900px) rotateY(${x*14}deg) rotateX(${-y*10}deg)`; });
-  hero.addEventListener("mouseleave",()=>vis.style.transform="");
+  hero.addEventListener("mousemove",e=>{ hero.style.setProperty("--bx",((e.clientX/innerWidth-.5)*8)+"%"); });
   document.querySelectorAll(".btn-g,.btn-w").forEach(b=>{
     b.addEventListener("mousemove",e=>{ if(b.getAttribute("aria-disabled")==="true")return; const r=b.getBoundingClientRect();
       b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28}px)`; });
     b.addEventListener("mouseleave",()=>b.style.transform=""); });
 }
+
+/* gold-dust particles */
+(function(){ const c=$("dust"); if(!c||reduce)return; const x=c.getContext("2d"); let W,H; const P=[];
+  const rs=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight}; rs(); addEventListener("resize",rs);
+  for(let i=0;i<70;i++)P.push({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.4,v:Math.random()*.00022+.00006,a:Math.random()*.6+.25,p:Math.random()*6.28});
+  (function f(t){ x.clearRect(0,0,W,H);
+    for(const q of P){ q.y-=q.v*16; if(q.y<0){q.y=1;q.x=Math.random()}
+      x.beginPath(); x.fillStyle=`rgba(190,255,120,${q.a*(.5+.5*Math.sin(t/700+q.p))})`; x.shadowBlur=8; x.shadowColor="#8be02a";
+      x.arc(q.x*W+Math.sin(t/1500+q.p)*14,q.y*H,q.r,0,6.283); x.fill(); }
+    requestAnimationFrame(f); })(0); })();
 
 /* admin */
 const modal=$("modal");
@@ -916,9 +1014,9 @@ function syncDraft(){
 }
 function buildTable(){
   $("admDev").innerHTML=Object.entries(DEVICES).map(([k,v])=>`<option value="${k}"${k===admDev?" selected":""}>${v.n}</option>`).join("");
-  let h="<tr><th>Modèle</th>"+Object.values(ISSUES).map(i=>`<th>${i.n}</th>`).join("")+"<th></th></tr>";
+  let h="<tr><th>Modèle</th>"+Object.values(ISSUES[DEVICES[admDev].k]).map(i=>`<th>${i.n}</th>`).join("")+"<th></th></tr>";
   for(const m in draft[admDev]){
-    h+=`<tr><td>${esc(m)}</td>`+Object.keys(ISSUES).map(k=>`<td><input type="number" min="0" step="1" data-m="${esc(m)}" data-k="${k}" value="${draft[admDev][m][k]||""}"></td>`).join("")+`<td><button class="x" type="button" data-del="${esc(m)}" aria-label="Supprimer">×</button></td></tr>`;
+    h+=`<tr><td>${esc(m)}</td>`+Object.keys(ISSUES[DEVICES[admDev].k]).map(k=>`<td><input type="number" min="0" step="1" data-m="${esc(m)}" data-k="${k}" value="${draft[admDev][m][k]||""}"></td>`).join("")+`<td><button class="x" type="button" data-del="${esc(m)}" aria-label="Supprimer">×</button></td></tr>`;
   }
   $("tbl").innerHTML=h;
 }
@@ -932,7 +1030,7 @@ $("admDev").onchange=e=>{ syncDraft(); admDev=e.target.value; buildTable(); };
 $("tbl").addEventListener("click",e=>{ const m=e.target.dataset&&e.target.dataset.del; if(m){ syncDraft(); delete draft[admDev][m]; buildTable(); } });
 $("addModel").onclick=()=>{ const n=$("newModel").value.trim(); if(!n) return; syncDraft();
   if(draft[admDev][n]) return toast("Ce modèle existe déjà");
-  draft[admDev][n]=mk(0,0,0,0); $("newModel").value=""; buildTable(); toast("Modèle ajouté, entrez les prix"); };
+  draft[admDev][n]=Object.fromEntries(Object.keys(ISSUES[DEVICES[admDev].k]).map(k=>[k,0])); $("newModel").value=""; buildTable(); toast("Modèle ajouté, entrez les prix"); };
 function applyPrices(){
   prices=clone(draft);
   if(model && model!==OTHER && dev && !prices[dev][model]) model=null;
