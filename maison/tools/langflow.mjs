@@ -1,0 +1,40 @@
+// UI flow: French on entry, switch via the dropdown, cart re-translates, WhatsApp message language, persistence, RTL
+import { chromium } from 'playwright-core'; import http from 'http'; import fs from 'fs'; import path from 'path';
+const site = path.resolve(new URL('..', import.meta.url).pathname); const SP = '/tmp/claude-0/-home-user-geniy/9d6c210a-1d40-575b-b4e9-4f41d3869cb9/scratchpad';
+const mime = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png' };
+const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); if (u === '/') u = '/index.html'; const f = path.join(site, u); if (!fs.existsSync(f)) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': mime[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(0);
+const url = `http://localhost:${srv.address().port}/`;
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
+let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, locale: 'ar-SA' }); // browser locale is Arabic, site must still open in French
+const pg = await ctx.newPage(); const errs = []; pg.on('pageerror', e => errs.push(e.message)); pg.on('console', m => { if (m.type() === 'error' && !/fonts\.g|ERR_|net::/.test(m.text())) errs.push(m.text()); });
+await pg.goto(url); await pg.waitForTimeout(2500);
+ok(await pg.evaluate(() => document.documentElement.lang) === 'fr' && await pg.textContent('.headline__w--b') === 'CADEAU', 'opens in French even with an Arabic browser locale');
+await pg.click('#langBtn'); await pg.waitForTimeout(400);
+ok(await pg.locator('#langList button').count() === 5, 'dropdown lists 5 languages'); await pg.screenshot({ path: SP + '/lf-menu.png' });
+await pg.click('#langList [data-l="ru"]'); await pg.waitForTimeout(900);
+ok(await pg.textContent('.headline__w--b') === 'ПОДАРОК', 'Russian headline applied'); ok((await pg.textContent('.nav a >> nth=1')).trim() === 'Магазин', 'nav translated');
+// add to cart in Russian, then switch to English: cart line must re-translate
+await pg.locator('#grid .card[data-id="metal"] .opt', { hasText: '20×30' }).click(); await pg.locator('#grid .card[data-id="metal"] .add').click(); await pg.waitForTimeout(300);
+await pg.click('#openCart'); await pg.waitForTimeout(700);
+ok((await pg.locator('.line__n').first().textContent()) === 'Фото на металле', 'cart line in Russian');
+await pg.check('#cFirst', { force: true }).catch(() => pg.click('.check')); await pg.fill('#cName', 'Анна');
+let msg = decodeURIComponent((await pg.getAttribute('#sendWa', 'href')).split('text=')[1]);
+ok(msg.includes('Здравствуйте') && msg.includes('Фото на металле (20×30 cm)') && msg.includes('[Photo sur métal, 20×30 cm]') && msg.includes('визитк'), 'WhatsApp message in Russian + French names in brackets');
+await pg.keyboard.press('Escape'); await pg.waitForTimeout(700);
+await pg.click('#langBtn'); await pg.click('#langList [data-l="en"]'); await pg.waitForTimeout(700);
+await pg.click('#openCart'); await pg.waitForTimeout(700);
+ok((await pg.locator('.line__n').first().textContent()) === 'Photo on metal', 'same cart line re-translates to English');
+msg = decodeURIComponent((await pg.getAttribute('#sendWa', 'href')).split('text=')[1]); ok(msg.startsWith('Hello Maison Volodymyr') && msg.includes('Estimated total'), 'WhatsApp message in English');
+console.log('--- EN message ---\n' + msg + '\n---');
+await pg.keyboard.press('Escape'); await pg.waitForTimeout(700);
+await pg.click('#langBtn'); await pg.click('#langList [data-l="ar"]'); await pg.waitForTimeout(700);
+ok(await pg.evaluate(() => document.documentElement.dir) === 'rtl', 'Arabic sets dir=rtl');
+await pg.click('#openCart'); await pg.waitForTimeout(800); await pg.screenshot({ path: SP + '/lf-ar-cart.png' });
+msg = decodeURIComponent((await pg.getAttribute('#sendWa', 'href')).split('text=')[1]); console.log('--- AR message ---\n' + msg + '\n---'); ok(msg.includes('مرحبًا') && msg.includes('[Photo sur métal, 20×30 cm]'), 'WhatsApp message in Arabic + French bracket');
+await pg.keyboard.press('Escape'); await pg.waitForTimeout(500);
+await pg.reload(); await pg.waitForTimeout(2200);
+ok(await pg.evaluate(() => document.documentElement.lang) === 'ar', 'chosen language persists after reload');
+const ctx2 = await b.newContext({ viewport: { width: 1440, height: 900 } }); const p2 = await ctx2.newPage(); await p2.goto(url); await p2.waitForTimeout(2000);
+ok(await p2.evaluate(() => document.documentElement.lang) === 'fr', 'a new visitor sees French');
+ok(errs.length === 0, 'no console errors ' + errs.join('|')); console.log(fails ? fails + ' FAILED' : 'ALL OK'); await b.close(); srv.close(); process.exit(fails ? 1 : 0);

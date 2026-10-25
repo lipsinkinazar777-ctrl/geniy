@@ -13,7 +13,7 @@
 <link rel="preload" as="image" href="assets/hero-bg.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@200;300;400&family=IBM+Plex+Sans+Arabic:wght@200;300;400&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -51,20 +51,24 @@
 
 <!-- =============== HEADER =============== -->
 <header class="top" id="top">
-  <a class="brand" href="#hero" aria-label="Maison Volodymyr — accueil">
+  <a class="brand" href="#hero" data-i18n-attr="aria-label:brand.aria">
     <img src="assets/logo-mv-256.webp" width="44" height="44" alt="">
     <span>MAISON VOLODYMYR</span>
   </a>
-  <nav class="nav" aria-label="Navigation principale">
-    <a href="#creations" class="roll" data-cursor="Voir"><span data-t="Créations">Créations</span></a>
-    <a href="#boutique" class="roll"><span data-t="Boutique">Boutique</span></a>
-    <a href="#coffrets" class="roll"><span data-t="Coffrets">Coffrets</span></a>
-    <a href="#composer" class="roll"><span data-t="Sur mesure">Sur mesure</span></a>
-    <a href="#atelier" class="roll"><span data-t="Atelier">Atelier</span></a>
+  <nav class="nav" data-i18n-attr="aria-label:nav.aria">
+    <a href="#creations" class="roll" data-cursor data-ci18n="c.view"><span data-t="" data-i18n="nav.creations">Créations</span></a>
+    <a href="#boutique" class="roll"><span data-t="" data-i18n="nav.shop">Boutique</span></a>
+    <a href="#coffrets" class="roll"><span data-t="" data-i18n="nav.boxes">Coffrets</span></a>
+    <a href="#composer" class="roll"><span data-t="" data-i18n="nav.custom">Sur mesure</span></a>
+    <a href="#atelier" class="roll"><span data-t="" data-i18n="nav.atelier">Atelier</span></a>
   </nav>
   <div class="top__right">
-    <a class="btn btn--gold btn--sm" href="#boutique" data-magnet><span class="btn__t">Commander</span></a>
-    <button class="bagbtn" id="openCart" aria-label="Ouvrir le panier" data-magnet>
+    <div class="lang" id="lang">
+      <button class="lang__btn" id="langBtn" aria-haspopup="listbox" aria-expanded="false" data-i18n-attr="aria-label:lang.label"><span id="langCur">FR</span><svg class="ico lang__chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <ul class="lang__list" id="langList" role="listbox" tabindex="-1"></ul>
+    </div>
+    <a class="btn btn--gold btn--sm" href="#boutique" data-magnet><span class="btn__t" data-i18n="top.order">Commander</span></a>
+    <button class="bagbtn" id="openCart" data-i18n-attr="aria-label:top.cart" data-magnet>
       <svg class="ico"><use href="#i-bag"/></svg><span class="bagbtn__n" id="cartCount">0</span>
     </button>
   </div>
@@ -79,9 +83,9 @@
   </div>
 
   <!-- headline sits between the scene and the product layers -->
-  <h1 class="headline" aria-label="Votre cadeau">
-    <span class="headline__w headline__w--a" data-split>VOTRE</span>
-    <span class="headline__w headline__w--b" data-split>CADEAU</span>
+  <h1 class="headline" data-i18n-attr="aria-label:hl.aria">
+    <span class="headline__w headline__w--a" data-split data-i18n="hl.a">VOTRE</span>
+    <span class="headline__w headline__w--b" data-split data-i18n="hl.b">CADEAU</span>
   </h1>
 
   <!-- product layers: same camera as the background → they overlay pixel for pixel -->
@@ -91,33 +95,33 @@
     <img class="layer layer--lid" src="assets/hero-box-lid.webp" alt="" width="2560" height="1600">
     <div class="sparks" id="sparks"></div>
   </div>
-  <button class="hit" id="hit" aria-pressed="false" aria-label="Ouvrir le coffret : découvrir la tasse" data-cursor="Ouvrir"></button>
-  <p class="hint" id="hint"><span class="hint__dot"></span><span class="hint__t" data-fine="Survolez le coffret" data-coarse="Touchez le coffret">Survolez le coffret</span></p>
+  <button class="hit" id="hit" aria-pressed="false" data-cursor></button>
+  <p class="hint" id="hint"><span class="hint__dot"></span><span class="hint__t" id="hintT"></span></p>
 
   <aside class="tag">
     <svg class="ico ico--ember" viewBox="0 0 40 20"><use href="#i-bow"/></svg>
-    <p>TASSES, PHOTOS SUR MÉTAL, AIMANTS ET PORTE-CLÉS. FAITS MAIN À PARIS.</p>
+    <p data-i18n="tag.text">TASSES, PHOTOS SUR MÉTAL, AIMANTS ET PORTE-CLÉS. FAITS MAIN À PARIS.</p>
   </aside>
 
-  <button class="about" id="aboutOpen" data-cursor="Lire">
+  <button class="about" id="aboutOpen" data-cursor data-ci18n="c.read">
     <span class="about__img"><img src="assets/card-key.webp" alt="" loading="eager"><span class="about__play"><svg class="ico"><use href="#i-play"/></svg></span></span>
-    <span class="about__cap">L’ATELIER</span>
+    <span class="about__cap" data-i18n="about.cap">L’ATELIER</span>
   </button>
 
   <p class="lead">
     <span class="lead__dot"></span>
-    <span>Cadeaux personnalisés avec vos photos.<br>Imprimés et gravés à la main,<br>prêts à offrir.</span>
+    <span data-i18n="lead.h" data-i18n-html>Cadeaux personnalisés avec vos photos.<br>Imprimés et gravés à la main,<br>prêts à offrir.</span>
   </p>
 
   <div class="plaques">
-    <a class="plaque plaque--img" href="#boutique" data-cursor="Voir" data-tilt>
-      <span class="plaque__top"><span>Nouveau</span><svg class="ico"><use href="#i-arrow-ur"/></svg></span>
-      <span class="plaque__sub">Photo sur métal 30×40</span>
+    <a class="plaque plaque--img" href="#boutique" data-cursor data-ci18n="c.view" data-tilt>
+      <span class="plaque__top"><span data-i18n="plaque.new">Nouveau</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></span>
+      <span class="plaque__sub" data-i18n="plaque.newsub">Photo sur métal 30×40</span>
       <img src="assets/card-photo.webp" alt="" loading="eager">
     </a>
-    <a class="plaque plaque--cream" href="#offre" data-cursor="Voir" data-tilt>
+    <a class="plaque plaque--cream" href="#offre" data-cursor data-ci18n="c.view" data-tilt>
       <svg class="ico ico--gold plaque__ico"><use href="#i-seal"/></svg>
-      <span class="plaque__lbl">AVEC NOTRE CARTE</span>
+      <span class="plaque__lbl" data-i18n="plaque.card">AVEC NOTRE CARTE</span>
       <span class="plaque__big">−20&nbsp;%</span>
     </a>
   </div>
@@ -126,34 +130,31 @@
 
 <!-- =============== MARQUEE =============== -->
 <section class="marquee" aria-hidden="true">
-  <div class="marquee__track" id="marquee">
-    <span>Tasses photo</span><i></i><span>Photos sur métal</span><i></i><span>Aimants</span><i></i><span>Porte-clés</span><i></i><span>Coffrets cadeaux</span><i></i><span>Fait main à Paris</span><i></i>
-    <span>Tasses photo</span><i></i><span>Photos sur métal</span><i></i><span>Aimants</span><i></i><span>Porte-clés</span><i></i><span>Coffrets cadeaux</span><i></i><span>Fait main à Paris</span><i></i>
-  </div>
+  <div class="marquee__track" id="marquee"></div>
 </section>
 
 <!-- =============== CRÉATIONS (index with floating preview) =============== -->
 <section class="sec creations" id="creations">
   <header class="sec__head">
-    <p class="eyebrow">01 — Créations</p>
-    <h2 class="h2 grad" data-split-lines>Ce que nous fabriquons</h2>
+    <p class="eyebrow" data-i18n="eb.1">01 — Créations</p>
+    <h2 class="h2 grad" data-split-lines data-i18n="cre.h2">Ce que nous fabriquons</h2>
   </header>
   <ul class="index" id="index">
     <li><a href="#boutique" data-img="assets/card-mug.webp" data-filter="tasse">
-      <span class="index__n">01</span><span class="index__t">Tasse photo</span>
-      <span class="index__d">Votre photo ou votre dessin, imprimé sur tout le tour</span><span class="index__p">10 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+      <span class="index__n">01</span><span class="index__t" data-i18n="item.tasse">Tasse photo</span>
+      <span class="index__d" data-i18n="idx.d1">Votre photo ou votre dessin, imprimé sur tout le tour</span><span class="index__p" data-price="10">10 €</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a></li>
     <li><a href="#boutique" data-img="assets/card-metal.webp" data-filter="metal">
-      <span class="index__n">02</span><span class="index__t">Photo sur métal</span>
-      <span class="index__d">De 10×15 à 30×40 cm, plaque brillante</span><span class="index__p">dès 4 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+      <span class="index__n">02</span><span class="index__t" data-i18n="item.metal">Photo sur métal</span>
+      <span class="index__d" data-i18n="idx.d2">De 10×15 à 30×40 cm, plaque brillante</span><span class="index__p" data-i18n="from" data-i18n-vars='{"p":4}'>…</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a></li>
     <li><a href="#boutique" data-img="assets/card-magnet.webp" data-filter="aimant">
-      <span class="index__n">03</span><span class="index__t">Aimant photo</span>
-      <span class="index__d">Pour le frigo, avec la photo du moment</span><span class="index__p">3 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+      <span class="index__n">03</span><span class="index__t" data-i18n="item.aimant">Aimant photo</span>
+      <span class="index__d" data-i18n="idx.d3">Pour le frigo, avec la photo du moment</span><span class="index__p" data-price="3">3 €</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a></li>
     <li><a href="#boutique" data-img="assets/card-key.webp" data-filter="cles">
-      <span class="index__n">04</span><span class="index__t">Porte-clés</span>
-      <span class="index__d">Simple ou double face</span><span class="index__p">dès 2 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+      <span class="index__n">04</span><span class="index__t" data-i18n="item.cles">Porte-clés</span>
+      <span class="index__d" data-i18n="idx.d4">Simple ou double face</span><span class="index__p" data-i18n="from" data-i18n-vars='{"p":2}'>…</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a></li>
     <li><a href="#coffrets" data-img="assets/card-coffret.webp">
-      <span class="index__n">05</span><span class="index__t">Coffrets cadeaux</span>
-      <span class="index__d">Plusieurs articles, boîte noire, ruban doré</span><span class="index__p">dès 22 €</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a></li>
+      <span class="index__n">05</span><span class="index__t" data-i18n="idx.t5">Coffrets cadeaux</span>
+      <span class="index__d" data-i18n="idx.d5">Plusieurs articles, boîte noire, ruban doré</span><span class="index__p" data-i18n="from" data-i18n-vars='{"p":22}'>…</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a></li>
   </ul>
   <div class="float" id="float" aria-hidden="true"><img alt=""><img alt=""></div>
 </section>
@@ -162,17 +163,17 @@
 <section class="sec shop" id="boutique">
   <header class="sec__head sec__head--row">
     <div>
-      <p class="eyebrow">02 — Boutique</p>
-      <h2 class="h2 grad" data-split-lines>Composez votre commande</h2>
+      <p class="eyebrow" data-i18n="eb.2">02 — Boutique</p>
+      <h2 class="h2 grad" data-split-lines data-i18n="shop.h2">Composez votre commande</h2>
     </div>
-    <p class="sec__lede">Ajoutez vos articles au panier, puis envoyez la commande sur WhatsApp. Vous nous envoyez la photo, nous vous montrons un aperçu avant de fabriquer.</p>
+    <p class="sec__lede" data-i18n="shop.lede">Ajoutez vos articles au panier, puis envoyez la commande sur WhatsApp. Vous nous envoyez la photo, nous vous montrons un aperçu avant de fabriquer.</p>
   </header>
-  <div class="chips" id="chips" role="tablist" aria-label="Filtrer les articles">
-    <button class="chip is-on" data-f="all" role="tab" aria-selected="true">Tout</button>
-    <button class="chip" data-f="tasse" role="tab" aria-selected="false">Tasses</button>
-    <button class="chip" data-f="metal" role="tab" aria-selected="false">Photos sur métal</button>
-    <button class="chip" data-f="aimant" role="tab" aria-selected="false">Aimants</button>
-    <button class="chip" data-f="cles" role="tab" aria-selected="false">Porte-clés</button>
+  <div class="chips" id="chips" role="tablist" data-i18n-attr="aria-label:chips.aria">
+    <button class="chip is-on" data-f="all" role="tab" aria-selected="true" data-i18n="chip.all">Tout</button>
+    <button class="chip" data-f="tasse" role="tab" aria-selected="false" data-i18n="chip.tasse">Tasses</button>
+    <button class="chip" data-f="metal" role="tab" aria-selected="false" data-i18n="chip.metal">Photos sur métal</button>
+    <button class="chip" data-f="aimant" role="tab" aria-selected="false" data-i18n="chip.aimant">Aimants</button>
+    <button class="chip" data-f="cles" role="tab" aria-selected="false" data-i18n="chip.cles">Porte-clés</button>
   </div>
   <div class="grid" id="grid"></div>
 </section>
@@ -185,15 +186,15 @@
       <div class="bs__in">
         <img class="bs__back" src="assets/build-box-back.webp" alt="" width="1400" height="1100" loading="lazy">
         <div class="bs__slots" id="bsShowSlots"></div>
-        <img class="bs__front" src="assets/build-box-front.webp" alt="Coffret cadeau noir au médaillon MV, ouvert" width="1400" height="1100" loading="lazy">
+        <img class="bs__front" src="assets/build-box-front.webp" alt="" data-i18n-attr="alt:box.alt" width="1400" height="1100" loading="lazy">
       </div>
       <p class="bs__cap"><span class="bs__capn" id="bsShowName"></span><span class="bs__capo" id="bsShowOcc"></span><span class="bs__capp" id="bsShowP"></span></p>
     </div>
   </div>
   <div class="box__body">
-    <p class="eyebrow">03 — Coffrets</p>
-    <h2 class="h2 grad" data-split-lines>Prêts à offrir</h2>
-    <p class="sec__lede">Plusieurs articles dans une boîte noire nouée d’un ruban doré. Choisissez l’occasion, nous préparons le reste.</p>
+    <p class="eyebrow" data-i18n="eb.3">03 — Coffrets</p>
+    <h2 class="h2 grad" data-split-lines data-i18n="box.h2">Prêts à offrir</h2>
+    <p class="sec__lede" data-i18n="box.lede">Plusieurs articles dans une boîte noire nouée d’un ruban doré. Choisissez l’occasion, nous préparons le reste.</p>
     <ul class="coffs" id="coffs"></ul>
   </div>
 </section>
@@ -201,8 +202,8 @@
 <!-- =============== COFFRET SUR MESURE (gift builder) =============== -->
 <section class="sec build" id="composer">
   <header class="sec__head">
-    <p class="eyebrow">04 — Sur mesure</p>
-    <h2 class="h2 grad" data-split-lines>Composez votre coffret</h2>
+    <p class="eyebrow" data-i18n="eb.4">04 — Sur mesure</p>
+    <h2 class="h2 grad" data-split-lines data-i18n="cu.h2">Composez votre coffret</h2>
   </header>
   <div class="build__grid">
     <div class="build__stage">
@@ -216,20 +217,20 @@
           <span class="bs__shine" id="bsShine"></span>
           <div class="bs__sparks" id="bsSparks"></div>
         </div>
-        <p class="bs__status" id="bsStatus" role="status" aria-live="polite">Ajoutez un premier article</p>
+        <p class="bs__status" id="bsStatus" role="status" aria-live="polite"></p>
       </div>
     </div>
     <div class="build__panel">
-      <p class="sec__lede">Choisissez jusqu’à six articles. Ils prennent place dans la boîte, puis vous fermez le coffret : ruban doré compris.</p>
+      <p class="sec__lede" data-i18n="cu.lede">Choisissez jusqu’à six articles. Ils prennent place dans la boîte, puis vous fermez le coffret : ruban doré compris.</p>
       <ul class="pick" id="pick"></ul>
       <dl class="bsum">
-        <div><dt>Articles <span id="bCount">0</span>/6</dt><dd id="bItems">0 €</dd></div>
-        <div><dt>Boîte noire et ruban doré</dt><dd>4 €</dd></div>
-        <div class="bsum__tot"><dt>Total du coffret</dt><dd id="bTot">0 €</dd></div>
+        <div><dt><span data-i18n="sum.items">Articles</span> <span id="bCount">0</span>/6</dt><dd id="bItems">0 €</dd></div>
+        <div><dt data-i18n="sum.box">Boîte noire et ruban doré</dt><dd>4 €</dd></div>
+        <div class="bsum__tot"><dt data-i18n="sum.total">Total du coffret</dt><dd id="bTot">0 €</dd></div>
       </dl>
       <div class="bact">
-        <button class="btn btn--gold" id="bClose" disabled data-magnet><span class="btn__t">Fermer le coffret</span><svg class="ico"><use href="#i-gift"/></svg></button>
-        <button class="btn btn--ghost" id="bReset" hidden><span class="btn__t">Recommencer</span></button>
+        <button class="btn btn--gold" id="bClose" disabled data-magnet><span class="btn__t"></span><svg class="ico"><use href="#i-gift"/></svg></button>
+        <button class="btn btn--ghost" id="bReset" hidden><span class="btn__t" data-i18n="b.reset">Recommencer</span></button>
       </div>
     </div>
   </div>
@@ -238,32 +239,32 @@
 <!-- =============== ATELIER =============== -->
 <section class="sec atelier" id="atelier">
   <header class="sec__head">
-    <p class="eyebrow">05 — Atelier</p>
-    <h2 class="h2 grad" data-split-lines>Un atelier de famille,<br>à Paris 18e</h2>
+    <p class="eyebrow" data-i18n="eb.5">05 — Atelier</p>
+    <h2 class="h2 grad" data-split-lines data-i18n="at.h2.h" data-i18n-html>Un atelier de famille,<br>à Paris 18e</h2>
   </header>
   <div class="atelier__cols">
-    <p class="atelier__txt">Maison Volodymyr est un atelier familial. Nous imprimons, gravons et assemblons chaque cadeau nous-mêmes, avec les photos de nos clients. Nous réalisons aussi des commandes en quantité pour les écoles, les associations et les entreprises.</p>
+    <p class="atelier__txt" data-i18n="at.txt">Maison Volodymyr est un atelier familial. Nous imprimons, gravons et assemblons chaque cadeau nous-mêmes, avec les photos de nos clients. Nous réalisons aussi des commandes en quantité pour les écoles, les associations et les entreprises.</p>
     <ul class="info">
-      <li><svg class="ico"><use href="#i-pin"/></svg><span>Stand à la Porte de Clignancourt<br>75018 Paris</span></li>
-      <li><svg class="ico"><use href="#i-clock"/></svg><span>Samedi et dimanche<br>de 10 h à 18 h</span></li>
-      <li><svg class="ico"><use href="#i-wa"/></svg><span><a href="https://wa.me/33758181515" target="_blank" rel="noopener">+33 7 58 18 15 15</a><br>WhatsApp</span></li>
+      <li><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="info.1.h" data-i18n-html>Stand à la Porte de Clignancourt<br>75018 Paris</span></li>
+      <li><svg class="ico"><use href="#i-clock"/></svg><span data-i18n="info.2.h" data-i18n-html>Samedi et dimanche<br>de 10 h à 18 h</span></li>
+      <li><svg class="ico"><use href="#i-wa"/></svg><span><a class="ltr" href="https://wa.me/33758181515" target="_blank" rel="noopener">+33 7 58 18 15 15</a><br>WhatsApp</span></li>
     </ul>
   </div>
   <ol class="steps">
-    <li data-tilt><svg class="ico ico--gold"><use href="#i-wa"/></svg><b>01</b><h3>Envoyez votre photo</h3><p>Sur WhatsApp, en haute qualité. Si vous hésitez entre plusieurs, envoyez-les toutes.</p></li>
-    <li data-tilt><svg class="ico ico--gold"><use href="#i-frame"/></svg><b>02</b><h3>Validez l’aperçu</h3><p>Nous préparons un aperçu gratuit. Vous répondez « OK », ou nous corrigeons.</p></li>
-    <li data-tilt><svg class="ico ico--gold"><use href="#i-laser"/></svg><b>03</b><h3>Fabrication à la main</h3><p>Impression, gravure laser sur métal, assemblage dans notre atelier.</p></li>
-    <li data-tilt><svg class="ico ico--gold"><use href="#i-gift"/></svg><b>04</b><h3>Prêt à offrir</h3><p>Votre cadeau est emballé, avec un coffret si vous le souhaitez.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-wa"/></svg><b>01</b><h3 data-i18n="s1.h">Envoyez votre photo</h3><p data-i18n="s1.p">Sur WhatsApp, en haute qualité. Si vous hésitez entre plusieurs, envoyez-les toutes.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-frame"/></svg><b>02</b><h3 data-i18n="s2.h">Validez l’aperçu</h3><p data-i18n="s2.p">Nous préparons un aperçu gratuit. Vous répondez « OK », ou nous corrigeons.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-laser"/></svg><b>03</b><h3 data-i18n="s3.h">Fabrication à la main</h3><p data-i18n="s3.p">Impression, gravure laser sur métal, assemblage dans notre atelier.</p></li>
+    <li data-tilt><svg class="ico ico--gold"><use href="#i-gift"/></svg><b>04</b><h3 data-i18n="s4.h">Prêt à offrir</h3><p data-i18n="s4.p">Votre cadeau est emballé, avec un coffret si vous le souhaitez.</p></li>
   </ol>
 </section>
 
 <!-- =============== OFFRE =============== -->
 <section class="sec offre" id="offre">
   <div class="offre__in" data-tilt>
-    <p class="eyebrow">Carte de visite Maison Volodymyr</p>
+    <p class="eyebrow" data-i18n="offer.eb">Carte de visite Maison Volodymyr</p>
     <p class="offre__big grad">−20&nbsp;%</p>
-    <p class="offre__t">Sur la première commande, sur présentation de notre carte de visite ou de son QR code. Sans la carte, la remise ne s’applique pas.</p>
-    <a class="btn btn--gold" href="#boutique" data-magnet><span class="btn__t">Choisir mes articles</span><svg class="ico"><use href="#i-arrow"/></svg></a>
+    <p class="offre__t" data-i18n="offer.t">Sur la première commande, sur présentation de notre carte de visite ou de son QR code. Sans la carte, la remise ne s’applique pas.</p>
+    <a class="btn btn--gold" href="#boutique" data-magnet><span class="btn__t" data-i18n="offer.btn">Choisir mes articles</span><svg class="ico dirico"><use href="#i-arrow"/></svg></a>
   </div>
 </section>
 </main>
@@ -272,50 +273,51 @@
 <footer class="foot">
   <div class="foot__big grad" aria-hidden="true">MAISON VOLODYMYR</div>
   <div class="foot__row">
-    <div><img src="assets/logo-mv-256.webp" width="56" height="56" alt=""><p>Cadeaux personnalisés<br>pour toute la famille.</p></div>
+    <div><img src="assets/logo-mv-256.webp" width="56" height="56" alt=""><p data-i18n="foot.tag.h" data-i18n-html>Cadeaux personnalisés<br>pour toute la famille.</p></div>
     <div>
-      <p class="foot__h">Contact</p>
-      <a class="lnk" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span>WhatsApp +33 7 58 18 15 15</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a>
-      <a class="lnk" href="https://www.instagram.com/maison.volodymyr" target="_blank" rel="noopener"><span>@maison.volodymyr</span><svg class="ico"><use href="#i-arrow-ur"/></svg></a>
+      <p class="foot__h" data-i18n="foot.contact">Contact</p>
+      <a class="lnk" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span class="ltr">WhatsApp +33 7 58 18 15 15</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a>
+      <a class="lnk" href="https://www.instagram.com/maison.volodymyr" target="_blank" rel="noopener"><span class="ltr">@maison.volodymyr</span><svg class="ico dirico"><use href="#i-arrow-ur"/></svg></a>
     </div>
     <div>
-      <p class="foot__h">Stand</p>
-      <p>Porte de Clignancourt, 75018 Paris<br>Samedi et dimanche, 10 h – 18 h</p>
+      <p class="foot__h" data-i18n="foot.stand">Stand</p>
+      <p data-i18n="foot.stand.h" data-i18n-html>Porte de Clignancourt, 75018 Paris<br>Samedi et dimanche, 10 h – 18 h</p>
     </div>
   </div>
-  <p class="foot__copy">© <span id="yr">2026</span> Maison Volodymyr. Fait main à Paris.</p>
+  <p class="foot__copy" id="footCopy"></p>
 </footer>
 
 <!-- =============== ABOUT DIALOG =============== -->
 <dialog class="dlg" id="aboutDlg" aria-labelledby="aboutT">
-  <button class="dlg__x" data-close aria-label="Fermer"><svg class="ico"><use href="#i-close"/></svg></button>
+  <button class="dlg__x" data-close data-i18n-attr="aria-label:close"><svg class="ico"><use href="#i-close"/></svg></button>
   <img src="assets/logo-mv-256.webp" width="64" height="64" alt="">
-  <h3 id="aboutT">L’atelier</h3>
-  <p>Tout commence avec une photo. Nous l’imprimons sur une tasse, la gravons sur du métal ou la glissons dans un porte-clés, puis nous emballons le tout à la main.</p>
-  <p>Vous nous trouvez à la Porte de Clignancourt le week-end, ou sur WhatsApp toute la semaine.</p>
-  <a class="btn btn--gold" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span class="btn__t">Écrire sur WhatsApp</span></a>
+  <h3 id="aboutT" data-i18n="dlg.t">L’atelier</h3>
+  <p data-i18n="dlg.p1">Tout commence avec une photo. Nous l’imprimons sur une tasse, la gravons sur du métal ou la glissons dans un porte-clés, puis nous emballons le tout à la main.</p>
+  <p data-i18n="dlg.p2">Vous nous trouvez à la Porte de Clignancourt le week-end, ou sur WhatsApp toute la semaine.</p>
+  <a class="btn btn--gold" href="https://wa.me/33758181515" target="_blank" rel="noopener"><span class="btn__t" data-i18n="dlg.btn">Écrire sur WhatsApp</span></a>
 </dialog>
 
 <!-- =============== CART =============== -->
 <div class="veil" id="veil"></div>
 <aside class="cart" id="cart" aria-hidden="true" aria-labelledby="cartT">
-  <header class="cart__head"><h3 id="cartT">Votre panier</h3><button class="iconbtn" id="closeCart" aria-label="Fermer le panier"><svg class="ico"><use href="#i-close"/></svg></button></header>
+  <header class="cart__head"><h3 id="cartT" data-i18n="cart.title">Votre panier</h3><button class="iconbtn" id="closeCart" data-i18n-attr="aria-label:cart.close"><svg class="ico"><use href="#i-close"/></svg></button></header>
   <div class="cart__body" id="cartBody"></div>
   <footer class="cart__foot" id="cartFoot">
-    <label class="field"><span>Prénom</span><input id="cName" type="text" autocomplete="given-name" placeholder="Votre prénom"></label>
-    <label class="field"><span>Précisions (texte à graver, date, couleurs)</span><textarea id="cNote" rows="2" placeholder="Facultatif"></textarea></label>
-    <label class="check"><input type="checkbox" id="cFirst"><span class="check__box"><svg class="ico"><use href="#i-check"/></svg></span><span>J’ai la carte de visite Maison Volodymyr (−20 % sur la 1ère commande)</span></label>
+    <label class="field"><span data-i18n="cart.name">Prénom</span><input id="cName" type="text" autocomplete="given-name" data-i18n-attr="placeholder:cart.name.ph"></label>
+    <label class="field"><span data-i18n="cart.note">Précisions (texte à graver, date, couleurs)</span><textarea id="cNote" rows="2" data-i18n-attr="placeholder:cart.note.ph"></textarea></label>
+    <label class="check"><input type="checkbox" id="cFirst"><span class="check__box"><svg class="ico"><use href="#i-check"/></svg></span><span data-i18n="cart.card">J’ai la carte de visite Maison Volodymyr (−20 % sur la 1ère commande)</span></label>
     <dl class="sum">
-      <div><dt>Sous-total</dt><dd id="sSub">0 €</dd></div>
-      <div id="sDiscRow" hidden><dt>Carte de visite −20 %</dt><dd id="sDisc">0 €</dd></div>
-      <div class="sum__tot"><dt>Total estimé</dt><dd id="sTot">0 €</dd></div>
+      <div><dt data-i18n="cart.sub">Sous-total</dt><dd id="sSub">0 €</dd></div>
+      <div id="sDiscRow" hidden><dt data-i18n="cart.disc">Carte de visite −20 %</dt><dd id="sDisc">0 €</dd></div>
+      <div class="sum__tot"><dt data-i18n="cart.tot">Total estimé</dt><dd id="sTot">0 €</dd></div>
     </dl>
-    <a class="btn btn--gold btn--block" id="sendWa" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-wa"/></svg><span class="btn__t">Envoyer la commande sur WhatsApp</span></a>
-    <p class="cart__fine">Le message s’ouvre dans WhatsApp, prêt à envoyer. Vous y joignez vos photos. La remise est vérifiée avec la carte, le prix final est confirmé par l’atelier.</p>
+    <a class="btn btn--gold btn--block" id="sendWa" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-wa"/></svg><span class="btn__t" data-i18n="cart.send">Envoyer la commande sur WhatsApp</span></a>
+    <p class="cart__fine" data-i18n="cart.fine">Le message s’ouvre dans WhatsApp, prêt à envoyer. Vous y joignez vos photos. La remise est vérifiée avec la carte, le prix final est confirmé par l’atelier.</p>
   </footer>
 </aside>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="js/i18n.js"></script>
 <script src="js/main.js" defer></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-/* Maison Volodymyr — interactions, shop and WhatsApp checkout */
+/* Maison Volodymyr — interactions, shop, multilingual UI and WhatsApp checkout */
 (() => {
 'use strict';
 const $ = (s, r = document) => r.querySelector(s);
@@ -7,47 +7,48 @@ const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 const WA = '33758181515';
 
+/* ---------------------------------------------------------------- i18n */
+const I = window.MV_I18N, LANGS = I.langs;
+let lang = 'fr';
+const L0 = () => LANGS.find(l => l.code === lang);
+// Arabic is right-to-left but numbers, sizes and prices must read left-to-right: wrap them in bidi isolates
+const isoNum = s => s.replace(/\d+(?:[.,]\d+)?(?:\s?[×x]\s?\d+(?:[.,]\d+)?)*(?:[\u00A0\s]?(?:€|%|cm|سم))?/g, '\u2066$&\u2069');
+const tl = (L, k, v) => { let s = I[L] && I[L][k] !== undefined ? I[L][k] : (I.fr[k] !== undefined ? I.fr[k] : k); if (v && typeof s === 'string') s = s.replace(/\{(\w+)\}/g, (_, n) => (v[n] !== undefined ? v[n] : '')); return L === 'ar' && typeof s === 'string' ? isoNum(s) : s; };
+const t = (k, v) => tl(lang, k, v);
+const eur = n => { const s = (Math.round(n * 100) / 100).toLocaleString(L0().loc, { minimumFractionDigits: n % 1 ? 2 : 0 }) + ' €'; return lang === 'ar' ? '⁦' + s + '⁩' : s; };
+
 /* ---------------------------------------------------------------- catalogue
    Prices come from the atelier's price sheet (launch/whatsapp_quick_replies.txt, coffrets/generate_bordeaux.js).
-   Items flagged `from` are "dès" prices, confirmed by the atelier after the preview. */
-const PRODUCTS = [
-  { id: 'tasse', cat: 'tasse', name: 'Tasse photo', badge: 'mug', img: 'assets/card-mug.webp',
-    desc: 'Votre photo ou votre dessin, imprimé sur tout le tour de la tasse. Thèmes gaming, voiture ou famille possibles.',
-    opts: [{ l: 'Tasse blanche', p: 10 }] },
-  { id: 'metal', cat: 'metal', name: 'Photo sur métal', badge: 'frame', img: 'assets/card-metal.webp',
-    desc: 'Votre photo sur une plaque de métal brillante. Quatre formats, du cadre de bureau au grand format.',
-    opts: [{ l: '10×15 cm', p: 4 }, { l: '15×20 cm', p: 6 }, { l: '20×30 cm', p: 8 }, { l: '30×40 cm', p: 25, from: true }] },
-  { id: 'aimant', cat: 'aimant', name: 'Aimant photo', badge: 'magnet', img: 'assets/card-magnet.webp',
-    desc: 'Un petit format pour le frigo, avec la photo du moment. Se glisse dans un coffret.',
-    opts: [{ l: 'Aimant photo', p: 3 }] },
-  { id: 'cles', cat: 'cles', name: 'Porte-clés photo', badge: 'key', img: 'assets/card-key.webp',
-    desc: 'Votre photo, sur une face ou sur deux. Léger, solide, facile à offrir.',
-    opts: [{ l: 'Simple face', p: 2, from: true }, { l: 'Double face', p: 5 }] }
+   `from` marks "dès" prices, confirmed by the atelier after the preview. */
+const SHOP = [
+  { id: 'tasse', badge: 'mug', img: 'assets/card-mug.webp' }, { id: 'metal', badge: 'frame', img: 'assets/card-metal.webp' },
+  { id: 'aimant', badge: 'magnet', img: 'assets/card-magnet.webp' }, { id: 'cles', badge: 'key', img: 'assets/card-key.webp' }
 ];
 const COFFRETS = [
-  { id: 'c-maman', name: 'Pour Maman', occ: 'Fête des mères', p: 23, items: [['tasse', 0], ['metal', 1], ['aimant', 0]] },
-  { id: 'c-papa', name: 'Pour Papa', occ: 'Fête des pères', p: 22, items: [['tasse', 0], ['cles', 1], ['aimant', 0]] },
-  { id: 'c-duo', name: 'Duo Amoureux', occ: 'Saint-Valentin', p: 31, items: [['tasse', 0], ['tasse', 0], ['metal', 0], ['aimant', 0]] },
-  { id: 'c-gp', name: 'Grands-parents', occ: 'Papi & Mamie', p: 26, items: [['metal', 2], ['tasse', 0], ['aimant', 0]] },
-  { id: 'c-bebe', name: 'Bébé', occ: 'Naissance', p: 25, items: [['tasse', 0], ['metal', 0], ['cles', 0], ['aimant', 0]] },
-  { id: 'c-fam', name: 'Coffret Famille', occ: 'Pour toute la famille', p: 28, rib: 'Best-seller', items: [['tasse', 0], ['metal', 1], ['cles', 1], ['aimant', 0]] },
-  { id: 'c-noel', name: 'Coffret Noël', occ: 'Noël & Nouvel An', p: 41, items: [['tasse', 0], ['tasse', 0], ['metal', 1], ['cles', 0], ['aimant', 0], ['aimant', 0]] },
-  { id: 'c-prest', name: 'Coffret Prestige', occ: 'Le grand cadeau', p: 51, was: 56, rib: 'Prestige', items: [['metal', 3], ['tasse', 0], ['pendant', 0], ['cles', 1], ['aimant', 0]] },
-  { id: 'c-duo2', name: 'Prestige Duo', occ: 'Pour deux familles', p: 66, was: 72, rib: 'Prestige', items: [['metal', 3], ['tasse', 0], ['tasse', 0], ['pendant', 0], ['pendant', 0], ['aimant', 0], ['aimant', 0]] }
+  { id: 'c-maman', p: 23, items: [['tasse', 0], ['metal', 1], ['aimant', 0]] },
+  { id: 'c-papa', p: 22, items: [['tasse', 0], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-duo', p: 31, items: [['tasse', 0], ['tasse', 0], ['metal', 0], ['aimant', 0]] },
+  { id: 'c-gp', p: 26, items: [['metal', 2], ['tasse', 0], ['aimant', 0]] },
+  { id: 'c-bebe', p: 25, items: [['tasse', 0], ['metal', 0], ['cles', 0], ['aimant', 0]] },
+  { id: 'c-fam', p: 28, rib: 'rib.best', items: [['tasse', 0], ['metal', 1], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-noel', p: 41, items: [['tasse', 0], ['tasse', 0], ['metal', 1], ['cles', 0], ['aimant', 0], ['aimant', 0]] },
+  { id: 'c-prest', p: 51, was: 56, rib: 'rib.prest', items: [['metal', 3], ['tasse', 0], ['pendant', 0], ['cles', 1], ['aimant', 0]] },
+  { id: 'c-duo2', p: 66, was: 72, rib: 'rib.prest', items: [['metal', 3], ['tasse', 0], ['tasse', 0], ['pendant', 0], ['pendant', 0], ['aimant', 0], ['aimant', 0]] }
 ];
-const eur = n => (Math.round(n * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: n % 1 ? 2 : 0 }) + ' €';
 
 /* ---------------------------------------------------------------- items inside a box (builder + coffret showcase) */
-// opts: label, price, s = relative size of the cut-out in the box
+// opts: l = raw label or k = translation key, p = price, s = relative size of the cut-out in the box
 const ITEMS = {
-  tasse: { name: 'Tasse photo', img: 'assets/cut-mug.webp', size: .98, ar: 1.31, opts: [{ l: 'Tasse', p: 10, s: 1 }] },
-  metal: { name: 'Photo sur métal', img: 'assets/cut-metal.webp', size: 1, ar: .73, opts: [{ l: '10×15', p: 4, s: .62 }, { l: '15×20', p: 6, s: .76 }, { l: '20×30', p: 8, s: .92 }, { l: '30×40', p: 25, s: 1.1 }] },
-  aimant: { name: 'Aimant photo', img: 'assets/cut-magnet.webp', size: .62, ar: .98, opts: [{ l: 'Aimant', p: 3, s: 1 }] },
-  cles: { name: 'Porte-clés', img: 'assets/cut-key.webp', size: .98, ar: .52, opts: [{ l: 'Simple face', p: 2, s: 1 }, { l: 'Double face', p: 5, s: 1 }] },
-  pendant: { name: 'Pendentif photo', img: 'assets/cut-pendant.webp', size: .86, ar: .75, opts: [{ l: 'Pendentif', p: 8, s: 1 }] }
+  tasse: { img: 'assets/cut-mug.webp', size: .98, ar: 1.31, opts: [{ k: 'opt.tasse', p: 10, s: 1 }] },
+  metal: { img: 'assets/cut-metal.webp', size: 1, ar: .73, opts: [{ l: '10×15', p: 4, s: .62 }, { l: '15×20', p: 6, s: .76 }, { l: '20×30', p: 8, s: .92 }, { l: '30×40', p: 25, s: 1.1, from: true }] },
+  aimant: { img: 'assets/cut-magnet.webp', size: .62, ar: .98, opts: [{ k: 'opt.aimant', p: 3, s: 1 }] },
+  cles: { img: 'assets/cut-key.webp', size: .98, ar: .52, opts: [{ k: 'opt.simple', p: 2, s: 1, from: true }, { k: 'opt.double', p: 5, s: 1 }] },
+  pendant: { img: 'assets/cut-pendant.webp', size: .86, ar: .75, opts: [{ k: 'opt.pendant', p: 8, s: 1 }] }
 };
 Object.values(ITEMS).forEach(d => { const i = new Image(); i.onload = () => { if (i.naturalHeight) d.ar = i.naturalWidth / i.naturalHeight; }; i.src = d.img; });
-const itemLabel = (pid, o) => { const d = ITEMS[pid]; return (d.opts.length > 1 ? `${d.name} ${d.opts[o].l}` : d.name).toLowerCase(); };
+const itemName = (pid, L = lang) => tl(L, 'item.' + pid);
+const optLabel = (pid, o, L = lang) => { const op = ITEMS[pid].opts[o]; return op.k ? tl(L, op.k) : (L === 'ar' ? isoNum(op.l) : op.l); };
+const itemLabel = (pid, o, L = lang) => (ITEMS[pid].opts.length > 1 ? `${itemName(pid, L)} ${optLabel(pid, o, L)}` : itemName(pid, L)).toLowerCase();
 const STAGE_AR = 1400 / 1100;
 /* Packs items in one or two rows by their real widths, so nothing overlaps badly.
    Returns {x,b,h,z} in % of the stage for each item (same order as the input). */
@@ -67,14 +68,15 @@ function pack(list) {
 function place(it, pos) { const el = it.el; el.style.left = pos.x + '%'; el.style.bottom = (100 - pos.b) + '%'; el.style.height = pos.h + '%'; el.style.zIndex = pos.z; }
 function makeEl(pid) { const el = document.createElement('img'); el.className = 'slot'; el.src = ITEMS[pid].img; el.alt = ''; return el; }
 
-
-/* ---------------------------------------------------------------- split text */
-$$('[data-split]').forEach(el => {
-  const t = el.textContent; el.textContent = ''; el.setAttribute('aria-hidden', 'true');
-  [...t].forEach((c, i) => { const s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', i); s.textContent = c; el.appendChild(s); });
-});
-$$('[data-split-lines]').forEach(el => {
-  let i = 0;
+/* ---------------------------------------------------------------- split text (re-run on every language change) */
+function setLetters(el, text) {
+  el.textContent = ''; el.setAttribute('aria-hidden', 'true');
+  const parts = lang === 'ar' ? [text] : [...text]; // Arabic letters must stay joined
+  parts.forEach((c, i) => { const s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', i); s.textContent = c; el.appendChild(s); });
+}
+function setLines(el, html) {
+  el.innerHTML = html; let i = 0;
+  el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
   const walk = node => [...node.childNodes].forEach(n => {
     if (n.nodeType === 3) {
       const frag = document.createDocumentFragment();
@@ -86,21 +88,33 @@ $$('[data-split-lines]').forEach(el => {
       n.replaceWith(frag);
     } else if (n.nodeType === 1 && n.tagName !== 'BR') walk(n);
   });
-  el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
   walk(el);
-});
-$$('.steps li, .coff, .card, .index li, .info li, .atelier__txt, .offre__in').forEach((el, i) => el.classList.add('rv'));
+}
+function applyStatic() {
+  $$('[data-i18n]').forEach(el => {
+    let vars = el.dataset.i18nVars ? JSON.parse(el.dataset.i18nVars) : null; if (vars && vars.p !== undefined) vars = { n: eur(vars.p) };
+    const s = t(el.dataset.i18n, vars);
+    if (el.hasAttribute('data-split-lines')) setLines(el, s);
+    else if (el.hasAttribute('data-split')) setLetters(el, s);
+    else if (el.hasAttribute('data-i18n-html')) el.innerHTML = s;
+    else el.textContent = s;
+    if (el.hasAttribute('data-t')) el.setAttribute('data-t', s);
+  });
+  $$('[data-i18n-attr]').forEach(el => el.dataset.i18nAttr.split(',').forEach(pair => { const [a, k] = pair.split(':'); el.setAttribute(a, t(k)); }));
+  $$('[data-ci18n]').forEach(el => { el.dataset.cursor = t(el.dataset.ci18n); });
+  $$('[data-price]').forEach(el => { el.textContent = eur(+el.dataset.price); });
+  $('#footCopy').textContent = t('foot.copy', { y: new Date().getFullYear() });
+}
+function renderMarquee() { const w = t('marquee'), one = w.map(x => `<span>${x}</span><i></i>`).join(''); $('#marquee').innerHTML = one + one; }
 
 /* ---------------------------------------------------------------- reveal on scroll */
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15, rootMargin: '0px 0px -6% 0px' });
-const observeReveals = () => $$('.h2, .rv:not(.in)').forEach(el => io.observe(el));
+const observeReveals = () => { $$('.steps li, .coff, .card, .index li, .info li, .atelier__txt, .offre__in').forEach(el => el.classList.add('rv')); $$('.h2, .rv:not(.in)').forEach(el => io.observe(el)); };
 
 /* ---------------------------------------------------------------- page load */
 const bg = $('.stage__bg');
 const start = () => document.documentElement.classList.add('is-ready');
 if (bg.complete) start(); else { bg.addEventListener('load', start, { once: true }); bg.addEventListener('error', start, { once: true }); setTimeout(start, 2500); }
-const hintT = $('.hint__t'); if (hintT && !fine) hintT.textContent = hintT.dataset.coarse;
-$('#yr').textContent = new Date().getFullYear();
 
 /* ---------------------------------------------------------------- header */
 const top = $('#top');
@@ -119,11 +133,14 @@ function burst() {
       { duration: 1100 + Math.random() * 900, delay: 350 + Math.random() * 250, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'both' }).onfinish = () => p.remove();
   }
 }
+function updateHit() {
+  hit.setAttribute('aria-label', t(opened ? 'hit.close' : 'hit.open')); hit.dataset.cursor = t(opened ? 'c.close' : 'c.open');
+  const cl = $('.cursor__label'); if (cl && cl.textContent && hit.matches(':hover')) cl.textContent = hit.dataset.cursor;
+  $('#hintT').textContent = t(fine ? 'hint.fine' : 'hint.coarse');
+}
 function setOpen(v) {
   if (v === opened) return; opened = v;
-  hero.classList.toggle('is-open', v); hit.setAttribute('aria-pressed', v);
-  hit.setAttribute('aria-label', v ? 'Refermer le coffret' : 'Ouvrir le coffret : découvrir la tasse');
-  hit.dataset.cursor = v ? 'Fermer' : 'Ouvrir'; const cl = $('.cursor__label'); if (cl && cl.textContent) cl.textContent = hit.dataset.cursor;
+  hero.classList.toggle('is-open', v); hit.setAttribute('aria-pressed', v); updateHit();
   if (v) burst();
 }
 // open when the pointer is over the box (rect test on mousemove: more reliable in Safari than enter/leave on a button)
@@ -153,7 +170,7 @@ const aboutDlg = $('#aboutDlg');
 $('#aboutOpen').addEventListener('click', () => { document.documentElement.classList.remove('has-cursor'); const c = $('.cursor'); if (c) c.style.display = 'none'; aboutDlg.showModal(); });
 aboutDlg.addEventListener('close', () => { if (fine) { document.documentElement.classList.add('has-cursor'); const c = $('.cursor'); if (c) c.style.display = ''; } });
 $$('[data-close]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
-$('#aboutDlg').addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
+aboutDlg.addEventListener('click', e => { if (e.target === e.currentTarget) e.currentTarget.close(); });
 
 /* ---------------------------------------------------------------- cursor */
 if (fine) {
@@ -210,35 +227,39 @@ if (mq && !reduce) {
   (function loop() { const d = scrollY - last; last = scrollY; skew += (Math.max(-8, Math.min(8, d * .35)) - skew) * .15; mq.style.transform = ''; mq.style.setProperty('--sk', skew); mq.parentElement.style.transform = `skewX(${-skew * .6}deg)`; requestAnimationFrame(loop); })();
 }
 
+
 /* ---------------------------------------------------------------- shop */
 const grid = $('#grid');
-const state = {}; // selected option per product
-grid.innerHTML = PRODUCTS.map(p => {
-  state[p.id] = 0;
-  const o = p.opts[0];
-  return `<article class="card" data-cat="${p.cat}" data-id="${p.id}">
-    <div class="card__img"><img src="${p.img}" alt="${p.name}" loading="lazy" width="1000" height="1250"><span class="card__badge"><svg class="ico"><use href="#i-${p.badge}"/></svg>${p.cat === 'metal' ? 'Gravé' : 'Fait main'}</span></div>
+const sel = {}; SHOP.forEach(p => sel[p.id] = 0); // selected option per product
+let curFilter = 'all';
+function renderGrid() {
+  grid.innerHTML = SHOP.map(p => {
+    const d = ITEMS[p.id], o = d.opts[sel[p.id]], name = itemName(p.id), cm = p.id === 'metal' ? ' cm' : '';
+    return `<article class="card" data-cat="${p.id}" data-id="${p.id}">
+    <div class="card__img"><img src="${p.img}" alt="${name}" loading="lazy" width="1000" height="1250"><span class="card__badge"><svg class="ico"><use href="#i-${p.badge}"/></svg>${t(p.id === 'metal' ? 'badge.eng' : 'badge.hand')}</span></div>
     <div class="card__body">
-      <h3 class="card__name">${p.name}</h3>
-      <p class="card__desc">${p.desc}</p>
-      ${p.opts.length > 1 ? `<div class="opts" role="radiogroup" aria-label="Choix pour ${p.name}">${p.opts.map((op, i) => `<button class="opt${i ? '' : ' is-on'}" role="radio" aria-checked="${i === 0}" data-i="${i}">${op.l}</button>`).join('')}</div>` : ''}
-      <div class="card__buy"><span class="price"><small>${o.from ? 'dès' : ''}</small><b>${eur(o.p)}</b></span>
-        <button class="add" data-cursor="Ajouter"><svg class="ico"><use href="#i-plus"/></svg><span>Ajouter</span></button></div>
+      <h3 class="card__name">${name}</h3>
+      <p class="card__desc">${t('p.' + p.id + '.d')}</p>
+      ${d.opts.length > 1 ? `<div class="opts" role="radiogroup" aria-label="${t('opt.for', { n: name })}">${d.opts.map((op, i) => `<button class="opt${i === sel[p.id] ? ' is-on' : ''}" role="radio" aria-checked="${i === sel[p.id]}" data-i="${i}">${optLabel(p.id, i)}${cm}</button>`).join('')}</div>` : ''}
+      <div class="card__buy"><span class="price"><small>${o.from ? t('from', { n: '' }).trim() : ''}</small><b>${eur(o.p)}</b></span>
+        <button class="add" data-cursor="${t('c.add')}"><svg class="ico"><use href="#i-plus"/></svg><span>${t('btn.add')}</span></button></div>
     </div></article>`;
-}).join('');
+  }).join('');
+  $$('.card', grid).forEach(c => bindTilt(c, 6));
+  filter(curFilter); observeReveals();
+}
 grid.addEventListener('click', e => {
-  const card = e.target.closest('.card'); if (!card) return;
-  const p = PRODUCTS.find(x => x.id === card.dataset.id);
+  const card = e.target.closest('.card'); if (!card) return; const id = card.dataset.id, d = ITEMS[id];
   const opt = e.target.closest('.opt');
   if (opt) {
-    state[p.id] = +opt.dataset.i; $$('.opt', card).forEach(b => { b.classList.toggle('is-on', b === opt); b.setAttribute('aria-checked', b === opt); });
-    const o = p.opts[state[p.id]]; $('.price small', card).textContent = o.from ? 'dès' : ''; $('.price b', card).textContent = eur(o.p); return;
+    sel[id] = +opt.dataset.i; $$('.opt', card).forEach(b => { b.classList.toggle('is-on', b === opt); b.setAttribute('aria-checked', b === opt); });
+    const o = d.opts[sel[id]]; $('.price small', card).textContent = o.from ? t('from', { n: '' }).trim() : ''; $('.price b', card).textContent = eur(o.p); return;
   }
   const add = e.target.closest('.add');
-  if (add) { const o = p.opts[state[p.id]]; addToCart({ key: p.id + ':' + o.l, name: p.name, opt: p.opts.length > 1 ? o.l : '', price: o.p, from: !!o.from, img: p.img }); flash(add); }
+  if (add) { const o = d.opts[sel[id]]; addToCart({ key: `p:${id}:${sel[id]}`, kind: 'prod', pid: id, oi: sel[id], price: o.p, from: !!o.from, img: SHOP.find(s => s.id === id).img }); flash(add); }
 });
-grid.querySelectorAll('.card').forEach(c => bindTilt(c, 6));
 function filter(f) {
+  curFilter = f;
   $$('.chip').forEach(c => { const on = c.dataset.f === f; c.classList.toggle('is-on', on); c.setAttribute('aria-selected', on); });
   $$('.card', grid).forEach(c => { const show = f === 'all' || c.dataset.cat === f; c.classList.toggle('is-hidden', !show); if (show) c.classList.add('in'); });
 }
@@ -246,32 +267,57 @@ $('#chips').addEventListener('click', e => { const c = e.target.closest('.chip')
 $$('#index a[data-filter]').forEach(a => a.addEventListener('click', () => filter(a.dataset.filter)));
 $$('#index a:not([data-filter])').forEach(a => a.addEventListener('click', () => filter('all')));
 
-$('#coffs').innerHTML = COFFRETS.map(c => `<li class="coff" data-id="${c.id}" tabindex="0">
-  <div><span class="coff__n">${c.name}${c.rib ? `<em class="coff__r">${c.rib}</em>` : ''}</span>
-    <span class="coff__ic">${chips(c.items)}</span><span class="coff__o">${c.occ}</span></div>
-  <div class="coff__p">${c.was ? `<s>${eur(c.was)}</s>` : ''}${eur(c.p)}</div>
-  <button class="add" aria-label="Ajouter ${c.name} au panier" data-cursor="Ajouter"><svg class="ico"><use href="#i-plus"/></svg><span>Ajouter</span></button></li>`).join('');
 function chips(items) {
   const n = {}; items.forEach(([pid, o]) => { const k = pid + ':' + o; n[k] = n[k] || { pid, o, n: 0 }; n[k].n++; });
-  return Object.values(n).map(x => { const d = ITEMS[x.pid]; return `<span class="ic" title="${itemLabel(x.pid, x.o)}"><img src="${d.img}" alt="" loading="lazy"><span>${x.n > 1 ? x.n + ' × ' : ''}${itemLabel(x.pid, x.o)}</span></span>`; }).join('');
+  return Object.values(n).map(x => { const d = ITEMS[x.pid], lb = itemLabel(x.pid, x.o); return `<span class="ic" title="${lb}"><img src="${d.img}" alt="" loading="lazy"><span>${x.n > 1 ? x.n + ' × ' : ''}${lb}</span></span>`; }).join('');
+}
+function renderCoffs() {
+  $('#coffs').innerHTML = COFFRETS.map(c => `<li class="coff${c.id === showId ? ' is-active' : ''}" data-id="${c.id}" tabindex="0">
+  <div><span class="coff__n">${t(c.id + '.n')}${c.rib ? `<em class="coff__r">${t(c.rib)}</em>` : ''}</span>
+    <span class="coff__ic">${chips(c.items)}</span><span class="coff__o">${t(c.id + '.o')}</span></div>
+  <div class="coff__p">${c.was ? `<s>${eur(c.was)}</s>` : ''}${eur(c.p)}</div>
+  <button class="add" aria-label="${t('box.addaria', { n: t(c.id + '.n') })}" data-cursor="${t('c.add')}"><svg class="ico"><use href="#i-plus"/></svg><span>${t('btn.add')}</span></button></li>`).join('');
+  $$('.coff').forEach(li => { li.addEventListener('pointerenter', () => showcase(li.dataset.id)); li.addEventListener('focus', () => showcase(li.dataset.id)); });
+  observeReveals();
 }
 $('#coffs').addEventListener('click', e => {
   const li = e.target.closest('.coff'); if (!li) return; const c = COFFRETS.find(x => x.id === li.dataset.id);
   const b = e.target.closest('.add');
   if (!b) return showcase(c.id);
-  addToCart({ key: c.id, name: c.name, opt: '', price: c.p, from: false, img: 'assets/card-coffret.webp' }); flash(b);
+  addToCart({ key: c.id, kind: 'cof', cid: c.id, price: c.p, from: false, img: 'assets/card-coffret.webp' }); flash(b);
 });
-$$('.coff').forEach(li => { li.addEventListener('pointerenter', () => showcase(li.dataset.id)); li.addEventListener('focus', () => showcase(li.dataset.id)); });
-function flash(btn) { const s = $('span', btn), t = s.textContent; btn.classList.add('done'); s.textContent = 'Ajouté'; setTimeout(() => { btn.classList.remove('done'); s.textContent = t; }, 1300); }
+function flash(btn) { const s = $('span', btn); btn.classList.add('done'); s.textContent = t('btn.added'); setTimeout(() => { btn.classList.remove('done'); s.textContent = t('btn.add'); }, 1300); }
+
+/* ---------------------------------------------------------------- coffret showcase: its own open box with its own items */
+const showBox = $('#bsShow'), showSlots = $('#bsShowSlots');
+let showId = null, showItems = [];
+function showHead() { if (!showId) return; const c = COFFRETS.find(x => x.id === showId); $('#bsShowName').textContent = t(c.id + '.n'); $('#bsShowOcc').textContent = t(c.id + '.o'); $('#bsShowP').textContent = eur(c.p); }
+function showcase(id) {
+  if (!showBox || id === showId) return; showId = id; const c = COFFRETS.find(x => x.id === id);
+  $$('.coff').forEach(li => li.classList.toggle('is-active', li.dataset.id === id)); showHead();
+  const old = showItems; showItems = [];
+  old.forEach(it => { it.el.style.transition = 'none'; it.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: 'forwards' }).finished.then(() => it.el.remove()); });
+  const list = c.items.map(([pid, o]) => ({ pid, o, el: makeEl(pid) })), pos = pack(list);
+  list.forEach((it, i) => {
+    it.el.style.opacity = 0; place(it, pos[i]); it.el.style.transition = 'none'; showSlots.appendChild(it.el); showItems.push(it);
+    if (reduce) { it.el.style.opacity = 1; return; }
+    it.el.animate([{ transform: 'translateX(-50%) translateY(-90px) rotate(-8deg)', opacity: 0 }, { transform: 'translateX(-50%) translateY(6px) rotate(1deg)', opacity: 1, offset: .65 }, { transform: 'translateX(-50%)', opacity: 1 }], { duration: 620, delay: 120 + i * 95, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'both' });
+    setTimeout(() => { it.el.style.opacity = 1; it.el.style.transition = ''; }, 120 + i * 95 + 700);
+  });
+}
 
 /* ---------------------------------------------------------------- cart */
-let cart = []; try { cart = JSON.parse(localStorage.getItem('mv-cart') || '[]'); } catch (e) { cart = []; }
+let cart = []; try { cart = JSON.parse(localStorage.getItem('mv-cart2') || '[]'); } catch (e) { cart = []; }
 const cartEl = $('#cart'), veil = $('#veil'), body = $('#cartBody'), foot = $('#cartFoot');
-const save = () => { try { localStorage.setItem('mv-cart', JSON.stringify(cart)); } catch (e) {} };
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('on'), 2200); }
+const save = () => { try { localStorage.setItem('mv-cart2', JSON.stringify(cart)); } catch (e) {} };
+function toast(msg) { const el = $('#toast'); el.textContent = msg; el.classList.add('on'); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 2200); }
+// cart lines keep ids, not text, so they re-translate when the language changes
+function partsText(parts, L) { const n = {}; parts.forEach(([pid, o]) => { const k = itemLabel(pid, o, L); n[k] = (n[k] || 0) + 1; }); return Object.entries(n).map(([k, c]) => (c > 1 ? c + ' × ' : '') + k).join(', '); }
+const cName = (i, L = lang) => i.kind === 'prod' ? itemName(i.pid, L) : i.kind === 'cof' ? tl(L, i.cid + '.n') : tl(L, 'custom.name');
+const cOpt = (i, L = lang) => i.kind === 'prod' ? (ITEMS[i.pid].opts.length > 1 ? optLabel(i.pid, i.oi, L) + (i.pid === 'metal' ? ' cm' : '') : '') : i.kind === 'custom' ? partsText(i.parts, L) : '';
 function addToCart(item) {
   const f = cart.find(i => i.key === item.key); if (f) f.qty++; else cart.push({ ...item, qty: 1 });
-  save(); renderCart(); const b = $('#openCart'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); toast(item.name + ' ajouté au panier');
+  save(); renderCart(); const b = $('#openCart'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); toast(t('toast.added', { n: cName(item) }));
 }
 function totals() {
   const sub = cart.reduce((s, i) => s + i.price * i.qty, 0), disc = $('#cFirst').checked ? Math.round(sub * .2 * 100) / 100 : 0;
@@ -279,24 +325,27 @@ function totals() {
 }
 function waMessage() {
   const { sub, disc, tot } = totals(), name = $('#cName').value.trim(), note = $('#cNote').value.trim();
-  const L = ['Bonjour Maison Volodymyr 🌿', '', 'Je souhaite commander :'];
-  cart.forEach(i => L.push(`• ${i.qty} × ${i.name}${i.opt ? ' (' + i.opt + ')' : ''} — ${i.from ? 'dès ' : ''}${eur(i.price * i.qty)}`));
-  L.push('', `Sous-total : ${eur(sub)}`);
-  if (disc) L.push(`Carte de visite Maison Volodymyr (−20 % 1ère commande) : −${eur(disc)}`, 'Je présente la carte / son QR code.');
-  L.push(`Total estimé : ${eur(tot)}`);
-  if (name) L.push('', `Prénom : ${name}`);
-  if (note) L.push(`Précisions : ${note}`);
-  L.push('', 'Je vous envoie mes photos dans ce chat 📸');
-  return L.join('\n');
+  const L = [t('wa.hello'), '', t('wa.order')];
+  cart.forEach(i => {
+    const o = cOpt(i), fr = lang === 'fr' ? '' : ` [${cName(i, 'fr')}${cOpt(i, 'fr') ? ', ' + cOpt(i, 'fr') : ''}]`, price = i.from ? t('from', { n: eur(i.price * i.qty) }) : eur(i.price * i.qty);
+    L.push(`• ${i.qty} × ${cName(i)}${o ? ' (' + o + ')' : ''}${fr} — ${price}`);
+  });
+  L.push('', t('wa.sub', { p: eur(sub) }));
+  if (disc) L.push(t('wa.disc', { p: eur(disc) }), t('wa.card'));
+  L.push(t('wa.total', { p: eur(tot) }));
+  if (name) L.push('', t('wa.name', { v: name }));
+  if (note) L.push(t('wa.note', { v: note }));
+  L.push('', t('wa.photos'));
+  return L.join('\n').replace(/[\u2066\u2069\u200E]/g, ''); // no invisible bidi controls in the outgoing text
 }
 function renderCart() {
   const n = cart.reduce((s, i) => s + i.qty, 0);
   $('#cartCount').textContent = n; $('#openCart').classList.toggle('has-items', n > 0);
   foot.classList.toggle('is-empty', !n);
-  if (!n) { body.innerHTML = `<div class="empty"><svg class="ico"><use href="#i-bag"/></svg><p>Votre panier est vide.</p><a class="btn btn--ghost" href="#boutique" data-closecart>Voir la boutique</a></div>`; return; }
-  body.innerHTML = cart.map((i, idx) => `<div class="line"><img src="${i.img}" alt=""><div><p class="line__n">${i.name}</p>${i.opt ? `<p class="line__o">${i.opt}</p>` : ''}
-    <div class="qty"><button data-a="dec" data-i="${idx}" aria-label="Retirer un"><svg class="ico"><use href="#i-minus"/></svg></button><span>${i.qty}</span><button data-a="inc" data-i="${idx}" aria-label="Ajouter un"><svg class="ico"><use href="#i-plus"/></svg></button></div></div>
-    <div class="line__r"><span class="line__p">${i.from ? '<small>dès </small>' : ''}${eur(i.price * i.qty)}</span><button class="line__x" data-a="del" data-i="${idx}">Supprimer</button></div></div>`).join('');
+  if (!n) { body.innerHTML = `<div class="empty"><svg class="ico"><use href="#i-bag"/></svg><p>${t('cart.empty')}</p><a class="btn btn--ghost" href="#boutique" data-closecart>${t('cart.shop')}</a></div>`; return; }
+  body.innerHTML = cart.map((i, idx) => { const o = cOpt(i); return `<div class="line"><img src="${i.img}" alt=""><div><p class="line__n">${cName(i)}</p>${o ? `<p class="line__o">${o}</p>` : ''}
+    <div class="qty"><button data-a="dec" data-i="${idx}" aria-label="${t('qty.dec')}"><svg class="ico"><use href="#i-minus"/></svg></button><span>${i.qty}</span><button data-a="inc" data-i="${idx}" aria-label="${t('qty.inc')}"><svg class="ico"><use href="#i-plus"/></svg></button></div></div>
+    <div class="line__r"><span class="line__p">${i.from ? `<small>${t('from', { n: '' }).trim()} </small>` : ''}${eur(i.price * i.qty)}</span><button class="line__x" data-a="del" data-i="${idx}">${t('cart.rm')}</button></div></div>`; }).join('');
   const { sub, disc, tot } = totals();
   $('#sSub').textContent = eur(sub); $('#sDiscRow').hidden = !disc; $('#sDisc').textContent = '−' + eur(disc); $('#sTot').textContent = eur(tot);
   $('#sendWa').href = `https://wa.me/${WA}?text=${encodeURIComponent(waMessage())}`;
@@ -314,46 +363,29 @@ function closeCart() { cartEl.classList.remove('on'); veil.classList.remove('on'
 $('#openCart').addEventListener('click', openCart); $('#closeCart').addEventListener('click', closeCart); veil.addEventListener('click', closeCart);
 addEventListener('keydown', e => { if (e.key === 'Escape' && cartEl.classList.contains('on')) closeCart(); });
 
-/* ---------------------------------------------------------------- coffret showcase: its own open box with its own items */
-const showBox = $('#bsShow'), showSlots = $('#bsShowSlots');
-let showId = null, showItems = [];
-function showcase(id) {
-  if (!showBox || id === showId) return; showId = id; const c = COFFRETS.find(x => x.id === id);
-  $$('.coff').forEach(li => li.classList.toggle('is-active', li.dataset.id === id));
-  $('#bsShowName').textContent = c.name; $('#bsShowOcc').textContent = c.occ; $('#bsShowP').textContent = eur(c.p);
-  const old = showItems; showItems = [];
-  old.forEach(it => { it.el.style.transition = 'none'; it.el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: 'forwards' }).finished.then(() => it.el.remove()); });
-  const list = c.items.map(([pid, o]) => ({ pid, o, el: makeEl(pid) })), pos = pack(list);
-  list.forEach((it, i) => {
-    it.el.style.opacity = 0; place(it, pos[i]); it.el.style.transition = 'none'; showSlots.appendChild(it.el); showItems.push(it);
-    if (reduce) { it.el.style.opacity = 1; return; }
-    it.el.animate([{ transform: 'translateX(-50%) translateY(-90px) rotate(-8deg)', opacity: 0 }, { transform: 'translateX(-50%) translateY(6px) rotate(1deg)', opacity: 1, offset: .65 }, { transform: 'translateX(-50%)', opacity: 1 }], { duration: 620, delay: 120 + i * 95, easing: 'cubic-bezier(.3,.7,.3,1)', fill: 'both' });
-    setTimeout(() => { it.el.style.opacity = 1; it.el.style.transition = ''; }, 120 + i * 95 + 700);
-  });
-}
-if (showBox) showcase('c-fam');
-
 /* ---------------------------------------------------------------- gift builder ("Composez votre coffret") */
 const BOX_FEE = 4; // black box + gold ribbon: derived from the set prices (e.g. Coffret Famille 28 € = 10 + 6 + 5 + 3 + 4)
 const MAXITEMS = 6;
 const PICK = ['tasse', 'metal', 'aimant', 'cles', 'pendant'];
 const bs = $('#bs'), bsSlots = $('#bsSlots'), bsLid = $('#bsLid'), bsStatus = $('#bsStatus'), pickEl = $('#pick'), bClose = $('#bClose'), bReset = $('#bReset');
-let bItems = [], bClosed = false, bBusy = false, uid = 0; const bSel = {};
-pickEl.innerHTML = PICK.map(id => { const p = ITEMS[id]; bSel[id] = 0; return `<li class="pk" data-id="${id}">
+let bItems = [], bClosed = false, bBusy = false, uid = 0; const bSel = {}; PICK.forEach(id => bSel[id] = 0);
+function renderPick() {
+  pickEl.innerHTML = PICK.map(id => { const p = ITEMS[id], name = itemName(id); return `<li class="pk" data-id="${id}">
   <img class="pk__img" src="${p.img}" alt="" width="56" height="56" loading="lazy">
-  <div class="pk__m"><span class="pk__n">${p.name}</span>
-    ${p.opts.length > 1 ? `<span class="pk__o" role="radiogroup" aria-label="${p.name}">${p.opts.map((o, i) => `<button class="pk__opt${i ? '' : ' is-on'}" role="radio" aria-checked="${i === 0}" data-i="${i}">${o.l}</button>`).join('')}</span>` : `<span class="pk__sub">${p.opts[0].l}</span>`}</div>
-  <span class="pk__p">${eur(p.opts[0].p)}</span>
-  <div class="qty pk__q"><button data-a="rm" aria-label="Retirer ${p.name}"><svg class="ico"><use href="#i-minus"/></svg></button><span>0</span><button data-a="add" aria-label="Ajouter ${p.name}"><svg class="ico"><use href="#i-plus"/></svg></button></div></li>`; }).join('');
+  <div class="pk__m"><span class="pk__n">${name}</span>
+    ${p.opts.length > 1 ? `<span class="pk__o" role="radiogroup" aria-label="${name}">${p.opts.map((o, i) => `<button class="pk__opt${i === bSel[id] ? ' is-on' : ''}" role="radio" aria-checked="${i === bSel[id]}" data-i="${i}">${optLabel(id, i)}</button>`).join('')}</span>` : `<span class="pk__sub">${optLabel(id, 0)}</span>`}</div>
+  <span class="pk__p">${eur(p.opts[bSel[id]].p)}</span>
+  <div class="qty pk__q"><button data-a="rm" aria-label="${t('a.rm', { n: name })}"><svg class="ico"><use href="#i-minus"/></svg></button><span>0</span><button data-a="add" aria-label="${t('a.add', { n: name })}"><svg class="ico"><use href="#i-plus"/></svg></button></div></li>`; }).join('');
+}
 function layout() { const pos = pack(bItems); bItems.forEach((it, i) => place(it, pos[i])); }
-function bTotals() { const sum = bItems.reduce((t, i) => t + ITEMS[i.pid].opts[i.o].p, 0); return { sum, tot: sum + (bItems.length ? BOX_FEE : 0) }; }
+function bTotals() { const sum = bItems.reduce((s, i) => s + ITEMS[i.pid].opts[i.o].p, 0); return { sum, tot: sum + (bItems.length ? BOX_FEE : 0) }; }
 function bRefresh() {
   const { sum, tot } = bTotals(); $('#bCount').textContent = bItems.length; $('#bItems').textContent = eur(sum); $('#bTot').textContent = eur(tot);
   $$('.pk', pickEl).forEach(li => { const n = bItems.filter(i => i.pid === li.dataset.id).length; $('.qty span', li).textContent = n; $('[data-a="rm"]', li).disabled = !n || bClosed || bBusy; $('[data-a="add"]', li).disabled = bClosed || bBusy || bItems.length >= MAXITEMS; li.classList.toggle('has', n > 0); });
   bClose.disabled = !bItems.length || bBusy;
   const full = bItems.length >= MAXITEMS;
-  bsStatus.textContent = bClosed ? 'Coffret fermé, prêt à offrir' : !bItems.length ? 'Ajoutez un premier article' : full ? 'Coffret plein : fermez-le' : `${bItems.length} article${bItems.length > 1 ? 's' : ''} dans le coffret`;
-  const t = $('.btn__t', bClose); t.textContent = bClosed ? `Ajouter au panier · ${eur(tot)}` : 'Fermer le coffret';
+  bsStatus.textContent = bClosed ? t('st.closed') : !bItems.length ? t('st.empty') : full ? t('st.full') : t('st.n', { n: bItems.length });
+  $('.btn__t', bClose).textContent = bClosed ? t('b.add', { p: eur(tot) }) : t('b.close');
   $('use', $('.ico', bClose)).setAttribute('href', bClosed ? '#i-bag' : '#i-gift'); bReset.hidden = !bItems.length;
 }
 function flyIn(it, srcImg) {
@@ -407,12 +439,36 @@ pickEl.addEventListener('click', e => {
 });
 bClose.addEventListener('click', () => {
   if (!bClosed) return bCloseBox();
-  const { tot } = bTotals(), names = {}; bItems.forEach(i => { const k = itemLabel(i.pid, i.o); names[k] = (names[k] || 0) + 1; });
-  const list = Object.entries(names).map(([k, n]) => (n > 1 ? n + ' × ' : '') + k).join(', ');
-  addToCart({ key: 'custom:' + list, name: 'Coffret sur mesure', opt: list, price: tot, from: false, img: 'assets/card-coffret.webp' });
+  const { tot } = bTotals(), parts = bItems.map(i => [i.pid, i.o]);
+  addToCart({ key: 'x:' + parts.map(p => p.join('.')).sort().join(','), kind: 'custom', parts, price: tot, from: false, img: 'assets/card-coffret.webp' });
   bOpenBox(true);
 });
 bReset.addEventListener('click', () => { if (!bBusy) { if (bClosed) bOpenBox(true); else { bItems.forEach(i => i.el.remove()); bItems = []; bRefresh(); } } });
-bRefresh();
-renderCart(); observeReveals();
+
+/* ---------------------------------------------------------------- language switcher */
+const langBox = $('#lang'), langBtn = $('#langBtn'), langList = $('#langList');
+function buildLang() {
+  langList.innerHTML = LANGS.map(l => `<li role="option" aria-selected="${l.code === lang}"><button data-l="${l.code}" lang="${l.code}" dir="${l.dir}"><b>${l.short}</b><span>${l.name}</span></button></li>`).join('');
+  $('#langCur').textContent = L0().short;
+}
+const langOpen = v => { langBox.classList.toggle('open', v); langBtn.setAttribute('aria-expanded', v); };
+langBtn.addEventListener('click', e => { e.stopPropagation(); langOpen(!langBox.classList.contains('open')); });
+langList.addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (b) { setLang(b.dataset.l); langOpen(false); langBtn.focus(); } });
+document.addEventListener('click', e => { if (!e.target.closest('#lang')) langOpen(false); });
+addEventListener('keydown', e => { if (e.key === 'Escape') langOpen(false); });
+function setLang(code) {
+  if (!LANGS.some(l => l.code === code)) code = 'fr';
+  lang = code; const L = L0();
+  const root = document.documentElement; root.lang = code; root.dir = L.dir;
+  try { localStorage.setItem('mv-lang', code); } catch (e) {}
+  document.title = t('meta.title');
+  [['meta[name="description"]', 'meta.desc'], ['meta[property="og:title"]', 'meta.title'], ['meta[property="og:description"]', 'meta.desc']].forEach(([s, k]) => { const m = $(s); if (m) m.setAttribute('content', t(k)); });
+  applyStatic(); renderMarquee(); renderGrid(); renderCoffs(); showHead(); renderPick(); bRefresh(); renderCart(); updateHit(); buildLang();
+}
+// French on entry; a language chosen earlier (or ?lang=xx) wins
+let initial = 'fr';
+try { const q = new URLSearchParams(location.search).get('lang'), s = localStorage.getItem('mv-lang'); initial = q || s || 'fr'; } catch (e) {}
+setLang(initial);
+showcase('c-fam');
+observeReveals();
 })();

@@ -7,7 +7,7 @@ const [pre, w, h, ys] = process.argv.slice(2);
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
 const pg = await b.newPage({ viewport: { width: +w, height: +h }, hasTouch: +w < 700, isMobile: +w < 700 });
 const errs = []; pg.on('console', m => { if (m.type() === 'error' && !/fonts\.g|ERR_|favicon|net::/.test(m.text())) errs.push(m.text()); }); pg.on('pageerror', e => errs.push('PAGEERR ' + e.message));
-await pg.goto(`http://localhost:${srv.address().port}/`); await pg.waitForTimeout(2500);
+await pg.goto(`http://localhost:${srv.address().port}/${process.env.Q||''}`); await pg.waitForTimeout(2500);
 const total = await pg.evaluate(() => document.documentElement.scrollHeight); console.log('page height', total);
 for (const y of ys.split(',')) { 
   // scroll gradually so IntersectionObservers fire
