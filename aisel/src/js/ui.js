@@ -35,27 +35,28 @@ A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth /
 const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
 const ROOMOF = { books: 'lib', potion: 'lab', quotes: 'cit' }, MOOD = { books: 'books', potion: 'potion', quotes: 'quotes' };
 const OBJ = { books: 'lib', quotes: 'quotes', potion: 'lab', sky: 'sky', path: 'path', bag: 'bag' };
-A.tab = 'room'; let moving = false;
+A.tab = 'room'; let moving = false, lockT = 0;
+const busy = (on = true) => { moving = on; clearTimeout(lockT); if (on) lockT = setTimeout(() => { moving = false; }, 3600); };      // a transition can never leave the room stuck
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 const curtain = A.$('#curtain');
 function enterRoom(tab, obj) {
   const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
   if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
-  moving = true; A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
-  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); };
+  busy(); A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
+  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
   A.snd.whoosh(1);
   if (prev === 'room') { A.scene.focus(obj || OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
 function exitRoom() {
-  if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide();
-  setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); }, 620);
+  if (moving) return; busy(); const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide();
+  setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); }, 620);
 }
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
   if (ROOMOF[tab]) return enterRoom(tab, opt.obj);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
-  if (moving) return; moving = true;
+  if (moving) return; busy();
   const fromEl = from !== 'room' && A.$('#v-' + from), mod = A.mods[tab];
   A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('panel'); A.snd.setMood(tab); A.fab && A.fab.hide(); mod && mod.beforeShow && mod.beforeShow();
   const reveal = () => {
@@ -69,16 +70,16 @@ A.go = (tab, opt = {}) => {
       A.fx.fireflies(x, y, 14, 150);
     }
     if (fromEl) { fromEl.style.zIndex = 1; setTimeout(() => { fromEl.classList.remove('active'); }, 900); }
-    setTimeout(() => { mod && mod.show && mod.show(); moving = false; }, 240);
+    setTimeout(() => { mod && mod.show && mod.show(); busy(false); }, 240);
   };
   if (fromEl || opt.instant) reveal(); else A.scene.focus(opt.obj || OBJ[tab]).then(reveal);
 };
 A.leave = () => {
   if (A.reader && A.reader.isOpen()) return A.reader.close();
   if (ROOMOF[A.tab]) return exitRoom();
-  if (A.tab === 'room' || moving) return; moving = true; const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
+  if (A.tab === 'room' || moving) return; busy(); const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
   const [x, y] = A.scene.focusPoint(), R = irisR(x, y); A.snd.whoosh(-1);
-  const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); moving = false; };
+  const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); busy(false); };
   A.scene.lock(true); document.body.classList.remove('panel');
   if (A.reduceMotion) return done();
   el.animate([{ clipPath: `circle(${R}px at ${x}px ${y}px)`, opacity: 1 }, { clipPath: `circle(0px at ${x}px ${y}px)`, opacity: .6 }], { duration: 720, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'forwards' }).finished.then(done);

@@ -1,15 +1,17 @@
+<div id="stageBg" aria-hidden="true"></div>
 <div id="stage" aria-label="Комната с книгой на столе">
   <div id="room" data-room="main">
-    <img id="roomImg" src="img/hub-p.webp" alt="" draggable="false">
-    <div id="dim" class="r-main"></div>
-    <div id="shade" class="r-main"></div>
+    <img class="plate" id="pl-main" alt="" draggable="false" decoding="async">
+    <img class="plate" id="pl-lab" alt="" draggable="false" decoding="async">
+    <img class="plate" id="pl-lib" alt="" draggable="false" decoding="async">
+    <img class="plate" id="pl-cit" alt="" draggable="false" decoding="async">
+    <div id="pageTxt" class="r-main" aria-hidden="true"></div>
     <div id="hsFx" class="r-main" aria-hidden="true"></div>
     <canvas id="fireCv" class="r-main" width="720" height="820" aria-hidden="true"></canvas>
     <canvas id="fireGl" class="r-main" aria-hidden="true"></canvas>
-    <div id="glow" class="r-main"></div>
     <div id="labels" class="r-main" aria-hidden="true"></div>
     <div id="labLayer" class="r-lab"></div>
-    <div id="libLayer" class="r-lib"></div>
+    <div id="libLayer" class="r-lib"><canvas id="fireGlLib" aria-hidden="true"></canvas></div>
   </div>
 </div>
 <canvas id="scene" aria-hidden="true"></canvas>
