@@ -3201,7 +3201,7 @@ A.introInit = () => A.intro = (() => {
     const url = i => `video/seq/f${String(i + 1).padStart(3, '0')}.webp`; let next = 0, ok = 0;
     const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; im.onerror = () => { pull(); }; im.src = url(i); };
     for (let k = 0; k < 6; k++) pull();
-    audio = new Audio('video/intro.m4a'); audio.preload = 'auto';
+    audio = new Audio('video/intro.mp3'); audio.preload = 'auto';
     tFail = setTimeout(() => { if (!tStart) finish(); }, 6000);                                         // not even the stills arrive: walk in anyway
   }
   function tick() {
