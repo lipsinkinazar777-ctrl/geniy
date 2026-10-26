@@ -60,12 +60,12 @@ A.casket = (() => {
 
   async function enter() {
     build(); if (open) return; open = true; busy = true; wrote = false; y = yt = 0; yv = 0; el.hidden = false; void el.offsetWidth; el.classList.add('on'); hintEl.classList.remove('on');
-    const L = A.scene.layout(), [sx, sy] = A.scene.plateToScreen(L.cit.slot[0], L.cit.slot[1]); fill();
-    const r = scroll.getBoundingClientRect(), dx = sx - (r.left + r.width / 2), dy = sy - (r.top + r.height / 2);
+    fill();
+    const r = scroll.getBoundingClientRect(), mid = r.top + r.height / 2, H = innerHeight;
     A.snd.page && A.snd.page(); A.snd.quill && A.snd.quill();
-    const a = scroll.animate([{ transform: `translate(${dx}px,${dy}px) scale(.22) rotate(-9deg)`, opacity: 0, filter: 'brightness(.5)' }, { opacity: 1, offset: .2 }, { transform: `translate(${dx * .3}px,${dy * .15 - 30}px) scale(.7) rotate(-3deg)`, opacity: 1, filter: 'brightness(.85)', offset: .55 }, { transform: 'none', opacity: 1, filter: 'none' }], { duration: 1250, easing: 'cubic-bezier(.25,.9,.25,1)', fill: 'backwards' });
+    const a = scroll.animate([{ top: mid - 34 + 'px', bottom: H - mid - 34 + 'px', opacity: 0, filter: 'brightness(.6)' }, { opacity: 1, offset: .25 }, { top: r.top + 'px', bottom: H - r.bottom + 'px', opacity: 1, filter: 'none' }], { duration: 1150, easing: 'cubic-bezier(.25,.9,.25,1)' });   // the scroll unrolls from its middle, right where it will stay
     await a.finished; busy = false; kick();
-    hintEl.textContent = list().length ? 'Листай свиток пальцем. Нажми на цитату, чтобы поделиться.' : ''; hintEl.classList.add('on');
+    if (list().length && !A.state.arcTip) { A.state.arcTip = true; A.save(); A.toast('Листай свиток пальцем. Нажми на цитату, чтобы поделиться.', 4200); }
     if (list().length && !wrote && open) { wrote = true; await wait(500); const first = A.$('.sq .sq__t', listEl); if (first && open) { try { await A.quill.write(first, { box: scroll, cps: Math.min(34, Math.max(18, first.textContent.length / 5)) }); } catch (e) {} } }
   }
   function hide() { if (!el) return; open = false; busy = false; el.classList.remove('on'); A.quill.hide(); hintEl.classList.remove('on'); cntEl.textContent = ''; setTimeout(() => { if (!open) el.hidden = true; }, 500); }

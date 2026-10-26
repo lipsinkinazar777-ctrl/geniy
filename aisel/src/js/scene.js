@@ -71,6 +71,7 @@ A.scene = (() => {
       if (L > .01) { const [fx, fy] = toScreen(FIRE.x, FIRE.y - 40), R = Math.max(VW, VH) * .75 * Math.min(1.6, s / s0 * .7 + .5), gr = g.createRadialGradient(fx, fy, 0, fx, fy, R); gr.addColorStop(0, `rgba(255,150,60,${(.2 * L * f).toFixed(3)})`); gr.addColorStop(.45, `rgba(255,110,40,${(.07 * L * f).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,100,30,0)'); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(0, 0, VW, VH); g.globalCompositeOperation = 'source-over'; }
     }
     if (roomName === 'lib') libLight(dt, vis);
+    else if (roomName === 'lab' && A.mods.potion && A.mods.potion.light) { const Lg = A.mods.potion.light(); if (Lg && Lg.k > .02) { const [sx, sy] = toScreen(Lg.x, Lg.y - 40), R = Math.max(VW, VH) * .9, gr = g.createRadialGradient(sx, sy, 0, sx, sy, R), fl = .85 + .15 * Math.sin(T * 5.3 + 1) + .06 * Math.sin(T * 12.1), rg = Lg.rgb.join(','); g.save(); g.globalCompositeOperation = 'lighter'; gr.addColorStop(0, `rgba(${rg},${(.34 * Lg.k * fl * vis).toFixed(3)})`); gr.addColorStop(.4, `rgba(${rg},${(.12 * Lg.k * fl * vis).toFixed(3)})`); gr.addColorStop(1, `rgba(${rg},0)`); g.fillStyle = gr; g.fillRect(0, 0, VW, VH); g.restore(); } }
     g.save(); g.globalCompositeOperation = 'lighter';
     for (const p of dust) {
       p.x += (p.vx + Math.sin(T * p.sp + p.ph) * 5) * dt; p.y += p.vy * dt;
@@ -219,7 +220,7 @@ A.scene = (() => {
     avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
     look(u, v, z = 1) { cancelSweep(); cam.x.t = u; cam.y.t = v; cam.z.t = z; clampT(); },
-    freeze(v) { frozen = v; }, lock(v) { locked = v; }, parallax: () => ({ x: gx, y: gy }), screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
+    freeze(v) { frozen = v; }, push(z) { cam.z.t = z; }, lock(v) { locked = v; }, parallax: () => ({ x: gx, y: gy }), screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
   return api;
 })();

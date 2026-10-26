@@ -3,15 +3,13 @@
 import pathlib, shutil, json, hashlib, base64
 root = pathlib.Path(__file__).resolve().parent.parent; src = root/'src'; out = root/'dist'
 css = '\n'.join((src/'css'/f).read_text() for f in sorted(p.name for p in (src/'css').glob('*.css')))
-order = ['store','layout','bookart','texts','import','audio','fx','scene','fire','ui','map','hands','library','bookview','quill','books','casket','quotes','sky','potion','goal','bag','intro','app']
+order = ['store','layout','bookart','texts','import','audio','fx','scene','fire','ui','map','hands','library','bookview','quill','quoteslip','books','casket','quotes','sky','potion','goal','bag','intro','app']
 js = '\n'.join((src/'js'/f'{n}.js').read_text() for n in order if (src/'js'/f'{n}.js').exists())
 story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').replace('${','\\${')
 js = js.replace('/*STORY*/', story)
 shell = (src/'shell.html').read_text(); body = (src/'body.html').read_text()
 inner = shell.replace('/*CSS*/', css).replace('<!--BODY-->', body).replace('/*JS*/', js)
-art = inner.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('<source src="video/intro.mp4" type="video/mp4">','').replace('<source src="video/intro.webm" type="video/webm">','')
-# the artifact host may not answer byte-range requests, which iOS needs for <video>: the film travels inside the page and is played from a blob URL
-art = art.replace('<script>', '<script>window.__INTRO="data:video/mp4;base64,' + base64.b64encode((src/'video'/'intro.mp4').read_bytes()).decode() + '";</script>\n<script>', 1)
+art = inner.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('<source src="video/intro.webm" type="video/webm">','')
 (root/'artifact.html').write_text(art)
 head, rest = inner.split('<style>', 1)
 page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
@@ -21,7 +19,7 @@ for f in (src/'img').iterdir():
     if f.name.startswith('bg-'): continue          # old forest plates are not used by the room
     shutil.copy(f, out/'img'/f.name)
 for f in (src/'lib').iterdir(): shutil.copy(f, out/'lib'/f.name)
-for f in (src/'video').iterdir(): shutil.copy(f, out/'video'/f.name)
+shutil.copytree(src/'video', out/'video', dirs_exist_ok=True)
 (out/'index.html').write_text(page)
 manifest = {
   "name": "Уголок принцессы Айсель", "short_name": "Уголок Айсель", "description": "Лесной каталог книг: тропа, цитаты, звёзды и зельеварня.",
@@ -33,8 +31,8 @@ manifest = {
     {"src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]
 }
 (out/'manifest.webmanifest').write_text(json.dumps(manifest, ensure_ascii=False, indent=1))
-files = ['./', 'index.html', 'manifest.webmanifest'] + ['img/' + f.name for f in sorted((out/'img').iterdir())] + ['video/' + f.name for f in sorted((out/'video').iterdir()) if f.suffix == '.mp4' or f.suffix == '.jpg']   # lib/ (pdf.js, JSZip) is cached on first use
-ver = hashlib.md5((page + ''.join(f.name + str(f.stat().st_size) for f in list((out/'img').iterdir()) + list((out/'video').iterdir()))).encode()).hexdigest()[:8]
+files = ['./', 'index.html', 'manifest.webmanifest'] + ['img/' + f.name for f in sorted((out/'img').iterdir())] + ['video/' + f.name for f in sorted((out/'video').iterdir()) if f.is_file() and f.suffix in ('.mp4', '.jpg')]   # lib/ (pdf.js, JSZip) is cached on first use
+ver = hashlib.md5((page + ''.join(f.name + str(f.stat().st_size) for f in list((out/'img').iterdir()) + [f for f in (out/'video').iterdir() if f.is_file()])).encode()).hexdigest()[:8]
 sw = f'''const V = 'aisel-{ver}', FILES = {json.dumps(files)};
 self.addEventListener('install', e => {{ e.waitUntil(caches.open(V).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); }});
 self.addEventListener('activate', e => {{ e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('aisel-') && k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); }});

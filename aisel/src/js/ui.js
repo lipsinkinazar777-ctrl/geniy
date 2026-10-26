@@ -134,7 +134,7 @@ A.applyPortrait = () => { const p = A.state.settings.portrait || (A._av = A._av 
 
 /* ---------------------------------------------------------------- back control: the glass chevron, or swipe in from the left edge */
 A.$('#back').addEventListener('click', () => { A.snd.tap(); A.leave(); });
-(() => { let sx = null, sy = 0; addEventListener('pointerdown', e => { sx = e.clientX < 28 && A.tab !== 'room' ? e.clientX : null; sy = e.clientY; }, { passive: true });
+(() => { let sx = null, sy = 0; addEventListener('pointerdown', e => { sx = e.clientX < 22 && A.tab !== 'room' && !ROOMOF[A.tab] && !(A.bookview && A.bookview.isOpen()) ? e.clientX : null; sy = e.clientY; }, { passive: true });   // the rooms have their own gestures and a back button
   addEventListener('pointermove', e => { if (sx != null && e.clientX - sx > 70 && Math.abs(e.clientY - sy) < 60) { sx = null; A.leave(); } }, { passive: true }); addEventListener('pointerup', () => sx = null); })();
 addEventListener('keydown', e => { if (e.key === 'Escape') A.leave(); });
 A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 100, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };

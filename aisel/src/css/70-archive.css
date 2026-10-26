@@ -3,7 +3,7 @@
 #cask.on{visibility:visible;pointer-events:auto}
 .cask__veil{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 52%,rgba(8,4,2,0),rgba(0,0,0,.4));opacity:0;transition:opacity .9s var(--ease)}
 #cask.on .cask__veil{opacity:1}
-.cask__scroll{position:absolute;left:50%;top:calc(var(--sat) + 62px);bottom:calc(var(--sab) + 84px);width:min(80vw,440px);transform:translateX(-50%);display:flex;flex-direction:column;filter:drop-shadow(0 30px 34px rgba(0,0,0,.65)) drop-shadow(0 0 60px rgba(255,170,70,.12))}
+.cask__scroll{position:absolute;top:calc(var(--sat) + 62px);bottom:calc(var(--sab) + 84px);width:min(80vw,440px);margin:0 auto;right:0;left:0;display:flex;flex-direction:column;filter:drop-shadow(0 30px 34px rgba(0,0,0,.65)) drop-shadow(0 0 60px rgba(255,170,70,.12))}
 .sc__rod{position:relative;flex:none;height:26px;margin:0 -16px;border-radius:13px;z-index:3;background:linear-gradient(180deg,#1d0e04,#6b3f1b 24%,#c48a4a 48%,#8a5427 66%,#2a1507);box-shadow:inset 0 1px 0 rgba(255,220,160,.35),0 6px 14px rgba(0,0,0,.5)}
 .sc__rod i{position:absolute;top:-5px;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff0bf,#d9a63a 42%,#7a5412 78%,#3a2606);box-shadow:0 4px 10px rgba(0,0,0,.55),inset 0 -3px 5px rgba(60,30,0,.5)}
 .sc__rod i:first-child{left:-14px}.sc__rod i:last-child{right:-14px}

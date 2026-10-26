@@ -10,7 +10,7 @@ A.hands = (() => {
   class Sp { constructor(x, k = 110, c = 17) { this.x = x; this.t = x; this.v = 0; this.k = k; this.c = c; }
     step(dt) { const n = Math.ceil(dt / .008), h = dt / n; for (let i = 0; i < n; i++) { this.v += (this.k * (this.t - this.x) - this.c * this.v) * h; this.x += this.v * h; } } }
   const sides = {}, L = { k: 1, vw: 0, vh: 0 };
-  let on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
+  let carryFn = null, carrySide = 'R', propEl = null, on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
 
   function layer(side, kind) {
     const a = ART[POSE[side][kind]], im = new Image(); im.src = `img/${POSE[side][kind]}.webp`; im.className = 'hd__img'; im.draggable = false; im.decoding = 'async';
@@ -55,6 +55,9 @@ A.hands = (() => {
         reachTo('L', [lx, ey]); reachTo('R', [rx, ey]);
         placeLayer('L', 'grasp', [lx, ey], ART['pose-2'].edge); placeLayer('R', 'grasp', [rx, ey], ART['pose-3'].edge);
       } }
+    if (mode === 'carry' && carryFn) { const c = carryFn(); if (c) { const l = sides[carrySide].grasp, a = ART[POSE[carrySide].grasp], sc0 = L.k * gk;
+        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0; l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
+        if (propEl && c.prop) propEl.style.transform = `translate3d(${c.prop.x.toFixed(1)}px,${c.prop.y.toFixed(1)}px,0) rotate(${(c.prop.r || 0).toFixed(2)}deg) scale(${(c.prop.s || 1).toFixed(3)})`; if (propEl && c.clip != null) propEl.style.clipPath = c.clip; } }
     if (mode === 'pinch' && pinchFn) { const p = pinchFn(); if (p) { const side = p.side; placeLayer(side, 'page', [p.x, p.y], ART[POSE[side].page].tip); reachTo(side, [p.x, p.y], .85); } }
     ['L', 'R'].forEach(side => {
       const o = sides[side], breath = mode === 'idle' || (mode === 'hover' && hoverSide !== side);
@@ -93,6 +96,12 @@ A.hands = (() => {
       if (l.o.x < .05) { placeLayer(p.side, 'page', [p.x, p.y], ART[POSE[p.side].page].tip); l.x.x = l.x.t + (p.side === 'R' ? 40 : -40); l.y.x = l.y.t + 150; l.x.v = l.y.v = 0; }
     },
     unpinch() { const p = pinchFn; pinchFn = null; mode = 'away'; ['L', 'R'].forEach(s => { const l = sides[s].page; setO(s, 'page', 0); l.y.t += 240; l.x.t += s === 'R' ? 50 : -50; }); },
+    carry(side, fn, prop) {
+      carryFn = fn; carrySide = side; propEl = prop || null; mode = 'carry'; follow = pinchFn = null; ['L', 'R'].forEach(sd => { setO(sd, 'reach', 0); setO(sd, 'page', 0); setO(sd, 'grasp', sd === side ? 1 : 0); });
+      const l = sides[side].grasp, a = ART[POSE[side].grasp], sc0 = L.k * gk; l.img.style.transformOrigin = `${a.edge[0] * sc0}px ${a.edge[1] * sc0}px`; sides[side].lift.x = sides[side].lift.t = 0;
+      if (propEl) { propEl.style.cssText += ';position:absolute;left:0;top:0;'; sides[side].el.insertBefore(propEl, sides[side].el.firstChild); } loop();
+    },
+    uncarry() { const side = carrySide; carryFn = null; const l = sides[side].grasp; l.img.style.transformOrigin = '0 0'; setO(side, 'grasp', 0); if (propEl) { propEl.remove(); propEl = null; } mode = 'away'; },
     parallax(x) { parXT = x; },
     get active() { return on; }, get mode() { return mode; }
   };

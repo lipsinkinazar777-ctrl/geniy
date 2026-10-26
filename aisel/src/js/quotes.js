@@ -1,4 +1,5 @@
 /* ============================================================ "Цитаты": postcards on aged paper, with stickers, photos and tags */
+A.addQuote = q => { A.state.quotes.unshift(q); const key = 'q' + A.dayKey(); A.state.bonusDone[key] = (A.state.bonusDone[key] || 0) + 1; if (A.state.bonusDone[key] <= 3) A.addAcorns(1); A.save(); A.mods.quotes && A.mods.quotes.refresh && A.mods.quotes.refresh(); };
 (() => {
   let el, book = 'all';
   const PAPER = { parch: 'Пергамент', kraft: 'Крафт', night: 'Ночь' };

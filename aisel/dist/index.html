@@ -98,6 +98,10 @@ body.warm #vignette{background:radial-gradient(120% 90% at 50% 45%,transparent 5
 #intro.skippable .in__skip{opacity:1;pointer-events:auto}
 #intro.title .in__skip{opacity:0;pointer-events:none}
 
+.in__seq{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);display:none}
+#intro.seq .in__seq{display:block}#intro.seq.play .in__seq{opacity:1}#intro.seq #introV{display:none}
+@media (orientation:landscape){.in__seq{right:auto;left:50%;width:auto;aspect-ratio:9/16;transform:translateX(-50%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}}
+
 /* ---------------- app shell */
 #app{position:fixed;inset:0;z-index:10}
 .view{position:absolute;inset:0;padding:calc(var(--sat) + 78px) 0 calc(var(--navh) + var(--sab) + 28px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;visibility:hidden;pointer-events:none;scrollbar-width:none}
@@ -623,6 +627,10 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .mood3 i{mix-blend-mode:normal!important}
 #scene{z-index:2}
 
+body.inroom #back,body.panel #back{width:auto;min-width:46px;padding:0 18px 0 11px;border-radius:999px;display:flex;align-items:center;gap:4px}
+body.inroom #back::before,body.panel #back::before{border-radius:inherit}
+body.inroom #back::after,body.panel #back::after{content:"Назад";font:400 11px/1 var(--f);letter-spacing:.2em;text-transform:uppercase;color:#f6e6bd}
+
 /* ============================================================ the reading hall: 3D books on the rug, the hands, firelight */
 #lib3d{position:fixed;inset:0;z-index:22;pointer-events:none;visibility:hidden;opacity:0;transition:opacity .9s var(--ease),visibility .9s;color:#f6e6bd}
 #lib3d.on{visibility:visible;opacity:1;pointer-events:auto}
@@ -652,7 +660,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .bk__cv{position:absolute;left:0;top:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:calc(var(--hx,5%)) 50%}
 .bk__lining{position:absolute;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;background:radial-gradient(90% 70% at 50% 40%,#e7d6a8,#cdb683);box-shadow:inset 0 0 26px rgba(80,45,8,.55);border:1px solid rgba(120,80,20,.35)}
 .bk__shadow{position:absolute;left:50%;height:46px;transform:translate(-50%,-12px) rotateX(90deg);transform-origin:50% 0;background:radial-gradient(closest-side,rgba(0,0,0,.65),rgba(0,0,0,.25) 60%,transparent);pointer-events:none}
-.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 70px);text-align:center;padding:0 24px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
+.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 70px);text-align:center;padding:0 94px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
 .lb__tag b{display:block;font:italic 500 clamp(26px,7.4vw,40px)/1.08 var(--serif);color:#f6e6bd;text-wrap:balance}
 .lb__tag small{display:block;margin-top:9px;font:400 11px/1 var(--f);letter-spacing:.3em;text-transform:uppercase;color:#e9c984}
 .lb__tag.pop b{animation:tagin .55s cubic-bezier(.2,.9,.3,1)}
@@ -686,6 +694,41 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .qw{white-space:nowrap}
 #lib3d::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.6),transparent 13%,transparent 87%,rgba(0,0,0,.6)),linear-gradient(0deg,rgba(0,0,0,.45),transparent 30%)}
 
+.lb__pool{position:absolute;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,rgba(255,176,90,.32),rgba(255,150,60,.1) 60%,transparent);opacity:0;transition:opacity .4s}
+.lb__rays{position:absolute;pointer-events:none;opacity:0;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,226,160,.55) 0 2.4deg,transparent 2.4deg 14deg);-webkit-mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent 70%);mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent 70%);animation:lbspin 28s linear infinite}
+@keyframes lbspin{to{transform:rotate(360deg)}}
+.bk__lf{position:absolute;display:none;transform-origin:0 50%;backface-visibility:visible;-webkit-backface-visibility:visible;box-shadow:inset 0 0 18px rgba(90,55,12,.4)}
+.lb__ink{position:absolute;right:12px;top:calc(var(--sat) + 6px);width:62px;height:88px;padding:0;pointer-events:auto;z-index:5;background:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.75));transition:transform .4s var(--spring)}
+.lb__ink img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;transform-origin:30% 90%;animation:inkbob 4.4s ease-in-out infinite}
+@keyframes inkbob{50%{transform:rotate(2.2deg) translateY(-1px)}}
+.lb__ink::after{content:"";position:absolute;left:58%;top:6%;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff6d8,rgba(255,200,110,.0) 70%);animation:inktw 3.2s ease-in-out infinite;pointer-events:none}
+@keyframes inktw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1.5)}}
+.lb__ink span{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);white-space:nowrap;font:italic 400 13px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 10px rgba(255,190,90,.6),0 2px 8px #000;opacity:.85;pointer-events:none}
+.lb__ink:active{transform:scale(.92)}
+.lb__ink.dip img{animation:inkdip .6s ease-in-out}
+@keyframes inkdip{0%{transform:rotate(0)}30%{transform:rotate(-9deg) translateY(4px)}60%{transform:rotate(3deg) translateY(-2px)}100%{transform:rotate(0)}}
+#lib3d.bv .lb__ink{opacity:0;pointer-events:none}
+@media (orientation:landscape){.lb__ink{width:46px;height:66px;top:calc(var(--sat) + 4px)}.lb__ink span{display:none}.lb__tag{padding:0 100px}}
+/* ============================================================ the potion on the table */
+#potion3d{position:fixed;inset:0;z-index:21;pointer-events:none;visibility:hidden}
+#potion3d.on{visibility:visible}
+#pvFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pv{position:relative;filter:drop-shadow(0 8px 10px rgba(0,0,0,.55))}
+.pv svg{display:block;overflow:visible}
+.pv__liq{transform:translateY(calc(var(--lv,0)*-1px));transform-box:fill-box}
+.pv--lit{filter:drop-shadow(0 0 16px rgba(var(--lc),.85)) drop-shadow(0 8px 10px rgba(0,0,0,.5))}
+.pvtable{position:absolute;inset:0;pointer-events:none}
+.pvt{position:absolute;left:0;top:0;width:var(--vw);height:var(--vh);will-change:transform}
+.pvt__tag{position:absolute;left:calc(var(--vw)*.9);top:calc(var(--vh)*.2);width:calc(var(--vh)*.8);padding:10px 10px 9px 12px;border-radius:3px 8px 8px 3px;color:#2b1c0c;background:radial-gradient(120% 90% at 40% 30%,#f1e4bf,#dcc791);box-shadow:0 8px 16px rgba(0,0,0,.5);transform-origin:0 0;transform:rotate(7deg);animation:tagsway 5s ease-in-out infinite;text-align:center}
+.pvt__tag i{position:absolute;left:-14px;top:9px;width:16px;height:2px;background:#6b4a1a;border-radius:1px}
+.pvt__tag b{display:block;font:400 clamp(14px,calc(var(--vh)*.115),19px)/1.12 "Marck Script","Caveat",cursive;text-wrap:balance}
+.pvt__tag small{display:block;margin-top:4px;font:italic 500 11px/1.15 var(--serif);opacity:.7}
+.pvt__tag em{display:block;margin-top:5px;font:400 9px/1.2 var(--f);letter-spacing:.16em;text-transform:uppercase;opacity:.5;font-style:normal}
+@keyframes tagsway{50%{transform:rotate(3deg)}}
+.pvbtns{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 26px);display:flex;justify-content:center;gap:12px;padding:0 16px;opacity:0;transform:translateY(16px);transition:opacity .8s .5s,transform .9s .5s var(--ease)}
+.pvbtns.on{opacity:1;transform:none}.pvbtns .seal{pointer-events:auto;margin-top:0}
+.seal--ghost{background:rgba(10,8,6,.55)!important;border:1px solid rgba(255,226,160,.45);color:#f6e6bd!important;box-shadow:0 6px 16px rgba(0,0,0,.5)!important}
+
 /* ============================================================ the open book: leather, paper, ribbons, the quill's slip */
 .bv{position:fixed;inset:0;z-index:35;color:#33230f;--fs:21px;--ff:"Cormorant Garamond",Georgia,serif;--fl:.9;visibility:hidden;pointer-events:none;-webkit-user-select:none;user-select:none}
 .bv.in{visibility:visible;pointer-events:auto}
@@ -694,7 +737,7 @@ body.bv-open #back{opacity:0!important;pointer-events:none!important}
 .bv.in .bv__veil{opacity:1}
 .bv__bar{position:absolute;left:0;right:0;top:0;height:calc(var(--sat) + 58px);display:flex;align-items:flex-end;gap:6px;padding:0 10px 4px;z-index:5;opacity:0;transform:translateY(-10px);transition:opacity .6s .25s,transform .7s .25s var(--ease)}
 .bv.in .bv__bar{opacity:1;transform:none}
-.bv__x,.bv__aa{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#e9c984;flex:none;transition:transform .4s var(--spring)}
+.bv__x,.bv__aa{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#f6e6bd;flex:none;transition:transform .4s var(--spring);background:rgba(8,10,10,.55);border:1px solid rgba(255,226,160,.45);box-shadow:0 8px 24px rgba(0,0,0,.5)}
 .bv__x:active,.bv__aa:active{transform:scale(.86)}
 .bv__x .ico{width:24px;height:24px}.bv__aa{font:italic 500 22px/1 var(--serif)}
 .bv__t{flex:1;min-width:0;text-align:center;line-height:1.15;color:#f1e1b8}
@@ -721,7 +764,7 @@ body.bv-open #back{opacity:0!important;pointer-events:none!important}
 .land .bv__leaf{left:var(--pw)}
 .lf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
 .lf--b{transform:rotateY(180deg)}
-.lf__sh{position:absolute;inset:0;pointer-events:none;z-index:4;background:linear-gradient(90deg,rgba(25,10,0,.8),rgba(25,10,0,0) 85%);opacity:calc(var(--k,0)*.75)}
+.lf__sh{position:absolute;inset:0;pointer-events:none;z-index:4;background:linear-gradient(90deg,rgba(25,10,0,.8),rgba(25,10,0,0) 85%);opacity:calc(var(--k,0)*.5)}
 .lf--b .lf__sh{background:linear-gradient(270deg,rgba(25,10,0,.8),rgba(25,10,0,0) 85%)}
 .bv__gutter{position:absolute;top:0;bottom:0;left:0;width:24px;z-index:7;pointer-events:none;background:linear-gradient(90deg,rgba(30,14,2,.55),transparent)}
 .land .bv__gutter{left:calc(var(--pw) - 22px);width:44px;background:linear-gradient(90deg,transparent,rgba(30,14,2,.35) 40%,rgba(20,8,0,.65) 50%,rgba(30,14,2,.35) 60%,transparent)}
@@ -817,13 +860,29 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
   .stamp{max-width:64px;font-size:11px}.star{max-width:34px}.chipx{padding:5px 9px;font-size:13px;margin:0 4px 5px 0}.im h3{margin-bottom:6px}.im .lbl{margin:6px 0 4px}
   .seal{padding:10px 16px;font-size:14px}textarea.lined{font-size:21px;line-height:30px;background-image:repeating-linear-gradient(180deg,transparent 0 29px,rgba(90,60,20,.3) 29px 30px)}
 }
+.bv__ribbon{position:absolute;bottom:-50px;left:calc(var(--pw)*.58);width:16px;height:56px;background:linear-gradient(90deg,#7a1c2b,#c4363b 45%,#681422);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%);opacity:0;transform:translateY(-14px);transition:opacity .5s .5s,transform .8s .5s var(--spring);z-index:0}
+.bv.has-mark .bv__ribbon{opacity:1;transform:none}.land .bv__ribbon{left:calc(var(--pw)*1.62)}
+/* writing desk from any room */
+.qs{position:fixed;inset:0;z-index:31;visibility:hidden;pointer-events:none}
+.qs.on{visibility:visible;pointer-events:auto}
+.qs__veil{position:absolute;inset:0;background:radial-gradient(100% 80% at 50% 45%,rgba(8,4,2,.55),rgba(0,0,0,.88));opacity:0;transition:opacity .6s}
+.qs.on .qs__veil{opacity:1}
+.qs__card{position:absolute;left:50%;top:48%;width:min(90vw,440px);max-height:calc(100vh - 150px);padding:26px 24px 20px;display:flex;flex-direction:column;gap:10px;transform:translate(-50%,-50%) rotate(-1.2deg);border-radius:4px;box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 0 1px rgba(110,70,20,.4),inset 0 0 40px rgba(90,55,12,.35);opacity:0;overflow:hidden;color:#33230f}
+.qs__card h3{font:400 30px/1.1 "Marck Script","Caveat",cursive;text-align:center;margin:0}
+.qs__books{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px;touch-action:pan-x}.qs__books::-webkit-scrollbar{display:none}
+.qs__books .chip{flex:none;padding:7px 12px;border-radius:999px;border:1px solid rgba(100,70,25,.4);font:italic 500 15px/1 var(--serif);color:#4b3516;background:none;white-space:nowrap}
+.qs__books .chip.on{background:rgba(170,115,30,.26);border-color:#8a5d10;color:#2b1a07}
+.qs__card textarea.lined{min-height:150px;flex:none;height:170px}
+.qs__x{position:absolute;right:14px;top:calc(var(--sat) + 14px);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#f6e6bd;background:rgba(8,10,10,.55);border:1px solid rgba(255,226,160,.45)}
+.qs__x .ico{width:22px;height:22px}
+@media (orientation:landscape){.qs__card{top:50%;padding:16px 22px 14px;gap:6px}.qs__card h3{font-size:24px}.qs__card textarea.lined{height:96px;min-height:96px;font-size:20px;line-height:30px}}
 
 /* ============================================================ the archive: a parchment scroll between two rods, soft-focus drawer behind it */
 #cask{position:fixed;inset:0;z-index:27;pointer-events:none;touch-action:none;user-select:none;visibility:hidden}
 #cask.on{visibility:visible;pointer-events:auto}
 .cask__veil{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 52%,rgba(8,4,2,0),rgba(0,0,0,.4));opacity:0;transition:opacity .9s var(--ease)}
 #cask.on .cask__veil{opacity:1}
-.cask__scroll{position:absolute;left:50%;top:calc(var(--sat) + 62px);bottom:calc(var(--sab) + 84px);width:min(80vw,440px);transform:translateX(-50%);display:flex;flex-direction:column;filter:drop-shadow(0 30px 34px rgba(0,0,0,.65)) drop-shadow(0 0 60px rgba(255,170,70,.12))}
+.cask__scroll{position:absolute;top:calc(var(--sat) + 62px);bottom:calc(var(--sab) + 84px);width:min(80vw,440px);margin:0 auto;right:0;left:0;display:flex;flex-direction:column;filter:drop-shadow(0 30px 34px rgba(0,0,0,.65)) drop-shadow(0 0 60px rgba(255,170,70,.12))}
 .sc__rod{position:relative;flex:none;height:26px;margin:0 -16px;border-radius:13px;z-index:3;background:linear-gradient(180deg,#1d0e04,#6b3f1b 24%,#c48a4a 48%,#8a5427 66%,#2a1507);box-shadow:inset 0 1px 0 rgba(255,220,160,.35),0 6px 14px rgba(0,0,0,.5)}
 .sc__rod i{position:absolute;top:-5px;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff0bf,#d9a63a 42%,#7a5412 78%,#3a2606);box-shadow:0 4px 10px rgba(0,0,0,.55),inset 0 -3px 5px rgba(60,30,0,.5)}
 .sc__rod i:first-child{left:-14px}.sc__rod i:last-child{right:-14px}
@@ -879,6 +938,7 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
 <div id="intro" aria-label="Вход">
   <div class="in__bg" id="introBg"></div>
   <canvas class="in__amb" id="introAmb" aria-hidden="true"></canvas>
+  <canvas class="in__seq" id="introSeq" width="360" height="640" aria-hidden="true"></canvas>
   <video id="introV" playsinline webkit-playsinline preload="auto" poster="video/poster.jpg" disablepictureinpicture>
     <source src="video/intro.mp4" type="video/mp4">
     <source src="video/intro.webm" type="video/webm">
@@ -1389,6 +1449,7 @@ A.scene = (() => {
       if (L > .01) { const [fx, fy] = toScreen(FIRE.x, FIRE.y - 40), R = Math.max(VW, VH) * .75 * Math.min(1.6, s / s0 * .7 + .5), gr = g.createRadialGradient(fx, fy, 0, fx, fy, R); gr.addColorStop(0, `rgba(255,150,60,${(.2 * L * f).toFixed(3)})`); gr.addColorStop(.45, `rgba(255,110,40,${(.07 * L * f).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,100,30,0)'); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(0, 0, VW, VH); g.globalCompositeOperation = 'source-over'; }
     }
     if (roomName === 'lib') libLight(dt, vis);
+    else if (roomName === 'lab' && A.mods.potion && A.mods.potion.light) { const Lg = A.mods.potion.light(); if (Lg && Lg.k > .02) { const [sx, sy] = toScreen(Lg.x, Lg.y - 40), R = Math.max(VW, VH) * .9, gr = g.createRadialGradient(sx, sy, 0, sx, sy, R), fl = .85 + .15 * Math.sin(T * 5.3 + 1) + .06 * Math.sin(T * 12.1), rg = Lg.rgb.join(','); g.save(); g.globalCompositeOperation = 'lighter'; gr.addColorStop(0, `rgba(${rg},${(.34 * Lg.k * fl * vis).toFixed(3)})`); gr.addColorStop(.4, `rgba(${rg},${(.12 * Lg.k * fl * vis).toFixed(3)})`); gr.addColorStop(1, `rgba(${rg},0)`); g.fillStyle = gr; g.fillRect(0, 0, VW, VH); g.restore(); } }
     g.save(); g.globalCompositeOperation = 'lighter';
     for (const p of dust) {
       p.x += (p.vx + Math.sin(T * p.sp + p.ph) * 5) * dt; p.y += p.vy * dt;
@@ -1537,7 +1598,7 @@ A.scene = (() => {
     avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
     look(u, v, z = 1) { cancelSweep(); cam.x.t = u; cam.y.t = v; cam.z.t = z; clampT(); },
-    freeze(v) { frozen = v; }, lock(v) { locked = v; }, parallax: () => ({ x: gx, y: gy }), screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
+    freeze(v) { frozen = v; }, push(z) { cam.z.t = z; }, lock(v) { locked = v; }, parallax: () => ({ x: gx, y: gy }), screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
   return api;
 })();
@@ -1757,7 +1818,7 @@ A.applyPortrait = () => { const p = A.state.settings.portrait || (A._av = A._av 
 
 /* ---------------------------------------------------------------- back control: the glass chevron, or swipe in from the left edge */
 A.$('#back').addEventListener('click', () => { A.snd.tap(); A.leave(); });
-(() => { let sx = null, sy = 0; addEventListener('pointerdown', e => { sx = e.clientX < 28 && A.tab !== 'room' ? e.clientX : null; sy = e.clientY; }, { passive: true });
+(() => { let sx = null, sy = 0; addEventListener('pointerdown', e => { sx = e.clientX < 22 && A.tab !== 'room' && !ROOMOF[A.tab] && !(A.bookview && A.bookview.isOpen()) ? e.clientX : null; sy = e.clientY; }, { passive: true });   // the rooms have their own gestures and a back button
   addEventListener('pointermove', e => { if (sx != null && e.clientX - sx > 70 && Math.abs(e.clientY - sy) < 60) { sx = null; A.leave(); } }, { passive: true }); addEventListener('pointerup', () => sx = null); })();
 addEventListener('keydown', e => { if (e.key === 'Escape') A.leave(); });
 A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 100, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };
@@ -1841,7 +1902,7 @@ A.hands = (() => {
   class Sp { constructor(x, k = 110, c = 17) { this.x = x; this.t = x; this.v = 0; this.k = k; this.c = c; }
     step(dt) { const n = Math.ceil(dt / .008), h = dt / n; for (let i = 0; i < n; i++) { this.v += (this.k * (this.t - this.x) - this.c * this.v) * h; this.x += this.v * h; } } }
   const sides = {}, L = { k: 1, vw: 0, vh: 0 };
-  let on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
+  let carryFn = null, carrySide = 'R', propEl = null, on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
 
   function layer(side, kind) {
     const a = ART[POSE[side][kind]], im = new Image(); im.src = `img/${POSE[side][kind]}.webp`; im.className = 'hd__img'; im.draggable = false; im.decoding = 'async';
@@ -1886,6 +1947,9 @@ A.hands = (() => {
         reachTo('L', [lx, ey]); reachTo('R', [rx, ey]);
         placeLayer('L', 'grasp', [lx, ey], ART['pose-2'].edge); placeLayer('R', 'grasp', [rx, ey], ART['pose-3'].edge);
       } }
+    if (mode === 'carry' && carryFn) { const c = carryFn(); if (c) { const l = sides[carrySide].grasp, a = ART[POSE[carrySide].grasp], sc0 = L.k * gk;
+        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0; l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
+        if (propEl && c.prop) propEl.style.transform = `translate3d(${c.prop.x.toFixed(1)}px,${c.prop.y.toFixed(1)}px,0) rotate(${(c.prop.r || 0).toFixed(2)}deg) scale(${(c.prop.s || 1).toFixed(3)})`; if (propEl && c.clip != null) propEl.style.clipPath = c.clip; } }
     if (mode === 'pinch' && pinchFn) { const p = pinchFn(); if (p) { const side = p.side; placeLayer(side, 'page', [p.x, p.y], ART[POSE[side].page].tip); reachTo(side, [p.x, p.y], .85); } }
     ['L', 'R'].forEach(side => {
       const o = sides[side], breath = mode === 'idle' || (mode === 'hover' && hoverSide !== side);
@@ -1924,6 +1988,12 @@ A.hands = (() => {
       if (l.o.x < .05) { placeLayer(p.side, 'page', [p.x, p.y], ART[POSE[p.side].page].tip); l.x.x = l.x.t + (p.side === 'R' ? 40 : -40); l.y.x = l.y.t + 150; l.x.v = l.y.v = 0; }
     },
     unpinch() { const p = pinchFn; pinchFn = null; mode = 'away'; ['L', 'R'].forEach(s => { const l = sides[s].page; setO(s, 'page', 0); l.y.t += 240; l.x.t += s === 'R' ? 50 : -50; }); },
+    carry(side, fn, prop) {
+      carryFn = fn; carrySide = side; propEl = prop || null; mode = 'carry'; follow = pinchFn = null; ['L', 'R'].forEach(sd => { setO(sd, 'reach', 0); setO(sd, 'page', 0); setO(sd, 'grasp', sd === side ? 1 : 0); });
+      const l = sides[side].grasp, a = ART[POSE[side].grasp], sc0 = L.k * gk; l.img.style.transformOrigin = `${a.edge[0] * sc0}px ${a.edge[1] * sc0}px`; sides[side].lift.x = sides[side].lift.t = 0;
+      if (propEl) { propEl.style.cssText += ';position:absolute;left:0;top:0;'; sides[side].el.insertBefore(propEl, sides[side].el.firstChild); } loop();
+    },
+    uncarry() { const side = carrySide; carryFn = null; const l = sides[side].grasp; l.img.style.transformOrigin = '0 0'; setO(side, 'grasp', 0); if (propEl) { propEl.remove(); propEl = null; } mode = 'away'; },
     parallax(x) { parXT = x; },
     get active() { return on; }, get mode() { return mode; }
   };
@@ -1931,21 +2001,23 @@ A.hands = (() => {
   return api;
 })();
 
-/* ============================================================ the reading hall: her books stand on the rug in front of the fireplace, built as real 3D boxes (cover, spine, page block).
-   swipe: the row turns like a coverflow; the nearer hand drifts toward the book in the middle (hover); tap it: both hands take it by the sides, it lifts through a puff of smoke,
-   the cover swings open, and the reading book (bookview.js) takes over. Everything is transform/opacity driven from one rAF loop. */
+/* ============================================================ the reading hall: her books stand in a gentle arc on the rug in front of the fireplace, built as real 3D boxes (cover, spine, page block, loose leaves).
+   swipe: the arc turns; the nearer hand drifts toward the book in the middle (hover); tap it: the book is pressed, both hands take it, it leaps up in a burst of gold light and smoke,
+   the cover swings open and the pages riffle, light pours out, and the reading book (bookview.js) takes over. The inkwell opens the writing desk for a new quote.
+   Everything is transform/opacity driven from one rAF loop. */
 A.lib = (() => {
   const root = A.$('#lib3d'), BA = A.BOOKART;
   const KNOWN = [[/фонар/i, 'lantern'], [/ленн|принц/i, 'prince'], [/зов|умирающ/i, 'souls'], [/алис/i, 'alice'], [/пепл|проклят/i, 'ash'], [/гордост|предубежд/i, 'pride']];
   const PAL = Object.keys(BA);
   const artOf = b => { const t = b.title || '', au = b.author || ''; if (/айсел/i.test(au)) for (const [re, k] of KNOWN) if (re.test(t)) return { k, own: true }; return { k: PAL[A.hash(t + au) % PAL.length], own: false }; };
   class Sp { constructor(x = 0, k = 90, c = 15) { this.x = x; this.t = x; this.v = 0; this.k = k; this.c = c; } step(dt) { const n = Math.ceil(dt / .008), h = dt / n; for (let i = 0; i < n; i++) { this.v += (this.k * (this.t - this.x) - this.c * this.v) * h; this.x += this.v * h; } } get moving() { return Math.abs(this.t - this.x) > .0008 || Math.abs(this.v) > .004; } }
-  const sgn = Math.sign, wait = ms => new Promise(r => setTimeout(r, ms));
-  let bvEl = null, stage, tagEl, noteEl, fxc, fxg, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, puffs = [], fl = 1, kick = 0, hs = [];
+  const sgn = Math.sign, wait = ms => new Promise(r => setTimeout(r, ms)), ease = k => 1 - Math.pow(1 - A.clamp(k, 0, 1), 3), rnd = (a, b) => a + Math.random() * (b - a);
+  let bvEl = null, stage, tagEl, noteEl, fxc, fxg, poolEl, raysEl, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, puffs = [], blooms = [], rings = [], sparks = [], fl = 1, kick = 0, hs = [], rays = new Sp(0, 40, 9);
   const order = { reading: 0, want: 1, done: 2 };
 
-  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, 132) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .64 }; };
+  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, 132) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
+  const PAPER = 'radial-gradient(120% 90% at 50% 40%,#efe2bd,#e0cd9b 70%,#cdb883)';
 
   /* ---------------------------------------------------------------- one 3D book */
   function bookHTML(it) {
@@ -1954,21 +2026,27 @@ A.lib = (() => {
     const front = it.add ? `<img src="img/blank-ash.webp" alt=""><span class="bk__plus"></span><div class="bk__ttl" style="top:62%"><i style="font-size:${Math.round(n.w * .06)}px">новая книга</i></div>`
       : own ? `<img src="img/book-${k}.webp" alt="">`
       : `<img src="img/blank-${k}.webp" alt=""><img class="bk__emb" src="img/emblem-${k}.webp" alt="" style="left:${n.emb[0]}px;top:${n.emb[1]}px;width:${Math.round(n.w * .3)}px"><div class="bk__ttl"><b style="font-size:${fs}px">${A.esc(b.title)}</b><i style="font-size:${Math.round(n.w * .06)}px">${A.esc(b.author || '')}</i></div>`;
+    const bx = f[0] + 8, bw = f[2] - f[0] - 12, by = f[1] + 5;
+    const leaves = [0, 1, 2].map(i => `<div class="bk__lf" style="top:${by}px;height:${bh - 10}px;left:${bx}px;width:${bw}px;background:${PAPER}"></div>`).join('');
     return `<div class="bk__box" style="width:${n.w}px;height:${n.h}px;--D:${D}px;--bh:${bh}px;--by:${f[1]}px;--lc:${lc};--lcl:${lcL}">
       <div class="bk__shadow" style="top:${f[3]}px;width:${n.w * 1.25}px"></div>
       <div class="bk__f bk__back" style="top:${f[1]}px;height:${bh}px;transform:translateZ(${-D / 2}px)"></div>
       <div class="bk__f bk__spine" style="top:${f[1]}px;height:${bh}px;width:${D}px;left:${-D / 2 + 3}px"></div>
       <div class="bk__f bk__edge" style="top:${f[1]}px;height:${bh}px;width:${D}px;left:${f[2] - D / 2 - 2}px"></div>
       <div class="bk__f bk__top" style="top:${f[1] - D / 2}px;height:${D}px;left:${f[0] - 4}px;width:${f[2] - f[0]}px"></div>
-      <div class="bk__f bk__block" style="top:${f[1] + 5}px;height:${bh - 10}px;left:${f[0] + 8}px;width:${f[2] - f[0] - 12}px;transform:translateZ(${D / 2 - 5}px)"><p>${it.add ? '' : A.esc(b.title)}</p></div>
+      <div class="bk__f bk__block" style="top:${by}px;height:${bh - 10}px;left:${bx}px;width:${bw}px;transform:translateZ(${D / 2 - 5}px)"><p>${it.add ? '' : A.esc(b.title)}</p></div>
+      ${leaves}
       <div class="bk__cv" style="transform:translateZ(${D / 2}px)"><div class="bk__front">${front}<div class="bk__lit"></div></div><div class="bk__lining" style="top:${f[1]}px;height:${bh}px;left:${f[0]}px;width:${f[2] - f[0]}px"></div></div>
     </div>`;
   }
 
   function init() {
     const ori = A.scene.ori(); if (built && lastOri === ori) return; built = true; lastOri = ori; G = geo();
-    root.innerHTML = `<div class="lb__stage" id="lbStage"></div><canvas id="lbFx" aria-hidden="true"></canvas><div class="lb__tag" id="lbTag"></div><p class="lb__note" id="lbNote"></p>`;
-    stage = A.$('#lbStage', root); tagEl = A.$('#lbTag', root); noteEl = A.$('#lbNote', root); fxc = A.$('#lbFx', root); fxg = fxc.getContext('2d'); fxc.width = innerWidth; fxc.height = innerHeight;
+    root.innerHTML = `<i class="lb__pool" id="lbPool"></i><div class="lb__stage" id="lbStage"></div><i class="lb__rays" id="lbRays"></i><canvas id="lbFx" aria-hidden="true"></canvas><div class="lb__tag" id="lbTag"></div><p class="lb__note" id="lbNote"></p>
+      <button class="lb__ink" id="lbInk" aria-label="Записать цитату"><img src="img/ink.webp" alt=""><span>цитата</span></button>`;
+    stage = A.$('#lbStage', root); tagEl = A.$('#lbTag', root); noteEl = A.$('#lbNote', root); fxc = A.$('#lbFx', root); fxg = fxc.getContext('2d'); fxc.width = innerWidth; fxc.height = innerHeight; poolEl = A.$('#lbPool', root); raysEl = A.$('#lbRays', root);
+    A.$('#lbInk', root).addEventListener('pointerdown', e => e.stopPropagation());
+    A.$('#lbInk', root).addEventListener('click', () => { if (busy || A.qslip.isOpen) return; const ib = A.$('#lbInk', root); ib.classList.remove('dip'); void ib.offsetWidth; ib.classList.add('dip'); A.snd.tap(); A.snd.quill && A.snd.quill(); A.vibrate(10); const it = items[Math.round(p)]; setTimeout(() => A.qslip.open({ bookId: it && it.b && it.b.id ? it.b.id : '' }), 260); });
     bind(); render();
   }
 
@@ -1976,21 +2054,27 @@ A.lib = (() => {
     if (!built) return; const keep = items[Math.round(p)] && items[Math.round(p)].b && items[Math.round(p)].b.id;
     const list = [...A.state.books].sort((a, b) => order[a.status] - order[b.status] || (b.added || 0) - (a.added || 0));
     stage.innerHTML = ''; items = list.map(b => ({ b, art: artOf(b) })); items.push({ add: true, b: { title: '', author: '' }, art: { k: 'ash', own: false } });
-    items.forEach(it => { const el = A.h(`<div class="bk">${bookHTML(it)}</div>`); el.style.display = 'none'; it.on = false; stage.appendChild(el); it.el = el; it.box = A.$('.bk__box', el); it.cv = A.$('.bk__cv', el); it.lit = A.$('.bk__lit', el); it.n = natOf(it.art.k); it.lift = new Sp(0, 70, 13); it.open = new Sp(0, 42, 10); it.zoom = new Sp(0, 60, 14); });
+    items.forEach(it => {
+      const el = A.h(`<div class="bk">${bookHTML(it)}</div>`); el.style.display = 'none'; it.on = false; stage.appendChild(el); it.el = el; it.box = A.$('.bk__box', el); it.cv = A.$('.bk__cv', el); it.lit = A.$('.bk__lit', el); it.lf = A.$$('.bk__lf', el); it.n = natOf(it.art.k);
+      it.jit = ((A.hash((it.b.title || 'x') + (it.b.author || '')) % 9) - 4) * .35;                                         // each book is set down a little differently
+      it.press = new Sp(0, 160, 18); it.lift = new Sp(0, 64, 8.5); it.open = new Sp(0, 50, 7.5); it.fan = new Sp(0, 38, 8); it.zoom = new Sp(0, 60, 14);
+    });
     noteEl.textContent = ''; const at = keep ? items.findIndex(i => i.b && i.b.id === keep) : -1, start = at >= 0 ? at : Math.max(0, items.findIndex(i => i.b.status === 'reading'));
-    p = pt = start; pv = 0; lastIdx = -1; draw(); label(); wake();
+    p = pt = start; pv = 0; lastIdx = -1; layoutPool(); draw(); label(); wake();
   }
+  function layoutPool() { const g = G; poolEl.style.cssText = `left:${g.cx - g.W0 * 1.35}px;top:${g.base - g.W0 * .2}px;width:${g.W0 * 2.7}px;height:${g.W0 * .6}px`; }
 
-  /* ---------------------------------------------------------------- the carousel */
+  /* ---------------------------------------------------------------- the arc: the book in the middle steps forward and floats a little, the others stand back, turned toward it */
   function place(it, d) {
-    const g = G, ad = Math.abs(d), s0 = g.W0 / it.n.w, lift = Math.max(0, 1 - ad), side = sgn(d) || 0;
-    let x = g.cx + side * g.W0 * (.66 * Math.min(ad, 1) + .4 * Math.max(0, ad - 1)), y = 0, z = 70 * lift - 130 * Math.min(ad, 1) - 40 * Math.max(0, ad - 1), ry = side * Math.min(ad, 1) * 54, rx = 0, s = s0 * (1 - .13 * Math.min(ad, 1)), dim = Math.min(.82, .1 + .6 * Math.min(ad, 1) + .06 * Math.max(0, ad - 1));
-    const L = it.lift.x, O = it.open.x, Z = it.zoom.x;
+    const g = G, ad = Math.abs(d), e = Math.min(ad, 1), far = Math.max(0, ad - 1), s0 = g.W0 / it.n.w, lift = Math.max(0, 1 - ad), side = sgn(d) || 0;
+    let x = g.cx + side * g.W0 * (.86 * e + .46 * far), y = e * 7 + far * 9 + it.jit * e - lift * (1.6 + 1.6 * Math.sin(T * 1.5)), z = 80 * lift - 85 * e - 60 * far, ry = -side * e * 17 + it.jit * .5 * e, rx = 0, s = s0 * (1 - .1 * e - .035 * far), dim = A.clamp(.05 + .5 * e + .05 * far, 0, .8);
+    const L = it.lift.x, O = it.open.x, Z = it.zoom.x, P = it.press.x;
+    if (P) { y += P * 8; s *= 1 - P * .03; rx += P * 3; }
     if (L || O || Z) {
       const f = it.n.face, fw = f[2] - f[0], fh = f[3] - f[1];
       ry *= 1 - L; dim *= 1 - L; y -= L * g.W0 * .45; z += L * 150; rx += L * 6; s *= 1 + L * .2;
       x += O * fw * s * .5;                                                                      // the swung cover and the book are centred together
-      const k = Z; if (k) { const S = g.land ? Math.min(g.vh * .78 / fh, g.vw * .22 / fw) : Math.min(g.vh * .72 / fh, g.vw * .9 / fw); const cxn = g.cx - (x - g.cx) * 0; s = s + (S - s) * k; x = x + (g.cx - x) * k - (g.land ? 0 : 0); y = y + ((g.vh * .5) - (g.base - fh * s0 * .5) - y) * k * .0; ry *= 1 - k; rx *= 1 - k; z *= 1 - k; it.zy = k; }
+      if (Z) { const S = g.land ? Math.min(g.vh * .78 / fh, g.vw * .22 / fw) : Math.min(g.vh * .72 / fh, g.vw * .9 / fw); s = s + (S - s) * Z; x = x + (g.cx - x) * Z; ry *= 1 - Z; rx *= 1 - Z; z *= 1 - Z; }
     }
     it.s = s; it.x = x; it.y = y; it.z = z; it.ry = ry; it.rx = rx; it.dim = dim;
   }
@@ -2002,40 +2086,57 @@ A.lib = (() => {
     setS(it.el, 'transform', `translate3d(${(it.x + parx * (1 + Math.max(0, it.z) / 500)).toFixed(1)}px,${(by + pary).toFixed(1)}px,${it.z.toFixed(1)}px) rotateY(${it.ry.toFixed(2)}deg) rotateX(${it.rx.toFixed(2)}deg) scale(${it.s.toFixed(4)})`);
     if (!it.placed) { it.placed = true; it.box.style.transform = `translate(${-(f[0] + fw / 2).toFixed(1)}px,${-f[3]}px)`; it.D = parseFloat(it.box.style.getPropertyValue('--D')); }
     setS(it.cv, 'transform', `translateZ(${it.D / 2}px) rotateY(${(-it.open.x * 168).toFixed(1)}deg)`);
+    const fan = it.fan.x; it.lf.forEach((l, i) => { const k = ease((fan - i * .13) / .55), a = k * (158 + i * 3), on = fan > .004; setS(l, 'display', on ? '' : 'none'); if (on) setS(l, 'transform', `translateZ(${it.D / 2 - 4 + i * .8}px) rotateY(${(-a).toFixed(1)}deg)`); });
     setS(it.el, 'dim', it.dim.toFixed(2)); setS(it.el, 'zIndex', String(100 - Math.round(Math.abs(it.pos) * 10) + (it === sel ? 50 : 0)));
   }
   function draw() {
     items.forEach((it, i) => { const d = i - p; it.pos = d; const vis = Math.abs(d) < 4.6; if (!vis) { if (it.on) { it.el.style.display = 'none'; it.on = false; } return; } if (!it.on) { it.el.style.display = ''; it.on = true; } place(it, d); paint(it); });
+    const c = items[A.clamp(Math.round(p), 0, items.length - 1)]; if (poolEl && c) poolEl.style.opacity = (.9 * (1 - c.lift.x * .8) * (1 - Math.min(1, Math.abs(c.pos)) * .5)).toFixed(2);
   }
   function label() {
     const i = A.clamp(Math.round(p), 0, items.length - 1), it = items[i]; if (!it) return;
     if (i !== lastIdx) { lastIdx = i; if (active) { A.snd.page && A.snd.page(); A.vibrate(6); } const b = it.b;
-      tagEl.innerHTML = it.add ? '<b>Новая книга</b><small>поставь её на полку</small>' : `<b>${A.esc(b.title)}</b><small>${A.esc(b.author || '')}${b.status === 'reading' ? ' · читаю' : b.status === 'done' ? ' · прочитано' : ''}</small>`;
+      const mk = b.pos > .002 && b.pages ? ` · стр. ${Math.max(1, Math.round(b.pos * b.pages))} из ${b.pages}` : '';
+      tagEl.innerHTML = it.add ? '<b>Новая книга</b><small>поставь её на полку</small>' : `<b>${A.esc(b.title)}</b><small>${A.esc(b.author || '')}${b.status === 'reading' ? ' · читаю' : b.status === 'done' ? ' · прочитано' : ''}${mk}</small>`;
       tagEl.classList.remove('pop'); void tagEl.offsetWidth; tagEl.classList.add('pop'); }
   }
 
   /* ---------------------------------------------------------------- loop */
   function wake() { if (!raf && active) { last = performance.now(); raf = requestAnimationFrame(loop); } }
   function loop(now) {
-    raf = 0; if (!active) return; const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt; let moving = false;
-    if (!drag) { pv += ((pt - p) * 170 - pv * 21) * dt; p += pv * dt; if (Math.abs(pt - p) > .002 || Math.abs(pv) > .01) moving = true; else { p = pt; pv = 0; } }
-    items.forEach(it => { [it.lift, it.open, it.zoom].forEach(s => { s.step(dt); if (s.moving) moving = true; else s.x = s.t; }); });
+    raf = 0; if (!active) return; const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
+    if (!drag) { pv += ((pt - p) * 170 - pv * 21) * dt; p += pv * dt; if (Math.abs(pt - p) <= .002 && Math.abs(pv) <= .01) { p = pt; pv = 0; } }
+    items.forEach(it => { [it.press, it.lift, it.open, it.fan, it.zoom].forEach(s => { s.step(dt); if (!s.moving) s.x = s.t; }); }); rays.step(dt);
     if (A.bookview && A.bookview.isOpen()) { raf = requestAnimationFrame(loop); return; }                 // the open book owns the frame
     const par = A.scene.parallax(); parx = par.x * 2.4; pary = par.y * 2.0;
     fl = .9 + .06 * Math.sin(T * 6.3) + .04 * Math.sin(T * 11.3 + 1.3) + (A.snd.fireLevel ? A.snd.fireLevel() * .12 : 0);
-    draw(); label(); drawFx(dt);
+    draw(); label(); drawFx(dt); paintRays();
     if ((kick = (kick + 1) % 2) === 0) items.forEach(it => { if (it.on && Math.abs(it.pos) < 1.6) it.lit.style.opacity = (fl * .55).toFixed(3); });
     raf = requestAnimationFrame(loop);        // keeps the firelight on the covers breathing; cheap: only the centre books are repainted by the browser
   }
 
-  /* ---------------------------------------------------------------- smoke */
+  /* ---------------------------------------------------------------- effects: smoke, a bloom of gold light, a ring on the rug, sparks, and rays pouring out of the open book */
+  const glow = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,236,180,1)'); gr.addColorStop(.25, 'rgba(255,190,90,.7)'); gr.addColorStop(1, 'rgba(255,140,40,0)'); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; })();
   const smk = (() => { const c = document.createElement('canvas'); c.width = c.height = 96; const x = c.getContext('2d'); for (let i = 0; i < 12; i++) { const px = 48 + (Math.random() - .5) * 44, py = 48 + (Math.random() - .5) * 44, r = 10 + Math.random() * 16, gr = x.createRadialGradient(px, py, 0, px, py, r); gr.addColorStop(0, 'rgba(190,168,140,.4)'); gr.addColorStop(1, 'rgba(210,190,160,0)'); x.fillStyle = gr; x.fillRect(0, 0, 96, 96); } return c; })();
   function puff(x, y, n = 18, w = 90) { for (let i = 0; i < n; i++) puffs.push({ x: x + (Math.random() - .5) * w, y: y + (Math.random() - .5) * 10, vx: (Math.random() - .5) * 120, vy: -18 - Math.random() * 46, life: 0, ttl: 1.1 + Math.random() * 1.0, s: 14 + Math.random() * 18, rot: Math.random() * 6.28 }); }
+  function burst(x, y, floorY, n = 46) {
+    blooms.push({ x, y, t: 0, d: 1.15 }); rings.push({ x, y: floorY, t: 0, d: 1.3 });
+    for (let i = 0; i < n; i++) { const a = rnd(0, 6.283), v = rnd(120, 520); sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v * .8 - rnd(40, 240), life: 0, ttl: rnd(.9, 2), r: rnd(1.4, 3.2) }); }
+  }
   function drawFx(dt) {
-    if (!puffs.length) { if (fxc.dataset.on) { fxg.clearRect(0, 0, fxc.width, fxc.height); delete fxc.dataset.on; } return; }
-    fxc.dataset.on = 1; fxg.clearRect(0, 0, fxc.width, fxc.height);
+    const any = puffs.length || blooms.length || rings.length || sparks.length; if (!any) { if (fxc.dataset.on) { fxg.clearRect(0, 0, fxc.width, fxc.height); delete fxc.dataset.on; } return; }
+    fxc.dataset.on = 1; fxg.clearRect(0, 0, fxc.width, fxc.height); const W0 = G.W0;
+    fxg.globalCompositeOperation = 'lighter';
+    for (let i = blooms.length - 1; i >= 0; i--) { const b = blooms[i]; b.t += dt; const k = b.t / b.d; if (k >= 1) { blooms.splice(i, 1); continue; } const R = W0 * (1.1 + 2.4 * ease(k)); fxg.globalAlpha = Math.pow(1 - k, 1.6) * .7; fxg.drawImage(glow, b.x - R, b.y - R, R * 2, R * 2); }
+    for (let i = rings.length - 1; i >= 0; i--) { const r = rings[i]; r.t += dt; const k = r.t / r.d; if (k >= 1) { rings.splice(i, 1); continue; } const rx = W0 * (.4 + 2.8 * ease(k)); fxg.globalAlpha = Math.pow(1 - k, 1.4) * .7; fxg.strokeStyle = 'rgb(255,208,130)'; fxg.lineWidth = 2.4 * (1 - k) + .6; fxg.beginPath(); fxg.ellipse(r.x, r.y, rx, rx * .2, 0, 0, 6.283); fxg.stroke(); }
+    for (let i = sparks.length - 1; i >= 0; i--) { const q = sparks[i]; q.life += dt; if (q.life > q.ttl) { sparks.splice(i, 1); continue; } const k = q.life / q.ttl; q.vy += 360 * dt; q.vx *= 1 - .9 * dt; q.x += q.vx * dt; q.y += q.vy * dt; const r = q.r * 5 * (1 - k * .6); fxg.globalAlpha = (1 - k) * (.6 + .4 * Math.sin(q.life * 30 + i)); fxg.drawImage(glow, q.x - r, q.y - r, r * 2, r * 2); }
+    fxg.globalCompositeOperation = 'source-over';
     for (let i = puffs.length - 1; i >= 0; i--) { const q = puffs[i]; q.life += dt; if (q.life > q.ttl) { puffs.splice(i, 1); continue; } const k = q.life / q.ttl; q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= 1 - 1.4 * dt; q.vy *= 1 - .9 * dt; const r = q.s * (1 + k * 2.6); fxg.globalAlpha = Math.min(1, k * 10) * (1 - k) * (1 - k) * .5; fxg.save(); fxg.translate(q.x, q.y); fxg.rotate(q.rot + k * .6); fxg.drawImage(smk, -r, -r, r * 2, r * 2); fxg.restore(); }
     fxg.globalAlpha = 1;
+  }
+  function paintRays() {
+    const c = sel; const o = c ? A.clamp(rays.x, 0, 1) * (1 - c.zoom.x * .6) : 0; if (!raysEl) return; if (o < .01) { if (raysEl._on) { raysEl.style.opacity = 0; raysEl._on = false; } return; }
+    raysEl._on = true; const r = c.box.getBoundingClientRect(), S = Math.max(G.vw, G.vh) * 1.4; raysEl.style.cssText = `left:${r.left + r.width * .62 - S / 2}px;top:${r.top + r.height * .45 - S / 2}px;width:${S}px;height:${S}px;opacity:${(o * .8).toFixed(3)}`;
   }
 
   /* ---------------------------------------------------------------- hands */
@@ -2046,18 +2147,18 @@ A.lib = (() => {
   }
   const rehover = () => { clearTimeout(hoverT); hoverT = setTimeout(hover, 520); };
 
-  /* ---------------------------------------------------------------- the choreography: take, lift, open, read */
+  /* ---------------------------------------------------------------- the choreography: press, take, leap, open, riffle, read */
   async function select(it) {
     if (busy) return; if (it.add) { A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .8, 16); A.mods.books.editBook(); return; }
     busy = true; sel = it; clearTimeout(hoverT); A.vibrate(14); A.snd.page(); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
-    A.hands.grasp(() => { const r = rectOf(it); return r; }); await wait(560);
-    it.lift.t = 1; const r0 = rectOf(it); puff(r0.left + r0.width / 2, r0.bottom - 6, 22, r0.width * .8); A.snd.whoosh && A.snd.whoosh(1); A.vibrate([10, 30, 16]); await wait(760);
-    it.open.t = 1; A.snd.page(); A.hands.retreat(); setTimeout(() => A.snd.chime && A.snd.chime([523.25, 659.25, 783.99], .09, .6), 520); await wait(1050);
-    it.zoom.t = 1; A.hands.show(false); await wait(520);
+    it.press.t = 1; A.hands.grasp(() => rectOf(it)); A.scene.push && A.scene.push(1.09); await wait(540);
+    it.press.t = 0; it.lift.t = 1; const r0 = rectOf(it); burst(r0.left + r0.width / 2, r0.top + r0.height * .5, r0.bottom, 52); puff(r0.left + r0.width / 2, r0.bottom - 6, 28, r0.width * .9); A.snd.whoosh && A.snd.whoosh(1); A.snd.chime && A.snd.chime([392, 587.33], .06, .5); A.vibrate([10, 30, 16]); await wait(900);
+    it.open.t = 1; rays.t = 1; setTimeout(() => { it.fan.t = 1; A.snd.page(); setTimeout(() => A.snd.page(), 130); setTimeout(() => A.snd.page(), 260); }, 200); setTimeout(() => A.snd.chime && A.snd.chime([523.25, 659.25, 783.99, 1046.5], .08, .7), 420); A.hands.retreat(); await wait(1250);
+    it.zoom.t = 1; A.hands.show(false); await wait(540);
     A.bookview.open(it.b, { onClose: () => back(it) });
   }
   function back(it) {
-    busy = true; A.hands.show(true); it.zoom.t = 0; it.open.t = 0; it.lift.t = 0; wake();
+    busy = true; A.hands.show(true); it.zoom.t = 0; it.open.t = 0; it.fan.t = 0; it.lift.t = 0; rays.t = 0; A.scene.push && A.scene.push(1); wake();
     setTimeout(() => { busy = false; sel = null; rehover(); }, 900);
   }
 
@@ -2080,14 +2181,14 @@ A.lib = (() => {
     };
     stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', () => { if (drag) { clearTimeout(drag.long); drag = null; pt = Math.round(p); wake(); } });
     stage.addEventListener('wheel', e => { e.preventDefault(); if (busy) return; pt = A.clamp(Math.round(pt + sgn(e.deltaX || e.deltaY)), 0, items.length - 1); wake(); rehover(); }, { passive: false });
-    addEventListener('keydown', e => { if (!active || busy || (A.bookview && A.bookview.isOpen())) return; if (e.key === 'ArrowRight') { pt = Math.min(items.length - 1, Math.round(pt) + 1); wake(); rehover(); } else if (e.key === 'ArrowLeft') { pt = Math.max(0, Math.round(pt) - 1); wake(); rehover(); } else if (e.key === 'Enter' || e.key === ' ') { const it = items[Math.round(p)]; it && select(it); } });
-    addEventListener('resize', () => { if (!built) return; if (A.scene.ori() !== lastOri) return; G = geo(); fxc.width = innerWidth; fxc.height = innerHeight; wake(); });
+    addEventListener('keydown', e => { if (!active || busy || (A.bookview && A.bookview.isOpen()) || A.qslip.isOpen) return; if (e.key === 'ArrowRight') { pt = Math.min(items.length - 1, Math.round(pt) + 1); wake(); rehover(); } else if (e.key === 'ArrowLeft') { pt = Math.max(0, Math.round(pt) - 1); wake(); rehover(); } else if (e.key === 'Enter' || e.key === ' ') { const it = items[Math.round(p)]; it && select(it); } });
+    addEventListener('resize', () => { if (!built) return; if (A.scene.ori() !== lastOri) return; G = geo(); fxc.width = innerWidth; fxc.height = innerHeight; layoutPool(); wake(); });
   }
 
-  /* ---------------------------------------------------------------- the two doors of the room (the quill desk and the alchemy table), visible where the frame shows them */
+  /* ---------------------------------------------------------------- the alchemy table, wherever the frame shows it */
   function doors() {
-    hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };
-    Object.entries(H).forEach(([k, polys]) => polys.forEach(pl => {
+    hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'] };
+    Object.entries(H).forEach(([k, polys]) => NM[k] && polys.forEach(pl => {
       const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateFinal(Math.min(...xs), Math.min(...ys)), b = A.scene.plateFinal(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
       if (cx < 24 || cx > innerWidth - 24 || b[1] < 0) return;
       const el = A.h(`<button class="lb__door" aria-label="${NM[k][0]}" style="left:${a[0]}px;top:${a[1]}px;width:${b[0] - a[0]}px;height:${b[1] - a[1]}px"><i></i><span>${NM[k][0]}</span></button>`);
@@ -2098,11 +2199,11 @@ A.lib = (() => {
   return {
     init, render, rebuild() { built = false; lastIdx = -1; if (active) { init(); doors(); } },
     show() {
-      init(); active = true; busy = false; sel = null; root.classList.add('on'); G = geo(); A.hands.show(true); A.snd.setFire(1); doors(); render(); wake();
+      init(); active = true; busy = false; sel = null; root.classList.add('on'); G = geo(); layoutPool(); A.hands.show(true); A.snd.setFire(1); doors(); render(); wake();
       root.classList.add('hints'); setTimeout(() => root.classList.remove('hints'), 5200); rehover();
       if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
-    hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); clearTimeout(hoverT); puffs.length = 0; hs.forEach(h => h.remove()); hs = []; if (raf) { cancelAnimationFrame(raf); raf = 0; } },
+    hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); A.snd.setFire(A.fire && A.fire.on ? 1 : 0); clearTimeout(hoverT); puffs.length = blooms.length = rings.length = sparks.length = 0; hs.forEach(h => h.remove()); hs = []; A.scene.push && A.scene.push(1); A.qslip && A.qslip.close(); if (raf) { cancelAnimationFrame(raf); raf = 0; } },
     get active() { return active; }
   };
 })();
@@ -2118,7 +2219,7 @@ A.bookview = (() => {
   const prefs = () => Object.assign({ size: 21, font: 'serif', theme: 'parch' }, A.state.settings.reader || {});
   const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
   const TABS = [['read', 'Читать'], ['impr', 'Впечатление'], ['quotes', 'Цитаты']];
-  let stillT = 0, el, book, bookEl, pgL, pgR, leaf, lfF, lfB, stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
+  let posT = 0, stillT = 0, el, book, bookEl, pgL, pgR, leaf, lfF, lfB, stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
 
   /* ---------------------------------------------------------------- pagination (lazy: a page is measured only when it is needed) */
   function makePager(paras, measure) {
@@ -2160,7 +2261,7 @@ A.bookview = (() => {
       <div class="bv__veil"></div>
       <header class="bv__bar"><button class="bv__x" id="bvX" aria-label="Закрыть книгу"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="bv__t"><b id="bvT"></b><small id="bvA"></small></div><button class="bv__aa" id="bvAa" aria-label="Шрифт и бумага">Aa</button></header>
       <div class="bv__stage" id="bvStage"><div class="bv__book" id="bvBook">
-        <i class="bv__leather"></i><i class="bv__edges"></i>
+        <i class="bv__ribbon"></i><i class="bv__leather"></i><i class="bv__edges"></i>
         <div class="bv__pg bv__pg--l paper" id="pgL"></div><div class="bv__pg bv__pg--r paper" id="pgR"></div>
         <div class="bv__leaf" id="bvLeaf"><div class="lf lf--f paper"><i class="lf__sh"></i></div><div class="lf lf--b paper"><i class="lf__sh"></i></div></div>
         <i class="bv__gutter"></i>
@@ -2201,10 +2302,12 @@ A.bookview = (() => {
   function markPrefs() { const P = prefs(); A.$$('#bvFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#bvTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); A.$('#bvSize', el).value = P.size; A.$('#bvFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; }
 
   /* ---------------------------------------------------------------- the faces (what a page holds) */
+  const savePos = () => { clearTimeout(posT); posT = setTimeout(() => A.save(), 450); };
   const pgn = (n, tot) => `<span class="pgn">${n}</span>`;
   const pageEl = (inner, cls = '') => { const d = document.createElement('div'); d.className = 'pgc ' + cls; d.innerHTML = inner; return d; };
   const blank = n => pageEl(n ? pgn(n) : '', 'blank');
-  const titlePage = () => pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i></div>`, 'title');
+  const markPage = () => hasText && book.pos > .002 ? pager.pageOfChar(book.pos * textLen) + 1 : 0;
+  const titlePage = () => { const n = markPage(), d = pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i>${n ? `<button class="seal tapable" id="bvResume"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg>Закладка · стр. ${n}</button>` : ''}</div>`, 'title'); const r = A.$('#bvResume', d); r && r.addEventListener('click', () => { A.snd.tap(); const i = g.land ? Math.floor(n / 2) : n; if (begin(1, { tab: 'read', i })) { const f = fl; f.k = 30; f.c = 8.6; setTimeout(() => { if (fl === f) { f.t = -180; run(); } }, 340); } }); return d; };
   const noText = () => { const d = pageEl(`<div class="tp tp--empty"><p class="hw">У этой книги пока нет страниц для чтения.</p><p class="small">Её можно загрузить из PDF, EPUB или TXT.</p><button class="seal tapable" id="bvLoad">Загрузить текст</button></div>`, 'title'); A.$('#bvLoad', d).addEventListener('click', () => { A.snd.tap(); A.mods.books.editBook(book.id); }); return d; };
   const textFace = (html, n) => pageEl(`<div class="pgtxt">${html}</div>${pgn(n)}`);
 
@@ -2264,7 +2367,8 @@ A.bookview = (() => {
       const first = g.land ? S.i * 2 : S.i, last = g.land ? S.i * 2 + 1 : S.i, cur = Math.max(0, last - 1), tp = pager.count(); pager.get(cur + 1);
       const tpN = pager.count(), end = pager.finished && cur >= pager.count() - 1 ? 1 : pager.fracOf(cur + 1);
       P.textContent = last === 0 ? 'титул' : `стр. ${last} из ${pager.finished ? '' : '≈ '}${tpN}`; prog.style.transform = `scaleX(${last === 0 ? 0 : Math.min(1, end)})`;
-      maxFrac = Math.max(maxFrac, last === 0 ? 0 : end); book.pos = pager.fracOf(Math.max(0, first - 1));
+      maxFrac = Math.max(maxFrac, last === 0 ? 0 : end); if (last > 0) { book.pos = pager.fracOf(Math.max(0, first - 1)); savePos(); }
+      el.classList.toggle('has-mark', book.pos > .002);
       fin.hidden = !(pager.finished && cur >= pager.count() - 1 && book.status !== 'done');
     } else { P.textContent = S.tab === 'quotes' ? `цитат: ${myQuotes().length}` : ''; prog.style.transform = 'scaleX(0)'; fin.hidden = true; }
     A.$$('#bvTabs .rb', el).forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
@@ -2280,8 +2384,9 @@ A.bookview = (() => {
     A.hands.show(true, true); A.$('#hands').classList.add('top'); A.hands.pinch(corner); A.snd.page(); return true;
   }
   function paintLeaf() {
-    const a = fl.ang, k = Math.abs(Math.sin(a * Math.PI / 180)); leaf.style.transform = `rotateY(${a.toFixed(2)}deg)`; leaf.style.setProperty('--k', k.toFixed(3));
-    pgR.style.setProperty('--u', a > -90 ? (k * .3).toFixed(3) : '0'); pgL.style.setProperty('--u', g.land && a <= -90 ? (k * .3).toFixed(3) : '0');
+    const a = fl.ang, th = Math.abs(a), k = Math.abs(Math.sin(th * Math.PI / 180)); leaf.style.transform = `rotateY(${a.toFixed(2)}deg)`; leaf.style.setProperty('--k', k.toFixed(3));
+    const wR = A.clamp((125 - th) / 70, 0, 1), wL = A.clamp((th - 55) / 70, 0, 1);              // the shadow the leaf throws glides from one page to the other, it never jumps
+    pgR.style.setProperty('--u', (k * .2 * wR).toFixed(3)); pgL.style.setProperty('--u', g.land ? (k * .2 * wL).toFixed(3) : '0');
   }
   function settle() { if (!fl) return; fl.v = fl.v || 0; run(); }
   function run() {
@@ -2333,8 +2438,8 @@ A.bookview = (() => {
     await A.quill.write(p, { box: slip, cps: Math.min(34, Math.max(19, text.length / 5)) });
     p.textContent = text; await wait(350); A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .12, .7);
     const q = { id: A.uid(), bookId: book.id, bookTitle: book.title, author: book.author, text, page, tags: [], sticker: '', paper: 'parch', photo: null, date: Date.now() };
-    A.state.quotes.unshift(q); const key = 'q' + A.dayKey(); A.state.bonusDone[key] = (A.state.bonusDone[key] || 0) + 1; if (A.state.bonusDone[key] <= 3) A.addAcorns(1); A.save(); freshId = q.id; comp = { text: '', page: '' };
-    qpager = quotesPager(); A.mods.quotes && A.mods.quotes.refresh && A.mods.quotes.refresh();
+    A.addQuote(q); freshId = q.id; comp = { text: '', page: '' };
+    qpager = quotesPager();
     const br = bookEl.getBoundingClientRect(), sr = slip.getBoundingClientRect(), tx = br.left + br.width * (g.land ? .75 : .5) - (sr.left + sr.width / 2), ty = br.top + br.height * .2 - (sr.top + sr.height / 2);
     const fly = slip.animate([{ transform: 'translate(-50%,-50%) rotate(-1.4deg) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px)) rotate(0deg) scale(.62)`, opacity: .0 }], { duration: 950, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' });
     if (!g.land) { await wait(380); const to = { tab: 'quotes', i: 1 }; if (S.i !== 1 && begin(1, to)) { const f = fl; f.k = 46; f.c = 9.5; await wait(260); f.t = -180; run(); } } else renderSlots();
@@ -2356,7 +2461,7 @@ A.bookview = (() => {
     if (bk.status === 'want') { bk.status = 'reading'; bk.started = bk.started || Date.now(); }
     if (!bk.pages && hasText) bk.pages = A.pagesEst(text); bk._len = textLen; A.save();
     A.$('#bvT', el).textContent = bk.title; A.$('#bvA', el).textContent = bk.author || ''; el.hidden = false; el.classList.remove('setting', 'in'); applyPrefs(); markPrefs(); layout();
-    S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; }
+    S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos > .002) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; setTimeout(() => open_ && A.toast(`Закладка: продолжаем со стр. ${n}`, 2800), 1700); }
     leaf.style.display = 'none'; renderSlots(); document.body.classList.add('bv-open'); A.$('#lib3d').classList.add('bv');
     A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
     if (hasText && !A.state.bvTip) { A.state.bvTip = true; A.save(); setTimeout(() => open_ && A.toast('Листай страницы пальцем. Зажми абзац — он станет цитатой.', 4600), 2000); }
@@ -2432,6 +2537,44 @@ A.quill = (() => {
     const plain = text; host.textContent = plain; if (q.parentNode) q.remove();
   }
   return { write, hide() { if (node && node.parentNode) node.remove(); } };
+})();
+
+/* ============================================================ the writing desk: a slip of parchment for a new quote, from any room.
+   choose the book, type the line, and the quill writes it; the slip then flies off into the archive. */
+A.qslip = (() => {
+  const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
+  let el, card, busy = false, sel = '', onDone = null;
+  function build() {
+    el = A.h(`<div id="qs" class="qs" hidden><div class="qs__veil"></div><div class="qs__card paper" id="qsCard"><h3 class="hw">Новая цитата</h3><div class="qs__books" id="qsBooks"></div>
+      <textarea class="lined hw" id="qsTxt" placeholder="Строки, которые хочется сохранить навсегда…" spellcheck="false"></textarea>
+      <div class="qrow"><label class="pgin"><span>стр.</span><input id="qsPg" inputmode="numeric"></label><button class="seal tapable" id="qsGo"><svg viewBox="0 0 24 24" class="ico"><use href="#i-quill"/></svg>Записать пером</button></div></div>
+      <button class="qs__x" id="qsX" aria-label="Закрыть"><svg viewBox="0 0 24 24" class="ico"><use href="#i-close"/></svg></button></div>`);
+    document.body.appendChild(el); card = A.$('#qsCard', el);
+    A.$('#qsX', el).addEventListener('click', () => close()); A.$('.qs__veil', el).addEventListener('click', () => !busy && close());
+    A.$('#qsGo', el).addEventListener('click', go);
+    A.$('#qsBooks', el).addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; sel = b.dataset.id; A.snd.tap(); A.$$('#qsBooks .chip', el).forEach(c => c.classList.toggle('on', c === b)); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !el.hidden && !busy) { e.stopImmediatePropagation(); close(); } }, true);
+  }
+  function open(opt = {}) {
+    if (!el) build(); if (!el.hidden) return; busy = false; onDone = opt.onDone || null; sel = opt.bookId != null ? opt.bookId : ((A.state.books.find(b => b.status === 'reading') || A.state.books[0] || {}).id || '');
+    A.$('#qsBooks', el).innerHTML = A.state.books.map(b => `<button class="chip ${b.id === sel ? 'on' : ''}" data-id="${b.id}">${esc(b.title)}</button>`).join('') + `<button class="chip ${sel === '' ? 'on' : ''}" data-id="">другая</button>`;
+    A.$('#qsTxt', el).value = opt.text || ''; A.$('#qsPg', el).value = ''; card.style.visibility = ''; card.hidden = false; el.hidden = false; void el.offsetWidth; el.classList.add('on'); A.snd.page();
+    card.animate([{ opacity: 0, transform: 'translate(-50%,-44%) rotate(-3deg) scale(.94)' }, { opacity: 1, transform: 'translate(-50%,-50%) rotate(-1.2deg) scale(1)' }], { duration: 600, easing: 'cubic-bezier(.2,.9,.25,1)', fill: 'forwards' });
+  }
+  function close() { if (!el || el.hidden) return; el.classList.remove('on'); A.quill.hide(); setTimeout(() => { el.hidden = true; A.$$('.qslip', el).forEach(n => n.remove()); }, 500); }
+  async function go() {
+    if (busy) return; const text = A.$('#qsTxt', el).value.trim(); if (!text) { A.toast('Впиши строки, которые хочется сохранить'); A.$('#qsTxt', el).focus(); return; }
+    busy = true; A.$('#qsTxt', el).blur(); const page = A.$('#qsPg', el).value.trim(), b = A.state.books.find(x => x.id === sel), title = b ? b.title : '';
+    const slip = A.h(`<div class="qslip"><div class="qslip__in"><p class="qslip__t hw"></p><cite>${title ? '— «' + esc(title) + '»' : ''}${page ? ', стр. ' + esc(page) : ''}</cite></div></div>`); el.appendChild(slip);
+    const p = A.$('.qslip__t', slip); p.textContent = text; p.style.fontSize = text.length > 220 ? '19px' : text.length > 120 ? '22px' : '26px';
+    card.style.visibility = 'hidden'; slip.animate([{ opacity: 0, transform: 'translate(-50%,-50%) rotate(-1.2deg) scale(.96)' }, { opacity: 1, transform: 'translate(-50%,-50%) rotate(-1.4deg) scale(1)' }], { duration: 420, easing: 'ease-out', fill: 'forwards' });
+    await wait(480); await A.quill.write(p, { box: slip, cps: Math.min(34, Math.max(19, text.length / 5)) }); p.textContent = text; await wait(380); A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .12, .7);
+    A.addQuote({ id: A.uid(), bookId: sel, bookTitle: b ? b.title : '', author: b ? b.author : '', text, page, tags: [], sticker: '', paper: 'parch', photo: null, date: Date.now() });
+    const ink = A.$('.lb__ink'), tr = ink ? ink.getBoundingClientRect() : { left: innerWidth - 50, top: 40, width: 40, height: 60 }, sr = slip.getBoundingClientRect(), dx = tr.left + tr.width / 2 - (sr.left + sr.width / 2), dy = tr.top + tr.height / 2 - (sr.top + sr.height / 2);
+    A.snd.page(); await slip.animate([{ transform: 'translate(-50%,-50%) rotate(-1.4deg) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${dx * .5}px),calc(-50% + ${dy * .5 - 30}px)) rotate(-8deg) scale(.5)`, opacity: .9, offset: .55 }, { transform: `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) rotate(-14deg) scale(.08)`, opacity: 0 }], { duration: 1000, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' }).finished;
+    A.fx.sparks(tr.left + tr.width / 2, tr.top + tr.height / 2, 18, '#f3d9a0'); busy = false; close(); A.toast('Цитата легла в архив 🪶'); onDone && onDone();
+  }
+  return { open, close, get isOpen() { return !!el && !el.hidden; } };
 })();
 
 /* ============================================================ "Полка": the catalogue */
@@ -2599,12 +2742,12 @@ A.casket = (() => {
 
   async function enter() {
     build(); if (open) return; open = true; busy = true; wrote = false; y = yt = 0; yv = 0; el.hidden = false; void el.offsetWidth; el.classList.add('on'); hintEl.classList.remove('on');
-    const L = A.scene.layout(), [sx, sy] = A.scene.plateToScreen(L.cit.slot[0], L.cit.slot[1]); fill();
-    const r = scroll.getBoundingClientRect(), dx = sx - (r.left + r.width / 2), dy = sy - (r.top + r.height / 2);
+    fill();
+    const r = scroll.getBoundingClientRect(), mid = r.top + r.height / 2, H = innerHeight;
     A.snd.page && A.snd.page(); A.snd.quill && A.snd.quill();
-    const a = scroll.animate([{ transform: `translate(${dx}px,${dy}px) scale(.22) rotate(-9deg)`, opacity: 0, filter: 'brightness(.5)' }, { opacity: 1, offset: .2 }, { transform: `translate(${dx * .3}px,${dy * .15 - 30}px) scale(.7) rotate(-3deg)`, opacity: 1, filter: 'brightness(.85)', offset: .55 }, { transform: 'none', opacity: 1, filter: 'none' }], { duration: 1250, easing: 'cubic-bezier(.25,.9,.25,1)', fill: 'backwards' });
+    const a = scroll.animate([{ top: mid - 34 + 'px', bottom: H - mid - 34 + 'px', opacity: 0, filter: 'brightness(.6)' }, { opacity: 1, offset: .25 }, { top: r.top + 'px', bottom: H - r.bottom + 'px', opacity: 1, filter: 'none' }], { duration: 1150, easing: 'cubic-bezier(.25,.9,.25,1)' });   // the scroll unrolls from its middle, right where it will stay
     await a.finished; busy = false; kick();
-    hintEl.textContent = list().length ? 'Листай свиток пальцем. Нажми на цитату, чтобы поделиться.' : ''; hintEl.classList.add('on');
+    if (list().length && !A.state.arcTip) { A.state.arcTip = true; A.save(); A.toast('Листай свиток пальцем. Нажми на цитату, чтобы поделиться.', 4200); }
     if (list().length && !wrote && open) { wrote = true; await wait(500); const first = A.$('.sq .sq__t', listEl); if (first && open) { try { await A.quill.write(first, { box: scroll, cps: Math.min(34, Math.max(18, first.textContent.length / 5)) }); } catch (e) {} } }
   }
   function hide() { if (!el) return; open = false; busy = false; el.classList.remove('on'); A.quill.hide(); hintEl.classList.remove('on'); cntEl.textContent = ''; setTimeout(() => { if (!open) el.hidden = true; }, 500); }
@@ -2612,6 +2755,7 @@ A.casket = (() => {
 })();
 
 /* ============================================================ "Цитаты": postcards on aged paper, with stickers, photos and tags */
+A.addQuote = q => { A.state.quotes.unshift(q); const key = 'q' + A.dayKey(); A.state.bonusDone[key] = (A.state.bonusDone[key] || 0) + 1; if (A.state.bonusDone[key] <= 3) A.addAcorns(1); A.save(); A.mods.quotes && A.mods.quotes.refresh && A.mods.quotes.refresh(); };
 (() => {
   let el, book = 'all';
   const PAPER = { parch: 'Пергамент', kraft: 'Крафт', night: 'Ночь' };
@@ -2786,7 +2930,9 @@ A.casket = (() => {
 
   A.mods.potion = {
     init() { build(); }, beforeShow() {}, rebuild() { built = false; if (A.scene.room() === 'lab') build(); },
-    show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } hint('Коснись склянки, чтобы влить её в котёл'); }
+    show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } hint('Коснись склянки, чтобы влить её в котёл'); },
+    hide() { filmT++; brewing = false; brewFx = 0; A.hands.uncarry && A.hands.uncarry(); A.hands.show(false); const hd = A.$('#hands'); hd && hd.classList.remove('top'); clearTable(); if (scr) scr.classList.remove('on'); layer && layer.classList.remove('boil'); A.$$('.mood3', layer || document).forEach(x => x.style.pointerEvents = ''); },
+    light: () => ({ x: LAB ? LAB.pour[0] : 0, y: LAB ? LAB.pour[1] : 0, rgb: liq.map(Math.round), k: Math.min(1, .25 + hot * .75) })
   };
   const hint = s => { const h = A.$('#labHint', layer); if (!h) return; h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); clearTimeout(hint._t); hint._t = setTimeout(() => h.classList.remove('on'), 4200); };
   function build() {
@@ -2831,12 +2977,86 @@ A.casket = (() => {
     cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
   }
 
-  function brew() {
-    if (brewing) return; if (!sel.size) { A.toast('Выбери настроение: коснись любой склянки'); A.snd.owl(); return; }
-    brewing = true; A.$('#labRes', layer).classList.remove('on'); hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); layer.classList.add('boil');
-    let n = 0; const iv = setInterval(() => { for (let i = 0; i < 10; i++) sparks.push({ x: LAB.pour[0] + R(-110, 110), y: LAB.pour[1], vx: R(-90, 90), vy: -R(160, 360), life: 0, max: R(.6, 1.2) }); for (let i = 0; i < 6; i++) bubbles.push(nb()); A.snd.bubble(); if (++n > 7) clearInterval(iv); }, 380);
-    setTimeout(() => { const pick_ = recommend(); brewing = false; layer.classList.remove('boil'); show(pick_); }, 3200);
+  /* ---------------------------------------------------------------- the brewing film: camera to the cauldron, her hand dips an empty vial, lifts it glowing, carries it across the room and sets it on the table */
+  const sleep = ms => new Promise(r => setTimeout(r, ms)), eio = k => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, eo = k => 1 - Math.pow(1 - k, 3), lerp = (a, b, k) => a + (b - a) * k;
+  const TABLE = { portrait: [560, 1490], landscape: [880, 940] };
+  let scr = null, vialId = 0, pv = null, brewFx = 0, filmT = 0, tableVial = null, pvSteam = [], pvLoop = 0;
+  const kPlate = () => { const a = A.scene.plateToScreen(0, 0), b = A.scene.plateToScreen(100, 0); return (b[0] - a[0]) / 100; };
+  const rgbOf = () => { const m = (liqT[0] + liqT[1] + liqT[2]) / 3; return liqT.map(v => Math.round(A.clamp(m + (v - m) * 1.6, 30, 235))); };       // the potion is a deeper, richer colour than the pale mix in the cauldron
+  function vialSVG(rgb) {
+    const id = 'v' + (++vialId), [r, g, b] = rgb, lt = `rgb(${Math.min(255, r + 38)},${Math.min(255, g + 38)},${Math.min(255, b + 38)})`, dk = `rgb(${r * .35 | 0},${g * .35 | 0},${b * .35 | 0})`, body = 'M33 20 L33 52 C14 62 6 80 6 102 C6 128 22 146 40 146 C58 146 74 128 74 102 C74 80 66 62 47 52 L47 20 Z';
+    return `<svg viewBox="0 0 80 150" width="80" height="150" aria-hidden="true"><defs><linearGradient id="${id}g" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".22" stop-color="#d8f2ee" stop-opacity=".14"/><stop offset=".72" stop-color="#a8d4cc" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/></linearGradient>
+      <radialGradient id="${id}l" cx=".38" cy=".3" r=".9"><stop offset="0" stop-color="${lt}"/><stop offset=".55" stop-color="rgb(${r},${g},${b})"/><stop offset="1" stop-color="${dk}"/></radialGradient><linearGradient id="${id}k" x1="0" x2="1"><stop offset="0" stop-color="#8a5a2c"/><stop offset=".5" stop-color="#c38a4d"/><stop offset="1" stop-color="#6a4020"/></linearGradient><clipPath id="${id}c"><path d="${body}"/></clipPath></defs>
+      <g clip-path="url(#${id}c)"><g class="pv__liq"><rect x="0" y="150" width="80" height="150" fill="url(#${id}l)"/><ellipse cx="40" cy="150" rx="26" ry="3.4" fill="${lt}" opacity=".85"/><circle cx="28" cy="190" r="3" fill="#fff" opacity=".35"/><circle cx="50" cy="210" r="2" fill="#fff" opacity=".3"/><circle cx="40" cy="240" r="4" fill="#fff" opacity=".25"/></g></g>
+      <path d="${body}" fill="url(#${id}g)" stroke="rgba(235,255,250,.6)" stroke-width="1.5"/><path d="M14 92 C12 106 16 120 24 130" stroke="rgba(255,255,255,.55)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M62 70 C68 80 70 90 70 98" stroke="rgba(255,255,255,.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="29" y="6" width="22" height="18" rx="3" fill="url(#${id}k)"/><path d="M31 10 H49 M31 15 H49" stroke="rgba(60,30,10,.4)" stroke-width="1"/><ellipse cx="40" cy="22" rx="12" ry="2" fill="rgba(0,0,0,.25)"/></svg>`;
   }
+  const mkVial = (lv, lit) => { const d = A.h(`<div class="pv ${lit ? 'pv--lit' : ''}" style="--lv:${lv};--lc:${rgbOf().join(',')}">${vialSVG(rgbOf())}</div>`); return d; };
+  function ensureScreen() { if (scr) return; scr = A.h(`<div id="potion3d" aria-hidden="false"><canvas id="pvFx"></canvas><div class="pvtable" id="pvTable"></div><div class="pvbtns" id="pvBtns"></div></div>`); document.body.appendChild(scr); const c = A.$('#pvFx', scr); c.width = innerWidth; c.height = innerHeight; addEventListener('resize', () => { c.width = innerWidth; c.height = innerHeight; }); }
+
+  async function brew() {
+    if (brewing) return; if (!sel.size) { A.toast('Выбери настроение: коснись любой склянки'); A.snd.owl(); return; }
+    brewing = true; const my = ++filmT; A.$('#labRes', layer).classList.remove('on'); clearTable(); hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); layer.classList.add('boil'); ensureScreen(); scr.classList.add('on');
+    const ori = A.scene.ori(), TB = TABLE[ori], rx = LAB.rx || 150, vH = A.clamp(innerHeight * .2, 110, 190), vW = vH * 80 / 150, ox = vW * .92, oy = vH * .42, vial = mkVial(0, false);
+    vial.style.cssText += `;width:${vW}px;height:${vH}px;transform-origin:${ox}px ${oy}px`; const svg = A.$('svg', vial); svg.setAttribute('width', vW); svg.setAttribute('height', vH);
+    A.$$('.mood3', layer).forEach(x => x.style.pointerEvents = 'none'); A.hands.show(true, true); A.$('#hands').classList.add('top');
+    // keyframes of the grip point, in screen pixels, recomputed every frame because the camera moves under them
+    const t0 = performance.now(); let phase = 0, dipped = false;
+    const cp = () => { const [px, py] = A.scene.plateToScreen(LAB.pour[0], LAB.pour[1]), k = kPlate(), [tx, ty] = A.scene.plateToScreen(TB[0], TB[1]), vk = vH / 150, w = innerWidth, h = innerHeight;
+      return { start: [w + 80, h * .95], above: [px - rx * k * .42, py - 190 * vk - vH * .1], dip: [px - rx * k * .42, py + 4 * k - vH * .02], aboveT: [tx + vW * .42, ty - vH * .58 - 120 * vk], onT: [tx + vW * .42, ty - vH * .58], surf: py + 8 * k, mouth: [px, py] }; };
+    const path = t => { const P = cp(); let x, y, r, lv = 0, lit = false;
+      if (t < 900) { const k = eo(t / 900); x = lerp(P.start[0], P.above[0], k); y = lerp(P.start[1], P.above[1], k); r = lerp(4, -8, k); }
+      else if (t < 1500) { const k = eio((t - 900) / 600); x = P.above[0]; y = lerp(P.above[1], P.dip[1], k); r = lerp(-8, -22, k); }
+      else if (t < 2800) { x = P.dip[0]; y = P.dip[1] + Math.sin((t - 1500) / 120) * 2; r = -22; lv = A.clamp((t - 1650) / 1000, 0, 1); }
+      else if (t < 3600) { const k = eio((t - 2800) / 800); x = P.dip[0]; y = lerp(P.dip[1], P.above[1], k); r = lerp(-22, -6, k); lv = 1; lit = true; }
+      else if (t < 5100) { const k = eio((t - 3600) / 1500), a = Math.sin(k * Math.PI) * 60; x = lerp(P.above[0], P.aboveT[0], k); y = lerp(P.above[1], P.aboveT[1], k) - a; r = lerp(-6, 0, k); lv = 1; lit = true; }
+      else { const k = eio(A.clamp((t - 5100) / 700, 0, 1)); x = P.aboveT[0]; y = lerp(P.aboveT[1], P.onT[1], k); r = 0; lv = 1; lit = true; }
+      const bottom = y - oy + vH, clip = (t > 1100 && t < 2900) ? Math.max(0, bottom - P.surf) : 0;
+      return { x, y, r, s: 1, lv, lit, clip, P, prop: { x: x - ox, y: y - oy, r, s: 1 } }; };
+    A.scene.look(LAB.pour[0], LAB.pour[1] + 40, 1.45);
+    A.hands.carry('R', () => { const t = performance.now() - t0, c = path(t); if (c.lv != null) { vial.style.setProperty('--lv', (c.lv * 96).toFixed(1)); vial.classList.toggle('pv--lit', c.lit); } if (!dipped && t > 1300) { dipped = true; ripple(c.P.mouth); A.snd.bubble(); for (let i = 0; i < 18; i++) sparks.push({ x: LAB.pour[0] + R(-90, 90), y: LAB.pour[1], vx: R(-90, 90), vy: -R(160, 340), life: 0, max: R(.6, 1.2) }); }
+      return { x: c.x, y: c.y, r: c.r, s: 1, prop: c.prop, clip: c.clip ? `inset(0 0 ${c.clip}px 0)` : 'none', snap: t < 40 }; }, vial);
+    brewFx = 1; hot = 1;
+    await sleep(1650); if (my !== filmT) return; for (let i = 0; i < 40; i++) bubbles.push(nb()); A.snd.bubble();
+    await sleep(900); if (my !== filmT) return; A.snd.unlock2 && A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .4, 22, 180);
+    await sleep(500); if (my !== filmT) return; A.scene.look(TB[0], TB[1] - 120, 1.12); A.snd.whoosh && A.snd.whoosh(1);
+    await sleep(2900); if (my !== filmT) return;
+    // the vial stands on the table; the hand lets go and slips away
+    const pk = recommend(); const [tx, ty] = [0, 0]; A.hands.uncarry(); A.hands.show(false); setTimeout(() => A.$('#hands').classList.remove('top'), 900);
+    placeTable(pk, vW, vH); brewing = false; brewFx = 0; layer.classList.remove('boil'); hint(''); A.$$('.mood3', layer).forEach(x => x.style.pointerEvents = '');
+  }
+  function ripple(m) { const [rx, ry] = LAB.pour; for (let i = 0; i < 3; i++) setTimeout(() => ripples.push({ x: rx + R(-30, 30), y: ry + R(-6, 10), r: 6, a: .8 }), i * 140); }
+
+  /* the vial on the table, in screen space: it follows the camera, smoke curls out of the cork, a tag with the book's name hangs from its neck */
+  function placeTable(p, vW, vH) {
+    const b = p.b, TB = TABLE[A.scene.ori()], el = mkVial(96, true); el.style.cssText += `;width:${vW}px;height:${vH}px`; const svg = A.$('svg', el); svg.setAttribute('width', vW); svg.setAttribute('height', vH);
+    const holder = A.$('#pvTable', scr); holder.innerHTML = ''; const wrap = A.h(`<div class="pvt" style="--vw:${vW}px;--vh:${vH}px"></div>`); wrap.appendChild(el);
+    wrap.appendChild(A.h(`<div class="pvt__tag"><i></i><b>${A.esc(b.title)}</b><small>${A.esc(b.author || '')}</small><em>${[...sel].map(k => A.MOODS[k]).join(' · ')}</em></div>`)); holder.appendChild(wrap); smkS = tintSprite(rgbOf()); tableVial = { wrap, el, TB, vW, vH, p };
+    wrap.animate([{ transform: 'translateY(-6px) scale(1.04)', filter: 'brightness(1.8)' }, { transform: 'none', filter: 'none' }], { duration: 900, easing: 'cubic-bezier(.2,.9,.3,1)' });
+    A.snd.chime && A.snd.chime([523.25, 659.25, 783.99, 1046.5], .1, .8); A.vibrate(24); A.fx.sparks(innerWidth / 2, innerHeight * .55, 24, '#bff5cf');
+    const bt = A.$('#pvBtns', scr), why = [...sel].map(k => A.MOODS[k]).join(' · ');
+    bt.innerHTML = `${p.own ? `<button class="seal" id="rcOpen">Открыть книгу</button>` : `<button class="seal" id="rcAdd">В «Хочу»</button>`}<button class="seal seal--ghost" id="rcAgain">Ещё раз</button>`;
+    bt.classList.add('on'); A.$$('button', bt).forEach(x => x.addEventListener('pointerdown', e => e.stopPropagation()));
+    A.$('#rcAgain', bt).addEventListener('click', () => { A.snd.tap(); clearTable(); sel.clear(); A.$$('.mood3', layer).forEach(x => x.classList.remove('on')); mix(); A.scene.look(LAB.pour[0], LAB.pour[1], 1); hint('Коснись склянки, чтобы влить её в котёл'); });
+    const add = A.$('#rcAdd', bt), open = A.$('#rcOpen', bt);
+    add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 30); add.textContent = 'Добавлено ✓'; add.disabled = true; });
+    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books'); setTimeout(() => { if (bk && bk.hasText) A.reader.open(bk, null); else if (bk) A.mods.books.openBook(bk.id); }, 1800); });
+    if (!pvLoop) { pvLoop = 1; requestAnimationFrame(pvFrame); }
+  }
+  function clearTable() { tableVial = null; pvSteam.length = 0; if (scr) { A.$('#pvTable', scr).innerHTML = ''; A.$('#pvBtns', scr).classList.remove('on'); const c = A.$('#pvFx', scr); c.getContext('2d').clearRect(0, 0, c.width, c.height); } }
+  const tintSprite = rgb => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32), m = rgb.map(v => Math.min(255, v + 60)).join(','); gr.addColorStop(0, `rgba(${m},.6)`); gr.addColorStop(.5, `rgba(${m},.22)`); gr.addColorStop(1, `rgba(${m},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
+  let smkS = null;
+  let pvLast = 0;
+  function pvFrame(now) {
+    if (!scr) { pvLoop = 0; return; } requestAnimationFrame(pvFrame); const dt = Math.min(.05, (now - (pvLast || now)) / 1000); pvLast = now; if (A.scene.room() !== 'lab') return;
+    const c = A.$('#pvFx', scr), g = c.getContext('2d'); g.clearRect(0, 0, c.width, c.height); if (!tableVial) return;
+    const { wrap, TB, vW, vH } = tableVial, [tx, ty] = A.scene.plateToScreen(TB[0], TB[1]); wrap.style.transform = `translate3d(${(tx - vW / 2).toFixed(1)}px,${(ty - vH).toFixed(1)}px,0)`;
+    const rgb = rgbOf(); if (Math.random() < dt * 9) pvSteam.push({ x: tx + R(-2, 2), y: ty - vH + 2, vx: R(-5, 5), vy: -R(22, 46), life: 0, max: R(2.6, 4.2), s: R(5, 11) });
+    g.globalCompositeOperation = 'lighter';
+    pvSteam = pvSteam.filter(q => { q.life += dt; if (q.life > q.max) return false; const k = q.life / q.max; q.x += (q.vx + Math.sin(q.life * 2.4 + q.max) * 14) * dt; q.y += q.vy * dt; const r = q.s * (1 + k * 4.2); g.globalAlpha = Math.min(1, k * 6) * (1 - k) * .3; g.drawImage(smkS, q.x - r, q.y - r, r * 2, r * 2); return true; });
+    const gr = g.createRadialGradient(tx, ty - vH * .45, 0, tx, ty - vH * .45, vH * 1.3); gr.addColorStop(0, `rgba(${rgb},${.28 + .06 * Math.sin(performance.now() / 400)})`); gr.addColorStop(1, `rgba(${rgb},0)`); g.globalAlpha = 1; g.fillStyle = gr; g.fillRect(tx - vH * 1.4, ty - vH * 1.8, vH * 2.8, vH * 2.4); g.globalCompositeOperation = 'source-over';
+  }
+
   function recommend() {
     const mine = A.state.books.filter(b => b.status === 'want'), have = new Set(A.state.books.map(b => b.title.toLowerCase()));
     const score = b => { const tg = b.tags || b.m || []; let s = 0; tg.forEach(m => { if (sel.has(m)) s += 3; }); return s + Math.random() * .9; };
@@ -2844,17 +3064,7 @@ A.casket = (() => {
     const cands = A.SUGGEST.filter(x => !have.has(x.t.toLowerCase())).map(x => ({ b: { title: x.t, author: x.a, pages: x.p, tags: x.m }, s: score(x) })).sort((a, b) => b.s - a.s);
     return own || cands[0] || { b: { title: A.SUGGEST[0].t, author: A.SUGGEST[0].a, pages: A.SUGGEST[0].p, tags: A.SUGGEST[0].m }, s: 0 };
   }
-  function show(p) {
-    const b = p.b, res = A.$('#labRes', layer); A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .5, 30, 220); A.vibrate(30); hint('');
-    const why = [...sel].map(k => A.MOODS[k]).join(' · ');
-    res.innerHTML = `<div class="scroll3"><small>на этот вечер</small><div class="scroll3__row">${A.coverHTML(b, 'reco__cover')}<div><h3>${A.esc(b.title)}</h3><p>${A.esc(b.author || '')}</p><em>${why ? 'рецепт: ' + A.esc(why) : ''}</em></div></div>
-      <div class="scroll3__btn">${p.own ? `<button class="btn btn--gold" id="rcOpen">Открыть</button>` : `<button class="btn btn--gold" id="rcAdd">В «Хочу»</button>`}<button class="btn btn--ghost" id="rcAgain">Ещё раз</button></div></div>`;
-    res.classList.add('on'); [...res.querySelectorAll('button')].forEach(x => x.addEventListener('pointerdown', e => e.stopPropagation()));
-    A.$('#rcAgain', res).addEventListener('click', () => { A.snd.tap(); res.classList.remove('on'); sel.clear(); A.$$('.mood3', layer).forEach(x => x.classList.remove('on')); mix(); hint('Коснись склянки, чтобы влить её в котёл'); });
-    const add = A.$('#rcAdd', res), open = A.$('#rcOpen', res);
-    add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 24); A.toast('Книга ждёт тебя в библиотеке'); add.disabled = true; add.textContent = 'Добавлено'; });
-    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books'); setTimeout(() => { if (bk && bk.hasText) A.reader.open(bk, null); else if (bk) A.mods.books.openBook(bk.id); }, 1800); });
-  }
+  function show() {}
 })();
 
 /* ============================================================ goals: daily pages -> acorns, week bars, stickers, logging + book completion */
@@ -2946,56 +3156,74 @@ A.logPages = (n, bookId) => {
 })();
 
 /* ============================================================ the entrance: the flythrough (graveyard, the key, the gate opens, the candlelit hall) with its own sound.
-   There is no button: the gate opens by itself and she walks into the room. Sound starts on the first touch (browsers forbid it earlier). */
+   There is no button: the gate opens by itself and she walks into the room. Sound starts on the first touch (browsers forbid it earlier).
+   Playback has two engines so the door can never silently be skipped:  a <video> of the film, and, if the browser cannot play it, the same film as an image sequence on a canvas with its audio on the side. */
 A.introInit = () => A.intro = (() => {
-  const el = A.$('#intro'), v = A.$('#introV'), skip = A.$('#introSkip');
-  let done = false, played = false, soundOn = false, tOut = 0;
-  const first = !A.state.introSeen;
-  const wantSound = () => A.state.settings.sound !== false;
+  const el = A.$('#intro'), v = A.$('#introV'), skip = A.$('#introSkip'), sc = A.$('#introSeq'), sg = sc.getContext('2d'), amb = A.$('#introAmb'), ag = amb.getContext('2d');
+  const DUR = 11.83, FPS = 12, N = 142, first = !A.state.introSeen, wantSound = () => A.state.settings.sound !== false;
+  let done = false, played = false, soundOn = false, seq = false, tStart = 0, tFail = 0, frames = [], audio = null, ended = false, ambT = 0, lastDraw = -1;
 
   function finish() {
-    if (done) return; done = true; clearTimeout(tOut);
+    if (done) return; done = true; clearTimeout(tFail);
     A.state.introSeen = true; A.save(); el.classList.add('out'); document.body.classList.add('ui');
     A.snd.setMood('room'); if (soundOn) A.snd.chime([392, 523.25, 659.25, 783.99], .16, .9);
     A.ui.enterApp(first);
-    setTimeout(() => { try { v.pause(); } catch (e) {} el.hidden = true; }, 1800);
+    setTimeout(() => { try { v.pause(); audio && audio.pause(); } catch (e) {} el.hidden = true; }, 1800);
     setTimeout(() => { if (A.tab !== 'room') return; const h = A.$('#hint'); h.textContent = first ? 'Проведи пальцем, чтобы осмотреться. Коснись любого предмета.' : ''; h.classList.add('on'); setTimeout(() => h.classList.remove('on'), 6500); }, 3800);
   }
   function unmute() {
-    if (soundOn || !wantSound()) return; soundOn = true; A.snd.unlock();
-    try { v.muted = false; v.volume = 1; if (v.paused && !done) v.play().catch(() => {}); } catch (e) {} el.classList.add('snd');
+    if (soundOn || !wantSound()) return; soundOn = true; A.snd.unlock(); el.classList.add('snd');
+    try { if (seq) { if (audio) { audio.currentTime = Math.min(DUR - .1, clock()); audio.volume = 1; audio.play().catch(() => {}); } } else { v.muted = false; v.volume = 1; if (v.paused && !done) v.play().catch(() => {}); } } catch (e) {}
   }
-  /* landscape: the film is 9:16, so a tiny live copy of the frame is blurred behind it as ambient light instead of black bars */
-  const amb = A.$('#introAmb'), ag = amb.getContext('2d'); let ambT = 0;
+  const clock = () => seq ? Math.max(0, (performance.now() - tStart) / 1000) : v.currentTime;
+  function begin() { if (played) return; played = true; clearTimeout(tFail); el.classList.add('play'); ambient(); setTimeout(() => el.classList.add('skippable'), 2600); }
+  const endHold = () => { if (ended) return; ended = true; el.classList.add('title'); setTimeout(finish, 2100); };       // hold the last frame (the candlelit hall) with the title, then walk in
+
+  /* landscape: the film is 9:16, so a tiny live copy of the frame, mirrored to both sides and blurred, is the light around it instead of black bars */
   function ambient() {
-    if (done) return; requestAnimationFrame(ambient); if (innerWidth <= innerHeight || v.readyState < 2) return;
+    if (done) return; requestAnimationFrame(ambient); if (innerWidth <= innerHeight) return; const src = seq ? sc : v; if (!seq && v.readyState < 2) return;
     const now = performance.now(); if (now - ambT < 60) return; ambT = now;
     const cw = 96, ch = Math.max(30, Math.round(96 * innerHeight / innerWidth)); if (amb.width !== cw || amb.height !== ch) { amb.width = cw; amb.height = ch; }
-    const h = ch, w = v.videoWidth * h / v.videoHeight, n = Math.ceil(cw / w / 2) + 1;       // mirrored copies of the frame continue it to both sides, so the strip melts into the screen
-    for (let i = -n; i <= n; i++) { ag.save(); ag.translate(cw / 2 + i * w, 0); if (i & 1) ag.scale(-1, 1); ag.drawImage(v, -w / 2, 0, w, h); ag.restore(); }
+    const sw = seq ? sc.width : v.videoWidth, sh = seq ? sc.height : v.videoHeight, h = ch, w = sw * h / sh, n = Math.ceil(cw / w / 2) + 1;
+    for (let i = -n; i <= n; i++) { ag.save(); ag.translate(cw / 2 + i * w, 0); if (i & 1) ag.scale(-1, 1); ag.drawImage(src, -w / 2, 0, w, h); ag.restore(); }
   }
-  function begin() {
-    if (played) return; played = true; el.classList.add('play'); ambient();
-    setTimeout(() => el.classList.add('skippable'), 2600);
-  }
+
+  /* ---------------- engine 1: the video */
   v.addEventListener('playing', begin);
   v.addEventListener('timeupdate', () => { if (v.currentTime > v.duration - 2.6 && !el.classList.contains('title')) el.classList.add('title'); });
-  v.addEventListener('ended', () => { el.classList.add('title'); setTimeout(finish, 2100); });          // hold the last frame (the candlelit hall) with the title, then walk in
-  v.addEventListener('error', () => { if (!played) finish(); });
+  v.addEventListener('ended', endHold);
+  v.addEventListener('error', () => { if (!played) toSeq(); });
+  function startVideo() {
+    v.muted = !wantSound(); v.playsInline = true;
+    tFail = setTimeout(() => { if (!played && v.readyState < 2) toSeq(); }, 4500);                  // nothing is moving after 4.5 s: switch engines
+    const p = v.play(), mute = () => { v.muted = true; return v.play(); };
+    if (p && p.then) p.then(() => { if (!v.muted) { soundOn = true; el.classList.add('snd'); } }).catch(err => mute().catch(() => {
+      if (err && err.name !== 'NotAllowedError') return toSeq();
+      el.classList.add('play'); const go = () => { v.play().catch(toSeq); unmute(); }; addEventListener('pointerdown', go, { once: true });  // autoplay is forbidden here: the first touch starts the film
+    }));
+  }
+
+  /* ---------------- engine 2: image sequence + audio */
+  function toSeq() {
+    if (seq || done || played) return; seq = true; el.classList.add('seq'); clearTimeout(tFail); try { v.pause(); } catch (e) {}
+    const url = i => `video/seq/f${String(i + 1).padStart(3, '0')}.webp`; let next = 0, ok = 0;
+    const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; im.onerror = () => { pull(); }; im.src = url(i); };
+    for (let k = 0; k < 6; k++) pull();
+    audio = new Audio('video/intro.m4a'); audio.preload = 'auto';
+    tFail = setTimeout(() => { if (!tStart) finish(); }, 6000);                                         // not even the stills arrive: walk in anyway
+  }
+  function tick() {
+    if (done) return; requestAnimationFrame(tick); const t = (performance.now() - tStart) / 1000, i = Math.min(N - 1, Math.floor(t * FPS));
+    if (t > DUR - 2.6) el.classList.add('title'); if (t >= DUR) endHold();
+    let j = i; while (j > 0 && !frames[j]) j--; if (!frames[j] || j === lastDraw) return; lastDraw = j;
+    const im = frames[j]; if (sc.width !== im.naturalWidth) { sc.width = im.naturalWidth; sc.height = im.naturalHeight; } sg.drawImage(im, 0, 0);
+  }
+
   skip.addEventListener('click', e => { e.stopPropagation(); A.snd.unlock(); finish(); });
   ['pointerdown', 'touchend', 'keydown'].forEach(t => addEventListener(t, () => { A.snd.unlock(); unmute(); }, { capture: true, passive: true }));
 
-  /* start: try with sound (works where the browser allows it), else muted, else wait for the first touch */
-  function start() {
-    v.muted = !wantSound() ? true : false; v.playsInline = true;
-    const p = v.play(); const mute = () => { v.muted = true; return v.play(); };
-    if (p && p.then) p.then(() => { if (!v.muted) { soundOn = true; el.classList.add('snd'); } }).catch(() => mute().catch(() => { el.classList.add('play'); const go = () => { v.play().catch(finish); unmute(); }; addEventListener('pointerdown', go, { once: true }); }));
-    tOut = setTimeout(() => { if (!played && !el.classList.contains('play')) finish(); }, 9000);          // never a stuck door: no video in 9 s means we simply walk in
-  }
-  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) finish();
-  else if (window.__INTRO) fetch(window.__INTRO).then(r => r.blob()).then(b => { v.src = URL.createObjectURL(b); start(); }).catch(finish);
-  else start();
-  return { finish, unmute, get done() { return done; } };
+  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) toSeq(); else startVideo();
+  return { finish, unmute, get done() { return done; }, get engine() { return seq ? 'seq' : 'video'; } };
 })();
 
 /* ============================================================ boot: the entrance video (intro.js) -> the hub room, the fire lights */

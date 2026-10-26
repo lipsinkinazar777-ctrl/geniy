@@ -9,7 +9,7 @@ A.bookview = (() => {
   const prefs = () => Object.assign({ size: 21, font: 'serif', theme: 'parch' }, A.state.settings.reader || {});
   const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
   const TABS = [['read', 'Читать'], ['impr', 'Впечатление'], ['quotes', 'Цитаты']];
-  let stillT = 0, el, book, bookEl, pgL, pgR, leaf, lfF, lfB, stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
+  let posT = 0, stillT = 0, el, book, bookEl, pgL, pgR, leaf, lfF, lfB, stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
 
   /* ---------------------------------------------------------------- pagination (lazy: a page is measured only when it is needed) */
   function makePager(paras, measure) {
@@ -51,7 +51,7 @@ A.bookview = (() => {
       <div class="bv__veil"></div>
       <header class="bv__bar"><button class="bv__x" id="bvX" aria-label="Закрыть книгу"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="bv__t"><b id="bvT"></b><small id="bvA"></small></div><button class="bv__aa" id="bvAa" aria-label="Шрифт и бумага">Aa</button></header>
       <div class="bv__stage" id="bvStage"><div class="bv__book" id="bvBook">
-        <i class="bv__leather"></i><i class="bv__edges"></i>
+        <i class="bv__ribbon"></i><i class="bv__leather"></i><i class="bv__edges"></i>
         <div class="bv__pg bv__pg--l paper" id="pgL"></div><div class="bv__pg bv__pg--r paper" id="pgR"></div>
         <div class="bv__leaf" id="bvLeaf"><div class="lf lf--f paper"><i class="lf__sh"></i></div><div class="lf lf--b paper"><i class="lf__sh"></i></div></div>
         <i class="bv__gutter"></i>
@@ -92,10 +92,12 @@ A.bookview = (() => {
   function markPrefs() { const P = prefs(); A.$$('#bvFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#bvTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); A.$('#bvSize', el).value = P.size; A.$('#bvFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; }
 
   /* ---------------------------------------------------------------- the faces (what a page holds) */
+  const savePos = () => { clearTimeout(posT); posT = setTimeout(() => A.save(), 450); };
   const pgn = (n, tot) => `<span class="pgn">${n}</span>`;
   const pageEl = (inner, cls = '') => { const d = document.createElement('div'); d.className = 'pgc ' + cls; d.innerHTML = inner; return d; };
   const blank = n => pageEl(n ? pgn(n) : '', 'blank');
-  const titlePage = () => pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i></div>`, 'title');
+  const markPage = () => hasText && book.pos > .002 ? pager.pageOfChar(book.pos * textLen) + 1 : 0;
+  const titlePage = () => { const n = markPage(), d = pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i>${n ? `<button class="seal tapable" id="bvResume"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg>Закладка · стр. ${n}</button>` : ''}</div>`, 'title'); const r = A.$('#bvResume', d); r && r.addEventListener('click', () => { A.snd.tap(); const i = g.land ? Math.floor(n / 2) : n; if (begin(1, { tab: 'read', i })) { const f = fl; f.k = 30; f.c = 8.6; setTimeout(() => { if (fl === f) { f.t = -180; run(); } }, 340); } }); return d; };
   const noText = () => { const d = pageEl(`<div class="tp tp--empty"><p class="hw">У этой книги пока нет страниц для чтения.</p><p class="small">Её можно загрузить из PDF, EPUB или TXT.</p><button class="seal tapable" id="bvLoad">Загрузить текст</button></div>`, 'title'); A.$('#bvLoad', d).addEventListener('click', () => { A.snd.tap(); A.mods.books.editBook(book.id); }); return d; };
   const textFace = (html, n) => pageEl(`<div class="pgtxt">${html}</div>${pgn(n)}`);
 
@@ -155,7 +157,8 @@ A.bookview = (() => {
       const first = g.land ? S.i * 2 : S.i, last = g.land ? S.i * 2 + 1 : S.i, cur = Math.max(0, last - 1), tp = pager.count(); pager.get(cur + 1);
       const tpN = pager.count(), end = pager.finished && cur >= pager.count() - 1 ? 1 : pager.fracOf(cur + 1);
       P.textContent = last === 0 ? 'титул' : `стр. ${last} из ${pager.finished ? '' : '≈ '}${tpN}`; prog.style.transform = `scaleX(${last === 0 ? 0 : Math.min(1, end)})`;
-      maxFrac = Math.max(maxFrac, last === 0 ? 0 : end); book.pos = pager.fracOf(Math.max(0, first - 1));
+      maxFrac = Math.max(maxFrac, last === 0 ? 0 : end); if (last > 0) { book.pos = pager.fracOf(Math.max(0, first - 1)); savePos(); }
+      el.classList.toggle('has-mark', book.pos > .002);
       fin.hidden = !(pager.finished && cur >= pager.count() - 1 && book.status !== 'done');
     } else { P.textContent = S.tab === 'quotes' ? `цитат: ${myQuotes().length}` : ''; prog.style.transform = 'scaleX(0)'; fin.hidden = true; }
     A.$$('#bvTabs .rb', el).forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
@@ -171,8 +174,9 @@ A.bookview = (() => {
     A.hands.show(true, true); A.$('#hands').classList.add('top'); A.hands.pinch(corner); A.snd.page(); return true;
   }
   function paintLeaf() {
-    const a = fl.ang, k = Math.abs(Math.sin(a * Math.PI / 180)); leaf.style.transform = `rotateY(${a.toFixed(2)}deg)`; leaf.style.setProperty('--k', k.toFixed(3));
-    pgR.style.setProperty('--u', a > -90 ? (k * .3).toFixed(3) : '0'); pgL.style.setProperty('--u', g.land && a <= -90 ? (k * .3).toFixed(3) : '0');
+    const a = fl.ang, th = Math.abs(a), k = Math.abs(Math.sin(th * Math.PI / 180)); leaf.style.transform = `rotateY(${a.toFixed(2)}deg)`; leaf.style.setProperty('--k', k.toFixed(3));
+    const wR = A.clamp((125 - th) / 70, 0, 1), wL = A.clamp((th - 55) / 70, 0, 1);              // the shadow the leaf throws glides from one page to the other, it never jumps
+    pgR.style.setProperty('--u', (k * .2 * wR).toFixed(3)); pgL.style.setProperty('--u', g.land ? (k * .2 * wL).toFixed(3) : '0');
   }
   function settle() { if (!fl) return; fl.v = fl.v || 0; run(); }
   function run() {
@@ -224,8 +228,8 @@ A.bookview = (() => {
     await A.quill.write(p, { box: slip, cps: Math.min(34, Math.max(19, text.length / 5)) });
     p.textContent = text; await wait(350); A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .12, .7);
     const q = { id: A.uid(), bookId: book.id, bookTitle: book.title, author: book.author, text, page, tags: [], sticker: '', paper: 'parch', photo: null, date: Date.now() };
-    A.state.quotes.unshift(q); const key = 'q' + A.dayKey(); A.state.bonusDone[key] = (A.state.bonusDone[key] || 0) + 1; if (A.state.bonusDone[key] <= 3) A.addAcorns(1); A.save(); freshId = q.id; comp = { text: '', page: '' };
-    qpager = quotesPager(); A.mods.quotes && A.mods.quotes.refresh && A.mods.quotes.refresh();
+    A.addQuote(q); freshId = q.id; comp = { text: '', page: '' };
+    qpager = quotesPager();
     const br = bookEl.getBoundingClientRect(), sr = slip.getBoundingClientRect(), tx = br.left + br.width * (g.land ? .75 : .5) - (sr.left + sr.width / 2), ty = br.top + br.height * .2 - (sr.top + sr.height / 2);
     const fly = slip.animate([{ transform: 'translate(-50%,-50%) rotate(-1.4deg) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px)) rotate(0deg) scale(.62)`, opacity: .0 }], { duration: 950, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' });
     if (!g.land) { await wait(380); const to = { tab: 'quotes', i: 1 }; if (S.i !== 1 && begin(1, to)) { const f = fl; f.k = 46; f.c = 9.5; await wait(260); f.t = -180; run(); } } else renderSlots();
@@ -247,7 +251,7 @@ A.bookview = (() => {
     if (bk.status === 'want') { bk.status = 'reading'; bk.started = bk.started || Date.now(); }
     if (!bk.pages && hasText) bk.pages = A.pagesEst(text); bk._len = textLen; A.save();
     A.$('#bvT', el).textContent = bk.title; A.$('#bvA', el).textContent = bk.author || ''; el.hidden = false; el.classList.remove('setting', 'in'); applyPrefs(); markPrefs(); layout();
-    S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; }
+    S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos > .002) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; setTimeout(() => open_ && A.toast(`Закладка: продолжаем со стр. ${n}`, 2800), 1700); }
     leaf.style.display = 'none'; renderSlots(); document.body.classList.add('bv-open'); A.$('#lib3d').classList.add('bv');
     A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
     if (hasText && !A.state.bvTip) { A.state.bvTip = true; A.save(); setTimeout(() => open_ && A.toast('Листай страницы пальцем. Зажми абзац — он станет цитатой.', 4600), 2000); }
