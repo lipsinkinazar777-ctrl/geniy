@@ -200,3 +200,23 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .shelf3::after{height:40px!important;background:linear-gradient(180deg,#7a5230,#4a2c17 40%,#21130a)!important;box-shadow:0 -3px 0 rgba(255,222,170,.28),0 8px 20px rgba(0,0,0,.6)!important}
 .shelf3__in{bottom:40px!important}
 #room[data-ori=landscape] .lib__t b{font-size:60px}#room[data-ori=landscape] .lib__t small{font-size:20px}
+
+/* lab hotspots on the art */
+.mood3{position:absolute;width:230px;height:290px;margin:-145px 0 0 -115px;background:none;touch-action:none}
+.mood3 i{position:absolute;left:50%;top:50%;width:230px;height:230px;margin:-115px 0 0 -115px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 70%,transparent),transparent);opacity:0;transform:scale(.6);transition:opacity .5s,transform .8s var(--spring);mix-blend-mode:screen;pointer-events:none}
+.mood3.on i{opacity:.95;transform:scale(1)}
+.mood3 span{position:absolute;left:50%;top:100%;transform:translate(-50%,-4px);white-space:nowrap;font:italic 400 40px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 3px 10px #000;opacity:0;transition:opacity .5s}
+.mood3.on span,.mood3:active span{opacity:1}
+.lab__t{position:absolute;top:70px;left:0;right:0;text-align:center;font:400 25px/1 var(--f);letter-spacing:.42em;text-transform:uppercase;color:#e9c984;text-shadow:0 0 20px rgba(255,190,90,.5),0 2px 8px #000}
+.lab__hint{position:absolute;left:60px;right:60px;bottom:160px;text-align:center;font:italic 400 38px/1.25 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.5),0 2px 10px #000;opacity:0}
+#room[data-ori=landscape] .lab__hint{bottom:150px}
+.lab__res{position:absolute;left:50%;top:50%;width:min(860px,78%);transform:translate(-50%,-46%) scale(.94);opacity:0;pointer-events:none;transition:opacity .7s,transform 1s var(--spring)}
+.lab__res.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+#room[data-ori=landscape] .lab__res{width:min(760px,50%)}
+
+.lib__hs{position:absolute;background:none;border-radius:40%}
+.lib__hs i{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,140,.32),transparent);opacity:0;transition:opacity .4s}
+.lib__hs:active i{opacity:1}
+.lib__hs span{position:absolute;left:50%;top:6%;transform:translateX(-50%);white-space:nowrap;font:italic 400 38px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 3px 10px #000;opacity:.0;transition:opacity .5s}
+#libLayer.hints .lib__hs span{opacity:.85}
+.shelf3{background:linear-gradient(180deg,rgba(6,4,2,.55),rgba(18,10,5,.78))!important}

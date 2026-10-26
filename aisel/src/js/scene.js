@@ -3,12 +3,11 @@
 A.scene = (() => {
   const ORI = () => innerWidth >= innerHeight ? 'landscape' : 'portrait';
   const LAYOUTS = A.LAYOUTS;                                               // desk plates + hotspot polygons for both orientations (tools/make_main.py)
-  const ROOMS = { lab: { portrait: { w: 1080, h: 1920, img: 'img/lab-bg.webp' }, landscape: { w: 1920, h: 1080, img: 'img/lab-bg-l.webp' } }, lib: { portrait: { w: 1080, h: 1920, img: 'img/lib.webp' }, landscape: { w: 1920, h: 1080, img: 'img/lib-l.webp' } } };
+  const ROOMKEY = { lab: 'lab', lib: 'lib', cit: 'cit' };
   let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
-  const DEFS = [['fire', 'Костёр', { act: 'fire' }], ['knob', 'Живой костёр', { act: 'fire' }], ['matches', 'Спички', { act: 'fire' }], ['quill', 'Написать цитату', { act: 'quill' }], ['casket', 'Шкатулка с цитатами', { tab: 'quotes' }],
-    ['potion', 'Лаборатория', { tab: 'potion' }], ['stars', 'Небо', { tab: 'sky' }], ['scope', 'Лесная карта', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['book', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['fire', 'Костёр', { act: 'fire' }], ['read', 'Продолжить чтение', { act: 'read' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const hit = (rx, ry) => HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
@@ -28,7 +27,7 @@ A.scene = (() => {
   function resize() {
     VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2);
     if (ORI() !== ori) { ori = ORI(); relayout(); }
-    s0 = Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
+    s0 = (roomName === 'main' && LAY.fitW) ? Math.max(VW / LAY.fitW, VH / RH) : Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
     cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); clampT(); dirty = true;
   }
   function apply() {
@@ -71,26 +70,15 @@ A.scene = (() => {
     g.restore();
   }
 
+  const roomPlate = name => name === 'main' ? { w: LAY.w, h: LAY.h, img: LAY.img } : { w: LAY.room[0], h: LAY.room[1], img: LAY.rooms[name] };
   function relayout() {
     LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = LAY.home[0]; HOME.cy = LAY.home[1];
-    if (roomName === 'main') { RW = LAY.w; RH = LAY.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; A.$('#roomImg').src = LAY.img; }
-    else { const r = ROOMS[roomName][ori]; RW = r.w; RH = r.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; A.$('#roomImg').src = r.img; }
-    room.dataset.ori = ori; if (roomName === 'lab' && A.mods.potion && A.mods.potion.rebuild) A.mods.potion.rebuild(); if (roomName === 'lib' && A.lib) A.lib.rebuild(); buildHotspots(); buildHs(); refreshPage(); placeCasket(); A.fire && A.fire.place && A.fire.place();
+    const r = roomPlate(roomName); RW = r.w; RH = r.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; A.$('#roomImg').src = r.img;
+    room.dataset.ori = ori; buildHotspots(); buildHs(); A.fire && A.fire.place && A.fire.place();
+    A.mods.potion && A.mods.potion.rebuild && A.mods.potion.rebuild(); A.lib && A.lib.rebuild && A.lib.rebuild(); A.casket && A.casket.relayout && A.casket.relayout();
     cam.x.x = cam.x.t = roomName === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = roomName === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; seed();
   }
-  function placeCasket() { const c = A.$('#casketImg'); if (!c) return; const k = LAY.casket, w = k.w, h = w * 520 / 640; c.style.cssText = `left:${k.x - w / 2}px;top:${k.y - h * .6}px;width:${w}px;height:${h}px`; api.casket = { x: k.x, y: k.y, w, h }; }
-  /* ---- the open book on the table speaks: it shows what she is reading (handwriting follows the page's perspective) */
-  const quadMatrix = (w, h, q) => {
-    const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q, dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, det = dx1 * dy2 - dx2 * dy1;
-    const gg = (dx3 * dy2 - dx2 * dy3) / det, hh = (dx1 * dy3 - dx3 * dy1) / det, a = x1 - x0 + gg * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + gg * y1, e = y3 - y0 + hh * y3;
-    return `matrix3d(${a / w},${d / w},0,${gg / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
-  };
-  function refreshPage() {
-    const el = A.$('#pageTxt'), b = A.state.books.find(x => x.status === 'reading'), done = A.doneBooks().length;
-    el.style.cssText = `width:620px;height:900px;transform:${quadMatrix(620, 900, LAY.page)}`;
-    el.innerHTML = `<h2>Книга Айсель</h2><i class="fl"></i>${b ? `<p>Сейчас читаю</p><b>${A.esc(b.title)}</b>` : `<p>Страницы ждут</p><b>Коснись книги</b>`}${done ? `<small>прочитано ${done} ${A.plural(done, 'книга', 'книги', 'книг')}</small>` : ''}`;
-  }
-
+  function refreshPage() {}
   /* ---- hotspot decoration: press-glow, idle glint, label (all opacity/transform only) */
   function buildHs() {
     const fx = A.$('#hsFx'), lb = A.$('#labels'); fx.innerHTML = lb.innerHTML = ''; A.fire && A.fire.reset && A.fire.reset();
@@ -137,7 +125,7 @@ A.scene = (() => {
   function tap(h, sx, sy) {
     if (!h) { showLabels(); A.snd.tap && A.snd.tap(); A.fx.sparks(sx, sy, 6, '#ffd98a'); return; }
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
-    if (h.act === 'quill') { A.snd.quill && A.snd.quill(); A.mods.quotes.editQuote && A.mods.quotes.editQuote(null); return; }
+    if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab);
   }
   if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });
@@ -161,10 +149,11 @@ A.scene = (() => {
     init() { ori = ORI(); resize(); relayout(); },
     room: () => roomName, ori: () => ori,
     setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
-      const r = name === 'main' ? { w: LAY.w, h: LAY.h, img: LAY.img } : ROOMS[name][ori]; roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
+      const r = roomPlate(name); roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
       A.$('#roomImg').src = r.img; saved = name === 'main' ? saved : null; focusId = null; resize();
       cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
+    layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y),
     clientToRoom: (x, y) => toRoom(x, y),
     returnMain(id) {
       api.setRoom('main'); const h = HS.find(o => o.id === id);

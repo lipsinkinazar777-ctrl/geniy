@@ -1,25 +1,26 @@
 /* ============================================================ the reading room: leather spines on three shelves; touching one pulls it out and opens it */
 A.lib = (() => {
   let layer, rows = [], built = false, lastOri = '';
-  const LC = { portrait: { w: 1080, rows: [[380, 104, 872, 340], [760, 104, 872, 340], [1140, 104, 872, 340]], title: [118, 540], add: [540, 1650], lect: null }, landscape: { w: 1920, rows: [[250, 120, 1540, 310], [590, 120, 1540, 310]], title: [150, 960], add: [1790, 540], lect: null } };
+  const LC = () => { const L = A.scene.layout(); return { rows: L.libRows, title: [L.libTitle], add: L.libAdd }; };
   const hue = b => (b.cover && b.cover.hue != null) ? b.cover.hue : (A.hash(b.title + (b.author || '')) % 360);
   const dims = (b, ph) => { const h = A.hash(b.title); return { w: 78 + (h % 30), h: Math.round(ph * (.7 + ((h >> 4) % 28) / 100)) }; };
   const order = { reading: 0, want: 1, done: 2 };
 
   function init() {
-    const ori = A.scene.ori(); if (built && lastOri === ori) return render(); built = true; lastOri = ori; layer = A.$('#libLayer'); const C = LC[ori];
-    layer.innerHTML = `<div class="lib__t" style="top:${C.title[0]}px"><small>читальный зал</small><b>Книги Айсель</b></div>
-      ${C.rows.map(([y, x, w, h]) => `<div class="shelf3" style="top:${y}px;left:${x}px;width:${w}px;height:${h}px"><div class="shelf3__in"></div></div>`).join('')}
+    const ori = A.scene.ori(); if (built && lastOri === ori) return render(); built = true; lastOri = ori; layer = A.$('#libLayer'); const C = LC();
+    layer.innerHTML = `${C.rows.map(([y, x, w, h]) => `<div class="shelf3" style="top:${y}px;left:${x}px;width:${w}px;height:${h}px"><div class="shelf3__in"></div></div>`).join('')}
       <button class="lib__add" aria-label="Добавить книгу" style="left:${C.add[0]}px;top:${C.add[1]}px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></button>
       <div class="lib__tag" id="libTag"></div><p class="lib__note" id="libNote"></p>`;
     rows = A.$$('.shelf3', layer); rows.forEach(r => drag(r));
+    const HS = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };
+    Object.entries(HS).forEach(([k, polys]) => polys.forEach(pl => { const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), b = A.h(`<button class="lib__hs" data-k="${k}" aria-label="${NM[k][0]}" style="left:${Math.min(...xs)}px;top:${Math.min(...ys)}px;width:${Math.max(...xs) - Math.min(...xs)}px;height:${Math.max(...ys) - Math.min(...ys)}px"><i></i><span>${NM[k][0]}</span></button>`); b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', () => { A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.vibrate(10); A.go(NM[k][1]); }); layer.appendChild(b); }));
     A.$('.lib__add', layer).addEventListener('pointerdown', e => e.stopPropagation());
     A.$('.lib__add', layer).addEventListener('click', () => { A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .88, 16); A.mods.books.editBook(); });
-    render();
+    render(); layer.classList.add('hints'); setTimeout(() => layer.classList.remove('hints'), 5200);
   }
 
   function render() {
-    if (!built) return; const C = LC[lastOri], list = [...A.state.books].sort((a, b) => order[a.status] - order[b.status] || (b.added || 0) - (a.added || 0));
+    if (!built) return; const C = LC(), list = [...A.state.books].sort((a, b) => order[a.status] - order[b.status] || (b.added || 0) - (a.added || 0));
     const inner = rows.map(r => A.$('.shelf3__in', r)); inner.forEach(n => { n.innerHTML = ''; n._w = 0; n.style.transform = ''; n._x = 0; });
     list.forEach(b => {
       const ph = C.rows[0][3] - 70, d = dims(b, ph), tgt = inner.reduce((m, n) => n._w < m._w ? n : m, inner[0]), hh = hue(b), len = b.title.length;

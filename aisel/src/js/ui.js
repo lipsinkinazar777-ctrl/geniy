@@ -33,8 +33,8 @@ A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth /
 /* ---------------------------------------------------------------- the room is the router:
    touching an object glides the camera in, the object "opens" as a full-screen panel with an iris from that spot, and back reverses it */
 const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
-const ROOMOF = { books: 'lib', potion: 'lab' }, MOOD = { books: 'books', potion: 'potion' };
-const OBJ = { books: 'book', quotes: 'casket', potion: 'potion', sky: 'stars', path: 'scope', bag: 'bag' };
+const ROOMOF = { books: 'lib', potion: 'lab', quotes: 'cit' }, MOOD = { books: 'books', potion: 'potion', quotes: 'quotes' };
+const OBJ = { books: 'lib', quotes: 'quotes', potion: 'lab', sky: 'sky', path: 'path', bag: 'bag' };
 A.tab = 'room'; let moving = false;
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 const curtain = A.$('#curtain');
@@ -46,19 +46,13 @@ function enterRoom(tab) {
   A.snd.whoosh(1);
   if (prev === 'room') { A.scene.focus(OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
-function enterCasket() {
-  if (moving || A.tab === 'quotes') return; if (A.tab !== 'room') { A.leave(); return setTimeout(() => A.go('quotes'), 1100); }
-  moving = true; A.tab = 'quotes'; document.body.dataset.tab = 'quotes'; document.body.classList.add('inroom'); A.snd.setMood('quotes'); A.snd.whoosh(1);
-  A.scene.focus('casket').then(() => { A.casket.enter().then(() => { moving = false; }); });
-}
 function exitRoom() {
-  if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1);
+  if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide();
   setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); }, 620);
 }
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
   if (ROOMOF[tab]) return enterRoom(tab);
-  if (tab === 'quotes') return enterCasket();
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; moving = true;
@@ -82,7 +76,6 @@ A.go = (tab, opt = {}) => {
 A.leave = () => {
   if (A.reader && A.reader.isOpen()) return A.reader.close();
   if (ROOMOF[A.tab]) return exitRoom();
-  if (A.tab === 'quotes') { if (moving) return; moving = true; A.casket.leave().then(() => { A.scene.unfocus(); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); moving = false; }); return; }
   if (A.tab === 'room' || moving) return; moving = true; const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
   const [x, y] = A.scene.focusPoint(), R = irisR(x, y); A.snd.whoosh(-1);
   const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); moving = false; };

@@ -19,7 +19,7 @@
   }
 
   const mod = A.mods.quotes = {
-    init() {}, show() {}, refresh() { A.casket && A.casket.refresh(); }, view, editQuote, cardHTML
+    init() {}, show() { A.casket.enter(); }, refresh() { A.casket && A.casket.refresh(); }, view, editQuote, cardHTML
   };
 
   function render() { A.casket && A.casket.refresh(); }

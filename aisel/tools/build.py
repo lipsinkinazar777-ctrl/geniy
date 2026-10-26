@@ -3,7 +3,7 @@
 import pathlib, shutil, json, hashlib
 root = pathlib.Path(__file__).resolve().parent.parent; src = root/'src'; out = root/'dist'
 css = '\n'.join((src/'css'/f).read_text() for f in sorted(p.name for p in (src/'css').glob('*.css')))
-order = ['store','layout','texts','import','audio','fx','scene','fire','ui','map','library','books','hands','casket','quotes','sky','potion','goal','bag','reader','app']
+order = ['store','layout','texts','import','audio','fx','scene','fire','ui','map','library','books','casket','quotes','sky','potion','goal','bag','reader','app']
 js = '\n'.join((src/'js'/f'{n}.js').read_text() for n in order if (src/'js'/f'{n}.js').exists())
 story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').replace('${','\\${')
 js = js.replace('/*STORY*/', story)
