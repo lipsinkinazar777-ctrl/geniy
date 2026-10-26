@@ -4,12 +4,12 @@ A.lib = (() => {
   let layer, shelf, track, tag, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, raf = 0, drag = null, G = null;
   const hue = b => (b.cover && b.cover.hue != null) ? b.cover.hue : (A.hash(b.title + (b.author || '')) % 360);
   const order = { reading: 0, want: 1, done: 2 };
-  const geo = () => { const L = A.scene.layout(), [y, x, w, h] = L.libRows[0], land = A.scene.ori() === 'landscape'; return { y, x, w, h, base: y + h, step: land ? 124 : 158, sw: land ? 56 : 78, sh: land ? 170 : 240, cw: land ? 170 : 230, ch: land ? 240 : 330, gap: land ? 110 : 170, add: L.libAdd }; };
+  const geo = () => { const L = A.scene.layout(), [y, x, w, h] = L.libRows[0], land = A.scene.ori() === 'landscape'; return { y, x, w, h, base: y + h, step: land ? 112 : 130, sw: land ? 56 : 78, sh: land ? 170 : 240, cw: land ? 150 : 175, ch: land ? 215 : 250, gap: land ? 100 : 130, add: L.libAdd }; };
 
   function init() {
     const ori = A.scene.ori(); if (built && lastOri === ori) return render(); built = true; lastOri = ori; layer = A.$('#libLayer'); G = geo();
-    layer.innerHTML = `<div class="shelfbd" style="left:${G.x - 30}px;top:${G.base - 14}px;width:${G.w + 60}px"><i></i></div><div class="coverflow" id="cf" style="left:${G.x}px;top:${G.y - 260}px;width:${G.w}px;height:${G.h + 260}px"></div>
-      <div class="lib__tag" id="libTag" style="left:${G.x + G.w / 2}px;top:${G.base + 56}px"></div><p class="lib__note" id="libNote"></p>
+    layer.innerHTML = `<div class="shelfbd" style="left:${G.x - 30}px;top:${G.base - 14}px;width:${G.w + 60}px"><i></i></div><div class="coverflow" id="cf" style="left:${G.x}px;top:${G.y - 140}px;width:${G.w}px;height:${G.h + 140}px"></div>
+      <div class="lib__tag" id="libTag" style="left:${G.x + G.w / 2}px;top:${A.scene.ori() === 'landscape' ? 40 : 150}px"></div><p class="lib__note" id="libNote"></p>
       <button class="lib__add" aria-label="Добавить книгу" style="left:${G.add[0]}px;top:${G.add[1]}px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></button>`;
     track = A.$('#cf', layer); tag = A.$('#libTag', layer); bind();
     const HS = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };

@@ -251,3 +251,13 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .bk3__cv{pointer-events:auto}
 
 .lab__hint{top:auto!important;bottom:120px!important;font-size:30px!important;left:40px!important;right:40px!important}
+
+/* library: title plate at the top, shelf strip low on the floor */
+.lib__tag{width:760px;padding-top:14px;background:none}
+.lib__tag::before{content:"";position:absolute;left:-200px;right:-200px;top:-60px;bottom:-30px;z-index:-1;background:radial-gradient(closest-side,rgba(0,0,0,.62),transparent);pointer-events:none}
+.lib__tag b{font-size:54px}
+.shelfbd{height:26px}
+/* entrance menu: the desk glows through a frosted dark pane, thin gold frame */
+#gate{background:radial-gradient(80% 60% at 50% 48%,rgba(0,0,0,.18),rgba(0,0,0,.72));backdrop-filter:blur(5px) brightness(.8);-webkit-backdrop-filter:blur(5px) brightness(.8)}
+#gate::before{content:"";position:absolute;inset:max(18px,env(safe-area-inset-top)) 16px max(18px,env(safe-area-inset-bottom));border:1px solid rgba(255,226,160,.22);border-radius:26px;pointer-events:none;box-shadow:inset 0 0 60px rgba(255,190,90,.06)}
+#room{opacity:1!important}

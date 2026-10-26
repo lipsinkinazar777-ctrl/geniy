@@ -51,7 +51,7 @@ for i in range(EB): out[Y0 + 1079 + i] = mb[min(i, len(mb) - 1)] * (max(0, 1 - i
 save(Image.fromarray(np.clip(out + rng.normal(0, 2, out.shape), 0, 255).astype(np.uint8)), 'hub-pt.webp', 84)
 # ---- plates for the rooms
 save(fit(a37, (0, 0, 358, 603), (1080, 1920)), 'lab-p.webp'); save(fit(a37, (0, 648, 358, 1250), (1080, 1920)), 'cit-p.webp'); save(fit(a39, (0, 0, 896, 1195), (1080, 1920)), 'lib-p.webp')
-save(fit(a38, (855, 328, 1280, 610), (1920, 1080)), 'lab-l.webp'); save(fit(a38, (0, 0, 425, 325), (1920, 1080)), 'cit-l.webp'); save(fit(a39, (0, 560, 896, 1064), (1920, 1080)), 'lib-l.webp')
+save(fit(a38, (855, 328, 1280, 610), (1920, 1080)), 'lab-l.webp'); save(fit(a38, (0, 0, 425, 325), (1920, 1080)), 'cit-l.webp'); save(fit(a39, (0, 650, 896, 1154), (1920, 1080)), 'lib-l.webp')
 import json
 R = lambda x0, y0, x1, y1: [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
 Z = 1.5
@@ -62,6 +62,6 @@ LAB_P = {'rx': 220, 'ry': 44, 'pour': [925, 480], 'cauldron': R(700, 380, 1080, 
 LAB_L = {'rx': 194, 'ry': 36, 'pour': [1129, 544], 'cauldron': R(940, 480, 1330, 820), 'bottles': {'romance': [110, 170], 'fantasy': [330, 150], 'adventure': [550, 150], 'cozy': [180, 500], 'detective': [500, 490], 'melancholy': [1500, 800]}}
 CIT_P = {'slot': [608, 1180], 'card': [540, 820, 760]}; CIT_L = {'slot': [1080, 480], 'card': [960, 470, 460]}
 def shift(hs, dy): return {k: [[[x, y + dy] for x, y in poly] for poly in v] for k, v in hs.items()}
-LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [1250, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-p.webp', 'cit': 'img/cit-p.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[1470, 40, 1000, 290]], 'libTitle': 150, 'libAdd': [930, 200], 'libHs': {'lab': [R(280, 240, 450, 540), R(0, 960, 130, 1130), R(720, 280, 840, 480)], 'quotes': [R(430, 440, 690, 1090)]}},
-       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-l.webp', 'cit': 'img/cit-l.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[860, 120, 1560, 200]], 'libTitle': 90, 'libAdd': [1790, 140], 'libHs': {'lab': [R(40, 86, 390, 450)], 'quotes': [R(800, 0, 1170, 330)]}}}
+LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [1250, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-p.webp', 'cit': 'img/cit-p.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[1660, 40, 1000, 230]], 'libTitle': 150, 'libAdd': [950, 400], 'libHs': {'lab': [R(280, 240, 450, 540), R(0, 960, 130, 1130), R(720, 280, 840, 480)], 'quotes': [R(430, 440, 690, 1090)]}},
+       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-l.webp', 'cit': 'img/cit-l.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[860, 120, 1680, 200]], 'libTitle': 90, 'libAdd': [1800, 400], 'libHs': {'lab': [R(40, 86, 390, 450)], 'quotes': [R(800, 0, 1170, 330)]}}}
 open('/home/user/geniy/aisel/src/js/layout.js', 'w').write('A.LAYOUTS = ' + json.dumps(LAY) + ';\n')

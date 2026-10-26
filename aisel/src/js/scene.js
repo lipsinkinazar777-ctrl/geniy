@@ -46,7 +46,7 @@ A.scene = (() => {
   function seed() {
     dust = [];
     const mkp = (n, d, rMin, rMax, a, kind) => { for (let i = 0; i < n; i++) dust.push({ x: rnd(0, 2400), y: rnd(0, 1400), d, r: rnd(rMin, rMax), a: a * rnd(.5, 1), ph: rnd(0, 6.28), sp: rnd(.3, 1.1), vx: rnd(-6, 6), vy: rnd(-9, -2), kind }); };
-    mkp(46, .8, 1.2, 2.6, .5, 'warm'); mkp(52, 1.08, 1.8, 3.8, .75, 'gold'); mkp(9, 1.75, 16, 34, .16, 'gold');
+    mkp(14, .8, 1, 1.9, .28, 'warm'); mkp(12, 1.08, 1.2, 2.4, .3, 'gold');
   }
   function particles(dt, vis) {
     g.clearRect(0, 0, VW, VH); const s = sNow(), padX = VW + 120, padY = VH + 120;
