@@ -41,7 +41,7 @@ A.fire = (() => {
   }
 
   function frame(dt, t) {
-    if (!ready) return; T = t; level += (target - level) * Math.min(1, dt * (target > level ? 2.4 : 1.1)); if (Math.abs(target - level) < .002) level = target;
+    if (!ready) return; T = t; level += (target - level) * Math.min(1, dt * (target > level ? 2.4 : 2.6)); if (Math.abs(target - level) < .002) level = target;
     flT += (Math.random() - .5) * 1.8 * dt * 14; flT = A.clamp(flT, .55, 1.2); fl += (flT - fl) * Math.min(1, dt * 16);
     au += ((A.snd.fireLevel ? A.snd.fireLevel() : 0) - au) * .4;
     const L = level, flick = (.8 + .2 * Math.sin(T * 11.3) * Math.sin(T * 6.1) + au * .25) * fl;

@@ -7,12 +7,13 @@ A.scene = (() => {
   let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
-  const DEFS = [['enter', 'Войти', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Читать', { act: 'read' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['enter', 'Войти', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
-  const hit = (rx, ry) => HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
+  const hit = (rx, ry) => roomName !== 'main' ? null : HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
+  const bbox = poly => { const xs = poly.map(q => q[0]), ys = poly.map(q => q[1]); return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
   function buildHotspots() {
-    HS = DEFS.filter(([id]) => LAY.hs[id]).map(([id, n, o]) => { const h = Object.assign({ id, n }, o); h.P = LAY.hs[id]; const pts = h.P.flat(); h.bb = [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))]; h.c = [(h.bb[0] + h.bb[2]) / 2, (h.bb[1] + h.bb[3]) / 2]; h.big = Math.max(h.bb[2] - h.bb[0], h.bb[3] - h.bb[1]); return h; });
+    HS = DEFS.filter(([id]) => LAY.hs[id]).map(([id, n, o]) => { const h = Object.assign({ id, n }, o); h.P = LAY.hs[id]; h.parts = h.P.map(bbox); h.bb = h.parts[0]; h.c = [(h.bb[0] + h.bb[2]) / 2, (h.bb[1] + h.bb[3]) / 2]; h.big = Math.max(h.bb[2] - h.bb[0], h.bb[3] - h.bb[1]); return h; });
   }
 
   /* ---- springs + camera */
@@ -81,16 +82,12 @@ A.scene = (() => {
   function buildHs() {
     const fx = A.$('#hsFx'), lb = A.$('#labels'); fx.innerHTML = lb.innerHTML = ''; A.fire && A.fire.reset && A.fire.reset();
     HS.forEach((h, i) => {
-      const [x0, y0, x1, y1] = h.bb, w = x1 - x0, hh = y1 - y0;
-      const d = A.h(`<div class="hs" data-id="${h.id}" style="left:${x0}px;top:${y0}px;width:${w}px;height:${hh}px;clip-path:polygon(${h.P[0].map(([x, y]) => `${x - x0}px ${y - y0}px`).join(',')})"></div>`);
-      if (h.P.length > 1 || h.id === 'fire') d.style.clipPath = 'none', d.style.borderRadius = '40%';
-      fx.appendChild(d); h.fx = d;
-      if (h.id !== 'fire' && h.id !== 'quill') { const gl = A.h(`<i class="glint" style="left:${h.c[0]}px;top:${h.c[1]}px;animation-delay:${(i * 1.7) % 9}s"></i>`); fx.appendChild(gl); h.gl = gl; }
-      const l = A.h(`<span class="lab" data-id="${h.id}" style="left:${h.c[0]}px;top:${Math.max(70, h.bb[1] - 6)}px">${h.n}</span>`); lb.appendChild(l); h.lab = l;
+      h.fxs = h.parts.map(([x0, y0, x1, y1]) => { const d = A.h(`<div class="hs" data-id="${h.id}" style="left:${x0}px;top:${y0}px;width:${x1 - x0}px;height:${y1 - y0}px;border-radius:40%"></div>`); fx.appendChild(d); return d; });
+      if (h.id !== 'enter' && h.id !== 'fire') { const gl = A.h(`<i class="glint" style="left:${h.c[0]}px;top:${h.c[1]}px;animation-delay:${(i * 1.7) % 9}s"></i>`); fx.appendChild(gl); }
+      const l = A.h(`<span class="lab" data-id="${h.id}" style="left:${h.c[0]}px;top:${Math.max(70, h.bb[1] - 6)}px">${h.n}</span>`); lb.appendChild(l);
     });
-    A.fire && A.fire.attachKnob && A.fire.attachKnob();
   }
-  const press = (h, on) => { HS.forEach(x => x.fx && x.fx.classList.remove('on')); if (h && on) { h.fx.classList.add('on'); if (h.act === 'fire') (HS.filter(o => o.act === 'fire').forEach(o => o.fx.classList.add('on'))); } };
+  const press = (h, on) => { HS.forEach(x => x.fxs && x.fxs.forEach(f => f.classList.remove('on'))); if (h && on && h.id !== 'enter') h.fxs.forEach(f => f.classList.add('on')); };
   let labelsT = 0;
   const showLabels = (ms = 4200) => { A.$('#labels').classList.add('show'); clearTimeout(labelsT); labelsT = setTimeout(() => A.$('#labels').classList.remove('show'), ms); };
 
@@ -98,7 +95,7 @@ A.scene = (() => {
   let drag = null, sweepOn = false;
   const cancelSweep = () => { sweepOn = false; };
   stage.addEventListener('pointerdown', e => {
-    if (locked || e.button > 0 || roomName !== 'main') return; cancelSweep(); stage.setPointerCapture(e.pointerId);
+    if (locked || e.button > 0) return; cancelSweep(); stage.setPointerCapture(e.pointerId);
     const [rx, ry] = toRoom(e.clientX, e.clientY); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, vx: 0, vy: 0, h: hit(rx, ry), lx: e.clientX, ly: e.clientY, lt: performance.now() };
     press(drag.h, true);
   });
@@ -125,7 +122,7 @@ A.scene = (() => {
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
     if (h.act === 'enter') { A.snd.chime && A.snd.chime([392, 523.25, 659.25], .1, .6); A.snd.page && A.snd.page(); api.showZones(); return; }
     if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
-    A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab);
+    A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab, { obj: h.id });
   }
   if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });
   addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !drag) { gxT = -((e.clientX / VW) - .5) * 22; gyT = -((e.clientY / VH) - .5) * 14; } }, { passive: true });
@@ -183,7 +180,7 @@ A.scene = (() => {
     avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
     look(u, v, z = 1) { cancelSweep(); cam.x.t = u; cam.y.t = v; cam.z.t = z; clampT(); },
-    lock(v) { locked = v; }, screenOf(id) { const h = HS.find(o => o.id === id); return toScreen(...h.c); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
+    lock(v) { locked = v; }, screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
   return api;
 })();

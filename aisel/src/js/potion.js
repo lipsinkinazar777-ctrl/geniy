@@ -2,7 +2,7 @@
    touch a bottle: it glows, a stream of its colour arcs into the cauldron; touch the cauldron to brew */
 (() => {
   const FL = { cozy: '#f0b25a', fantasy: '#9b7bff', detective: '#5aa6b0', romance: '#e86a8f', melancholy: '#5f86d6', adventure: '#58c28a' };
-  let layer, cv, cx, sel = new Set(), brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, lastOri = '', hot = 0, LAB = null, L = null;
+  let motes = [], layer, cv, cx, sel = new Set(), brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, lastOri = '', hot = 0, LAB = null, L = null;
   const R = (a, b) => a + Math.random() * (b - a), hex = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
   const inP = (x, y, p) => { let c = false; for (let i = 0, j = p.length - 1; i < p.length; j = i++) { const [xi, yi] = p[i], [xj, yj] = p[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
 
@@ -16,7 +16,7 @@
     layer.innerHTML = `<canvas id="labCv" width="${L.room[0]}" height="${L.room[1]}"></canvas><div class="lab__t"><small>алхимическая лаборатория</small></div><div class="lab__hint" id="labHint"></div><div class="lab__res" id="labRes"></div>
       ${Object.entries(LAB.bottles).map(([k, [x, y]]) => `<button class="mood3 ${sel.has(k) ? 'on' : ''}" data-k="${k}" style="--c:${FL[k]};left:${x}px;top:${y}px"><i></i><span>${A.MOODS[k]}</span></button>`).join('')}
       <button class="lab__pot" aria-label="Котёл" style="left:${LAB.cauldron[0][0]}px;top:${LAB.cauldron[0][1]}px;width:${LAB.cauldron[1][0] - LAB.cauldron[0][0]}px;height:${LAB.cauldron[2][1] - LAB.cauldron[0][1]}px"></button>`;
-    cv = A.$('#labCv'); cx = cv.getContext('2d');
+    cv = A.$('#labCv'); cv.style.width = L.room[0] + 'px'; cv.style.height = L.room[1] + 'px'; cx = cv.getContext('2d');
     A.$$('.mood3', layer).forEach(b => { b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', () => pick(b)); });
     const pot = A.$('.lab__pot', layer); pot.addEventListener('pointerdown', e => e.stopPropagation()); pot.addEventListener('click', brew); mix();
   }
@@ -32,7 +32,11 @@
   function frame(now) {
     requestAnimationFrame(frame); if (A.scene.room() !== 'lab' || !cx) { last = now; return; }
     const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; hot += ((brewing ? 1 : .3 + .12 * sel.size) - hot) * dt * 2;
-    cx.clearRect(0, 0, cv.width, cv.height); liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(','), [px, py] = LAB.pour, w = LAB.rx || 150, h = LAB.ry || 34;
+    cx.clearRect(0, 0, cv.width, cv.height);
+    if (Math.random() < dt * (6 + hot * 22)) motes.push({ x: LAB.pour[0] + R(-.9, .9) * (LAB.rx || 150), y: LAB.pour[1] + R(-10, 10), vx: R(-14, 14), vy: -R(40, 110), life: 0, max: R(2.4, 4.6), s: R(2, 5.5), ph: R(0, 6.3) });
+    cx.globalCompositeOperation = 'lighter'; const gcol = liq.map(Math.round).join(','); const gw = (LAB.rx || 150) * 2.4, gg = cx.createRadialGradient(LAB.pour[0], LAB.pour[1] + 20, 0, LAB.pour[0], LAB.pour[1] + 20, gw); gg.addColorStop(0, `rgba(${gcol},${.2 + .1 * Math.sin(t * 2.2) + hot * .16})`); gg.addColorStop(1, `rgba(${gcol},0)`); cx.fillStyle = gg; cx.fillRect(LAB.pour[0] - gw, LAB.pour[1] - gw, gw * 2, gw * 2);
+    motes = motes.filter(m => { m.life += dt; if (m.life > m.max) return false; const k = m.life / m.max; m.x += (m.vx + Math.sin(t * 1.7 + m.ph) * 16) * dt; m.y += m.vy * dt; const r = m.s * (1 + k) * 3.2; const g3 = cx.createRadialGradient(m.x, m.y, 0, m.x, m.y, r); g3.addColorStop(0, `rgba(${gcol.split(',').map(v => Math.min(255, +v + 90)).join(',')},${.75 * (1 - k)})`); g3.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g3; cx.fillRect(m.x - r, m.y - r, r * 2, r * 2); return true; });
+    cx.globalCompositeOperation = 'source-over'; liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(','), [px, py] = LAB.pour, w = LAB.rx || 150, h = LAB.ry || 34;
     // the liquid in the mouth of the cauldron
     cx.save(); cx.beginPath(); cx.ellipse(px, py + 4, w, h, 0, 0, 6.283); cx.clip();
     const lg = cx.createRadialGradient(px, py, 0, px, py, w); lg.addColorStop(0, col); lg.addColorStop(1, `rgb(${liq.map(v => Math.round(v * .3))})`); cx.globalAlpha = .88; cx.fillStyle = lg; cx.fillRect(px - w, py - h, w * 2, h * 2 + 10); cx.globalAlpha = 1;

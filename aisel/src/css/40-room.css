@@ -178,7 +178,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 /* casket overlay */
 #cask{position:fixed;inset:0;z-index:27;pointer-events:none;touch-action:none;user-select:none}
 #cask.on{pointer-events:auto}
-.cask__veil{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 60%,rgba(8,4,2,.35),rgba(0,0,0,.82));opacity:0;transition:opacity .9s}
+.cask__veil{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 60%,rgba(8,4,2,.05),rgba(0,0,0,.5));opacity:0;transition:opacity .9s}
 #cask.on .cask__veil{opacity:1}
 .cask__stage{position:absolute;inset:0;overflow:hidden}
 .cask__box{filter:drop-shadow(0 24px 26px rgba(0,0,0,.7))}
@@ -261,3 +261,9 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 #gate{background:radial-gradient(80% 60% at 50% 48%,rgba(0,0,0,.18),rgba(0,0,0,.72));backdrop-filter:blur(5px) brightness(.8);-webkit-backdrop-filter:blur(5px) brightness(.8)}
 #gate::before{content:"";position:absolute;inset:max(18px,env(safe-area-inset-top)) 16px max(18px,env(safe-area-inset-bottom));border:1px solid rgba(255,226,160,.22);border-radius:26px;pointer-events:none;box-shadow:inset 0 0 60px rgba(255,190,90,.06)}
 #room{opacity:1!important}
+
+#fireGl{mix-blend-mode:normal}
+
+.ck__card .pc__stk{display:none}
+.ck__card .pc__t{font-size:clamp(20px,5.2vw,28px)!important}
+#labCv{pointer-events:none}

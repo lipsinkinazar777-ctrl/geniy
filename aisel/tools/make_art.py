@@ -27,28 +27,28 @@ def fit(img, box, size, shift=(0, 0)):             # cover-crop `box` of img to 
     a = np.asarray(im).astype(np.float32); a += rng.normal(0, 1.2, a.shape); return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
 def save(im, name, q=84): im.save(OUT + name, quality=q, method=6); print(name, im.size)
 
-# ---- the entrance desk (image 43) stays exactly as delivered; only the baked flame is wiped so the live fire can replace it
-a43 = Image.open(D + '43.webp').convert('RGB'); yy, xx = np.mgrid[0:a43.height, 0:a43.width]
-l43 = np.asarray(a43).astype(np.float32); lum = l43.mean(2); reg = (xx > 985) & (xx < 1135) & (yy > 405) & (yy < 590)
+# ---- the entrance desk (image 43) stays as delivered; the baked flame is replaced by dark charred logs and ember beds, the live fire is drawn over them
+a43 = Image.open(D + '43.webp').convert('RGB'); l43 = np.asarray(a43).astype(np.float32); lum = l43.mean(2)
+FP = [(150,420),(130,320),(150,250),(200,200),(260,130),(330,60),(380,70),(390,120),(400,200),(430,300),(420,370),(330,430),(200,440)]
+yy_, xx_ = np.mgrid[0:a43.height, 0:a43.width]
+poly_m = Image.new('L', a43.size, 0); ImageDraw.Draw(poly_m).polygon([(920 + x / 2, 380 + y / 2) for x, y in FP], fill=255); poly_m = np.asarray(poly_m) > 0
 r_, g_, b_ = l43[..., 0], l43[..., 1], l43[..., 2]
-flame = ((lum > 135) & (r_ > b_ * 1.1)) | ((b_ > r_ * .95) & (b_ > 70) & (yy > 520)) | (g_ > 120)
-mk = flame & reg
-mk = np.asarray(Image.fromarray((mk * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9))).astype(np.float32) / 255
-h43 = wipe(a43, mk, sig=(2, 4, 8, 16)); 
-soft = gblur(np.asarray(Image.fromarray((mk * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(25))).astype(np.float32) / 255, 10)[..., None]
-h43 = Image.fromarray(np.clip(np.asarray(h43).astype(np.float32) * (1 - .5 * soft) * np.array([1, .88, .8]) + (1 - 1) * 0, 0, 255).astype(np.uint8))
-hub = h43.resize((1920, 1079), Image.LANCZOS).filter(ImageFilter.UnsharpMask(2, 70, 2)); save(hub, 'hub.webp', 88); hub.resize((960, 540)).save(SP + 'hub43.png')
-# the photo's own flame, cut out as a sprite (RGBA) for the live shader to bend and flicker
+fl = (((lum > 125) | ((b_ > r_ * .8) & (lum > 55)) | ((r_ > 190) & (g_ > 110))) & poly_m)
+fl = np.asarray(Image.fromarray((fl * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(9))).astype(np.float32) / 255 * poly_m
+h43 = wipe(a43, fl, sig=(3, 6, 12, 24, 48)); arr_ = np.asarray(h43).astype(np.float32)
+wv = np.clip((yy_ - 470) / 90.0, 0, 1)                                    # 0 over the table behind, 1 deep in the hearth
+tone = (.9 - .18 * wv)[..., None] * np.array([1, .92, .86])
+mu = gblur(fl, 3.5)[..., None]; arr_ = arr_ * (1 - mu) + arr_ * tone * mu
+h43 = Image.fromarray(np.clip(arr_, 0, 255).astype(np.uint8))
+hub = h43.resize((1920, 1079), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.2, 40, 3))
+BASE = (1592, 872); hubA = hub.convert('RGBA'); em = Image.new('RGBA', hub.size, (0, 0, 0, 0)); ed = ImageDraw.Draw(em)
+for _ in range(16): x = BASE[0] + int(rng.normal(0, 46)); y = BASE[1] + int(rng.normal(0, 10)) + 6; r = int(rng.integers(3, 7)); ed.ellipse([x - r, y - r * .6, x + r, y + r * .6], fill=(255, int(rng.integers(50, 120)), 16, int(rng.integers(120, 220))))
+em = em.filter(ImageFilter.GaussianBlur(2.0)); hubA.alpha_composite(em); hub = hubA.convert('RGB')
+save(hub, 'hub.webp', 90); hub.resize((960, 540)).save(SP + 'hub43.png')
 fx0, fy0, fx1, fy1 = 960, 395, 1150, 590
-spr_a = gblur(np.asarray(Image.fromarray((mk * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(3))).astype(np.float32)[fy0:fy1, fx0:fx1] / 255, 3.2)
-spr_rgb = l43[fy0:fy1, fx0:fx1]; spr = np.dstack([np.clip(spr_rgb, 0, 255), np.clip(spr_a * 255, 0, 255)]).astype(np.uint8)
-sp_im = Image.fromarray(spr, 'RGBA').resize((int((fx1 - fx0) * 1.5), int((fy1 - fy0) * 1.5)), Image.LANCZOS); import io; bf = io.BytesIO(); sp_im.save(bf, 'PNG', optimize=True); FLAME_URI = 'data:image/png;base64,' + __import__('base64').b64encode(bf.getvalue()).decode(); FLAME_RECT = [round(fx0 * 1.5), round(fy0 * 1.5), sp_im.width, sp_im.height]; print('flame', FLAME_RECT, len(FLAME_URI) // 1024, 'KB')
-# portrait plate: the same desk, set in the middle of a taller frame whose top and bottom melt into the dark of the room
-Y0, TH = 910, 2900; ha = np.asarray(hub).astype(np.float32); out = np.zeros((TH, 1920, 3), np.float32); out[Y0:Y0 + 1079] = ha
-EB = TH - Y0 - 1079; mt = gblur(ha[:Y0].copy(), 34); mb = gblur(ha[::-1][:EB].copy(), 34)
-for i in range(Y0): out[Y0 - 1 - i] = mt[min(i, len(mt) - 1)] * (max(0, 1 - i / Y0) ** 2.6)
-for i in range(EB): out[Y0 + 1079 + i] = mb[min(i, len(mb) - 1)] * (max(0, 1 - i / EB) ** 2.6)
-save(Image.fromarray(np.clip(out + rng.normal(0, 2, out.shape), 0, 255).astype(np.uint8)), 'hub-pt.webp', 84)
+spr_a = gblur(fl[fy0:fy1, fx0:fx1], 2.2); spr = np.dstack([l43[fy0:fy1, fx0:fx1], np.clip(spr_a * 255 * 1.25, 0, 255)]).astype(np.uint8)
+sp_im = Image.fromarray(spr, 'RGBA').resize((int((fx1 - fx0) * 1.5), int((fy1 - fy0) * 1.5)), Image.LANCZOS); import io, base64; bf = io.BytesIO(); sp_im.save(bf, 'PNG', optimize=True)
+FLAME_URI = 'data:image/png;base64,' + base64.b64encode(bf.getvalue()).decode(); FLAME_RECT = [round(fx0 * 1.5), round(fy0 * 1.5), sp_im.width, sp_im.height]
 # ---- plates for the rooms
 save(fit(a37, (0, 0, 358, 603), (1080, 1920)), 'lab-p.webp'); save(fit(a37, (0, 648, 358, 1250), (1080, 1920)), 'cit-p.webp'); save(fit(a39, (0, 0, 896, 1195), (1080, 1920)), 'lib-p.webp')
 save(fit(a38, (855, 328, 1280, 610), (1920, 1080)), 'lab-l.webp'); save(fit(a38, (0, 0, 425, 325), (1920, 1080)), 'cit-l.webp'); save(fit(a39, (0, 650, 896, 1154), (1920, 1080)), 'lib-l.webp')
@@ -62,6 +62,6 @@ LAB_P = {'rx': 220, 'ry': 44, 'pour': [925, 480], 'cauldron': R(700, 380, 1080, 
 LAB_L = {'rx': 194, 'ry': 36, 'pour': [1129, 544], 'cauldron': R(940, 480, 1330, 820), 'bottles': {'romance': [110, 170], 'fantasy': [330, 150], 'adventure': [550, 150], 'cozy': [180, 500], 'detective': [500, 490], 'melancholy': [1500, 800]}}
 CIT_P = {'slot': [608, 1180], 'card': [540, 820, 760]}; CIT_L = {'slot': [1080, 480], 'card': [960, 470, 460]}
 def shift(hs, dy): return {k: [[[x, y + dy] for x, y in poly] for poly in v] for k, v in hs.items()}
-LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [1250, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-p.webp', 'cit': 'img/cit-p.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[1660, 40, 1000, 230]], 'libTitle': 150, 'libAdd': [950, 400], 'libHs': {'lab': [R(280, 240, 450, 540), R(0, 960, 130, 1130), R(720, 280, 840, 480)], 'quotes': [R(430, 440, 690, 1090)]}},
-       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1583, 870], 'fireScale': .85, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-l.webp', 'cit': 'img/cit-l.webp'}, 'flame': FLAME_RECT, 'flameUri': FLAME_URI, 'libRows': [[860, 120, 1680, 200]], 'libTitle': 90, 'libAdd': [1800, 400], 'libHs': {'lab': [R(40, 86, 390, 450)], 'quotes': [R(800, 0, 1170, 330)]}}}
+LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameUri': FLAME_URI, 'home': [1450, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-p.webp', 'cit': 'img/cit-p.webp'}, 'flame': FLAME_RECT, 'libRows': [[1660, 40, 1000, 230]], 'libTitle': 150, 'libAdd': [950, 400], 'libHs': {'lab': [R(280, 240, 450, 540), R(0, 960, 130, 1130), R(720, 280, 840, 480)], 'quotes': [R(430, 440, 690, 1090)]}},
+       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameUri': FLAME_URI, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-l.webp', 'cit': 'img/cit-l.webp'}, 'flame': FLAME_RECT, 'libRows': [[745, 120, 1680, 210]], 'libTitle': 90, 'libAdd': [1800, 760], 'libHs': {'lab': [R(40, 86, 390, 450)], 'quotes': [R(800, 0, 1170, 330)]}}}
 open('/home/user/geniy/aisel/src/js/layout.js', 'w').write('A.LAYOUTS = ' + json.dumps(LAY) + ';\n')

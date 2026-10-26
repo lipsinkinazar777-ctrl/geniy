@@ -9,7 +9,7 @@ A.lib = (() => {
   function init() {
     const ori = A.scene.ori(); if (built && lastOri === ori) return render(); built = true; lastOri = ori; layer = A.$('#libLayer'); G = geo();
     layer.innerHTML = `<div class="shelfbd" style="left:${G.x - 30}px;top:${G.base - 14}px;width:${G.w + 60}px"><i></i></div><div class="coverflow" id="cf" style="left:${G.x}px;top:${G.y - 140}px;width:${G.w}px;height:${G.h + 140}px"></div>
-      <div class="lib__tag" id="libTag" style="left:${G.x + G.w / 2}px;top:${A.scene.ori() === 'landscape' ? 40 : 150}px"></div><p class="lib__note" id="libNote"></p>
+      <div class="lib__tag" id="libTag" style="left:${A.scene.ori() === 'landscape' ? 360 : G.x + G.w / 2}px;top:${A.scene.ori() === 'landscape' ? 470 : 150}px"></div><p class="lib__note" id="libNote"></p>
       <button class="lib__add" aria-label="Добавить книгу" style="left:${G.add[0]}px;top:${G.add[1]}px"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></button>`;
     track = A.$('#cf', layer); tag = A.$('#libTag', layer); bind();
     const HS = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };

@@ -38,13 +38,13 @@ const OBJ = { books: 'lib', quotes: 'quotes', potion: 'lab', sky: 'sky', path: '
 A.tab = 'room'; let moving = false;
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 const curtain = A.$('#curtain');
-function enterRoom(tab) {
+function enterRoom(tab, obj) {
   const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
   if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
   moving = true; A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
   const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); };
   A.snd.whoosh(1);
-  if (prev === 'room') { A.scene.focus(OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
+  if (prev === 'room') { A.scene.focus(obj || OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
 function exitRoom() {
   if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide();
@@ -52,7 +52,7 @@ function exitRoom() {
 }
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
-  if (ROOMOF[tab]) return enterRoom(tab);
+  if (ROOMOF[tab]) return enterRoom(tab, opt.obj);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; moving = true;
@@ -71,7 +71,7 @@ A.go = (tab, opt = {}) => {
     if (fromEl) { fromEl.style.zIndex = 1; setTimeout(() => { fromEl.classList.remove('active'); }, 900); }
     setTimeout(() => { mod && mod.show && mod.show(); moving = false; }, 240);
   };
-  if (fromEl || opt.instant) reveal(); else A.scene.focus(OBJ[tab]).then(reveal);
+  if (fromEl || opt.instant) reveal(); else A.scene.focus(opt.obj || OBJ[tab]).then(reveal);
 };
 A.leave = () => {
   if (A.reader && A.reader.isOpen()) return A.reader.close();

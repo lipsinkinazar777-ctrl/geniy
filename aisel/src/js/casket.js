@@ -4,8 +4,8 @@ A.casket = (() => {
   let el, cardsEl, hintEl, cnt, idx = 0, open = false, busy = false, cur = null, built = false, hold = 0;
   const list = () => A.state.quotes.slice().sort((a, b) => b.date - a.date);
   const wait = ms => new Promise(r => setTimeout(r, ms));
-  const geo = () => { const L = A.scene.layout(), W = innerWidth, H = innerHeight, land = W > H, cw = Math.min(land ? H * .56 : W * .84, 440), ch = cw * 1.36;
-    const [rx, ry] = A.scene.plateToScreen(L.cit.slot[0], L.cit.slot[1]); return { W, H, cw, ch, cx: W / 2, cy: land ? H * .5 : H * .4, sx: rx, sy: ry }; };
+  const geo = () => { const L = A.scene.layout(), W = innerWidth, H = innerHeight, land = W > H, cw = Math.min(land ? H * .46 : W * .62, 380), ch = cw * 1.32;
+    const [rx, ry] = A.scene.plateToScreen(L.cit.slot[0], L.cit.slot[1]); return { W, H, cw, ch, cx: W / 2, cy: land ? H * .46 : H * .36, sx: rx, sy: ry }; };
   function build() {
     if (built) return; built = true;
     el = A.h(`<div id="cask" hidden><div class="cask__veil"></div><div class="cask__cards" id="ckCards"></div><p class="cask__hint" id="ckHint"></p><p class="cask__count" id="ckCnt"></p></div>`);
