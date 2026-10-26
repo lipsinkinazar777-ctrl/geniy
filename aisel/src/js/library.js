@@ -9,8 +9,9 @@ A.lib = (() => {
   const artOf = b => { const t = b.title || '', au = b.author || ''; if (/айсел/i.test(au)) for (const [re, k] of KNOWN) if (re.test(t)) return { k, own: true }; return { k: PAL[A.hash(t + au) % PAL.length], own: false }; };
   class Sp { constructor(x = 0, k = 90, c = 15) { this.x = x; this.t = x; this.v = 0; this.k = k; this.c = c; } step(dt) { const n = Math.ceil(dt / .008), h = dt / n; for (let i = 0; i < n; i++) { this.v += (this.k * (this.t - this.x) - this.c * this.v) * h; this.x += this.v * h; } } get moving() { return Math.abs(this.t - this.x) > .0008 || Math.abs(this.v) > .004; } }
   const sgn = Math.sign, wait = ms => new Promise(r => setTimeout(r, ms)), ease = k => 1 - Math.pow(1 - A.clamp(k, 0, 1), 3), rnd = (a, b) => a + Math.random() * (b - a);
-  let stage, tagEl, noteEl, poolEl, delEl, askEl, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, fl = 1, kick = 0, hs = [], others = new Sp(0, 46, 9.5);
+  let stage, tagEl, noteEl, poolEl, delEl, askEl, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, fl = 1, kick = 0, hs = [], others = new Sp(0, 46, 9.5), fireOn = true, fireL = new Sp(1, 26, 8.5), offEl = null, darkEl = null, fireBtn = null;
   const order = { reading: 0, want: 1, done: 2 };
+  const fireSnd = () => A.snd.setFire(fireOn ? 1 : 0);
 
   const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, 132) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
@@ -38,14 +39,26 @@ A.lib = (() => {
     </div>`;
   }
 
+  /* ---------------------------------------------------------------- the fireplace: a patch of the plate with the flames put out fades in over the live plate; the light, embers and crackle follow the same level */
+  function mountFire() {
+    const lay = A.$('#libLayer'); if (!lay) return; if (offEl && offEl.parentNode) offEl.remove(); if (darkEl && darkEl.parentNode) darkEl.remove();
+    darkEl = A.h('<div class="lb__dark"></div>'); offEl = A.h('<img class="lb__off" src="img/lib-fireoff.webp" alt="" draggable="false" style="left:700px;top:140px;width:510px;height:340px">'); lay.appendChild(darkEl); lay.appendChild(offEl); paintFire();
+  }
+  function paintFire() { const k = 1 - fireL.x; if (offEl) offEl.style.opacity = k.toFixed(3); if (darkEl) darkEl.style.opacity = (k * .55).toFixed(3); if (fireBtn) fireBtn.classList.toggle('on', fireOn); }
+  function toggleFire() {
+    fireOn = !fireOn; fireL.t = fireOn ? 1 : 0; A.state.libFire = fireOn; A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.vibrate(fireOn ? [12, 24, 14] : 10);
+    if (fireOn) { A.snd.fireLit && A.snd.fireLit(); setTimeout(fireSnd, 380); } else { A.snd.fireOut && A.snd.fireOut(); fireSnd(); } paintFire(); wake();
+  }
+
   function init() {
     const ori = A.scene.ori(); if (built && lastOri === ori) return; built = true; lastOri = ori; G = geo();
     root.innerHTML = `<i class="lb__pool" id="lbPool"></i><div class="lb__stage" id="lbStage"></div><div class="lb__tag" id="lbTag"></div><p class="lb__note" id="lbNote"></p>
       <button class="lb__ink" id="lbInk" aria-label="Записать цитату"><img src="img/ink.webp" alt=""><span>цитата</span></button>
+      <button class="lb__fire on" id="lbFire" aria-label="Камин: огонь"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg><i></i></button>
       <button class="lb__del" id="lbDel" aria-label="Убрать книгу с полки"><svg viewBox="0 0 24 24" class="ico"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.500 7h15M9.500 7V4.800h5V7M6.500 7l.9 12.200h9.200L17.500 7M10 10.500v5.500M14 10.500v5.500"/></g></svg></button>
       <div class="lb__ask" id="lbAsk" hidden><div class="lb__ask-in"><p>Убрать эту книгу с полки?</p><b id="lbAskT"></b><small>Её цитаты останутся в свитке</small><div class="lb__ask-row"><button class="seal seal--ghost" data-a="no">Оставить</button><button class="seal" data-a="yes">Убрать</button></div></div></div>`;
-    stage = A.$('#lbStage', root); tagEl = A.$('#lbTag', root); noteEl = A.$('#lbNote', root); poolEl = A.$('#lbPool', root); delEl = A.$('#lbDel', root); askEl = A.$('#lbAsk', root);
-    A.$('#lbInk', root).addEventListener('pointerdown', e => e.stopPropagation()); delEl.addEventListener('pointerdown', e => e.stopPropagation()); askEl.addEventListener('pointerdown', e => e.stopPropagation());
+    stage = A.$('#lbStage', root); tagEl = A.$('#lbTag', root); noteEl = A.$('#lbNote', root); poolEl = A.$('#lbPool', root); delEl = A.$('#lbDel', root); askEl = A.$('#lbAsk', root); fireBtn = A.$('#lbFire', root); fireOn = A.state.libFire !== false; fireL.x = fireL.t = fireOn ? 1 : 0; mountFire();
+    A.$('#lbInk', root).addEventListener('pointerdown', e => e.stopPropagation()); delEl.addEventListener('pointerdown', e => e.stopPropagation()); fireBtn.addEventListener('pointerdown', e => e.stopPropagation()); fireBtn.addEventListener('click', () => toggleFire()); askEl.addEventListener('pointerdown', e => e.stopPropagation());
     A.$('#lbInk', root).addEventListener('click', () => { if (busy || A.qslip.isOpen) return; const ib = A.$('#lbInk', root); ib.classList.remove('dip'); void ib.offsetWidth; ib.classList.add('dip'); A.snd.tap(); A.snd.quill && A.snd.quill(); A.vibrate(10); const it = items[Math.round(p)]; setTimeout(() => A.qslip.open({ bookId: it && it.b && it.b.id ? it.b.id : '' }), 260); });
     delEl.addEventListener('click', () => { if (busy) return; const it = items[Math.round(p)]; if (!it || it.add) return; A.snd.tap(); A.vibrate(10); A.$('#lbAskT', askEl).textContent = '«' + (it.b.title || 'Без названия') + '»'; askEl.hidden = false; void askEl.offsetWidth; askEl.classList.add('on'); busy = true; });
     askEl.addEventListener('click', e => { const b = e.target.closest('button'); if (!b && e.target !== askEl) return; const yes = b && b.dataset.a === 'yes'; askEl.classList.remove('on'); setTimeout(() => { askEl.hidden = true; }, 380); if (yes) removeBook(items[Math.round(p)]); else { busy = false; A.snd.tap(); } });
@@ -110,7 +123,7 @@ A.lib = (() => {
   function loop(now) {
     raf = 0; if (!active) return; const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
     if (!drag) { pv += ((pt - p) * 170 - pv * 21) * dt; p += pv * dt; if (Math.abs(pt - p) <= .002 && Math.abs(pv) <= .01) { p = pt; pv = 0; } }
-    items.forEach(it => { [it.press, it.lift, it.lay, it.open, it.fan, it.zoom].forEach(s => { s.step(dt); if (!s.moving) s.x = s.t; }); }); others.step(dt); if (!others.moving) others.x = others.t;
+    items.forEach(it => { [it.press, it.lift, it.lay, it.open, it.fan, it.zoom].forEach(s => { s.step(dt); if (!s.moving) s.x = s.t; }); }); others.step(dt); if (!others.moving) others.x = others.t; fireL.step(dt); if (!fireL.moving) fireL.x = fireL.t; paintFire();
     if (A.bookview && A.bookview.isOpen()) { raf = requestAnimationFrame(loop); return; }                 // the open book owns the frame
     const par = A.scene.parallax(); parx = par.x * 2.4; pary = par.y * 2.0;
     fl = .9 + .06 * Math.sin(T * 6.3) + .04 * Math.sin(T * 11.3 + 1.3) + (A.snd.fireLevel ? A.snd.fireLevel() * .12 : 0);
@@ -130,7 +143,7 @@ A.lib = (() => {
   /* ---------------------------------------------------------------- the choreography: both hands take the book, lift it, carry it to the empty middle of the rug, lay it down; the others fade; the cover opens; she reads */
   async function select(it) {
     if (busy) return; if (it.add) { A.snd.coin(); A.mods.books.editBook(); return; }
-    busy = true; sel = it; clearTimeout(hoverT); A.vibrate(14); A.snd.page(); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1); root.classList.add('pick');
+    busy = true; sel = it; clearTimeout(hoverT); A.vibrate(14); A.snd.page(); A.snd.unlock && A.snd.unlock(); fireSnd(); root.classList.add('pick');
     it.press.t = 1; A.hands.grasp(() => rectOf(it)); A.scene.push && A.scene.push(1.06); await wait(520);
     it.press.t = 0; it.lift.t = 1; others.t = 1; A.snd.whoosh && A.snd.whoosh(1); A.vibrate([8, 20, 8]); await wait(560);                          // taken up; the others step back into the dark
     it.lay.t = 1; await wait(420); it.lift.t = .12; await wait(560);                                                                            // carried over, then lowered onto the rug
@@ -179,23 +192,23 @@ A.lib = (() => {
 
   /* ---------------------------------------------------------------- the alchemy table, wherever the frame shows it */
   function doors() {
-    hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'] };
+    hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], fire: ['Камин', 'fire'] };
     Object.entries(H).forEach(([k, polys]) => NM[k] && polys.forEach(pl => {
       const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateFinal(Math.min(...xs), Math.min(...ys)), b = A.scene.plateFinal(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
       if (cx < 24 || cx > innerWidth - 24 || b[1] < 0) return;
-      const el = A.h(`<button class="lb__door" aria-label="${NM[k][0]}" style="left:${a[0]}px;top:${a[1]}px;width:${b[0] - a[0]}px;height:${b[1] - a[1]}px"><i></i><span>${NM[k][0]}</span></button>`);
-      el.addEventListener('pointerdown', e => e.stopPropagation()); el.addEventListener('click', () => { if (busy) return; A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.vibrate(10); A.go(NM[k][1]); }); root.appendChild(el); hs.push(el);
+      const el = A.h(`<button class="lb__door" aria-label="${NM[k][0]}" style="left:${a[0]}px;top:${a[1]}px;width:${b[0] - a[0]}px;height:${b[1] - a[1]}px"><i></i>${NM[k][1] === 'fire' ? '' : `<span>${NM[k][0]}</span>`}</button>`);
+      el.addEventListener('pointerdown', e => e.stopPropagation()); el.addEventListener('click', () => { if (busy) return; if (NM[k][1] === 'fire') { toggleFire(); return; } A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.vibrate(10); A.go(NM[k][1]); }); root.appendChild(el); hs.push(el);
     }));
   }
 
   return {
     init, render, rebuild() { built = false; lastIdx = -1; if (active) { init(); doors(); } },
     show() {
-      init(); active = true; busy = false; sel = null; others.x = others.t = 0; root.classList.remove('pick'); root.classList.add('on'); G = geo(); layoutPool(); A.hands.show(true); A.snd.setFire(1); doors(); render(); wake();
+      init(); active = true; busy = false; sel = null; others.x = others.t = 0; root.classList.remove('pick'); root.classList.add('on'); G = geo(); layoutPool(); A.hands.show(true); fireSnd(); doors(); render(); wake();
       root.classList.add('hints'); setTimeout(() => root.classList.remove('hints'), 5200); rehover();
       if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
     hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); A.snd.setFire(A.fire && A.fire.on ? 1 : 0); clearTimeout(hoverT); root.classList.remove('pick'); hs.forEach(h => h.remove()); hs = []; A.scene.push && A.scene.push(1); A.qslip && A.qslip.close(); if (raf) { cancelAnimationFrame(raf); raf = 0; } },
-    get active() { return active; }, _items: () => items
+    get active() { return active; }, fireLevel: () => fireL.x, _items: () => items
   };
 })();

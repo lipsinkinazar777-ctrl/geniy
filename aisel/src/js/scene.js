@@ -9,7 +9,7 @@ A.scene = (() => {
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
   const PL = { main: A.$('#pl-main'), lab: A.$('#pl-lab'), lib: A.$('#pl-lib'), cit: A.$('#pl-cit') }, BG = A.$('#stageBg');
   const setBg = name => { const u = PL[name] && PL[name].src; if (u) BG.style.backgroundImage = `url("${u}")`; };
-  const DEFS = [['enter', 'Закладка', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['enter', 'Закладка', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['bag', 'Сумка', { tab: 'bag' }], ['music', 'Шкатулка', { act: 'music' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const hit = (rx, ry) => roomName !== 'main' ? null : HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
@@ -56,12 +56,12 @@ A.scene = (() => {
   const LIBL = [[952, 372, 700, 1, .8], [50, 318, 300, .8, 1.3], [790, 122, 220, .55, 2.1], [1068, 104, 240, .6, 3.4], [1640, 92, 230, .6, 4.2], [1384, 292, 200, .5, 5.1], [512, 160, 170, .4, 6], [672, 292, 170, .4, 7.3], [1280, 190, 220, .35, 8.2]];
   let emAcc = 0;
   function libLight(dt, vis) {
-    const s = sNow(), au = A.snd.fireLevel ? A.snd.fireLevel() : 0; g.save(); g.globalCompositeOperation = 'lighter';
-    LIBL.forEach(([x, y, r, a, ph], i) => {
+    const s = sNow(), lvl = A.lib && A.lib.fireLevel ? A.lib.fireLevel() : 1, au = (A.snd.fireLevel ? A.snd.fireLevel() : 0) * lvl; g.save(); g.globalCompositeOperation = 'lighter';
+    LIBL.forEach(([x, y, r, a0, ph], i) => { const a = i === 0 ? a0 * lvl : a0;
       const f = i === 0 ? .86 + .08 * Math.sin(T * 5.7) + .05 * Math.sin(T * 9.9 + 1.1) + au * .16 : .82 + .12 * Math.sin(T * (4.6 + i * .7) + ph) + .07 * Math.sin(T * (8.3 + i) + ph * 2), [sx, sy] = toScreen(x, y), R = r * s, gr = g.createRadialGradient(sx, sy, 0, sx, sy, R);
       gr.addColorStop(0, `rgba(255,${i ? 170 : 150},${i ? 80 : 60},${(a * .34 * f * vis).toFixed(3)})`); gr.addColorStop(.4, `rgba(255,${i ? 130 : 110},50,${(a * .1 * f * vis).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,100,30,0)'); g.fillStyle = gr; g.fillRect(sx - R, sy - R, R * 2, R * 2);
     }); g.restore();
-    emAcc += dt * (3 + au * 5); while (emAcc > 1) { emAcc--; embers.push({ x: 952 + rnd(-46, 46), y: 392 - rnd(0, 30), vx: rnd(-14, 14), vy: rnd(-105, -45), r: rnd(1, 2), life: 0, max: rnd(1.1, 2.4), ph: rnd(0, 6) }); }
+    emAcc += dt * (3 + au * 5) * lvl; while (emAcc > 1) { emAcc--; embers.push({ x: 952 + rnd(-46, 46), y: 392 - rnd(0, 30), vx: rnd(-14, 14), vy: rnd(-105, -45), r: rnd(1, 2), life: 0, max: rnd(1.1, 2.4), ph: rnd(0, 6) }); }
   }
   function particles(dt, vis) {
     g.clearRect(0, 0, VW, VH); const s = sNow(), padX = VW + 120, padY = VH + 120;
@@ -160,6 +160,7 @@ A.scene = (() => {
   function tap(h, sx, sy) {
     if (!h) { showLabels(); A.snd.tap && A.snd.tap(); A.fx.sparks(sx, sy, 6, '#ffd98a'); return; }
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
+    if (h.act === 'music') { A.musicBox.toggle(); return; }
     if (h.act === 'enter') { A.snd.chime && A.snd.chime([392, 523.25, 659.25], .1, .6); A.snd.page && A.snd.page(); api.showZones(); return; }
     if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab, { obj: h.id });

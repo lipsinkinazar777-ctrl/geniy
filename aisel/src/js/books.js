@@ -15,7 +15,7 @@
   function openBook(id) {
     const b = A.bookById(id); if (!b) return;
     const quotes = () => A.state.quotes.filter(q => q.bookId === b.id);
-    const sh = A.sheet.open({ tall: true, noHead: true, html: '', onClose: () => { render(); A.mods.path && A.mods.path.refreshHello && A.mods.path.refreshHello(); }, onMount: s => { paint(s); } });
+    const sh = A.sheet.open({ tall: true, noHead: true, html: '', onClose: () => { render(); }, onMount: s => { paint(s); } });
     function paint(s) {
       const pr = b.pages ? Math.round((b.read || 0) / b.pages * 100) : 0;
       s.body.innerHTML = `<div class="bd"><div class="bd__cover tilt">${A.coverHTML(b)}<span class="bd__glow"></span></div>

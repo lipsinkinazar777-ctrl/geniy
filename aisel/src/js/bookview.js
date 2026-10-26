@@ -9,7 +9,7 @@ A.bookview = (() => {
   const prefs = () => Object.assign({ size: 21, font: 'serif', theme: 'parch' }, A.state.settings.reader || {});
   const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
   const TABS = [['read', 'Читать'], ['impr', 'Впечатление'], ['quotes', 'Цитаты']];
-  let posT = 0, stillT = 0, warmT = 0, el, book, bookEl, pgL, pgR, leaf, castL, castR, fsh, strips = [], stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
+  let posT = 0, stillT = 0, warmT = 0, leafTok = 0, el, book, bookEl, pgL, pgR, leaf, castL, castR, fsh, strips = [], stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
 
   /* ---------------------------------------------------------------- pagination (lazy: a page is measured only when it is needed) */
   function makePager(paras, measure) {
@@ -186,7 +186,7 @@ A.bookview = (() => {
     if (fl && fl.flutter) { cancelAnimationFrame(raf); raf = 0; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0; }
     if (fl || !open_) return false; to = to || { tab: S.tab, i: S.i + dir }; if (to.i < 0 || (to.tab === S.tab && to.i >= spreads(to.tab))) return false; const from = { tab: S.tab, i: S.i }, a = slots(from), b = slots(to); if (to.i >= spreads(to.tab)) return false;
     if (dir > 0) { buildLeaf(a.R, g.land ? b.L : null); setSlot(pgR, b.R); } else { buildLeaf(b.R, g.land ? a.L : null); setSlot(pgR, a.R); if (g.land) setSlot(pgL, b.L); }
-    fl = { dir, from, to, a, b, ang: dir > 0 ? 0 : -180, v: 0, t: dir > 0 ? 0 : -180, k: 60, c: 11, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: dir > 0 ? g.pw : -g.pw, hold: true, pin: true }; leaf.style.display = 'block'; paintLeaf();
+    fl = { dir, from, to, a, b, ang: dir > 0 ? 0 : -180, v: 0, t: dir > 0 ? 0 : -180, k: 60, c: 11, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: dir > 0 ? g.pw : -g.pw, hold: true, pin: true }; leaf.style.transition = 'none'; leaf.style.opacity = ''; leafTok++; leaf.style.display = 'block'; paintLeaf();
     A.hands.show(true, true); A.$('#hands').classList.add('top'); A.hands.pinch(corner); A.snd.page(); run(); return true;
   }
   function paintLeaf() {
@@ -197,7 +197,7 @@ A.bookview = (() => {
       const fd = (LIGHT[0] * sn + LIGHT[1] * cs) / LIGHT[2], bk = -fd, sf = A.clamp((.86 - fd) * .75, 0, .5), sb = A.clamp((.86 - bk) * .75, 0, .5);
       if (Math.abs(sf - S_.tf) > .008) { S_.tf = sf; S_.sf.style.opacity = sf.toFixed(3); } if (Math.abs(sb - S_.tb) > .008) { S_.tb = sb; S_.sb.style.opacity = sb.toFixed(3); }
     }
-    fl.tx = x; fl.h = A.clamp(h / g.pw, 0, 1);
+    fl.tx = x; fl.h = A.clamp(h / g.pw, 0, 1); if (!g.land) leaf.style.opacity = (1 - A.clamp((Math.abs(th) - 96) / 66, 0, 1)).toFixed(3);          // with no left page the leaf melts into the dark as it goes by instead of vanishing
     // the shadow of the lifted page on the page below: it stretches to where the free edge is and softens as the page rises
     const over = x >= 0 ? 'R' : 'L', ca = over === 'R' ? castR : castL, cb2 = over === 'R' ? castL : castR, wpx = Math.abs(x), soft = .5 * Math.pow(Math.sin(Math.min(1, fl.h * 1.15) * 1.5708), .8) * (1 - .35 * fl.h);
     ca.style.cssText = `left:${(over === 'R' ? (g.land ? g.pw : 0) : (g.land ? 0 : -g.pw))}px;width:${(wpx + 26 + fl.h * 34).toFixed(1)}px;opacity:${soft.toFixed(3)};transform:${over === 'R' ? 'none' : `translateX(${(g.pw - wpx - 26 - fl.h * 34).toFixed(1)}px)`};background:linear-gradient(${over === 'R' ? 90 : 270}deg,rgba(24,10,0,.0),rgba(24,10,0,.5) ${Math.max(20, 70 - fl.h * 20).toFixed(0)}%,rgba(24,10,0,.34) ${(92 - fl.h * 6).toFixed(0)}%,rgba(24,10,0,0))`; cb2.style.opacity = 0;
@@ -221,19 +221,25 @@ A.bookview = (() => {
     raf = requestAnimationFrame(f);
   }
   function endFlip() {
-    const f = fl, done = f.flutter ? false : f.dir > 0 ? f.t <= -179 : f.t >= -1; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0;
+    const f = fl, done = f.flutter ? false : f.dir > 0 ? f.t <= -179 : f.t >= -1; fl = null; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0;
     if (!f.flutter) {
       if (done) { S = { tab: f.to.tab, i: f.to.i }; if (f.dir > 0) { if (g.land) setSlot(pgL, f.b.L); } else setSlot(pgR, f.b.R); }
       else { if (f.dir > 0) setSlot(pgR, f.a.R); else if (g.land) setSlot(pgL, f.a.L); }
       foot();
     }
+    retireLeaf();
     if (!f.flutter) { A.hands.unpinch(); setTimeout(() => { if (!fl) A.$('#hands').classList.remove('top'); }, 700); } warm();
+  }
+  /* the leaf is not cut away at the end of a turn: the page underneath is already in place, the leaf lets go over a moment */
+  function retireLeaf() {
+    const tok = ++leafTok, l = leaf; l.style.transition = 'opacity .2s ease-out'; l.style.opacity = '0';
+    setTimeout(() => { if (tok !== leafTok) return; l.style.display = 'none'; l.innerHTML = ''; strips = []; l.style.transition = 'none'; l.style.opacity = ''; }, 230);
   }
   function warm() { clearTimeout(warmT); warmT = setTimeout(() => { if (open_ && S.tab === 'read' && hasText && pager) pager.get(Math.max(0, (g.land ? S.i * 2 + 1 : S.i) - 1) + 3); }, 140); }
   /* a breath of air as the book opens: the top page lifts, sails and settles again */
   function flutter() {
     if (fl || !open_ || busyW || !g) return; const R = slots(S).R; if (!R) return; buildLeaf(R, null);
-    fl = { dir: 1, from: S, to: S, ang: 0, v: -125, t: 0, k: 70, c: 8.6, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: g.pw, hold: false, flutter: true }; leaf.style.display = 'block'; paintLeaf(); A.snd.page && A.snd.page(); run();
+    fl = { dir: 1, from: S, to: S, ang: 0, v: -125, t: 0, k: 70, c: 8.6, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: g.pw, hold: false, flutter: true }; leaf.style.transition = 'none'; leaf.style.opacity = ''; leafTok++; leaf.style.display = 'block'; paintLeaf(); A.snd.page && A.snd.page(); run();
   }
   function go(dir) { if (flipping() || busyW) return; if (begin(dir)) { launch(fl, dir > 0 ? -180 : 0, 120); fl.k = 28; fl.c = 8.4; } else if (dir > 0 || dir < 0) { bump(dir); } }
   function bump(dir) { pgR.animate([{ transform: 'none' }, { transform: `translateX(${-dir * 9}px)` }, { transform: 'none' }], { duration: 260, easing: 'ease-out' }); }
@@ -306,7 +312,7 @@ A.bookview = (() => {
   }
   function close() {
     if (!open_) return; if (busyW) return; open_ = false; clearSel(); cancelPress(); A.quill.hide(); const b = book; clearTimeout(warmT);
-    if (fl) { cancelAnimationFrame(raf); raf = 0; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0; }
+    if (fl) { cancelAnimationFrame(raf); raf = 0; fl = null; } leafTok++; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0;
     if (hasText && pager) { b.read = b.read || 0; const reached = Math.round(maxFrac * (b.pages || A.pagesEst('x'.repeat(b._len || 800)))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); }
     A.save(); el.classList.remove('in', 'setting'); clearTimeout(stillT); document.body.classList.remove('bv-open', 'bv-still'); A.scene.freeze(false); A.$('#lib3d').classList.remove('bv'); A.$('#hands').classList.remove('top'); A.hands.unpinch();
     document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); A.snd.setFire(A.tab === 'books' || (A.fire && A.fire.on) ? 1 : 0);

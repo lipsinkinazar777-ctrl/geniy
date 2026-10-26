@@ -101,7 +101,7 @@ body.ui #fire{opacity:1;transform:none}
 #fire canvas{width:110px;height:110px;display:block}
 .fire__tip{position:absolute;left:62px;top:6px;white-space:nowrap;font:italic 400 14px/1 var(--serif);color:#ffe3a6;opacity:0;transform:translateX(-6px);transition:all .6s;pointer-events:none;text-shadow:0 2px 10px #000}
 .fire__tip.on{opacity:.95;transform:none}
-body[data-tab=sky] #fire,body[data-tab=potion] #fire{opacity:.85}
+body[data-tab=potion] #fire{opacity:.85}
 
 /* ---------------- settings bits */
 .set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:16px}
@@ -147,8 +147,6 @@ body[data-tab=sky] #fire,body[data-tab=potion] #fire{opacity:.85}
 #mapSvg .fogx{animation:fogx 9s ease-in-out infinite alternate}@keyframes fogx{to{transform:translateX(14px)}}
 #mapSvg .mk{animation:mk 2.4s ease-in-out infinite}@keyframes mk{50%{transform:translateY(-5px)}}
 #mapSvg .shake{animation:shake .5s}@keyframes shake{20%{transform:translate(var(--sx,0),0) rotate(-2deg)}}
-.loc-art{margin:-6px -20px 6px;background:radial-gradient(70% 60% at 50% 55%,rgba(255,200,110,.18),transparent 70%);max-height:300px;display:flex;justify-content:center}
-.loc-art svg{max-height:290px;width:auto}
 .shelf-row{display:flex;gap:12px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}.mini{width:84px;flex:none}
 .stk{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .stk__i{aspect-ratio:1;border-radius:18px;background:rgba(255,236,190,.05);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
@@ -213,12 +211,6 @@ body[data-tab=sky] #fire,body[data-tab=potion] #fire{opacity:.85}
 .pc.prev{margin-bottom:18px;transform:rotate(0)}
 .pcv{padding:6px 0 0}.qprev{margin-bottom:16px}
 .stkpick{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.stkpick button{aspect-ratio:1;border-radius:14px;background:rgba(255,236,190,.06);border:1px solid var(--line);font-size:24px;transition:all .4s var(--spring)}.stkpick button.on{background:rgba(255,214,140,.22);border-color:rgba(255,214,140,.6);transform:scale(1.08)}.stkpick .lock{opacity:.5;font-size:18px}
-/* ---------------- sky */
-#v-sky{padding:0;overflow:hidden;background:#040818}
-#skyCv{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-.sky__ui{position:absolute;inset:0;pointer-events:none;padding-top:calc(var(--sat) + 78px)}
-.sky__hint{position:absolute;left:0;right:0;bottom:calc(var(--navh) + var(--sab) + 120px);text-align:center;padding:0 40px;font:italic 400 16px/1.35 var(--serif);color:var(--ink2);pointer-events:none}
-.sky__panel{position:absolute;left:0;right:0;bottom:calc(var(--navh) + var(--sab) + 26px);display:flex;gap:10px;overflow-x:auto;padding:4px 18px;pointer-events:auto;scrollbar-width:none}.sky__panel::-webkit-scrollbar{display:none}
 .cstl{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 16px 12px 36px;position:relative;border-radius:18px;background:rgba(10,16,48,.7);border:1px solid hsla(var(--h),70%,70%,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-align:left;transition:transform .4s var(--spring)}
 .cstl:active{transform:scale(.94)}.cstl i{position:absolute;left:14px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:hsl(var(--h) 90% 80%);box-shadow:0 0 12px 3px hsla(var(--h),90%,70%,.7)}.cstl b{font:italic 500 15px/1.1 var(--serif);color:hsl(var(--h) 80% 88%)}.cstl small{font-size:12px;color:var(--ink3)}
 .starc{display:flex;gap:18px;align-items:flex-start}.starc__c{width:92px;flex:none}.stars5.sm button{width:22px;height:22px}.stars5.sm{gap:2px;margin-top:8px}

@@ -32,9 +32,9 @@ A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth /
 
 /* ---------------------------------------------------------------- the room is the router:
    touching an object glides the camera in, the object "opens" as a full-screen panel with an iris from that spot, and back reverses it */
-const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
+const TABS = ['books', 'quotes', 'potion', 'bag'];
 const ROOMOF = { books: 'lib', potion: 'lab', quotes: 'cit' }, MOOD = { books: 'books', potion: 'potion', quotes: 'quotes' };
-const OBJ = { books: 'lib', quotes: 'quotes', potion: 'lab', sky: 'sky', path: 'path', bag: 'bag' };
+const OBJ = { books: 'lib', quotes: 'quotes', potion: 'lab', bag: 'bag' };
 A.tab = 'room'; let moving = false, lockT = 0;
 const busy = (on = true) => { moving = on; clearTimeout(lockT); if (on) lockT = setTimeout(() => { moving = false; }, 3600); };      // a transition can never leave the room stuck
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
@@ -117,7 +117,7 @@ A.settings = () => {
       const q = (x) => A.$(x, sh.el);
       const por = q('#stPortrait'); if (s.portrait) por.style.backgroundImage = `url(${s.portrait})`;
       q('#stFile').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; const url = await A.imgToData(f, 360, .86); s.portrait = url; A.save(); por.style.backgroundImage = `url(${url})`; A.applyPortrait(); A.snd.chime(); });
-      A.$$('.tog', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.k; s[k] = !s[k]; b.classList.toggle('on', s[k]); A.save(); A.snd.refresh(); A.snd.tap(); }));
+      A.$$('.tog', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.k; s[k] = !s[k]; b.classList.toggle('on', s[k]); A.save(); A.snd.refresh(); if (k === 'music') A.musicBox && A.musicBox.sync(); A.snd.tap(); }));
       q('#stVol').addEventListener('input', e => { s.vol = +e.target.value; A.save(); A.snd.refresh(); });
       A.$$('[data-g]', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.g, g = A.state.goal; g[k] = A.clamp(g[k] + +b.dataset.d, k === 'day' ? 5 : 20, 1000); q(k === 'day' ? '#gDay' : '#gWeek').textContent = g[k]; A.save(); A.snd.tap(); A.mods.path && A.mods.path.refreshGoal && A.mods.path.refreshGoal(); }));
       q('#stCopy').addEventListener('click', async () => { const txt = JSON.stringify(A.state); try { await navigator.clipboard.writeText(txt); A.toast('Копия скопирована. Вставь её в заметки'); } catch (e) { A.backupBox(txt); } });

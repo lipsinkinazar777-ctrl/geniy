@@ -20,7 +20,7 @@ A.vibrate = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e
 const KEY = 'aisel-corner-v1';
 const DEFAULT = () => ({
   v: 1, books: [], quotes: [], log: {}, acorns: 0, earned: 0, claimedDays: {}, claimedWeeks: {}, bonusDone: {},
-  goal: { day: 20, week: 120 }, samples: true, locSeen: 0, bonusPoints: 12, welcomed: false,
+  goal: { day: 20, week: 120 }, samples: true, bonusPoints: 12, welcomed: false,
   settings: { sound: true, music: true, vol: .8, portrait: null }, introSeen: false, fireTip: false
 });
 A.state = DEFAULT();

@@ -27,7 +27,7 @@ A.snd = (() => {
     noise = makeNoise(4);
     applyVol(); return true;
   }
-  function applyVol() { if (!ctx) return; const v = S().sound ? S().vol : 0; master.gain.cancelScheduledValues(now()); master.gain.linearRampToValueAtTime(v * .9, now() + .35); mus.gain.value = S().music ? .9 : 0; }
+  function applyVol() { if (!ctx) return; const v = S().sound ? S().vol : 0; master.gain.cancelScheduledValues(now()); master.gain.linearRampToValueAtTime(v * .9, now() + .35); mus.gain.cancelScheduledValues(now()); mus.gain.setTargetAtTime(S().music ? .9 : 0, now(), .18); }
 
   /* ---- ambient bed */
   function bed() {

@@ -49,7 +49,6 @@ A.finishBook = (b, silent) => {
   const first = !b.rewarded; b.rewarded = true; A.save(); if (silent) return; if (first) A.addAcorns(15);
   A.snd.unlock2(); A.vibrate([40, 30, 60]); A.fx.petals(innerWidth / 2, innerHeight * .55, 36); A.fx.stars(innerWidth / 2, innerHeight * .4, 24);
   A.toast(`«${b.title}» прочитана. На небе зажглась новая звезда`, 3600);
-  A.mods.sky && A.mods.sky.markNew && A.mods.sky.markNew(b.id);
 };
 A.logPages = (n, bookId) => {
   if (!(n > 0)) return; const st = A.state, key = A.dayKey(), oldTotal = A.pagesTotal(), oldDay = A.pagesToday(), oldWeek = A.pagesWeek();
@@ -62,5 +61,4 @@ A.logPages = (n, bookId) => {
   const wk = A.weekId(); if (oldWeek < st.goal.week && A.pagesWeek() >= st.goal.week && !st.claimedWeeks[wk]) { st.claimedWeeks[wk] = 1; A.addAcorns(15); setTimeout(() => { A.fx.acornRain(40); A.toast('Цель недели выполнена! +15 желудей 🌰', 3600); }, 1800); }
   A.save(); if (finished) setTimeout(() => A.finishBook(finished), 600);
   A.goal.refresh(); A.refreshHud(true); A.mods.books && A.mods.books.refresh && A.mods.books.refresh();
-  setTimeout(() => A.mods.path && A.mods.path.checkUnlock(), 1600);
 };

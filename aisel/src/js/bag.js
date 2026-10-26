@@ -16,5 +16,4 @@
     show() { A.rise(el); mod.refreshGoal(); A.goal.animateIn(); },
     refreshGoal() { A.goal.refresh(); }
   };
-  A.mods.path && (A.mods.path.acornSheet = () => A.goal.acornSheet());
 })();

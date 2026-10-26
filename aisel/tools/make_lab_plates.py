@@ -26,9 +26,13 @@ def table():
     big = cv2.resize(cv2.inpaint(small, ms, 12, cv2.INPAINT_TELEA), (w, h), interpolation=cv2.INTER_CUBIC)
     # above the cap the wall is nearly flat and dark: fill each row by interpolating between the clean pixels on both sides (keeps the shelf boards' level and the dark mood)
     rows = big.copy().astype(np.float32); xa, xb = 258, 484
-    for y in range(190, 520):
+    for y in range(190, 810):
         a = im[y, xa - 12:xa].astype(np.float32).mean(0); b = im[y, xb:xb + 12].astype(np.float32).mean(0); t = np.linspace(0, 1, xb - xa)[:, None]; rows[y, xa:xb] = a * (1 - t) + b * t
-    rows = cv2.GaussianBlur(rows, (0, 0), 3); ym = np.zeros((h, w), np.float32); ym[190:505, xa:xb] = 1; ym = cv2.GaussianBlur(ym, (0, 0), 12)[..., None]; big = (big * (1 - ym) + rows * ym)
+    rows = cv2.GaussianBlur(rows, (0, 0), sigmaX=4, sigmaY=14); ym = np.zeros((h, w), np.float32); ym[190:800, xa:xb] = 1; ym[790:812, xa:xb] *= np.linspace(1, 0, 22)[:, None]; ym = cv2.GaussianBlur(ym, (0, 0), 12)[..., None]; big = (big * (1 - ym) + rows * ym)
+    # the table top: its planks run toward us, so the clean wood just below the bottle's footprint is carried up over it
+    top = big.copy(); SH = 112
+    for y in range(806, 922): top[y, 286:452] = im[min(y + SH, h - 1), 286:452]
+    wt_ = np.zeros((h, w), np.float32); wt_[806:922, 286:452] = 1; wt_[806:836, 286:452] *= np.linspace(0, 1, 30)[:, None]; wt_ = cv2.GaussianBlur(wt_, (0, 0), 6)[..., None]; big = big * (1 - wt_) + top * wt_
     mf = cv2.GaussianBlur(m.astype(np.float32) / 255, (0, 0), 7)[..., None]; o = (im * (1 - mf) + big * mf).astype(np.float32)
     # the aura the bottle threw on both sides is a green stain after inpainting: pull it back toward the surrounding dark
     g = cv2.cvtColor(o.astype(np.uint8), cv2.COLOR_BGR2HSV).astype(np.float32); g[..., 1] *= (1 - .45 * mf[..., 0]); g[..., 2] *= (1 - .18 * mf[..., 0]); o = cv2.cvtColor(np.clip(g, 0, [180, 255, 255]).astype(np.uint8), cv2.COLOR_HSV2BGR).astype(np.float32)
@@ -47,4 +51,8 @@ def recolor(im, ht):
 for name, fn in (('c', cauldron), ('t', table)):
     base = fn(); cv2.imwrite(str(tmp / f'{name}_base.png'), base)
     for mood, ht in MOODS.items():
-        v = recolor(base, ht); p = out / f'lab-{name}-{mood}.webp'; cv2.imwrite(str(p), v, [cv2.IMWRITE_WEBP_QUALITY, 80]); print(p.name, p.stat().st_size // 1024, 'KB')
+        v = recolor(base, ht); p = out / f'lab-{name}-{mood}.webp'
+        # 1.5x with lanczos + a little unsharp + fine grain: the page draws it at 720x1280 css px, so retina screens get real extra pixels and edges stay crisp on large windows
+        big = cv2.resize(v, (1080, 1920), interpolation=cv2.INTER_LANCZOS4); bl = cv2.GaussianBlur(big, (0, 0), 1.5); big = cv2.addWeighted(big, 1.55, bl, -.55, 0)
+        big = np.clip(big.astype(np.float32) + np.random.default_rng(9).normal(0, 1.4, big.shape[:2])[..., None], 0, 255).astype(np.uint8)
+        cv2.imwrite(str(p), big, [cv2.IMWRITE_WEBP_QUALITY, 78]); print(p.name, p.stat().st_size // 1024, 'KB')
