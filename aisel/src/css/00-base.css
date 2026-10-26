@@ -1,0 +1,22 @@
+:root{--bg:#000;--ink:#f3ead3;--ink2:rgba(243,234,211,.68);--ink3:rgba(243,234,211,.42);--glass:rgba(10,14,14,.52);--glass2:rgba(14,20,19,.7);--line:rgba(255,226,160,.16);--gold:#f1c76e;--glow:#ffd98a;--teal:#38c2ae;--rose:#ffadc2;--moss:#4f8a5b;--parch:#ecdcb4;--ink-dark:#2b2114;
+--f:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--hand:"Cormorant Garamond",Georgia,serif;
+--ease:cubic-bezier(.22,.9,.24,1);--spring:cubic-bezier(.34,1.56,.64,1);--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--navh:72px;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.5 var(--f);overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button,input,textarea,select{font:inherit;color:inherit;background:none;border:0;outline:0}
+button{cursor:pointer;padding:0}
+input,textarea{-webkit-user-select:text;user-select:text}
+h1,h2,h3,p{margin:0}
+.ico{width:1.2em;height:1.2em;fill:none;stroke:currentColor}
+[hidden]{display:none!important}
+::selection{background:rgba(241,199,110,.35)}
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+#vignette{position:fixed;inset:0;z-index:2;pointer-events:none;background:radial-gradient(120% 90% at 50% 45%,transparent 55%,rgba(0,0,0,.55))}
+body.warm #vignette{background:radial-gradient(120% 90% at 50% 45%,transparent 50%,rgba(40,12,0,.55))}
+#tint{position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,4,4,.55),rgba(0,4,4,.3) 30%,rgba(0,3,3,.72));opacity:0;transition:opacity 1.2s var(--ease)}
+body.ui #tint{opacity:1}
+body[data-tab=books] #tint{background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(2,2,1,.56) 40%,rgba(0,0,0,.86))}
+body[data-tab=quotes] #tint{background:linear-gradient(180deg,rgba(0,0,0,.68),rgba(4,2,0,.52) 40%,rgba(0,0,0,.86))}
+body[data-tab=sky] #tint{background:linear-gradient(180deg,rgba(0,1,10,.9),rgba(0,2,12,.86))}
+body[data-tab=potion] #tint{background:linear-gradient(180deg,rgba(0,8,5,.78),rgba(0,3,3,.9))}
+body[data-tab=path] #tint{background:linear-gradient(180deg,rgba(0,0,0,.66),rgba(0,3,3,.4) 36%,rgba(0,0,0,.84))}
