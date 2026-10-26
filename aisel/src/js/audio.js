@@ -47,7 +47,10 @@ A.snd = (() => {
     // owl
     loop(() => { if (mood !== 'sky' && Math.random() < .7) return; const t = now() + .05; osc('sine', 392, t, .05, .02, .35, amb, 340); osc('sine', 349, t + .55, .05, .018, .45, amb, 300); }, 14, 30);
     // fire crackle
-    const crack = () => { const lvl = .3 + fire * 1.7, t = now() + .01; noiseHit(t, .012 + Math.random() * .02, 'highpass', 1800 + Math.random() * 2500, 1, (.016 + fire * .05) * (.5 + Math.random()), amb); if (Math.random() < .12 + fire * .2) noiseHit(t, .07, 'bandpass', 700 + Math.random() * 500, 3, .03 + fire * .05, amb); timers.push(setTimeout(crack, (120 + Math.random() * 520) / lvl)); };
+    const crack = () => { if (fire < .04) { timers.push(setTimeout(crack, 350)); return; } const t = now() + .01, pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null; if (pn) { pn.pan.value = (Math.random() * 2 - 1) * .7; pn.connect(amb); } const d = pn || amb, lvl = .4 + fire * 1.6;
+      noiseHit(t, .012 + Math.random() * .02, 'highpass', 1800 + Math.random() * 2500, 1, (.03 + fire * .1) * (.5 + Math.random()), d); if (Math.random() < .16 + fire * .22) noiseHit(t, .07 + Math.random() * .05, 'bandpass', 600 + Math.random() * 600, 3, .05 + fire * .09, d);
+      if (Math.random() < .05) { for (let i = 0; i < 4; i++) noiseHit(t + i * .018, .012, 'highpass', 2500, 1, .09 * fire, d); }
+      timers.push(setTimeout(crack, (110 + Math.random() * 480) / lvl)); };
     timers.push(setTimeout(crack, 400));
     // music box + pad
     const note = (f, vel = 1, when) => { const t = when || now(); [[1, .05], [2, .014], [3, .005]].forEach(([m, p]) => osc(m === 1 ? 'triangle' : 'sine', f * m, t, .004, p * vel, m === 1 ? 2.2 : 1.1, mus)); };
@@ -66,7 +69,7 @@ A.snd = (() => {
     get ready() { return !!ctx; },
     unlock() { if (!init()) return; if (ctx.state === 'suspended') ctx.resume(); if (!started) bed(); applyVol(); },
     setMood(m) { mood = m; },
-    setFire(v) { fire = v; if (fireG && ctx) fireG.gain.linearRampToValueAtTime(.012 + v * .07, now() + .5); },
+    setFire(v) { fire = v; if (fireG && ctx) { fireG.gain.cancelScheduledValues(now()); fireG.gain.setTargetAtTime(v ? .13 : .0001, now(), v ? .5 : .7); } },
     refresh() { applyVol(); },
     suspend() { if (ctx && ctx.state === 'running') ctx.suspend(); },
     resume() { if (ctx && S().sound && ctx.state === 'suspended') ctx.resume(); },
@@ -82,6 +85,7 @@ A.snd = (() => {
     pop() { if (!ctx) return; osc('sine', 700, now(), .002, .06, .08, sfx, 180); },
     brew() { if (!ctx) return; const t = now(); noiseHit(t, 1.8, 'bandpass', 600, 2, .07, sfx, 3200); [293.66, 349.23, 440, 587.33, 698.46, 880].forEach((f, i) => osc('triangle', f, t + .15 * i, .01, .045, 1.4)); },
     quill() { if (!ctx) return; const t = now(); for (let i = 0; i < 4; i++) noiseHit(t + i * .06, .05, 'bandpass', 3000 + i * 500, 2, .03, sfx); },
+    fireOut() { if (!ctx) return; const t = now(); noiseHit(t, 1.1, 'highpass', 2200, .8, .1, sfx, 7000); noiseHit(t + .05, .5, 'bandpass', 500, 1.2, .08, sfx, 200); },
     fireLit() { if (!ctx) return; noiseHit(now(), .5, 'bandpass', 800, 1.5, .12, sfx, 2400); osc('sine', 220, now() + .05, .01, .04, .5); },
     owl() { if (!ctx) return; const t = now(); osc('sine', 392, t, .05, .05, .35, sfx, 340); osc('sine', 349, t + .55, .05, .045, .45, sfx, 300); },
     stream(sec = 5) { if (!ctx) return; const t = now(); noiseHit(t, sec, 'bandpass', 1500, .7, .05, amb, 2300); },

@@ -17,17 +17,12 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
   const mod = A.mods.path = {
     init(root) {
       el = root; if (!A.state.locSeen) { A.state.locSeen = A.unlockedCount(); A.save(); }
-      root.innerHTML = `<div class="wrap"><div class="hello" data-rise><div class="eyebrow" id="helloEb"></div><h1 class="h1">Привет, <em>Айсель</em></h1><p class="sub" id="helloSub"></p></div><div id="goalMount" data-rise></div>
-        <section class="sec" data-rise><div class="sec__h"><h3>Лесная тропа</h3><small id="mapCount"></small></div><div class="trail" id="trail"></div></section><div style="height:30px"></div></div>`;
-      A.goal.mount(A.$('#goalMount', root)); buildMap(); mod.refreshHello();
+      root.innerHTML = `<div class="wrap"><div data-rise><div class="eyebrow" id="helloEb">карта леса</div><h1 class="h1">Лесная <em>тропа</em></h1><p class="sub">Чем больше читаешь, тем дальше ведёт дорога.</p></div>
+        <section class="sec" data-rise><div class="sec__h"><h3>Места</h3><small id="mapCount"></small></div><div class="trail" id="trail"></div></section><div style="height:40px"></div></div>`;
+      buildMap();
     },
-    show() { A.rise(el); mod.refreshHello(); mod.refreshGoal(); A.goal.animateIn(); setTimeout(() => { mod.checkUnlock(); const cur = Math.max(0, A.unlockedCount() - 1), c = cards[cur]; if (c) el.scrollTo({ top: Math.max(0, c.offsetTop + trail.offsetTop - innerHeight * .32), behavior: 'smooth' }); }, 700); },
-    refreshGoal() { A.goal.refresh(); }, refreshHello() {
-      const h = new Date().getHours(), part = h < 5 ? 'тихой ночи' : h < 12 ? 'доброго утра' : h < 18 ? 'хорошего дня' : 'уютного вечера';
-      A.$('#helloEb', el).textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
-      const open = A.state.books.filter(b => b.status === 'reading').length;
-      A.$('#helloSub', el).textContent = `${part[0].toUpperCase() + part.slice(1)}, принцесса. ${open ? `Сейчас ${open === 1 ? 'открыта' : 'открыто'} ${open} ${A.plural(open, 'книга', 'книги', 'книг')}.` : 'Выбери книгу на полке, и лес оживёт.'}`;
-    },
+    show() { A.rise(el); setTimeout(() => { mod.checkUnlock(); const cur = Math.max(0, A.unlockedCount() - 1), c = cards[cur]; if (c) el.scrollTo({ top: Math.max(0, c.offsetTop + trail.offsetTop - innerHeight * .32), behavior: 'smooth' }); }, 700); },
+    refreshGoal() { A.mods.bag && A.mods.bag.refreshGoal(); }, refreshHello() {},
     checkUnlock() { const n = A.unlockedCount(); if (n > A.state.locSeen) { const from = A.state.locSeen; A.state.locSeen = n; A.save(); celebrate(from, n); } },
     acornSheet: () => A.goal.acornSheet(),
     rebuild() { if (el) buildMap(); }

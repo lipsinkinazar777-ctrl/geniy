@@ -13,7 +13,7 @@
         <div id="bkSample"></div><div class="shelf" id="bkGrid"></div></div>`;
       A.$('#bkQ', root).addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); render(); });
       A.$('#bkF', root).addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; filter = c.dataset.f; A.$$('#bkF .chip', root).forEach(x => x.classList.toggle('on', x === c)); A.snd.page(); render(); });
-      A.$('#bkGrid', root).addEventListener('click', e => { const c = e.target.closest('.bk'); if (c) { A.snd.page(); openBook(c.dataset.id); } });
+      A.$('#bkGrid', root).addEventListener('click', e => { const c = e.target.closest('.bk'); if (!c) return; A.snd.page(); const bk = A.bookById(c.dataset.id); if (bk && bk.text) A.reader.open(bk, A.$('.bk__c', c).getBoundingClientRect()); else openBook(c.dataset.id); });
       render();
     },
     show() { A.rise(el); render(true); A.fab.show(() => editBook()); },
@@ -44,6 +44,7 @@
       s.body.innerHTML = `<div class="bd"><div class="bd__cover tilt">${A.coverHTML(b)}<span class="bd__glow"></span></div>
         <h2 class="bd__t">${A.esc(b.title)}</h2><p class="sub bd__a">${A.esc(b.author || 'автор неизвестен')}</p>
         <div class="seg" id="bdSt">${Object.keys(ST).map(k => `<button data-s="${k}" class="${b.status === k ? 'on' : ''}">${ST[k]}</button>`).join('')}</div>
+        ${b.text ? '<button class="btn btn--gold" style="width:100%;margin:2px 0 16px" id="bdRead">Читать</button>' : ''}
         ${b.status !== 'want' ? `<div class="glass bd__pr"><div class="bd__prh"><span>${b.read || 0} из ${b.pages || '?'} стр.</span><b>${pr}%</b></div><div class="wbar big"><i style="width:${pr}%"></i></div>${b.status === 'reading' ? `<div class="row" style="margin-top:14px"><button class="btn btn--gold" id="bdLog">Записать страницы</button><button class="btn btn--ghost" id="bdDone">Дочитала</button></div>` : ''}</div>` : `<button class="btn btn--gold" style="width:100%;margin:6px 0 18px" id="bdStart">Начать читать</button>`}
         <div class="sec__h"><h3>Оценка</h3></div><div class="stars5" id="bdRate">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" class="${b.rating >= n ? 'on' : ''}" aria-label="${n}"><svg class="ico" viewBox="0 0 24 24"><use href="#i-star"/></svg></button>`).join('')}</div>
         <div class="sec__h" style="margin-top:22px"><h3>Впечатление</h3></div><div class="chips wrapchips" id="bdImp">${IMP.map(t => `<button class="chip ${(b.imp || []).includes(t) ? 'on' : ''}" data-t="${t}">${t}</button>`).join('')}</div>
@@ -54,6 +55,7 @@
         <div class="row" style="margin-top:26px"><button class="btn btn--ghost" id="bdEdit">Изменить</button><button class="btn btn--danger" id="bdDel">Удалить</button></div></div>`;
       const q = x => A.$(x, s.body); tilt(q('.tilt'));
       A.$$('#bdSt button', s.body).forEach(bt => bt.addEventListener('click', () => { const k = bt.dataset.s; if (k === b.status) return; A.snd.page(); setStatus(k); paint(s); }));
+      const rd = q('#bdRead'); rd && rd.addEventListener('click', () => { s.close(); setTimeout(() => A.reader.open(b), 380); });
       const lg = q('#bdLog'); lg && lg.addEventListener('click', () => { A.goal.logSheet(b.id); });
       const dn = q('#bdDone'); dn && dn.addEventListener('click', () => { setStatus('done'); paint(s); });
       const stt = q('#bdStart'); stt && stt.addEventListener('click', () => { setStatus('reading'); paint(s); });
@@ -85,6 +87,7 @@
       <div class="row"><label class="field"><span>Страниц</span><input class="in" id="ebP" type="number" inputmode="numeric" min="0" value="${b.pages || ''}"></label><label class="field"><span>Прочитано</span><input class="in" id="ebR" type="number" inputmode="numeric" min="0" value="${b.read || ''}"></label></div>
       <div class="field"><span>Статус</span><div class="seg" id="ebS">${Object.keys(ST).map(k => `<button data-s="${k}" class="${b.status === k ? 'on' : ''}">${ST[k]}</button>`).join('')}</div></div>
       <div class="field"><span>Настроение книги</span><div class="chips wrapchips" id="ebM">${Object.entries(A.MOODS).map(([k, v]) => `<button class="chip ${b.tags.includes(k) ? 'on' : ''}" data-k="${k}">${v}</button>`).join('')}</div></div>
+      <div class="field"><span>Текст истории, чтобы читать здесь</span><textarea class="in" id="ebTx" placeholder="Вставь текст или загрузи файл" style="min-height:110px;font-size:14px">${A.esc(b.text || '')}</textarea><label class="btn btn--ghost" style="margin-top:10px;width:100%">Загрузить файл (.txt, .md)<input type="file" id="ebTf" accept=".txt,.md,.text,text/plain,text/markdown" hidden></label></div>
       <div class="field"><span>Обложка</span><div class="hues" id="ebH">${[...Array(9)].map((_, i) => { const h = i * 40; return `<button data-h="${h}" style="background:linear-gradient(160deg,hsl(${h} 45% 34%),hsl(${h + 25} 50% 16%))"></button>`; }).join('')}<label class="hues__ph"><svg class="ico" viewBox="0 0 24 24"><use href="#i-camera"/></svg><input type="file" accept="image/*" id="ebF" hidden></label></div></div>
       <button class="btn btn--gold" style="width:100%;margin-top:10px" id="ebOk">${old ? 'Сохранить' : 'Поставить на полку'}</button>`,
       onMount: s => {
@@ -95,6 +98,8 @@
         A.$$('#ebS button', s.el).forEach(bt => bt.addEventListener('click', () => { b.status = bt.dataset.s; A.$$('#ebS button', s.el).forEach(x => x.classList.toggle('on', x === bt)); A.snd.tap(); }));
         A.$$('#ebM .chip', s.el).forEach(c => c.addEventListener('click', () => { const k = c.dataset.k, i = b.tags.indexOf(k); i >= 0 ? b.tags.splice(i, 1) : b.tags.push(k); c.classList.toggle('on', i < 0); A.snd.tap(); }));
         A.$$('#ebH button', s.el).forEach(h => h.addEventListener('click', () => { b.cover = { hue: +h.dataset.h }; prev(); A.snd.tap(); }));
+        q('#ebTx').addEventListener('input', e => { b.text = e.target.value; if (!old || !old.pages) { b.pages = b.text ? A.pagesEst(b.text) : 0; q('#ebP').value = b.pages || ''; } });
+        q('#ebTf').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; if (f.size > 3e6) { A.toast('Файл слишком большой для телефона'); return; } const fr = new FileReader(); fr.onload = () => { b.text = String(fr.result); q('#ebTx').value = b.text; if (!b.pages) { b.pages = A.pagesEst(b.text); q('#ebP').value = b.pages; } if (!b.title.trim()) { b.title = f.name.replace(/\.[^.]+$/, ''); q('#ebT').value = b.title; prev(); } A.snd.chime([659.25, 880], .1, .6); A.toast('Текст добавлен, книга откроется как читалка'); }; fr.readAsText(f, 'utf-8'); });
         q('#ebF').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; b.cover = { img: await A.imgToData(f, 520, .8) }; prev(); A.snd.chime([659.25, 880], .1, .6); });
         A.$$('#ebSug .chip', s.el).forEach(c => c.addEventListener('click', () => { const x = A.SUGGEST[+c.dataset.i]; b.title = x.t; b.author = x.a; b.pages = x.p; b.tags = [...x.m]; q('#ebT').value = x.t; q('#ebA').value = x.a; q('#ebP').value = x.p; A.$$('#ebM .chip', s.el).forEach(m => m.classList.toggle('on', b.tags.includes(m.dataset.k))); prev(); A.snd.twinkle(2); }));
         q('#ebOk').addEventListener('click', () => {

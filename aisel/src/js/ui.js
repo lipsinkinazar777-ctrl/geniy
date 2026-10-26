@@ -26,58 +26,56 @@ A.sheet = (() => {
   return { open };
 })();
 
-/* ---------------------------------------------------------------- hud */
-A.refreshHud = (bump) => {
-  A.$('#acornN').textContent = A.state.acorns; A.$('#streakN').textContent = A.streak();
-  if (bump) { const p = A.$('#acornPill'); p.classList.remove('bump'); void p.offsetWidth; p.classList.add('bump'); }
-};
+/* ---------------------------------------------------------------- hud (the numbers live in the bag now) */
+A.refreshHud = (bump) => { const a = A.$('#acornN'), s = A.$('#streakN'); if (a) a.textContent = A.state.acorns; if (s) s.textContent = A.streak(); };
 A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth / 2, innerHeight * .4, 36); A.toast(`Новый стикер: ${s.e} ${s.n}`); }, 600); };
 
-/* ---------------------------------------------------------------- router */
-const TABS = ['path', 'books', 'quotes', 'sky', 'potion'];
-A.tab = null;
+/* ---------------------------------------------------------------- the room is the router:
+   touching an object glides the camera in, the object "opens" as a full-screen panel with an iris from that spot, and back reverses it */
+const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
+const OBJ = { books: 'book', quotes: 'quill', potion: 'potion', sky: 'stars', path: 'scope', bag: 'bag' };
+A.tab = 'room'; let moving = false;
+const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 A.go = (tab, opt = {}) => {
-  if (tab === A.tab && !opt.force) { const v = A.$('#v-' + tab); v.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
-  const from = A.tab, fromEl = from && A.$('#v-' + from), toEl = A.$('#v-' + tab), btn = A.$(`.tabs button[data-tab="${tab}"]`);
-  const idx = TABS.indexOf(tab), dir = from ? Math.sign(idx - TABS.indexOf(from)) || 1 : 1;
-  A.tab = tab; document.body.dataset.tab = tab;
-  A.$$('.tabs button').forEach(b => b.classList.toggle('on', b === btn));
-  const glow = A.$('#tabGlow'), r = btn.getBoundingClientRect(), tr = A.$('#tabs').getBoundingClientRect();
-  glow.style.width = r.width + 'px'; glow.style.transform = `translateX(${r.left - tr.left}px)`;
-  A.snd.setMood(tab); A.fab && A.fab.hide();
-  const mod = A.mods[tab]; mod && mod.beforeShow && mod.beforeShow();
-  A.scene.setTab(tab);
-  toEl.classList.add('active'); toEl.scrollTop = 0; toEl.style.zIndex = 2;
-  if (opt.instant || !fromEl) { if (fromEl) fromEl.classList.remove('active'); mod && mod.show && mod.show(); return; }
-  fromEl.style.zIndex = 1; A.snd.whoosh(dir);
-  const x = r.left + r.width / 2, y = r.top + r.height / 2, R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
-  if (!A.reduceMotion) {
-    toEl.animate([{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${R}px at ${x}px ${y}px)` }], { duration: 900, easing: 'cubic-bezier(.55,.05,.15,1)' });
-    fromEl.animate([{ opacity: 1, transform: 'scale(1) translateX(0)', filter: 'blur(0)' }, { opacity: 0, transform: `scale(.93) translateX(${-dir * 26}px)`, filter: 'blur(10px)' }], { duration: 700, easing: 'ease-in', fill: 'forwards' }).finished.then(() => { fromEl.classList.remove('active'); fromEl.getAnimations().forEach(a => a.cancel()); });
-    const ir = A.$('#iris'); ir.style.left = x + 'px'; ir.style.top = y + 'px';
-    ir.animate([{ opacity: .95, transform: 'scale(.4)' }, { opacity: .5, transform: `scale(${R / 14})`, offset: .7 }, { opacity: 0, transform: `scale(${R / 12})` }], { duration: 950, easing: 'cubic-bezier(.45,.05,.2,1)' });
-    A.fx.fireflies(x, y, 16, 160);
-  } else { fromEl.classList.remove('active'); }
-  setTimeout(() => { mod && mod.show && mod.show(); }, 260);
+  if (tab === 'room' || tab === 'back') return A.leave();
+  const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
+  if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
+  if (moving) return; moving = true;
+  const fromEl = from !== 'room' && A.$('#v-' + from), mod = A.mods[tab];
+  A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('panel'); A.snd.setMood(tab); A.fab && A.fab.hide(); mod && mod.beforeShow && mod.beforeShow();
+  const reveal = () => {
+    const [x, y] = fromEl ? [innerWidth / 2, innerHeight / 2] : A.scene.focusPoint(), R = irisR(x, y);
+    toEl.classList.add('active'); toEl.scrollTop = 0; toEl.style.zIndex = 2; A.snd.whoosh(1);
+    if (!A.reduceMotion) {
+      toEl.animate([{ clipPath: `circle(0px at ${x}px ${y}px)` }, { clipPath: `circle(${R}px at ${x}px ${y}px)` }], { duration: 950, easing: 'cubic-bezier(.5,0,.12,1)' });
+      toEl.firstElementChild && toEl.firstElementChild.animate([{ transform: 'translateY(34px) scale(.97)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 1000, delay: 160, easing: 'cubic-bezier(.2,.9,.2,1)', fill: 'backwards' });
+      const ir = A.$('#iris'); ir.style.left = x + 'px'; ir.style.top = y + 'px';
+      ir.animate([{ opacity: .9, transform: 'scale(.4)' }, { opacity: .45, transform: `scale(${R / 14})`, offset: .7 }, { opacity: 0, transform: `scale(${R / 12})` }], { duration: 950, easing: 'cubic-bezier(.45,.05,.2,1)' });
+      A.fx.fireflies(x, y, 14, 150);
+    }
+    if (fromEl) { fromEl.style.zIndex = 1; setTimeout(() => { fromEl.classList.remove('active'); }, 900); }
+    setTimeout(() => { mod && mod.show && mod.show(); moving = false; }, 240);
+  };
+  if (fromEl || opt.instant) reveal(); else A.scene.focus(OBJ[tab]).then(reveal);
+};
+A.leave = () => {
+  if (A.reader && A.reader.isOpen()) return A.reader.close();
+  if (A.tab === 'room' || moving) return; moving = true; const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
+  const [x, y] = A.scene.focusPoint(), R = irisR(x, y); A.snd.whoosh(-1);
+  const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); moving = false; };
+  A.scene.lock(true); document.body.classList.remove('panel');
+  if (A.reduceMotion) return done();
+  el.animate([{ clipPath: `circle(${R}px at ${x}px ${y}px)`, opacity: 1 }, { clipPath: `circle(0px at ${x}px ${y}px)`, opacity: .6 }], { duration: 720, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'forwards' }).finished.then(done);
+  setTimeout(() => A.scene.unfocus(), 280);
 };
 A.rise = (root) => { A.$$('[data-rise]', root).forEach((el, i) => { el.classList.remove('rise'); el.style.setProperty('--i', i); void el.offsetWidth; el.classList.add('rise'); }); };
 
 A.ui = {
-  enterApp() {
+  enterApp(first) {
     A.$('#app').hidden = false; A.applyPortrait(); A.refreshHud();
     TABS.forEach(t => A.mods[t] && A.mods[t].init && A.mods[t].init(A.$('#v-' + t)));
-    A.fire && A.fire.init();
-    A.go('path', { instant: true, force: true });
-    const g = A.$('#tabGlow'); g.style.transition = 'none'; const b = A.$('.tabs button.on'), r = b.getBoundingClientRect(), tr = A.$('#tabs').getBoundingClientRect(); g.style.width = r.width + 'px'; g.style.transform = `translateX(${r.left - tr.left}px)`; requestAnimationFrame(() => g.style.transition = '');
-    setTimeout(() => A.fire && A.fire.tip(), 4500);
-    if (!A.state.welcomed) setTimeout(A.ui.welcome, 1800);
-    A.snd.setMood('path');
-  },
-  welcome() {
-    A.state.welcomed = true; A.save();
-    A.sheet.open({ title: 'Добро пожаловать', html: `<p class="sub" style="margin-bottom:16px">Это твой уютный уголок для книг. Здесь всё живёт: тропа открывает новые места, книги зажигают звёзды, а цитаты превращаются в открытки.</p>
-      <div class="glass" style="padding:8px 18px;margin-bottom:18px"><div class="wrow"><span class="eyebrow">Тропа</span><span>читай, и лес будет открываться</span></div><div class="wrow"><span class="eyebrow">Полка</span><span>все твои книги и впечатления</span></div><div class="wrow"><span class="eyebrow">Цитаты</span><span>открытки с твоими любимыми строками</span></div><div class="wrow"><span class="eyebrow">Небо</span><span>каждая прочитанная книга станет звездой</span></div><div class="wrow"><span class="eyebrow">Зелье</span><span>сваришь рекомендацию на вечер</span></div><div class="wrow"><span class="eyebrow">Костёр</span><span>слева внизу: коснись, и станет теплее</span></div></div>
-      <button class="btn btn--gold" style="width:100%" id="wOk">В уголок</button>`, onMount: s => A.$('#wOk', s.el).addEventListener('click', () => { A.snd.chime([523.25, 659.25, 783.99], .1, .8); s.close(); }) });
+    A.scene.init(); A.fire.init(); A.scene.enter(first); A.snd.setMood('room');
+    const on = first ? true : A.state.fireOn !== false; setTimeout(() => A.fire.set(on, !first), first ? 1700 : 600);
   }
 };
 
@@ -117,10 +115,9 @@ A.backupBox = (txt) => {
 A.imgToData = (file, max = 720, q = .78) => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', q)); }; im.onerror = rej; im.src = fr.result; }; fr.onerror = rej; fr.readAsDataURL(file); });
 A.applyPortrait = () => { const p = A.state.settings.portrait || (A._av = A._av || A.scene.avatar()); A.$$('.medal__img').forEach(m => { m.style.backgroundImage = p ? `url(${p})` : ''; }); };
 
-/* ---------------------------------------------------------------- tab bar + hud wiring */
-A.$$('.tabs button').forEach(b => b.addEventListener('click', () => A.go(b.dataset.tab)));
-A.$('#medal').addEventListener('click', () => { A.snd.tap(); A.settings(); });
-A.$('#acornPill').addEventListener('click', () => { A.snd.tap(); A.mods.path && A.mods.path.acornSheet && A.mods.path.acornSheet(); });
-A.$('#streakPill').addEventListener('click', () => { A.snd.tap(); const n = A.streak(); A.toast(n ? `${n} ${A.plural(n, 'день', 'дня', 'дней')} подряд: огонёк горит` : 'Почитай сегодня, и загорится огонёк'); });
-A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.coin && A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 140, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };
-addEventListener('resize', () => { const b = A.$('.tabs button.on'); if (!b || A.$('#app').hidden) return; const g = A.$('#tabGlow'), r = b.getBoundingClientRect(), tr = A.$('#tabs').getBoundingClientRect(); g.style.width = r.width + 'px'; g.style.transform = `translateX(${r.left - tr.left}px)`; });
+/* ---------------------------------------------------------------- back control: the glass chevron, or swipe in from the left edge */
+A.$('#back').addEventListener('click', () => { A.snd.tap(); A.leave(); });
+(() => { let sx = null, sy = 0; addEventListener('pointerdown', e => { sx = e.clientX < 28 && A.tab !== 'room' ? e.clientX : null; sy = e.clientY; }, { passive: true });
+  addEventListener('pointermove', e => { if (sx != null && e.clientX - sx > 70 && Math.abs(e.clientY - sy) < 60) { sx = null; A.leave(); } }, { passive: true }); addEventListener('pointerup', () => sx = null); })();
+addEventListener('keydown', e => { if (e.key === 'Escape') A.leave(); });
+A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 100, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };

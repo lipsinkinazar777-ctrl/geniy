@@ -105,10 +105,12 @@ A.SUGGEST = [
   { t: 'Таинственный сад', a: 'Фрэнсис Ходжсон Бёрнетт', p: 320, m: ['cozy', 'mist', 'classic', 'tale'] }
 ];
 
+const STORY = `/*STORY*/`;
 A.seed = () => {
   const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now(), cover: {}, sample: true }, extra);
   A.state.books = [
     mk('Маленький принц', 'Антуан де Сент-Экзюпери', 96, 'reading', 40, ['tale', 'deep', 'classic']),
+    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { text: STORY }),
     mk('Алиса в Стране чудес', 'Льюис Кэрролл', 192, 'want', 0, ['tale', 'funny', 'fantasy']),
     mk('Гордость и предубеждение', 'Джейн Остин', 416, 'want', 0, ['romance', 'cozy', 'classic'])
   ];

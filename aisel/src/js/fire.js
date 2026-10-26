@@ -1,33 +1,55 @@
-/* ============================================================ campfire in the corner: tap it, the whole forest turns warmer and the crackle gets louder */
+/* ============================================================ the living fire on the open book (also the knob and the matchbox switch it)
+   flame tongues + coals + smoke on a canvas in room space, warm light that dances over the table, sparks into the parallax layer */
 A.fire = (() => {
-  const btn = A.$('#fire'), cv = A.$('#fireCv'), ctx = cv.getContext('2d'), tip = A.$('#fireTip');
-  let ps = [], level = .3, target = .3, warm = false, run = false, last = 0, t = 0;
+  const cv = A.$('#fireCv'), ctx = cv.getContext('2d'), glow = A.$('#glow'), dim = A.$('#dim'), CW = 420, CH = 480, BX = 210, BY = 410;
+  let ps = [], smoke = [], level = 0, target = 0, T = 0, fl = 1, flT = 1, sparkAcc = 0, knob = null;
   const R = (a, b) => a + Math.random() * (b - a);
-  function log(x, y, ang) { ctx.save(); ctx.translate(x, y); ctx.rotate(ang); const g = ctx.createLinearGradient(0, -9, 0, 9); g.addColorStop(0, '#2b1c12'); g.addColorStop(.5, '#120a06'); g.addColorStop(1, '#050302'); ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-52, -9, 104, 18, 9) : ctx.rect(-52, -9, 104, 18); ctx.fill(); ctx.fillStyle = '#4a2a14'; ctx.beginPath(); ctx.ellipse(52, 0, 5, 8.5, 0, 0, 6.3); ctx.fill(); ctx.restore(); }
-  function stones() { [[58,190,12,8],[76,194,9,6],[146,192,13,8],[162,190,9,7],[96,198,10,6],[128,197,11,6]].forEach(([x,y,rx,ry]) => { const g = ctx.createLinearGradient(x, y-ry, x, y+ry); g.addColorStop(0, '#3a3d3c'); g.addColorStop(1, '#0c0e0d'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, 6.3); ctx.fill(); }); }
-  function frame(now) {
-    if (!run) return; requestAnimationFrame(frame); const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; level += (target - level) * Math.min(1, dt * 3);
-    ctx.clearRect(0, 0, 220, 220);
-    const gl = ctx.createRadialGradient(110, 168, 0, 110, 168, 70 + level * 36); gl.addColorStop(0, `rgba(255,140,50,${.22 + level * .3})`); gl.addColorStop(1, 'rgba(255,150,50,0)'); ctx.fillStyle = gl; ctx.fillRect(0, 0, 220, 220);
-    stones(); log(110, 186, -.28); log(110, 186, .28);
-    // coals
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; const cg = ctx.createRadialGradient(110, 182, 0, 110, 182, 36); cg.addColorStop(0, `rgba(255,120,30,${.7 + .2 * Math.sin(t * 8)})`); cg.addColorStop(1, 'rgba(255,60,0,0)'); ctx.fillStyle = cg; ctx.fillRect(60, 150, 100, 60);
-    const n = (1 + level * 2.2) * 70 * dt; for (let i = 0; i < n; i++) ps.push({ x: 110 + R(-22, 22), y: 180 + R(-4, 6), vx: R(-8, 8), vy: -R(50, 95) * (.7 + level * .8), life: 0, ttl: R(.55, 1.1), s: R(11, 22) * (.7 + level * .5) });
-    if (Math.random() < dt * (2 + level * 6)) ps.push({ x: 110 + R(-14, 14), y: 160, vx: R(-26, 26), vy: -R(80, 160), life: 0, ttl: R(.8, 1.6), s: 2, spark: true });
-    for (let i = ps.length - 1; i >= 0; i--) { const p = ps[i]; p.life += dt; if (p.life > p.ttl) { ps.splice(i, 1); continue; } const k = p.life / p.ttl; p.x += p.vx * dt + Math.sin(t * 9 + i) * .4; p.y += p.vy * dt; p.vx *= .99;
-      if (p.spark) { ctx.fillStyle = `rgba(255,${190 - k * 90 | 0},90,${1 - k})`; ctx.beginPath(); ctx.arc(p.x, p.y, 1.8 * (1 - k * .5), 0, 6.3); ctx.fill(); continue; }
-      const s = p.s * (1 - k * .75), g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, s); const c = k < .25 ? '255,208,120' : k < .55 ? '255,170,50' : '230,70,20'; g.addColorStop(0, `rgba(${c},${.75 * (1 - k)})`); g.addColorStop(1, `rgba(${c},0)`); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, s, 0, 6.3); ctx.fill(); }
-    ctx.restore();
+  const spr = (rgb) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.3, `rgba(${rgb},.55)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
+  const S = { hot: spr('255,244,200'), mid: spr('255,170,50'), red: spr('235,70,20'), smoke: spr('150,150,150') };
+  const COALS = [[-44, 6, 9], [-22, 14, 11], [4, 10, 12], [30, 14, 10], [50, 4, 8], [-6, 2, 8], [16, 2, 9]];
+
+  function place() { const f = A.scene.fireBase(); cv.style.cssText = `left:${f.x - BX}px;top:${f.y - BY}px;width:${CW}px;height:${CH}px`; glow.style.cssText = `left:${f.x - 1300}px;top:${f.y - 1050}px;width:2600px;height:2100px`; }
+
+  function frame(dt, t) {
+    T = t; level += (target - level) * Math.min(1, dt * (target > level ? 2.6 : 1.3)); if (Math.abs(target - level) < .002) level = target;
+    flT += (Math.random() - .5) * 1.6 * dt * 12; flT = A.clamp(flT, .6, 1.2); fl += (flT - fl) * Math.min(1, dt * 14);
+    const L = level, flick = (.82 + .18 * Math.sin(T * 11.3) * Math.sin(T * 6.1)) * fl;
+    glow.style.opacity = (L * .9 * flick).toFixed(3); dim.style.opacity = ((1 - L) * .62).toFixed(3);
+    if (knob) knob.style.opacity = (.35 + L * .65).toFixed(3);
+    ctx.clearRect(0, 0, CW, CH);
+    ctx.globalCompositeOperation = 'lighter';
+    // coals: they keep a faint glow after the flames die
+    const ember = Math.max(L, target ? 0 : Math.max(0, L * .0) + .0) , cg = .16 + L * .84;
+    COALS.forEach(([x, y, r], i) => { const p = .6 + .4 * Math.sin(T * (2 + i) + i * 2); ctx.globalAlpha = Math.min(1, cg * p * (.5 + .5 * flick)) * (L > .02 || target ? 1 : .5); const rr = r * 3.2; ctx.drawImage(S.mid, BX + x - rr, BY + y - rr, rr * 2, rr * 2); });
+    // tongues: narrow, tall, orange-dominant blobs; only the root is white-hot
+    if (L > .02) {
+      const n = (50 + 120 * L) * L * dt; for (let i = 0; i < n; i++) ps.push({ x: BX + R(-17, 17) * (.5 + .5 * L), y: BY + R(-2, 8), vx: R(-8, 8), vy: -R(170, 310) * (.55 + .45 * L), life: 0, ttl: R(.6, 1.2), s: R(24, 42) * (.55 + .45 * L), ph: R(0, 6.3) });
+      if (Math.random() < dt * 3.2 * L) ps.push({ x: BX + R(-10, 10), y: BY - 14, vx: R(-14, 14), vy: -R(330, 460), life: 0, ttl: R(.6, .95), s: R(15, 24), ph: 0 });   // a licking tongue
+    }
+    for (let i = ps.length - 1; i >= 0; i--) {
+      const p = ps[i]; p.life += dt; if (p.life > p.ttl) { ps.splice(i, 1); continue; } const k = p.life / p.ttl;
+      p.x += (p.vx + Math.sin(T * 8 + p.ph) * 30 * k - (p.x - BX) * 2.2) * dt; p.y += p.vy * dt; p.vy *= 1 - .3 * dt;
+      const sz = p.s * (1 - k * .72), sp = k < .14 ? S.hot : k < .6 ? S.mid : S.red, w = sz * 1.15, h = sz * 2.5;
+      ctx.globalAlpha = Math.min(1, (1 - k) * 1.2) * .5 * Math.min(1, L * 1.4); ctx.drawImage(sp, p.x - w, p.y - h * .62, w * 2, h);
+    }
+    // base glow
+    const bg = 90 * (.3 + L * .7); ctx.globalAlpha = L * .4 * flick; ctx.drawImage(S.mid, BX - bg * 1.4, BY - bg * .8, bg * 2.8, bg * 1.4);
+    // smoke while the flame is dying
+    ctx.globalCompositeOperation = 'source-over';
+    if (target === 0 && L > .015 && Math.random() < dt * 30 * L) smoke.push({ x: BX + R(-24, 24), y: BY - R(10, 50), vy: -R(30, 60), vx: R(-8, 8), life: 0, ttl: R(2, 3.6), s: R(24, 40) });
+    for (let i = smoke.length - 1; i >= 0; i--) { const p = smoke[i]; p.life += dt; if (p.life > p.ttl) { smoke.splice(i, 1); continue; } const k = p.life / p.ttl; p.x += (p.vx + Math.sin(T * 1.6 + i) * 10) * dt; p.y += p.vy * dt; const r = p.s * (1 + k * 2.2); ctx.globalAlpha = .22 * (1 - k) * Math.min(1, k * 6); ctx.drawImage(S.smoke, p.x - r, p.y - r, r * 2, r * 2); }
+    ctx.globalAlpha = 1;
+    // sparks fly into the parallax layer
+    sparkAcc += dt * 20 * L * L; while (sparkAcc > 1) { sparkAcc--; const f = A.scene.fireBase(); A.scene.spark(f.x + R(-30, 30), f.y - R(40, 160)); }
   }
-  function setWarm(v) { warm = v; target = v ? 1 : .3; document.body.classList.toggle('warm', v); A.scene.setWarm(v ? 1 : 0); A.snd.setFire(v ? 1 : .1); A.state.warm = v; }
-  btn.addEventListener('click', () => {
-    A.snd.fireLit(); A.vibrate(20); setWarm(!warm); A.state.fireTip = true; tip.classList.remove('on');
-    const r = btn.getBoundingClientRect(); A.fx.sparks(r.left + r.width / 2, r.top + r.height * .7, 28, '#ffb45a');
-    A.toast(warm ? 'Костёр разгорелся. Стало теплее' : 'Костёр тихо тлеет');
-  });
+
+  function set(on, quiet) {
+    target = on ? 1 : 0; A.state.fireOn = on; A.save && A.save(); document.body.classList.toggle('warm', on);
+    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.setFire(1), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.setFire(0)); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 16; i++) A.scene.spark(f.x + R(-30, 30), f.y - R(20, 80)); } }
+    else A.snd.setFire(on ? 1 : 0);
+  }
   return {
-    init() { cv.width = 220 * 2; cv.height = 220 * 2; ctx.setTransform(2, 0, 0, 2, 0, 0); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } },
-    tip() { if (!A.state.fireTip) { tip.classList.add('on'); setTimeout(() => tip.classList.remove('on'), 5200); } },
-    get warm() { return warm; }
+    init() { place(); const hs = A.$('#hsFx'); knob = A.h('<i class="knoblight"></i>'); const k = A.scene.hs('knob'); knob.style.cssText = `left:${k.c[0]}px;top:${k.c[1]}px`; hs.appendChild(knob); knob.style.opacity = 0; },
+    frame, set, toggle() { set(!(target > 0)); }, get on() { return target > 0; }, get level() { return level; }
   };
 })();

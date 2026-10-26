@@ -1,54 +1,37 @@
+<div id="stage" aria-label="Комната с книгой на столе">
+  <div id="room">
+    <img id="roomImg" src="img/room.webp" alt="" draggable="false">
+    <div id="dim"></div>
+    <div id="pageTxt" aria-hidden="true"></div>
+    <div id="hsFx" aria-hidden="true"></div>
+    <canvas id="fireCv" width="420" height="480" aria-hidden="true"></canvas>
+    <div id="glow"></div>
+    <div id="labels" aria-hidden="true"></div>
+  </div>
+</div>
 <canvas id="scene" aria-hidden="true"></canvas>
 <div id="tint" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
+<div id="hint" aria-hidden="true"></div>
 
-<!-- GATE: first tap unlocks sound and starts the walk -->
+<!-- GATE: title over the dark room; the touch unlocks sound and walks into the room -->
 <div id="gate">
-    <p class="gate__small">лес давно ждёт</p>
+  <p class="gate__small">тихая комната ждёт</p>
   <h1 class="gate__title">Уголок принцессы <em>Айсель</em></h1>
-  <button class="gate__btn" id="gateBtn"><span>Коснись, чтобы войти</span></button>
+  <button class="gate__btn" id="gateBtn"><span>Войти</span></button>
   <p class="gate__hint">включи звук — так уютнее</p>
 </div>
 
-<!-- WALK: captions + skip -->
-<div id="walk" hidden>
-  <p class="walk__cap" id="walkCap"></p>
-  <button class="walk__skip" id="walkSkip">пропустить</button>
-</div>
-
-<!-- FINALE: title above the castle -->
-<div id="finale" hidden>
-  <div class="fin__head"><p class="fin__small">добро пожаловать в</p>
-  <h2 class="fin__title" id="finTitle"></h2></div>
-  <button class="fin__btn" id="finBtn"><span>Войти в уголок</span><i></i></button>
-</div>
-
 <div id="app" hidden>
-  <header class="top" id="top">
-    <button class="medal" id="medal" aria-label="Настройки"><span class="medal__img"></span></button>
-    <div class="top__ttl"><small>Уголок принцессы</small><b>Айсель</b></div>
-    <button class="pill" id="acornPill" aria-label="Желуди и стикеры"><svg viewBox="0 0 24 24" class="ico acorn"><use href="#i-acorn"/></svg><b id="acornN">0</b></button>
-    <button class="pill pill--fire" id="streakPill" aria-label="Дней подряд"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg><b id="streakN">0</b></button>
-  </header>
-
+  <button id="back" aria-label="Назад к столу"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <main id="views">
     <section class="view" id="v-path" data-tab="path"></section>
     <section class="view" id="v-books" data-tab="books"></section>
     <section class="view" id="v-quotes" data-tab="quotes"></section>
     <section class="view" id="v-sky" data-tab="sky"></section>
     <section class="view" id="v-potion" data-tab="potion"></section>
+    <section class="view" id="v-bag" data-tab="bag"></section>
   </main>
-
-  <nav class="tabs" id="tabs" aria-label="Разделы">
-    <span class="tabs__glow" id="tabGlow"></span>
-    <button data-tab="path" class="on"><svg viewBox="0 0 24 24" class="ico"><use href="#i-path"/></svg><span>Тропа</span></button>
-    <button data-tab="books"><svg viewBox="0 0 24 24" class="ico"><use href="#i-books"/></svg><span>Полка</span></button>
-    <button data-tab="quotes"><svg viewBox="0 0 24 24" class="ico"><use href="#i-quill"/></svg><span>Цитаты</span></button>
-    <button data-tab="sky"><svg viewBox="0 0 24 24" class="ico"><use href="#i-star"/></svg><span>Небо</span></button>
-    <button data-tab="potion"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flask"/></svg><span>Зелье</span></button>
-  </nav>
-
-  <button id="fire" aria-label="Костёр: подбросить дров"><canvas id="fireCv" width="220" height="220"></canvas><span class="fire__tip" id="fireTip">подбрось дров</span></button>
 </div>
 
 <div id="iris" aria-hidden="true"></div>

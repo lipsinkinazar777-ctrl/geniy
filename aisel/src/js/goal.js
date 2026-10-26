@@ -6,8 +6,7 @@ A.goal = (() => {
   const pick = a => a[Math.floor(Date.now() / 86400000) % a.length];
   function mount(root) {
     el = root; root.innerHTML = `<div class="goal glass"><div class="goal__top"><div class="ring"><svg viewBox="0 0 100 100"><defs><linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff0bf"/><stop offset="1" stop-color="#f1a94b"/></linearGradient></defs><circle cx="50" cy="50" r="42" class="ring__bg"/><circle cx="50" cy="50" r="42" class="ring__fg" id="ringFg" stroke-dasharray="${C}" stroke-dashoffset="${C}"/></svg><div class="ring__c"><b id="gToday">0</b><small>из <span id="gGoal">20</span> стр.</small></div></div>
-      <div class="goal__txt"><div class="eyebrow">сегодня</div><p class="goal__msg" id="gMsg"></p><button class="btn btn--gold goal__btn" id="gLog"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg>Записать страницы</button></div></div>
-      <div class="week" id="weekBars"></div><div class="goal__foot"><span id="wTxt"></span><div class="wbar"><i id="wFill"></i></div></div></div>`;
+      <div class="goal__txt"><div class="eyebrow">сегодня</div><p class="goal__msg" id="gMsg"></p><button class="btn btn--gold goal__btn" id="gLog"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg>Записать страницы</button></div></div></div>`;
     A.$('#gLog', root).addEventListener('click', () => { A.snd.tap(); logSheet(); });
     refresh();
   }
@@ -17,9 +16,6 @@ A.goal = (() => {
     A.$('#ringFg', el).setAttribute('stroke-dashoffset', C * (1 - p));
     const left = Math.max(0, g.day - t);
     A.$('#gMsg', el).textContent = t === 0 ? pick(msgs.zero) : left > 0 ? pick(msgs.part).replace('{n}', left).replace('{w}', A.plural(left, 'страница', 'страницы', 'страниц')) : pick(msgs.done);
-    const keys = A.weekKeys(), vals = keys.map(A.pagesOn), mx = Math.max(g.day * 1.5, ...vals), today = A.dayKey(), names = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
-    A.$('#weekBars', el).innerHTML = keys.map((k, i) => `<div class="wd ${k === today ? 'today' : ''} ${vals[i] >= g.day ? 'ok' : ''}"><div class="wd__bar"><i style="height:${Math.max(4, vals[i] / mx * 100)}%"></i>${vals[i] >= g.day ? '<em>🌰</em>' : ''}</div><span>${names[i]}</span></div>`).join('');
-    const w = A.pagesWeek(); A.$('#wTxt', el).textContent = `Неделя: ${w} из ${g.week}`; A.$('#wFill', el).style.width = Math.min(100, w / g.week * 100) + '%';
     A.refreshHud();
   }
   function animateIn() { if (!el) return; const f = A.$('#ringFg', el), v = f.getAttribute('stroke-dashoffset'); f.style.transition = 'none'; f.setAttribute('stroke-dashoffset', C); void f.getBoundingClientRect(); f.style.transition = ''; requestAnimationFrame(() => f.setAttribute('stroke-dashoffset', v)); }
@@ -66,5 +62,5 @@ A.logPages = (n, bookId) => {
   const wk = A.weekId(); if (oldWeek < st.goal.week && A.pagesWeek() >= st.goal.week && !st.claimedWeeks[wk]) { st.claimedWeeks[wk] = 1; A.addAcorns(15); setTimeout(() => { A.fx.acornRain(40); A.toast('Цель недели выполнена! +15 желудей 🌰', 3600); }, 1800); }
   A.save(); if (finished) setTimeout(() => A.finishBook(finished), 600);
   A.goal.refresh(); A.refreshHud(true); A.mods.books && A.mods.books.refresh && A.mods.books.refresh();
-  if (A.tab === 'path') setTimeout(() => A.mods.path.checkUnlock(), 1600);
+  setTimeout(() => A.mods.path && A.mods.path.checkUnlock(), 1600);
 };

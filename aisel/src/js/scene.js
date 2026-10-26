@@ -1,160 +1,184 @@
-/* ============================================================ scene: cinematic photographic backdrop
-   photo layers (parallax + dolly) + volumetric fog + moon shafts + three-depth gold sparks & fireflies + grain */
+/* ============================================================ the room: a first-person desk you look around and touch
+   one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  const cv = A.$('#scene'), g = cv.getContext('2d');
-  let W = 0, H = 0, DPR = 1, last = 0, running = false;
-  const IMG = {};
-  ['pines', 'oak', 'finale', 'library', 'lantern', 'moon'].forEach(n => { const im = new Image(); im.decoding = 'async'; im.onload = () => { IMG[n].ok = true; }; IMG[n] = { el: im, ok: false }; im.src = `img/bg-${n}.webp`; });
-  const S = { mode: 'gate', t: 0, p: 0, px: 0, py: 0, warm: 0, bg: 'moon', prev: null, mix: 1, appear: 0, zoomUI: 1.08 };
-  const walk = { t: 0, dur: 10, done: null, on: false };
-  let pxT = 0, paused = false, frame = 0;
-  const FOCUS = { pines: [.5, .62], oak: [.5, .6], finale: [.4, .56], library: [.5, .55], lantern: [.5, .5], moon: [.5, .5] };
+  const RW = 2368, RH = 1320, U = RW / 1500;                  // room plate size; hotspot art is drawn in 1500-wide units
+  const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
+  const FIRE = { x: 945 * U, y: 372 * U };                    // base of the flame, room px
+  const HOME = { cx: 930 * U, cy: RH * .5, z: 1 };
 
-  const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
-  const rnd = (a, b) => a + Math.random() * (b - a);
-  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const clamp = A.clamp || ((v, a, b) => Math.min(b, Math.max(a, v)));
+  /* ---- objects (polygons in plate units).  act:'fire' toggles the flame, tab opens a panel */
+  const P = (...a) => a;
+  const HS = [
+    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([835, 235], [1070, 235], [1075, 400], [830, 400])], pad: 4 },
+    { id: 'knob', act: 'fire', n: 'Живой костёр', circle: [210, 590, 95] },
+    { id: 'matches', act: 'fire', n: 'Спички', polys: [P([203, 396], [312, 338], [338, 372], [232, 440])] },
+    { id: 'quill', tab: 'quotes', n: 'Цитаты', polys: [P([1092, 78], [1195, 78], [1205, 170], [1100, 170]), P([1160, 0], [1285, 0], [1215, 95], [1160, 85])] },
+    { id: 'potion', tab: 'potion', n: 'Зельеварня', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
+    { id: 'stars', tab: 'sky', n: 'Небо', polys: [P([1215, 168], [1500, 298], [1500, 474], [1312, 430], [1246, 336])] },
+    { id: 'scope', tab: 'path', n: 'Лесная карта', polys: [P([1242, 62], [1335, 46], [1500, 160], [1500, 212], [1424, 192])] },
+    { id: 'bag', tab: 'bag', n: 'Сумка', polys: [P([1072, 172], [1236, 238], [1324, 332], [1330, 522], [1292, 524], [1238, 396], [1108, 262])] },
+    { id: 'book', tab: 'books', n: 'Книга', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
+  ];
+  HS.forEach(h => {
+    h.P = h.circle ? [P(...[...Array(18)].map((_, i) => [h.circle[0] + Math.cos(i / 18 * 6.283) * h.circle[2], h.circle[1] + Math.sin(i / 18 * 6.283) * h.circle[2]]))] : h.polys;
+    const pts = h.P.flat(); h.bb = [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))].map(v => v * U);
+    h.c = [(h.bb[0] + h.bb[2]) / 2, (h.bb[1] + h.bb[3]) / 2]; h.big = Math.max(h.bb[2] - h.bb[0], h.bb[3] - h.bb[1]);
+  });
+  const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+  const hit = (rx, ry) => { const x = rx / U, y = ry / U; return HS.find(h => h.P.some(p => inPoly(x, y, p))) || null; };
 
-  /* ---- procedural sprites */
-  const fogTex = (() => { const c = mk(1024, 384), x = c.getContext('2d');
-    for (let i = 0; i < 70; i++) { const px = rnd(0, 1024), py = rnd(60, 330), r = rnd(80, 230), a = rnd(.05, .15);
-      for (const o of [-1024, 0, 1024]) { const gr = x.createRadialGradient(px + o, py, 0, px + o, py, r); gr.addColorStop(0, `rgba(176,206,220,${a})`); gr.addColorStop(1, 'rgba(176,206,220,0)'); x.fillStyle = gr; x.fillRect(px + o - r, py - r, r * 2, r * 2); } }
-    x.globalCompositeOperation = 'destination-in'; const mg = x.createLinearGradient(0, 0, 0, 384); mg.addColorStop(0, 'rgba(0,0,0,0)'); mg.addColorStop(.3, 'rgba(0,0,0,1)'); mg.addColorStop(.7, 'rgba(0,0,0,1)'); mg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = mg; x.fillRect(0, 0, 1024, 384);
-    return c; })();
-  const glowSpr = (rgb) => { const c = mk(64, 64), x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32);
-    gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.16, `rgba(${rgb},.7)`); gr.addColorStop(.42, `rgba(${rgb},.18)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
-  const SPR = { gold: glowSpr('255,214,140'), fly: glowSpr('216,255,160'), ember: glowSpr('255,150,70'), fire: glowSpr('255,170,80') };
-  const grain = (() => { const c = mk(160, 160), x = c.getContext('2d'), d = x.createImageData(160, 160); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); return c; })();
-
-  /* ---- particles in three depth planes */
-  let P = [], embers = [];
-  function seed() {
-    const area = W * H / (390 * 844), n = Math.round(clamp(area, .8, 2.2) * 1);
-    P = [];
-    for (let i = 0; i < 46 * n; i++) P.push({ k: 's', d: [.25, .55, 1][i % 3], x: rnd(0, W), y: rnd(0, H), vx: rnd(-4, 5), vy: rnd(-12, -3), ph: rnd(0, 6.28), sz: rnd(.7, 1.9), sp: rnd(.6, 1.8) });
-    for (let i = 0; i < 16 * n; i++) P.push({ k: 'f', d: [.3, .6, 1][i % 3], x: rnd(0, W), y: rnd(H * .25, H), vx: rnd(-9, 9), vy: rnd(-5, 5), ph: rnd(0, 6.28), sz: rnd(7, 15), sp: rnd(.35, 1.1), h: Math.random() < .3 });
-  }
+  /* ---- springs + camera */
+  const sp = (x) => ({ x, v: 0, t: x });
+  const step = (s, dt, k, c) => { const n = Math.ceil(dt / .008); const h = dt / n; for (let i = 0; i < n; i++) { s.v += (k * (s.t - s.x) - c * s.v) * h; s.x += s.v * h; } };
+  const cam = { x: sp(HOME.cx), y: sp(HOME.cy), z: sp(1.9) };
+  let VW = innerWidth, VH = innerHeight, DPR = 1, s0 = 1, gx = 0, gy = 0, gxT = 0, gyT = 0, dirty = true, locked = true, focusId = null, saved = null, running = false, last = 0, T = 0, mode = 'gate';
+  const KC = [150, 24];                                           // spring stiffness / damping: lively but settled
+  const sNow = () => s0 * cam.z.x;
+  function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
+  const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
   function resize() {
-    DPR = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
-    cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); seed();
+    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH * .64 / RH);
+    cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); clampT(); dirty = true;
+  }
+  function apply() {
+    const s = sNow(), l = limits(cam.z.x), cx = A.clamp(cam.x.x, l.x0 - 140, l.x1 + 140), cy = A.clamp(cam.y.x, l.y0 - 90, l.y1 + 90);
+    room.style.transform = `translate3d(${(VW / 2 - cx * s + gx).toFixed(2)}px,${(VH / 2 - cy * s + gy).toFixed(2)}px,0) scale(${s.toFixed(4)})`;
+  }
+  const toRoom = (sx, sy) => { const s = sNow(); return [cam.x.x + (sx - VW / 2 - gx) / s, cam.y.x + (sy - VH / 2 - gy) / s]; };
+  const toScreen = (rx, ry) => { const s = sNow(); return [VW / 2 + (rx - cam.x.x) * s + gx, VH / 2 + (ry - cam.y.x) * s + gy]; };
+
+  /* ---- dust & bokeh in three depth planes, plus embers from the fire */
+  const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  const glowSpr = (rgb) => { const c = mk(64, 64), x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.18, `rgba(${rgb},.65)`); gr.addColorStop(.5, `rgba(${rgb},.14)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
+  const SPR = { gold: glowSpr('255,214,140'), warm: glowSpr('255,236,200'), ember: glowSpr('255,140,60') };
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  let dust = [], embers = [];
+  function seed() {
+    dust = [];
+    const mkp = (n, d, rMin, rMax, a, kind) => { for (let i = 0; i < n; i++) dust.push({ x: rnd(0, 2400), y: rnd(0, 1400), d, r: rnd(rMin, rMax), a: a * rnd(.5, 1), ph: rnd(0, 6.28), sp: rnd(.3, 1.1), vx: rnd(-6, 6), vy: rnd(-9, -2), kind }); };
+    mkp(46, .8, 1.2, 2.6, .5, 'warm'); mkp(52, 1.08, 1.8, 3.8, .75, 'gold'); mkp(9, 1.75, 16, 34, .16, 'gold');
+  }
+  function particles(dt, vis) {
+    g.clearRect(0, 0, VW, VH); const s = sNow(), padX = VW + 120, padY = VH + 120;
+    g.save(); g.globalCompositeOperation = 'lighter';
+    for (const p of dust) {
+      p.x += (p.vx + Math.sin(T * p.sp + p.ph) * 5) * dt; p.y += p.vy * dt;
+      let sx = VW / 2 + (p.x - cam.x.x) * s * p.d + gx * p.d * 1.3, sy = VH / 2 + (p.y - cam.y.x) * s * p.d + gy * p.d * 1.3;
+      sx = ((sx % padX) + padX) % padX - 60; sy = ((sy % padY) + padY) % padY - 60;
+      const tw = .45 + .55 * Math.abs(Math.sin(T * p.sp * 1.4 + p.ph)), r = p.r * (p.d > 1.5 ? 1 : s0 * 3.2 + .6);
+      g.globalAlpha = p.a * tw * vis; g.drawImage(p.kind === 'warm' ? SPR.warm : SPR.gold, sx - r, sy - r, r * 2, r * 2);
+    }
+    for (let i = embers.length - 1; i >= 0; i--) {
+      const e = embers[i]; e.life += dt; if (e.life > e.max) { embers.splice(i, 1); continue; }
+      e.x += (e.vx + Math.sin(T * 3 + e.ph) * 14) * dt; e.y += e.vy * dt; e.vy *= .995;
+      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), r = e.r * s * 3.4 * (.4 + k * .6) + 1.5;
+      g.globalAlpha = Math.min(1, k * 1.4) * .95 * vis; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
+    }
+    g.restore();
   }
 
-  /* ---- photo placement (cover + focal point + zoom + parallax) */
-  function place(name, zoom, fx, fy, shiftX = 0, shiftY = 0) {
-    const im = IMG[name]; if (!im || !im.ok) return null;
-    const iw = im.el.naturalWidth, ih = im.el.naturalHeight, s = Math.max(W / iw, H / ih) * zoom, w = iw * s, h = ih * s;
-    let x = W * .5 - fx * w + shiftX, y = H * .5 - fy * h + shiftY; x = clamp(x, W - w, 0); y = clamp(y, H - h, 0);
-    return { im: im.el, x, y, w, h, s };
+  /* ---- the open book on the table speaks: it shows what she is reading (handwriting follows the page's perspective) */
+  const quadMatrix = (w, h, q) => {
+    const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q, dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, det = dx1 * dy2 - dx2 * dy1;
+    const gg = (dx3 * dy2 - dx2 * dy3) / det, hh = (dx1 * dy3 - dx3 * dy1) / det, a = x1 - x0 + gg * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + gg * y1, e = y3 - y0 + hh * y3;
+    return `matrix3d(${a / w},${d / w},0,${gg / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
+  };
+  const PAGE = [[486, 262], [716, 232], [836, 546], [496, 626]].map(([x, y]) => [x * U, y * U]);
+  function refreshPage() {
+    const el = A.$('#pageTxt'), b = A.state.books.find(x => x.status === 'reading'), done = A.doneBooks().length;
+    el.style.cssText = `width:620px;height:900px;transform:${quadMatrix(620, 900, PAGE)}`;
+    el.innerHTML = `<h2>Книга Айсель</h2><i class="fl"></i>${b ? `<p>Сейчас читаю</p><b>${A.esc(b.title)}</b>` : `<p>Страницы ждут</p><b>Коснись книги</b>`}${done ? `<small>прочитано ${done} ${A.plural(done, 'книга', 'книги', 'книг')}</small>` : ''}`;
   }
-  function drawPhoto(r, alpha = 1) { if (!r) return; g.globalAlpha = alpha; g.drawImage(r.im, r.x, r.y, r.w, r.h); g.globalAlpha = 1; }
 
-  /* ---- fog, shafts, particles, fire */
-  function fog(t, strength, lowOnly) {
-    const speeds = [[14, .5, .42, 1.1], [-9, .3, .3, 1.5]];
-    speeds.forEach(([v, ypos, a, sc], i) => {
-      const h = 384 * sc * (W / 560 > 1 ? W / 560 : 1), w = 1024 * sc * (W / 560 > 1 ? W / 560 : 1), y = H * (lowOnly ? .56 + i * .1 : ypos) - h * .5 + Math.sin(t * .12 + i) * 10;
-      const off = ((t * v) % w + w) % w; g.globalAlpha = clamp(a * strength, 0, 1);
-      for (let x = -off; x < W; x += w) g.drawImage(fogTex, x, y, w, h);
+  /* ---- hotspot decoration: press-glow, idle glint, label (all opacity/transform only) */
+  function buildHs() {
+    const fx = A.$('#hsFx'), lb = A.$('#labels'); fx.innerHTML = lb.innerHTML = '';
+    HS.forEach((h, i) => {
+      const [x0, y0, x1, y1] = h.bb, w = x1 - x0, hh = y1 - y0;
+      const d = A.h(`<div class="hs" data-id="${h.id}" style="left:${x0}px;top:${y0}px;width:${w}px;height:${hh}px;clip-path:polygon(${h.P[0].map(([x, y]) => `${x * U - x0}px ${y * U - y0}px`).join(',')})"></div>`);
+      if (h.P.length > 1) d.style.clipPath = 'none', d.style.borderRadius = '40%';
+      fx.appendChild(d); h.fx = d;
+      if (h.id !== 'fire') { const gl = A.h(`<i class="glint" style="left:${h.c[0]}px;top:${h.c[1]}px;animation-delay:${(i * 1.7) % 9}s"></i>`); fx.appendChild(gl); h.gl = gl; }
+      const l = A.h(`<span class="lab" data-id="${h.id}" style="left:${h.c[0]}px;top:${Math.max(70, h.bb[1] - 6)}px">${h.n}</span>`); lb.appendChild(l); h.lab = l;
     });
-    g.globalAlpha = 1;
   }
-  function shafts(t, a) {
-    g.save(); g.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 4; i++) {
-      const x0 = W * (.55 + i * .12) + S.px * 14 * (i + 1) * .3, wd = 36 + i * 22, pulse = .55 + .45 * Math.sin(t * .35 + i * 1.7);
-      const gr = g.createLinearGradient(x0, 0, x0 - W * .32, H * .85); gr.addColorStop(0, `rgba(170,205,255,${.10 * a * pulse})`); gr.addColorStop(.6, `rgba(120,160,210,${.035 * a * pulse})`); gr.addColorStop(1, 'rgba(120,160,210,0)');
-      g.fillStyle = gr; g.beginPath(); g.moveTo(x0, 0); g.lineTo(x0 + wd, 0); g.lineTo(x0 + wd - W * .32 - 30, H * .85); g.lineTo(x0 - W * .32 - 30 - wd * .4, H * .85); g.closePath(); g.fill();
-    }
-    g.restore();
-  }
-  function particles(dt, t, a) {
-    g.save(); g.globalCompositeOperation = 'lighter';
-    for (const p of P) {
-      const par = (p.d - .35) * 34; p.x += (p.vx + Math.sin(t * p.sp + p.ph) * 6 * p.d) * dt * (.4 + p.d * .6); p.y += p.vy * dt * (.4 + p.d * .6);
-      if (p.y < -30) { p.y = H + 20; p.x = rnd(0, W); } if (p.y > H + 40) p.y = -20; if (p.x < -30) p.x = W + 20; if (p.x > W + 30) p.x = -20;
-      const x = p.x + S.px * par, y = p.y + S.py * par * .6;
-      if (p.k === 's') {
-        const tw = .35 + .65 * Math.abs(Math.sin(t * p.sp * 1.6 + p.ph)), r = p.sz * (.55 + p.d * .75) * 5;
-        g.globalAlpha = tw * (.45 + p.d * .5) * a; g.drawImage(SPR.gold, x - r, y - r, r * 2, r * 2);
-      } else {
-        const bl = Math.pow(Math.max(0, Math.sin(t * p.sp + p.ph)), 3), r = p.sz * (.55 + p.d * .7) * (.7 + bl * .6);
-        g.globalAlpha = (.12 + bl * .88) * (.45 + p.d * .55) * a; g.drawImage(p.h ? SPR.gold : SPR.fly, x - r * 2, y - r * 2, r * 4, r * 4);
-      }
-    }
-    g.globalAlpha = 1; g.restore();
-  }
-  function firePos(r) { return r ? { x: r.x + 520 * r.s, y: r.y + 1190 * r.s, k: r.s } : null; }
-  function fireFx(dt, t, r, a) {
-    const f = firePos(r); if (!f) return;
-    g.save(); g.globalCompositeOperation = 'lighter';
-    const fl = .8 + .2 * Math.sin(t * 9) * Math.sin(t * 5.3) + .06 * Math.sin(t * 23), R = 170 * f.k * 2.4;
-    g.globalAlpha = .62 * fl * a; g.drawImage(SPR.fire, f.x - R, f.y - R * .95, R * 2, R * 2);
-    if (Math.random() < dt * 22) embers.push({ x: f.x + rnd(-24, 24) * f.k, y: f.y - rnd(20, 70) * f.k, vx: rnd(-14, 18), vy: rnd(-70, -28), life: 0, max: rnd(1.6, 3.4), s: rnd(1, 2.6) });
-    embers = embers.filter(e => { e.life += dt; if (e.life > e.max) return false; e.x += (e.vx + Math.sin(t * 3 + e.max * 5) * 12) * dt; e.y += e.vy * dt; const k = 1 - e.life / e.max, r2 = e.s * 5 * (.5 + k); g.globalAlpha = k * .9 * a; g.drawImage(SPR.ember, e.x - r2, e.y - r2, r2 * 2, r2 * 2); return true; });
-    g.restore();
-  }
-  function noise() { g.save(); g.globalCompositeOperation = 'overlay'; g.globalAlpha = .09; const ox = (frame * 37) % 160, oy = (frame * 53) % 160; for (let x = -ox; x < W; x += 160) for (let y = -oy; y < H; y += 160) g.drawImage(grain, x, y); g.restore(); }
+  const press = (h, on) => { HS.forEach(x => x.fx && x.fx.classList.remove('on')); if (h && on) { h.fx.classList.add('on'); if (h.act === 'fire') (HS.filter(o => o.act === 'fire').forEach(o => o.fx.classList.add('on'))); } };
+  let labelsT = 0;
+  const showLabels = (ms = 4200) => { A.$('#labels').classList.add('show'); clearTimeout(labelsT); labelsT = setTimeout(() => A.$('#labels').classList.remove('show'), ms); };
 
-  /* ---- timeline */
-  function shot(t) {   // returns {a:[name,zoom,fx,fy,sx,sy,alpha], b:[...]|null, fog}
-    const e = ease(t), px = S.px * 18, py = S.py * 10; let fogS = .55;
-    const bump = (c, w) => Math.exp(-Math.pow((t - c) / w, 2));
-    fogS = .55 + .9 * bump(.45, .07) + .9 * bump(.80, .06);
-    const seg = (a, b, tt) => clamp((tt - a) / (b - a), 0, 1);
-    const L = [];
-    if (t < .47) L.push(['pines', 1.04 + .55 * ease(seg(0, .47, t)), .5, .62 - .1 * seg(0, .47, t), px, py, 1]);
-    if (t >= .42 && t < .84) L.push(['oak', 1.0 + .5 * ease(seg(.42, .84, t)), .5, .6, px, py, ease(seg(.42, .5, t))]);
-    if (t >= .78) L.push(['finale', 1.45 - .45 * ease(seg(.78, 1, t)), .4, .56 + .0 * seg(.78, 1, t), px, py, ease(seg(.78, .86, t))]);
-    return { L, fog: fogS };
+  /* ---- input: drag to look around with inertia, tap an object */
+  let drag = null, sweepOn = false;
+  const cancelSweep = () => { sweepOn = false; };
+  stage.addEventListener('pointerdown', e => {
+    if (locked || e.button > 0) return; cancelSweep(); stage.setPointerCapture(e.pointerId);
+    const [rx, ry] = toRoom(e.clientX, e.clientY); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, vx: 0, vy: 0, h: hit(rx, ry), lx: e.clientX, ly: e.clientY, lt: performance.now() };
+    press(drag.h, true);
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!drag) { if (!locked && e.pointerType === 'mouse') { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); stage.style.cursor = h ? 'pointer' : 'grab'; press(h, true); } return; }
+    if (e.pointerId !== drag.id) return; const s = sNow();
+    if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 9) { drag.moved = true; press(null); stage.classList.add('grab'); }
+    if (drag.moved) {
+      const dx = e.clientX - drag.lx, dy = e.clientY - drag.ly, now = performance.now(), dt = Math.max(1, now - drag.lt);
+      cam.x.t -= dx / s; cam.y.t -= dy / s; drag.vx = drag.vx * .7 + (-dx / s / dt * 1000) * .3; drag.vy = drag.vy * .7 + (-dy / s / dt * 1000) * .3; drag.lx = e.clientX; drag.ly = e.clientY; drag.lt = now; clampT();
+      cam.x.x = cam.x.t; cam.y.x = cam.y.t; cam.x.v = cam.y.v = 0; dirty = true;                      // follows the finger 1:1
+    }
+  });
+  const up = e => {
+    if (!drag || e.pointerId !== drag.id) return; const d = drag; drag = null; stage.classList.remove('grab'); press(null);
+    if (!d.moved && performance.now() - d.t < 600) { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); tap(h, e.clientX, e.clientY); }
+    else if (d.moved) { cam.x.t += d.vx * .22; cam.y.t += d.vy * .22; clampT(); cam.x.v = d.vx * .3; cam.y.v = d.vy * .3; }
+  };
+  stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', e => { if (drag && e.pointerId === drag.id) { drag = null; press(null); } });
+  stage.addEventListener('wheel', e => { if (locked) return; e.preventDefault(); cancelSweep(); const s = sNow(); cam.x.t += (e.deltaX + (e.shiftKey ? e.deltaY : 0)) / s; cam.y.t += (e.shiftKey ? 0 : e.deltaY) / s; clampT(); }, { passive: false });
+  addEventListener('keydown', e => { if (locked) return; const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (k) { cam.x.t += k[0] * 260; cam.y.t += k[1] * 200; clampT(); } });
+  function tap(h, sx, sy) {
+    if (!h) { showLabels(); A.snd.tap && A.snd.tap(); A.fx.sparks(sx, sy, 6, '#ffd98a'); return; }
+    A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
+    A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab);
   }
+  if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });
+  addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && !drag) { gxT = -((e.clientX / VW) - .5) * 22; gyT = -((e.clientY / VH) - .5) * 14; } }, { passive: true });
+  addEventListener('resize', resize);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) last = performance.now(); });
 
+  /* ---- frame */
   function loop(now) {
     if (!running) return; requestAnimationFrame(loop);
-    const dtm = now - last; if (paused) { last = now; return; } if (S.mode === 'ui' && dtm < 30) return;
-    const dt = Math.min(.05, dtm / 1000); last = now; S.t += dt; frame++;
-    S.px += (pxT - S.px) * Math.min(1, dt * 3); S.warm += ((warmT) - S.warm) * Math.min(1, dt * 2.5);
-    S.appear = Math.min(1, S.appear + dt * .55);
-    g.fillStyle = '#020605'; g.fillRect(0, 0, W, H);
-    let fogS = .5, pa = 1, fireA = 0, fireR = null;
-    if (S.mode === 'gate') {
-      const z = 1.04 + .012 * Math.sin(S.t * .2), r = place('pines', z, .5, .62, S.px * 14, S.py * 8); drawPhoto(r, S.appear); fogS = .7;
-    } else if (S.mode === 'walk') {
-      walk.t += dt; const t = clamp(walk.t / walk.dur, 0, 1), sh = shot(t); fogS = sh.fog;
-      sh.L.forEach(([n, z, fx, fy, sx, sy, al], i) => { const r = place(n, z, fx, fy, sx, sy); drawPhoto(r, al); if (n === 'finale') { fireR = r; fireA = al; } });
-      if (t >= 1 && walk.on) { walk.on = false; S.mode = 'finale'; S.t0 = S.t; const d = walk.done; walk.done = null; d && d(); }
-    } else if (S.mode === 'finale') {
-      const z = 1.0 + .01 * Math.sin(S.t * .25), r = place('finale', z, .4, .56, S.px * 12, S.py * 6); drawPhoto(r, 1); fireR = r; fireA = 1; fogS = .55;
-    } else {  // ui
-      S.mix = Math.min(1, S.mix + dt / 1.2);
-      const draw = (n, al) => { const r = place(n, S.zoomUI + .012 * Math.sin(S.t * .17), FOCUS[n][0], FOCUS[n][1], S.px * 16, S.py * 8); drawPhoto(r, al); };
-      if (S.prev && S.mix < 1) draw(S.prev, 1); draw(S.bg, S.prev && S.mix < 1 ? ease(S.mix) : 1);
-      fogS = .5; pa = .85;
-    }
-    shafts(S.t, S.mode === 'ui' ? .5 : 1);
-    fog(S.t, fogS, false);
-    if (fireR) fireFx(dt, S.t, fireR, fireA);
-    if (S.warm > .02) { g.save(); g.globalCompositeOperation = 'lighter'; const R = Math.max(W, H) * .9, gr = g.createRadialGradient(W * .2, H * .98, 0, W * .2, H * .98, R); gr.addColorStop(0, `rgba(255,140,60,${.3 * S.warm * (.85 + .15 * Math.sin(S.t * 8))})`); gr.addColorStop(1, 'rgba(255,140,60,0)'); g.fillStyle = gr; g.fillRect(0, 0, W, H); g.restore(); }
-    particles(dt, S.t, pa); noise();
+    const dtm = now - last; if (document.hidden) { last = now; return; } if (mode === 'panel' && dtm < 30) return;
+    const dt = Math.min(.05, dtm / 1000); last = now; T += dt;
+    if (!drag || !drag.moved) { step(cam.x, dt, KC[0], KC[1]); step(cam.y, dt, KC[0], KC[1]); }
+    step(cam.z, dt, 120, 20); gx += (gxT - gx) * Math.min(1, dt * 3); gy += (gyT - gy) * Math.min(1, dt * 3);
+    apply(); A.fire && A.fire.frame(dt, T);
+    particles(dt, mode === 'panel' ? .5 : 1);
   }
 
-  function start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(loop); }
-  let warmT = 0;
-  addEventListener('resize', resize);
-  addEventListener('pointermove', e => { pxT = (e.clientX / innerWidth - .5) * 2; S.py += ((e.clientY / innerHeight - .5) * 2 - S.py) * .08; }, { passive: true });
-  addEventListener('deviceorientation', e => { if (e.gamma != null) { pxT = clamp(e.gamma / 28, -1, 1); S.py += (clamp((e.beta - 50) / 40, -1, 1) - S.py) * .08; } }, { passive: true });
-  document.addEventListener('visibilitychange', () => { paused = document.hidden; });
-
-  return {
-    init() { resize(); }, start,
-    mode() { return S.mode; },
-    walk(dur, done) { S.mode = 'walk'; walk.t = 0; walk.dur = dur; walk.done = done; walk.on = true; },
-    skipWalk() { if (S.mode === 'walk') walk.t = walk.dur * .985; },
-    toUI() { S.mode = 'ui'; S.bg = S.bg || 'moon'; S.mix = 1; },
-    setTab(tab) { const n = { path: 'moon', books: 'library', quotes: 'lantern', sky: 'moon', potion: 'oak' }[tab] || 'moon'; if (n === S.bg) return; S.prev = S.bg; S.bg = n; S.mix = 0; },
-    setWarm(v) { warmT = v; }, setParallax(x) { pxT = x; },
-    avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#16352f'); gr.addColorStop(1, '#030807'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
+  /* ---- public */
+  const api = {
+    init() { resize(); seed(); buildHs(); refreshPage(); },
+    start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(loop); },
+    mode: () => mode, hs: id => HS.find(h => h.id === id), fireBase: () => FIRE, refreshPage, showLabels,
+    spark(x, y) { embers.push({ x, y, vx: rnd(-26, 36), vy: rnd(-150, -50), r: rnd(.9, 2.2), life: 0, max: rnd(1.8, 3.8), ph: rnd(0, 6) }); },
+    enter(first) {                                         // walk into the room: dolly in from the dark, then look around once
+      mode = 'room'; locked = false; cam.z.x = 2.1; cam.z.v = 0; cam.z.t = 1; cam.x.x = HOME.cx - 40; cam.x.t = HOME.cx; cam.y.x = HOME.cy - 120; cam.y.t = HOME.cy; cam.x.v = cam.y.v = 0;
+      stage.classList.add('in'); if (first) setTimeout(() => api.sweep(), 2300); setTimeout(() => showLabels(first ? 6500 : 3200), first ? 1500 : 900);
+    },
+    sweep() {
+      if (sweepOn || locked) return; sweepOn = true; const pts = [[560 * U, RH * .55], [1400 * U, RH * .4], [HOME.cx, HOME.cy]]; let i = 0;
+      const go = () => { if (!sweepOn || i >= pts.length) { sweepOn = false; return; } cam.x.t = pts[i][0]; cam.y.t = pts[i][1]; clampT(); i++; setTimeout(go, 1900); }; go();
+    },
+    focus(id) {                                            // camera glides to the object; resolves when it fills the view
+      const h = HS.find(o => o.id === id); if (!h) return Promise.resolve(); cancelSweep();
+      if (!saved) saved = { x: cam.x.t, y: cam.y.t, z: cam.z.t }; focusId = id; mode = 'panel'; locked = true; A.$('#labels').classList.remove('show');
+      cam.z.t = A.clamp(.58 * Math.min(VW, VH) / (h.big * s0), 1.5, 3.4); cam.x.t = h.c[0]; cam.y.t = h.c[1]; clampT();
+      return new Promise(r => setTimeout(r, 420));
+    },
+    unfocus() { if (saved) { cam.x.t = saved.x; cam.y.t = saved.y; cam.z.t = saved.z; saved = null; } focusId = null; mode = 'room'; locked = false; clampT(); refreshPage(); },
+    focusPoint() { return toScreen(...(HS.find(o => o.id === focusId) || { c: [cam.x.x, cam.y.x] }).c); },
+    avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
-    pause(v) { /* tabs keep their own photo; nothing to stop */ },
-    freeze(mode) { S.mode = mode; }
+    look(u, v, z = 1) { cancelSweep(); cam.x.t = u * U; cam.y.t = v * U; cam.z.t = z; clampT(); },
+    lock(v) { locked = v; }, screenOf(id) { const h = HS.find(o => o.id === id); return toScreen(...h.c); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
+  return api;
 })();
