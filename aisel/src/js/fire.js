@@ -13,7 +13,7 @@ A.fire = (() => {
         float sway=(fbm(vec2(y*2.1+ph,T*.7+ph))-.5)*1.5*y;
         float x=(q.x-off)/wd+sway;
         float tex=fbm(vec2(x*1.6+ph*3.,y*2.3-T*1.8+ph));
-        float w=mix(1.05,.06,pow(y,.62))*(.75+.55*tex);
+        float w=mix(1.1,.05,pow(y,.7))*(.8+.5*tex);
         float body=smoothstep(w,w*.02,abs(x+(tex-.5)*.55*(.25+y)));
         float tex2=fbm(vec2(x*4.3-2.,y*5.-T*3.3));
         return max(body*(1.-clamp(y,0.,1.)*.92)*(.5+1.05*tex)-tex2*.24*max(y,0.),0.)*smoothstep(-.06,.07,y);
@@ -21,12 +21,11 @@ A.fire = (() => {
       void main(){
         vec2 q=(gl_FragCoord.xy-O)/K; float lv=L; float au=1.+A*.35;
         float f=0.;
-        f=max(f,tongue(q,0.,330.*lv*au,86.,0.));
-        f=max(f,tongue(q,-62.,225.*lv,60.,1.7));
-        f=max(f,tongue(q,64.,255.*lv,62.,3.3));
-        f=max(f,tongue(q,-26.,170.*lv,46.,5.1));
-        f=max(f,tongue(q,30.,190.*lv,48.,7.2));
-        f+=.26*exp(-dot(q/vec2(150.,40.),q/vec2(150.,40.)))*lv*smoothstep(-26.,8.,q.y);
+        f=max(f,tongue(q,0.,340.*lv*au,64.,0.));
+        f=max(f,tongue(q,-46.,200.*lv,44.,1.7));
+        f=max(f,tongue(q,50.,225.*lv,46.,3.3));
+        f=max(f,tongue(q,6.,150.*lv,34.,5.1));
+        f+=.24*exp(-dot(q/vec2(120.,36.),q/vec2(120.,36.)))*lv*smoothstep(-26.,8.,q.y);
         f=clamp(f*1.0,0.,1.);
         vec3 c=mix(vec3(.55,.04,0.),vec3(1.,.34,.03),smoothstep(.0,.34,f));
         c=mix(c,vec3(1.,.66,.08),smoothstep(.3,.7,f));
@@ -40,10 +39,10 @@ A.fire = (() => {
     return { g, c, u: n => g.getUniformLocation(pr, n) };
   } catch (e) { return null; } })();
   let ps = [], smoke = [], level = 0, target = 0, T = 0, fl = 1, flT = 1, sparkAcc = 0, knob = null, au = 0, ready = false;
-  const R = (a, b) => a + Math.random() * (b - a), K = 500 / 760, SC = K / .526;
+  const R = (a, b) => a + Math.random() * (b - a), K = 1, SC = 1;
   const spr = (rgb, mid = .35) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(mid, `rgba(${rgb},.5)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
   const S = { hot: spr('255,246,210', .25), yel: spr('255,206,90'), mid: spr('255,140,36'), red: spr('222,58,16'), smoke: spr('140,140,140', .2) };
-  const COALS = [...Array(30)].map(() => { const a = Math.random() * 6.283, r = Math.sqrt(Math.random()); return [Math.cos(a) * r * 168 * K, 14 * K * 1.2 + Math.sin(a) * r * 44 * K, R(8, 17) * SC / 1.25, Math.random() * 6.3]; });
+  const COALS = [...Array(26)].map(() => { const a = Math.random() * 6.283, r = Math.sqrt(Math.random()); return [Math.cos(a) * r * 110, 6 + Math.sin(a) * r * 40, R(10, 20), Math.random() * 6.3]; });
 
   function place() {
     const f = A.scene.fireBase(); const box = `left:${f.x - BX}px;top:${f.y - BY}px;width:${CW}px;height:${CH}px`; cv.style.cssText = box; if (gl) { gl.c.style.cssText = box; gl.c.width = Math.round(CW * .8); gl.c.height = Math.round(CH * .8); }
@@ -92,7 +91,7 @@ A.fire = (() => {
     else A.snd.setFire(on ? 1 : 0);
   }
   return {
-    init() { place(); const hs = A.$('#hsFx'); knob = A.h('<i class="knoblight"></i>'); const k = A.scene.hs('knob'); knob.style.cssText = `left:${k.c[0]}px;top:${k.c[1]}px`; hs.appendChild(knob); knob.style.opacity = 0; },
+    place, reset() { knob = null; }, attachKnob() { const k = A.scene.hs('knob'); if (!k) return; knob = A.h('<i class="knoblight"></i>'); knob.style.cssText = `left:${k.c[0]}px;top:${k.c[1]}px;opacity:0`; A.$('#hsFx').appendChild(knob); }, init() { place(); },
     frame, set, toggle() { set(!(target > 0)); }, get on() { return target > 0; }, get level() { return level; }, always: false
   };
 })();

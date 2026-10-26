@@ -5,7 +5,7 @@
   const IMP = ['Мурашки', 'Плакала', 'Не оторваться', 'Уютная', 'Затянуло', 'Заставила думать', 'Смеялась', 'Разочарование'];
 
   const mod = A.mods.books = {
-    init() { A.lib.init(); },
+    init() {},
     show() { A.lib.show(); },
     beforeShow() {}, refresh() { render(); mod.repaintDetail && mod.repaintDetail(); }, openBook, editBook
   };

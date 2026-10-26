@@ -1,45 +1,34 @@
 /* ============================================================ the room: a first-person desk you look around and touch
    one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  let RW = 2368, RH = 1320, roomName = 'main'; const U = 2368 / 1500;     // plate size of the current room; main-table hotspot art is drawn in 1500-wide units
-  const ROOMS = { main: { w: 2368, h: 1320, img: 'img/room.webp' }, lab: { w: 1080, h: 1920, img: 'img/lab.webp' }, lib: { w: 1080, h: 1920, img: 'img/lib.webp' } };
-  const BOWL = { x: 1960, y: 1030, k: 500 / 760 };               // the iron fire bowl on the table (rim centre, room px)
+  const ORI = () => innerWidth >= innerHeight ? 'landscape' : 'portrait';
+  const LAYOUTS = A.LAYOUTS;                                               // desk plates + hotspot polygons for both orientations (tools/make_main.py)
+  const ROOMS = { lab: { portrait: { w: 1080, h: 1920, img: 'img/lab-bg.webp' }, landscape: { w: 1920, h: 1080, img: 'img/lab-bg-l.webp' } }, lib: { portrait: { w: 1080, h: 1920, img: 'img/lib.webp' }, landscape: { w: 1920, h: 1080, img: 'img/lib-l.webp' } } };
+  let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
-  const FIRE = { x: BOWL.x, y: BOWL.y + 8 };                  // base of the flame, room px
-  const HOME = { cx: 1850, cy: RH * .5, z: 1 };
-
-  /* ---- objects (polygons in plate units).  act:'fire' toggles the flame, tab opens a panel */
-  const P = (...a) => a;
-  const HS = [
-    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([1040, 500], [1420, 500], [1420, 760], [1040, 760])] },
-    { id: 'knob', act: 'fire', n: 'Живой костёр', circle: [210, 590, 95] },
-    { id: 'matches', act: 'fire', n: 'Спички', polys: [P([203, 396], [312, 338], [338, 372], [232, 440])] },
-    { id: 'quill', tab: 'quotes', n: 'Цитаты', polys: [P([1092, 78], [1195, 78], [1205, 170], [1100, 170]), P([1160, 0], [1285, 0], [1215, 95], [1160, 85])] },
-    { id: 'potion', tab: 'potion', n: 'Лаборатория', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
-    { id: 'stars', tab: 'sky', n: 'Небо', polys: [P([1215, 168], [1500, 298], [1500, 474], [1312, 430], [1246, 336])] },
-    { id: 'scope', tab: 'path', n: 'Лесная карта', polys: [P([1242, 62], [1335, 46], [1500, 160], [1500, 212], [1424, 192])] },
-    { id: 'bag', tab: 'bag', n: 'Сумка', polys: [P([1072, 172], [1236, 238], [1324, 332], [1330, 522], [1292, 524], [1238, 396], [1108, 262])] },
-    { id: 'book', tab: 'books', n: 'Библиотека', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
-  ];
-  HS.forEach(h => {
-    h.P = h.circle ? [P(...[...Array(18)].map((_, i) => [h.circle[0] + Math.cos(i / 18 * 6.283) * h.circle[2], h.circle[1] + Math.sin(i / 18 * 6.283) * h.circle[2]]))] : h.polys;
-    const pts = h.P.flat(); h.bb = [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))].map(v => v * U);
-    h.c = [(h.bb[0] + h.bb[2]) / 2, (h.bb[1] + h.bb[3]) / 2]; h.big = Math.max(h.bb[2] - h.bb[0], h.bb[3] - h.bb[1]);
-  });
+  const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
+  const DEFS = [['fire', 'Костёр', { act: 'fire' }], ['knob', 'Живой костёр', { act: 'fire' }], ['matches', 'Спички', { act: 'fire' }], ['quill', 'Написать цитату', { act: 'quill' }], ['casket', 'Шкатулка с цитатами', { tab: 'quotes' }],
+    ['potion', 'Лаборатория', { tab: 'potion' }], ['stars', 'Небо', { tab: 'sky' }], ['scope', 'Лесная карта', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['book', 'Библиотека', { tab: 'books' }]];
+  let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
-  const hit = (rx, ry) => { const x = rx / U, y = ry / U; return HS.find(h => h.P.some(p => inPoly(x, y, p))) || null; };
+  const hit = (rx, ry) => HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
+  function buildHotspots() {
+    HS = DEFS.filter(([id]) => LAY.hs[id]).map(([id, n, o]) => { const h = Object.assign({ id, n }, o); h.P = LAY.hs[id]; const pts = h.P.flat(); h.bb = [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))]; h.c = [(h.bb[0] + h.bb[2]) / 2, (h.bb[1] + h.bb[3]) / 2]; h.big = Math.max(h.bb[2] - h.bb[0], h.bb[3] - h.bb[1]); return h; });
+  }
 
   /* ---- springs + camera */
   const sp = (x) => ({ x, v: 0, t: x });
   const step = (s, dt, k, c) => { const n = Math.ceil(dt / .008); const h = dt / n; for (let i = 0; i < n; i++) { s.v += (k * (s.t - s.x) - c * s.v) * h; s.x += s.v * h; } };
-  const cam = { x: sp(HOME.cx), y: sp(HOME.cy), z: sp(1.9) };
+  const cam = { x: sp(0), y: sp(0), z: sp(1.9) };
   let VW = innerWidth, VH = innerHeight, DPR = 1, s0 = 1, gx = 0, gy = 0, gxT = 0, gyT = 0, dirty = true, locked = true, focusId = null, saved = null, running = false, last = 0, T = 0, mode = 'gate';
   const KC = [150, 24];                                           // spring stiffness / damping: lively but settled
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
   function resize() {
-    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
+    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2);
+    if (ORI() !== ori) { ori = ORI(); relayout(); }
+    s0 = Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
     cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); clampT(); dirty = true;
   }
   function apply() {
@@ -82,31 +71,38 @@ A.scene = (() => {
     g.restore();
   }
 
-  function placeBowl() { const b = A.$('#bowlImg'); if (b) b.style.cssText = `left:${BOWL.x - 380 * BOWL.k}px;top:${BOWL.y - 215 * BOWL.k}px;width:${760 * BOWL.k}px;height:${560 * BOWL.k}px`; }
+  function relayout() {
+    LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = LAY.home[0]; HOME.cy = LAY.home[1];
+    if (roomName === 'main') { RW = LAY.w; RH = LAY.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; A.$('#roomImg').src = LAY.img; }
+    else { const r = ROOMS[roomName][ori]; RW = r.w; RH = r.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; A.$('#roomImg').src = r.img; }
+    room.dataset.ori = ori; if (roomName === 'lab' && A.mods.potion && A.mods.potion.rebuild) A.mods.potion.rebuild(); if (roomName === 'lib' && A.lib) A.lib.rebuild(); buildHotspots(); buildHs(); refreshPage(); placeCasket(); A.fire && A.fire.place && A.fire.place();
+    cam.x.x = cam.x.t = roomName === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = roomName === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; seed();
+  }
+  function placeCasket() { const c = A.$('#casketImg'); if (!c) return; const k = LAY.casket, w = k.w, h = w * 520 / 640; c.style.cssText = `left:${k.x - w / 2}px;top:${k.y - h * .6}px;width:${w}px;height:${h}px`; api.casket = { x: k.x, y: k.y, w, h }; }
   /* ---- the open book on the table speaks: it shows what she is reading (handwriting follows the page's perspective) */
   const quadMatrix = (w, h, q) => {
     const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q, dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, det = dx1 * dy2 - dx2 * dy1;
     const gg = (dx3 * dy2 - dx2 * dy3) / det, hh = (dx1 * dy3 - dx3 * dy1) / det, a = x1 - x0 + gg * x1, b = x3 - x0 + hh * x3, d = y1 - y0 + gg * y1, e = y3 - y0 + hh * y3;
     return `matrix3d(${a / w},${d / w},0,${gg / w},${b / h},${e / h},0,${hh / h},0,0,1,0,${x0},${y0},0,1)`;
   };
-  const PAGE = [[486, 262], [716, 232], [836, 546], [496, 626]].map(([x, y]) => [x * U, y * U]);
   function refreshPage() {
     const el = A.$('#pageTxt'), b = A.state.books.find(x => x.status === 'reading'), done = A.doneBooks().length;
-    el.style.cssText = `width:620px;height:900px;transform:${quadMatrix(620, 900, PAGE)}`;
+    el.style.cssText = `width:620px;height:900px;transform:${quadMatrix(620, 900, LAY.page)}`;
     el.innerHTML = `<h2>Книга Айсель</h2><i class="fl"></i>${b ? `<p>Сейчас читаю</p><b>${A.esc(b.title)}</b>` : `<p>Страницы ждут</p><b>Коснись книги</b>`}${done ? `<small>прочитано ${done} ${A.plural(done, 'книга', 'книги', 'книг')}</small>` : ''}`;
   }
 
   /* ---- hotspot decoration: press-glow, idle glint, label (all opacity/transform only) */
   function buildHs() {
-    const fx = A.$('#hsFx'), lb = A.$('#labels'); fx.innerHTML = lb.innerHTML = '';
+    const fx = A.$('#hsFx'), lb = A.$('#labels'); fx.innerHTML = lb.innerHTML = ''; A.fire && A.fire.reset && A.fire.reset();
     HS.forEach((h, i) => {
       const [x0, y0, x1, y1] = h.bb, w = x1 - x0, hh = y1 - y0;
-      const d = A.h(`<div class="hs" data-id="${h.id}" style="left:${x0}px;top:${y0}px;width:${w}px;height:${hh}px;clip-path:polygon(${h.P[0].map(([x, y]) => `${x * U - x0}px ${y * U - y0}px`).join(',')})"></div>`);
-      if (h.P.length > 1) d.style.clipPath = 'none', d.style.borderRadius = '40%';
+      const d = A.h(`<div class="hs" data-id="${h.id}" style="left:${x0}px;top:${y0}px;width:${w}px;height:${hh}px;clip-path:polygon(${h.P[0].map(([x, y]) => `${x - x0}px ${y - y0}px`).join(',')})"></div>`);
+      if (h.P.length > 1 || h.id === 'fire') d.style.clipPath = 'none', d.style.borderRadius = '40%';
       fx.appendChild(d); h.fx = d;
-      if (h.id !== 'fire') { const gl = A.h(`<i class="glint" style="left:${h.c[0]}px;top:${h.c[1]}px;animation-delay:${(i * 1.7) % 9}s"></i>`); fx.appendChild(gl); h.gl = gl; }
+      if (h.id !== 'fire' && h.id !== 'quill') { const gl = A.h(`<i class="glint" style="left:${h.c[0]}px;top:${h.c[1]}px;animation-delay:${(i * 1.7) % 9}s"></i>`); fx.appendChild(gl); h.gl = gl; }
       const l = A.h(`<span class="lab" data-id="${h.id}" style="left:${h.c[0]}px;top:${Math.max(70, h.bb[1] - 6)}px">${h.n}</span>`); lb.appendChild(l); h.lab = l;
     });
+    A.fire && A.fire.attachKnob && A.fire.attachKnob();
   }
   const press = (h, on) => { HS.forEach(x => x.fx && x.fx.classList.remove('on')); if (h && on) { h.fx.classList.add('on'); if (h.act === 'fire') (HS.filter(o => o.act === 'fire').forEach(o => o.fx.classList.add('on'))); } };
   let labelsT = 0;
@@ -141,6 +137,7 @@ A.scene = (() => {
   function tap(h, sx, sy) {
     if (!h) { showLabels(); A.snd.tap && A.snd.tap(); A.fx.sparks(sx, sy, 6, '#ffd98a'); return; }
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
+    if (h.act === 'quill') { A.snd.quill && A.snd.quill(); A.mods.quotes.editQuote && A.mods.quotes.editQuote(null); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab);
   }
   if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });
@@ -161,10 +158,10 @@ A.scene = (() => {
 
   /* ---- public */
   const api = {
-    init() { resize(); seed(); buildHs(); refreshPage(); placeBowl(); },
-    room: () => roomName, bowl: () => ({ x: BOWL.x, y: BOWL.y, k: BOWL.k }),
+    init() { ori = ORI(); resize(); relayout(); },
+    room: () => roomName, ori: () => ori,
     setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
-      const r = ROOMS[name]; roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
+      const r = name === 'main' ? { w: LAY.w, h: LAY.h, img: LAY.img } : ROOMS[name][ori]; roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
       A.$('#roomImg').src = r.img; saved = name === 'main' ? saved : null; focusId = null; resize();
       cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
@@ -183,7 +180,7 @@ A.scene = (() => {
       stage.classList.add('in'); if (first) setTimeout(() => api.sweep(), 2300); setTimeout(() => showLabels(first ? 6500 : 3200), first ? 1500 : 900);
     },
     sweep() {
-      if (sweepOn || locked) return; sweepOn = true; const pts = [[560 * U, RH * .55], [1400 * U, RH * .4], [HOME.cx, HOME.cy]]; let i = 0;
+      if (sweepOn || locked) return; sweepOn = true; const pts = [[RW * .28, RH * .55], [RW * .72, RH * .4], [HOME.cx, HOME.cy]]; let i = 0;
       const go = () => { if (!sweepOn || i >= pts.length) { sweepOn = false; return; } cam.x.t = pts[i][0]; cam.y.t = pts[i][1]; clampT(); i++; setTimeout(go, 1900); }; go();
     },
     focus(id) {                                            // camera glides to the object; resolves when it fills the view
@@ -196,7 +193,7 @@ A.scene = (() => {
     focusPoint() { return toScreen(...(HS.find(o => o.id === focusId) || { c: [cam.x.x, cam.y.x] }).c); },
     avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
-    look(u, v, z = 1) { cancelSweep(); cam.x.t = u * U; cam.y.t = v * U; cam.z.t = z; clampT(); },
+    look(u, v, z = 1) { cancelSweep(); cam.x.t = u; cam.y.t = v; cam.z.t = z; clampT(); },
     lock(v) { locked = v; }, screenOf(id) { const h = HS.find(o => o.id === id); return toScreen(...h.c); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
   return api;

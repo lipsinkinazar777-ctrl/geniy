@@ -12,28 +12,29 @@
     { id: 'moss', n: 'лунный мох', c: '#7fd29a', b: ['cozy', 'tale'] }, { id: 'fly', n: 'светлячки', c: '#e6f58a', b: ['fantasy', 'adventure'] }, { id: 'dew', n: 'роса', c: '#8fc7ff', b: ['melancholy', 'deep'] },
     { id: 'cin', n: 'корица', c: '#d79a63', b: ['romance', 'cozy'] }, { id: 'leaf', n: 'сухой лист', c: '#d9a441', b: ['mist', 'detective', 'classic'] }
   ];
-  const POT = { x: 540, y: 1135, rx: 238, ry: 58 };
-  let layer, cv, cx, sel = new Set(), ing = [], brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, hot = 0, flames = [];
+  let POT = { x: 540, y: 1130, rx: 252, ry: 62 }, CFG = null;
+  const LABCFG = { portrait: { w: 1080, h: 1920, pot: { x: 540, y: 1130, rx: 252, ry: 62 }, fl: i => [102 + i * 148, 762], jar: i => [112 + i * 176, 1590], hint: [60, 1005], res: [130, 120, 820], title: 64, fire: [540, 1430] }, landscape: { w: 1920, h: 1080, pot: { x: 1290, y: 600, rx: 252, ry: 62 }, fl: i => [770 + i * 168, 270], jar: i => [250 + i * 200, 640], hint: [740, 440], res: [200, 60, 640], title: 40, fire: [1290, 800] } };
+  let layer, cv, cx, sel = new Set(), ing = [], brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, hot = 0, flames = [], lastOri = '';
   const R = (a, b) => a + Math.random() * (b - a), hex = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
   const flask = c => `<svg viewBox="0 0 64 88" class="fl"><defs><linearGradient id="g${c.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="1" stop-color="${c}" stop-opacity=".5"/></linearGradient></defs><path d="M24 6h16M26 6v20L8 66c-3 8 1 16 10 16h28c9 0 13-8 10-16L38 26V6" fill="rgba(255,255,255,.05)" stroke="rgba(255,226,160,.75)" stroke-width="1.3" stroke-linejoin="round"/><path d="M14 52c8-4 14 4 22 0s12-4 14 0l5 14c3 8-1 14-9 14H18c-8 0-12-6-9-14z" fill="url(#g${c.slice(1)})"/><path d="M28 10v14" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="22" cy="62" rx="3" ry="9" fill="#fff" opacity=".14"/></svg>`;
   const jar = g => `<svg viewBox="0 0 68 92" class="jar"><rect x="22" y="2" width="24" height="12" rx="3" fill="#7a5436"/><rect x="24" y="4" width="20" height="3" fill="#a07850" opacity=".7"/><path d="M18 14h32v6c8 4 12 12 12 24v30c0 8-6 14-14 14H20c-8 0-14-6-14-14V44c0-12 4-20 12-24z" fill="rgba(210,230,235,.10)" stroke="rgba(255,226,160,.6)" stroke-width="1.3"/>${JAR[g.id]}<path d="M14 40v38" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".22"/></svg>`;
 
   A.mods.potion = {
-    init() { build(); }, beforeShow() {},
+    init() { build(); }, beforeShow() {}, rebuild() { built = false; build(); },
     show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } sizeCv(); }
   };
   function build() {
-    if (built) return; built = true; layer = A.$('#labLayer');
-    layer.innerHTML = `<canvas id="labCv" width="1080" height="1920"></canvas><div class="lab__moon"></div>
-      <div class="lab__t"><small>алхимическая лаборатория</small></div>
-      ${FLASKS.map((f, i) => `<button class="flask3" data-k="${f.k}" style="--c:${f.c};left:${102 + i * 148}px"><div class="fl3">${flask(f.c)}</div><span>${A.MOODS[f.k]}</span></button>`).join('')}
-      <div class="lab__hint" id="labHint">Выбери настроение на полке</div>
-      ${INGR.map((g, i) => `<div class="ing3" data-id="${g.id}" style="--c:${g.c};left:${112 + i * 176}px"><div class="jar3">${jar(g)}</div><span>${g.n}</span></div>`).join('')}
-      <button class="lab__pot" aria-label="Котёл"></button><div class="lab__res" id="labRes"></div>`;
+    const ori = A.scene.ori(); if (built && lastOri === ori) return; built = true; lastOri = ori; CFG = LABCFG[ori]; POT = CFG.pot; layer = A.$('#labLayer'); const sel0 = [...sel], ing0 = [...ing];
+    layer.innerHTML = `<img class="lab__fg" src="img/lab-fg${ori === 'landscape' ? '-l' : ''}.webp" alt=""><canvas id="labCv" width="${CFG.w}" height="${CFG.h}"></canvas>${ori === 'portrait' ? '<div class="lab__moon"></div>' : ''}
+      <div class="lab__t" style="top:${CFG.title}px"><small>алхимическая лаборатория</small></div>
+      ${FLASKS.map((f, i) => { const [x, y] = CFG.fl(i); return `<button class="flask3 ${sel.has(f.k) ? 'on' : ''}" data-k="${f.k}" style="--c:${f.c};left:${x}px;top:${y}px"><div class="fl3">${flask(f.c)}</div><span>${A.MOODS[f.k]}</span></button>`; }).join('')}
+      <div class="lab__hint" id="labHint" style="left:${CFG.hint[0]}px;top:${CFG.hint[1]}px;width:${ori === 'landscape' ? 900 : 960}px;text-align:center">Выбери настроение на полке</div>
+      ${INGR.map((g, i) => { const [x, y] = CFG.jar(i); return `<div class="ing3" data-id="${g.id}" style="--c:${g.c};left:${x}px;top:${y}px"><div class="jar3">${jar(g)}</div><span>${g.n}</span></div>`; }).join('')}
+      <button class="lab__pot" aria-label="Котёл" style="left:${POT.x - 290}px;top:${POT.y - 70}px"></button><div class="lab__res" id="labRes" style="left:${CFG.res[0]}px;top:${CFG.res[1]}px;width:${CFG.res[2]}px"></div>`;
     cv = A.$('#labCv'); cx = cv.getContext('2d');
     A.$$('.flask3', layer).forEach(b => { b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', () => pickFlask(b)); });
     A.$$('.ing3', layer).forEach(bindDrag);
-    const pot = A.$('.lab__pot', layer); pot.addEventListener('pointerdown', e => e.stopPropagation()); pot.addEventListener('click', brew);
+    const pot = A.$('.lab__pot', layer); pot.addEventListener('pointerdown', e => e.stopPropagation()); pot.addEventListener('click', brew); mix();
   }
   const sizeCv = () => {};
   const hint = s => { const h = A.$('#labHint', layer); h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); };
@@ -67,12 +68,12 @@
   function frame(now) {
     requestAnimationFrame(frame); if (A.scene.room() !== 'lab') { last = now; return; }
     const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; hot += ((brewing ? 1 : .35 + .1 * (sel.size + ing.length)) - hot) * dt * 2;
-    cx.clearRect(0, 0, 1080, 1920);
+    cx.clearRect(0, 0, CFG.w, CFG.h);
     liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(',');
     // fire under the pot
     cx.globalCompositeOperation = 'lighter';
-    const fg = cx.createRadialGradient(540, 1430, 0, 540, 1430, 330); fg.addColorStop(0, `rgba(255,150,60,${.32 + .12 * Math.sin(t * 9) * hot})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(100, 1150, 880, 560);
-    if (Math.random() < dt * (30 + 50 * hot)) flames.push({ x: 540 + R(-120, 120), y: 1452, vy: -R(60, 150), life: 0, ttl: R(.4, .8), s: R(10, 22) });
+    const fg = cx.createRadialGradient(CFG.fire[0], CFG.fire[1], 0, CFG.fire[0], CFG.fire[1], 330); fg.addColorStop(0, `rgba(255,150,60,${.32 + .12 * Math.sin(t * 9) * hot})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(CFG.fire[0] - 440, CFG.fire[1] - 280, 880, 560);
+    if (Math.random() < dt * (30 + 50 * hot)) flames.push({ x: CFG.fire[0] + R(-120, 120), y: CFG.fire[1] + 22, vy: -R(60, 150), life: 0, ttl: R(.4, .8), s: R(10, 22) });
     flames = flames.filter(f => { f.life += dt; if (f.life > f.ttl) return false; const k = f.life / f.ttl; f.y += f.vy * dt; f.x += Math.sin(t * 8 + f.s) * 12 * dt; cx.globalAlpha = (1 - k) * .55; const g = cx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.s * (1 - k * .5)); g.addColorStop(0, 'rgba(255,200,90,1)'); g.addColorStop(1, 'rgba(255,90,20,0)'); cx.fillStyle = g; cx.fillRect(f.x - 30, f.y - 40, 60, 80); return true; });
     cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
     // the liquid

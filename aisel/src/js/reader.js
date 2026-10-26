@@ -66,7 +66,7 @@ A.reader = (() => {
   }
 
   async function openReader(book, rect) {
-    if (!el) build(); const text = await A.txt.get(book.id); if (!text) { A.toast('Текст этой книги не найден: загрузи файл заново'); return; } b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
+    if (!el) build(); let text = await A.txt.get(book.id); if (!text) text = '# ' + book.title + '\n\nУ этой книги пока нет текста для чтения.\n\nДолгое нажатие на корешок откроет описание, а кнопка «+» на полке позволит загрузить PDF, EPUB или TXT.'; b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
     A.$('#rdT', el).textContent = b.title; A.$('#rdA', el).textContent = b.author || ''; flow.innerHTML = html(text); style();
     el.hidden = false; el.classList.remove('setting'); el.classList.add('chrome'); if (b.status === 'want') { b.status = 'reading'; b.started = b.started || Date.now(); } p = b.read || 0;
     if (!b.pages) b.pages = A.pagesEst(text); b._len = text.length; maxSeen = 0; A.save();

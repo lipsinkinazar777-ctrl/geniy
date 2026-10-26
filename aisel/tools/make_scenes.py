@@ -81,70 +81,62 @@ def wood(h, w, base=(104, 72, 44), pl=118):
         t = rng.normal(1, .1); y2 = min(h, y + pl + int(rng.integers(-14, 20)))
         out[y:y2] = np.array(base, np.float32) * t * (1 + g[y:y2, :, None]); out[y:y2][:3] *= .35; out[max(y, y2 - 3):y2] *= .3; y = y2
     return out
-# ------------------------------------------------------------------ alchemy lab plate (portrait 1080x1920)
-def lab():
-    W, H = 1080, 1920; yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    # stone wall
+# ------------------------------------------------------------------ alchemy lab: far wall (window, shelf) + near layer (hearth, iron pot, bench), both orientations
+def lab(land=False):
+    W, H = (1920, 1080) if land else (1080, 1920); sfx = '-l' if land else ''
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+    cfg = dict(win=(120, 560, 90, 560), shelf=(430, 480), pot=(1290, 600, 252, 62), bench=830) if land else dict(win=(300, 780, 150, 760), shelf=(930, 980), pot=(540, 1130, 252, 62), bench=1500)
+    wx0, wx1, wtop, wsill = cfg['win']; sh0, sh1 = cfg['shelf']; cx, rcy, rrx, rry = cfg['pot']; bench0 = cfg['bench']
     wall = np.zeros((H, W, 3), np.float32); wall[...] = (36, 40, 42)
-    bl = Image.new('L', (W, H), 0); d = ImageDraw.Draw(bl); y = 0; row = 0
-    shade = np.zeros((H, W), np.float32)
-    while y < 1500:
+    bl = Image.new('L', (W, H), 0); d = ImageDraw.Draw(bl); y = 0; row = 0; shade = np.zeros((H, W), np.float32)
+    while y < bench0 + 40:
         h = int(rng.integers(105, 135)); x = -int(rng.integers(0, 200)) if row % 2 else 0
         while x < W:
             w = int(rng.integers(190, 320)); v = rng.normal(0, 6); shade[max(0, y):y + h, max(0, x):x + w] = v; d.rectangle([x, y, x + w, y + h], outline=255, width=5); x += w
         y += h; row += 1
     edges = gblur(np.asarray(bl).astype(np.float32) / 255.0, 2.2)
-    wall += shade[..., None] + noise(H, W, 3, 4)[..., None] + noise(H, W, 18, 5)[..., None]
-    wall = wall * (1 - .55 * edges[..., None]); wall *= (.8 + .35 * np.clip(1 - np.hypot((xx - 540) / 700, (yy - 700) / 900), 0, 1))[..., None]
-    wall[..., 2] += 4
-    # arched window onto the misty oak forest
-    ar = mask((W, H), lambda dd: (dd.rectangle([300, 420, 780, 760], fill=255), dd.ellipse([300, 150, 780, 690], fill=255)))
-    fo = Image.open(SP + '28.webp').convert('RGB'); fo = fo.resize((int(fo.width * 700 / fo.height), 700)).crop((0, 0, 480, 700)) if fo.width * 700 / fo.height >= 480 else fo.resize((480, 700))
-    win = np.zeros((H, W, 3), np.float32); win[150:850 if False else 850, 300:780] = 0
-    fo = fo.resize((480, 610)); fa = np.asarray(fo).astype(np.float32) * np.array([.55, .72, .95]) + np.array([4, 10, 22])
-    win[150:760, 300:780] = fa; arch = gblur(ar, 1.2)
-    frame = gblur(mask((W, H), lambda dd: (dd.rectangle([262, 420, 818, 780], fill=255), dd.ellipse([262, 112, 818, 728], fill=255))), 1.2) - arch
-    wall = blend(wall, win, arch); fr = np.stack([22, 24, 25], -1)[None, None, :] * (.7 + .5 * np.clip(1 - (xx - 262) / 556, 0, 1))[..., None] * (1 + noise(H, W, 4, .08)[..., None])
-    wall = blend(wall, fr, np.clip(frame, 0, 1))
-    wall[150:780, 300:780] *= (1 - arch[150:780, 300:780, None] * (.15 - .3 * np.clip(1 - (yy[150:780, 300:780, None] - 150) / 600, 0, 1)))
-    # sill + moonlight on it
-    sill = mask((W, H), lambda dd: dd.rectangle([240, 760, 840, 800], fill=255)); wall = blend(wall, (58, 62, 64), gblur(sill, 1)) 
-    # wood: shelf plank and the bench, textured from the desk photo
-    wd = wood(760, W)
-    wall[930:980] = wd[40:90] * .75; wall[925:930] = (118, 86, 54); wall[980:996] = wall[980:996] * .5
-    bench0 = 1500; bt = (yy[bench0:] - bench0) / (H - bench0)
-    wall[bench0:] = wood(H - bench0, W, pl=150) * (.8 - .42 * bt)[..., None]; wall[bench0 - 6:bench0] = (112, 80, 50)
-    wall[bench0:bench0 + 70] *= np.linspace(.55, 1, 70)[:, None, None]
-    # hearth slab + iron pot with legs
-    cx = 540; slab = mask((W, H), lambda dd: dd.ellipse([cx - 360, 1390, cx + 360, 1530], fill=255)); wall = blend(wall, np.stack([54, 52, 50], -1) * (1 + noise(H, W, 3, .08)[..., None]), gblur(slab, 1.2))
-    shadow = gblur(mask((W, H), lambda dd: dd.ellipse([cx - 330, 1440, cx + 330, 1540], fill=255)), 26) * .6; wall = wall * (1 - shadow[..., None] * .5)
-    rcy, rrx, rry = 1130, 262, 74
-    prof = lambda y: 262 + (335 - 262) * np.sin(np.clip((y - rcy) / 150, 0, 1) * np.pi / 2) if y < rcy + 150 else 335 - (335 - 190) * ((y - rcy - 150) / 150) ** 1.2
-    def potm(dd):
-        pts = [(cx - prof(y), y) for y in range(rcy, rcy + 300)] + [(cx + prof(y), y) for y in range(rcy + 299, rcy - 1, -1)]; dd.polygon(pts, fill=255)
-        for lx in (-170, 0, 170): dd.polygon([(cx + lx - 28, rcy + 270), (cx + lx + 28, rcy + 270), (cx + lx + 18, rcy + 340), (cx + lx - 18, rcy + 340)], fill=255)
-    pm = mask((W, H), potm); pm = np.maximum(pm, mask((W, H), lambda dd: dd.ellipse([cx - rrx - 6, rcy - rry, cx + rrx + 6, rcy + rry], fill=255)))
-    half = np.where(yy < rcy + 150, 262 + 73 * np.sin(np.clip((yy - rcy) / 150, 0, 1) * np.pi / 2), 335 - 145 * np.clip((yy - rcy - 150) / 150, 0, 1) ** 1.2)
-    nxp = np.clip((xx - cx) / half, -1, 1); lit = .22 + .5 * np.clip(.1 - nxp * .9, 0, 1) + .5 * np.exp(-((nxp + .5) * 4) ** 2) * .5
-    warm = np.clip((yy - (rcy + 100)) / 220, 0, 1) * np.exp(-(nxp * 1.3) ** 2) * .5
+    wall += shade[..., None] + noise(H, W, 3, 4)[..., None] + noise(H, W, 18, 5)[..., None]; wall = wall * (1 - .55 * edges[..., None]); wall[..., 2] += 4
+    ww = wx1 - wx0; ar = mask((W, H), lambda dd: (dd.rectangle([wx0, wtop + ww // 2, wx1, wsill], fill=255), dd.ellipse([wx0, wtop, wx1, wtop + ww], fill=255)))
+    fo = Image.open(SP + '28.webp').convert('RGB'); fo = fo.resize((ww, wsill - wtop), Image.LANCZOS)
+    win = np.zeros((H, W, 3), np.float32); win[wtop:wsill, wx0:wx1] = np.asarray(fo).astype(np.float32) * np.array([.55, .72, .95]) + np.array([4, 10, 22]); arch = gblur(ar, 1.2)
+    frame = gblur(mask((W, H), lambda dd: (dd.rectangle([wx0 - 38, wtop + ww // 2, wx1 + 38, wsill + 20], fill=255), dd.ellipse([wx0 - 38, wtop - 38, wx1 + 38, wtop + ww + 38], fill=255))), 1.2) - arch
+    wall = blend(wall, win, arch); fr = np.stack([22, 24, 25], -1)[None, None, :] * (.7 + .5 * np.clip(1 - (xx - wx0) / ww, 0, 1))[..., None] * (1 + noise(H, W, 4, .08)[..., None]); wall = blend(wall, fr, np.clip(frame, 0, 1))
+    wall = wall * (1 - arch[..., None] * (.15 - .3 * np.clip(1 - (yy[..., None] - wtop) / (wsill - wtop), 0, 1)))
+    sill = mask((W, H), lambda dd: dd.rectangle([wx0 - 60, wsill + 20, wx1 + 60, wsill + 60], fill=255)); wall = blend(wall, (58, 62, 64), gblur(sill, 1))
+    wd = wood(300, W); x0s = 700 if land else 0
+    pl = mask((W, H), lambda dd: dd.rectangle([x0s, sh0, W if land else W, sh1], fill=255)); plank = np.zeros((H, W, 3), np.float32); plank[sh0:sh1] = wd[40:40 + sh1 - sh0] * .75; wall = blend(wall, plank, gblur(pl, .8)); wall[sh0 - 5:sh0, x0s:] = (118, 86, 54); wall[sh1:sh1 + 16, x0s:] *= .5
+    v = np.clip(1 - np.hypot((xx - W / 2) / (W * .76), (yy - H * .5) / (H * .65)) ** 1.7, .18, 1); far = wall * v[..., None]
+    Image.fromarray(np.clip(far + noise(H, W, 1, 2.2)[..., None], 0, 255).astype(np.uint8)).save(OUT + f'lab-bg{sfx}.webp', quality=82, method=6)
+    # ---- near layer
+    fg = np.zeros((H, W, 3), np.float32); al = np.zeros((H, W), np.float32)
+    bt = (yy - bench0) / max(1, H - bench0); bw = wood(H, W, pl=150) * (.8 - .42 * np.clip(bt, 0, 1))[..., None]; bm = (yy >= bench0).astype(np.float32); bm = gblur(bm, 1.0)
+    fg = blend(fg, bw, bm); al = np.maximum(al, bm); fg[bench0 - 6:bench0 + 70] *= np.linspace(.55, 1, 76)[:, None, None]
+    hy = bench0 - 60; sl = gblur(mask((W, H), lambda dd: dd.ellipse([cx - 380, hy - 20, cx + 380, hy + 140], fill=255)), 1.2); fg = blend(fg, np.stack([54, 52, 50], -1) * (1 + noise(H, W, 3, .08)[..., None]), sl); al = np.maximum(al, sl)
+    shw = gblur(mask((W, H), lambda dd: dd.ellipse([cx - 340, hy + 20, cx + 340, hy + 150], fill=255)), 26) * .6; fg = fg * (1 - shw[..., None] * .5); al = np.maximum(al, shw)
+    prof = lambda yv: np.where(yv < rcy + 150, rrx + 73 * np.sin(np.clip((yv - rcy) / 150, 0, 1) * np.pi / 2), 335 - 145 * np.clip((yv - rcy - 150) / 150, 0, 1) ** 1.2 + (rrx - 262))
+    half = prof(yy); prow = np.clip((yy - rcy) / 300, 0, 1)
+    body = ((yy >= rcy) & (yy <= rcy + 300) & (np.abs(xx - cx) <= half)).astype(np.float32)
+    legs = np.zeros((H, W), np.float32)
+    for lx in (-170, 0, 170): legs[(yy >= rcy + 270) & (yy <= rcy + 340) & (np.abs(xx - (cx + lx)) <= 28 - (yy - rcy - 270) * .14)] = 1
+    top = mask((W, H), lambda dd: dd.ellipse([cx - rrx - 6, rcy - rry, cx + rrx + 6, rcy + rry], fill=255)); pm = np.maximum(np.maximum(body, legs), top)
+    nxp = np.clip((xx - cx) / np.maximum(half, 1), -1, 1); lit = .22 + .5 * np.clip(.1 - nxp * .9, 0, 1) + .25 * np.exp(-((nxp + .5) * 4) ** 2); warm = np.clip((yy - (rcy + 100)) / 220, 0, 1) * np.exp(-(nxp * 1.3) ** 2) * .5
     pot = np.stack([30 * lit + 130 * warm, 29 * lit + 52 * warm, 29 * lit + 14 * warm], -1) * (1 + (noise(H, W, 3, .07) + noise(H, W, 30, .05))[..., None])
-    wall = blend(wall, pot, gblur(pm, .9))
+    fg = blend(fg, pot, gblur(pm, .9)); al = np.maximum(al, gblur(pm, .9))
     ro = mask((W, H), lambda dd: dd.ellipse([cx - rrx - 8, rcy - rry - 4, cx + rrx + 8, rcy + rry + 4], fill=255)); ri = mask((W, H), lambda dd: dd.ellipse([cx - rrx + 22, rcy - rry + 14, cx + rrx - 22, rcy + rry - 12], fill=255))
-    rl = .6 + .4 * np.clip(-(xx - cx) / rrx, -1, 1); wall = blend(wall, np.stack([92 * rl, 86 * rl, 78 * rl], -1) * (1 + noise(H, W, 2, .05)[..., None]), gblur(np.clip(ro - ri, 0, 1), .8))
-    wall = blend(wall, (8, 7, 6), gblur(ri, 1))
-    # vignette + grade
-    v = np.clip(1 - np.hypot((xx - 540) / 820, (yy - 960) / 1250) ** 1.7, .18, 1); wall *= v[..., None]
-    out = np.clip(wall + noise(H, W, 1, 2.2)[..., None], 0, 255).astype(np.uint8)
-    Image.fromarray(out).save(OUT + 'lab.webp', quality=82, method=6); print('lab')
+    rl = .6 + .4 * np.clip(-(xx - cx) / rrx, -1, 1); fg = blend(fg, np.stack([92 * rl, 86 * rl, 78 * rl], -1) * (1 + noise(H, W, 2, .05)[..., None]), gblur(np.clip(ro - ri, 0, 1), .8)); fg = blend(fg, (8, 7, 6), gblur(ri, 1)); al = np.maximum(al, gblur(ro, .8))
+    fg *= v[..., None] ** .6
+    out = np.dstack([np.clip(fg, 0, 255), np.clip(al * 255, 0, 255)]).astype(np.uint8); Image.fromarray(out, 'RGBA').save(OUT + f'lab-fg{sfx}.webp', quality=84, method=6, lossless=False); print('lab' + sfx)
+def lab_l(): lab(True)
 
-# ------------------------------------------------------------------ library backdrop (portrait 1080x1920) from the user's photo
-def lib():
-    im = Image.open(SP + '23.webp').convert('RGB'); W, H = 1080, 1920
-    s = max(W / im.width, H / im.height); im = im.resize((int(im.width * s) + 1, int(im.height * s) + 1), Image.LANCZOS); x0 = (im.width - W) // 2
-    im = im.crop((x0, 0, x0 + W, H)).filter(ImageFilter.GaussianBlur(2.2)); a = np.asarray(im).astype(np.float32)
-    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); v = np.clip(1 - np.hypot((xx - 540) / 800, (yy - 700) / 1300) ** 1.6, .15, 1)
+# ------------------------------------------------------------------ library backdrop from the user's photo, both orientations
+def lib(land=False):
+    im = Image.open(SP + '23.webp').convert('RGB'); W, H = (1920, 1080) if land else (1080, 1920); sfx = '-l' if land else ''
+    s = max(W / im.width, H / im.height); im = im.resize((int(im.width * s) + 1, int(im.height * s) + 1), Image.LANCZOS); x0 = (im.width - W) // 2; y0 = (im.height - H) // 2 if land else 0
+    im = im.crop((x0, y0, x0 + W, y0 + H)).filter(ImageFilter.GaussianBlur(2.2 if not land else 3)); a = np.asarray(im).astype(np.float32)
+    yy, xx = np.mgrid[0:H, 0:W].astype(np.float32); v = np.clip(1 - np.hypot((xx - W / 2) / (W * .74), (yy - H * .36) / (H * .68)) ** 1.6, .15, 1)
     a = a * (.62 * v[..., None]) + np.array([2, 1, 0]); out = np.clip(a + noise(H, W, 1, 2)[..., None], 0, 255).astype(np.uint8)
-    Image.fromarray(out).save(OUT + 'lib.webp', quality=80, method=6); print('lib')
+    Image.fromarray(out).save(OUT + f'lib{sfx}.webp', quality=80, method=6); print('lib' + sfx)
+def lib_l(): lib(True)
 if __name__ == '__main__':
     import sys
-    for f in (sys.argv[1:] or ['bowl', 'lab', 'lib']): globals()[f]()
+    for f in (sys.argv[1:] or ['bowl', 'lab', 'lab_l', 'lib', 'lib_l']): globals()[f]()

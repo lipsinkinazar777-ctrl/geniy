@@ -19,20 +19,10 @@
   }
 
   const mod = A.mods.quotes = {
-    init(root) { el = root; root.innerHTML = `<div class="wrap"><div data-rise><div class="eyebrow" id="qEb"></div><h1 class="h1">Мой <em>цитатник</em></h1></div><div class="chips" id="qF" data-rise></div><div id="qList"></div></div>`; A.$('#qF', root).addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; book = c.dataset.b; A.snd.page(); render(true); }); A.$('#qList', root).addEventListener('click', e => { const c = e.target.closest('.pc'); if (c) { A.snd.page(); view(c.dataset.id); } }); render(); },
-    show() { A.rise(el); render(true); A.fab.show(() => editQuote()); },
-    refresh() { el && render(); }, view, editQuote, cardHTML
+    init() {}, show() {}, refresh() { A.casket && A.casket.refresh(); }, view, editQuote, cardHTML
   };
 
-  function render(anim) {
-    const qs = A.state.quotes.slice().sort((a, b) => b.date - a.date);
-    A.$('#qEb', el).textContent = `${qs.length} ${A.plural(qs.length, 'открытка', 'открытки', 'открыток')}`;
-    const withBooks = [...new Set(qs.map(q => q.bookId).filter(Boolean))].map(id => A.bookById(id)).filter(Boolean);
-    if (book !== 'all' && !withBooks.some(b => b.id === book)) book = 'all';
-    A.$('#qF', el).innerHTML = qs.length ? `<button class="chip ${book === 'all' ? 'on' : ''}" data-b="all">Все</button>${withBooks.map(b => `<button class="chip ${book === b.id ? 'on' : ''}" data-b="${b.id}">${A.esc(b.title)}</button>`).join('')}` : '';
-    const list = qs.filter(q => book === 'all' || q.bookId === book), box = A.$('#qList', el);
-    box.innerHTML = list.length ? list.map((q, i) => cardHTML(q, anim ? 'drop' : '', i)).join('') : `<div class="empty"><b>Здесь будут цитаты</b>Нажми на золотую кнопку и сохрани фразу, которая запомнилась. Она станет открыткой.</div>`;
-  }
+  function render() { A.casket && A.casket.refresh(); }
 
   /* ---------------------------------------------------------------- viewer */
   function view(id) {

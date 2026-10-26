@@ -45,6 +45,7 @@ gut = np.exp(-((xx - (680 + (yy - 190) * .25)) / 30) ** 2) * .22              # 
 tex = 1 + fnoise(60) * .045 + fnoise(18) * .03 + fnoise(6) * .018
 page = base[None, None, :] * (light * edge * (1 - gut) * tex)[..., None]
 m3 = (mask / 255.0)[..., None]; out = a * (1 - m3) + np.clip(page, 0, 255) * m3
+Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).save('/home/user/geniy/aisel/tools/_cache/clean_full.png'); Image.fromarray(a.astype(np.uint8)).save('/home/user/geniy/aisel/tools/_cache/orig.png')
 res = Image.fromarray(np.clip(out, 0, 255).astype(np.uint8)).crop(CROP)
 res = res.resize((res.width * 2, res.height * 2), Image.LANCZOS).filter(ImageFilter.UnsharpMask(1.6, 70, 2))
 res.save('/home/user/geniy/aisel/src/img/room.webp', quality=82, method=6)
