@@ -22,12 +22,12 @@ A.scene = (() => {
   const sp = (x) => ({ x, v: 0, t: x });
   const step = (s, dt, k, c) => { const n = Math.ceil(dt / .008); const h = dt / n; for (let i = 0; i < n; i++) { s.v += (k * (s.t - s.x) - c * s.v) * h; s.x += s.v * h; } };
   const cam = { x: sp(0), y: sp(0), z: sp(1.9) };
-  let VW = innerWidth, VH = innerHeight, DPR = 1, s0 = 1, gx = 0, gy = 0, gxT = 0, gyT = 0, dirty = true, locked = true, focusId = null, saved = null, running = false, last = 0, T = 0, mode = 'gate';
+  let frozen = false, VW = innerWidth, VH = innerHeight, DPR = 1, s0 = 1, gx = 0, gy = 0, gxT = 0, gyT = 0, dirty = true, locked = true, focusId = null, saved = null, running = false, last = 0, T = 0, mode = 'gate';
   const KC = [150, 24];                                           // spring stiffness / damping: lively but settled
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
-  const fitScale = () => { const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
+  const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
   function resize() {
     VW = innerWidth; VH = innerHeight; DPR = 1;
     if (ORI() !== ori) { ori = ORI(); relayout(); }
@@ -52,6 +52,17 @@ A.scene = (() => {
     const mkp = (n, d, rMin, rMax, a, kind) => { for (let i = 0; i < n; i++) dust.push({ x: rnd(0, 2400), y: rnd(0, 1400), d, r: rnd(rMin, rMax), a: a * rnd(.5, 1), ph: rnd(0, 6.28), sp: rnd(.3, 1.1), vx: rnd(-6, 6), vy: rnd(-9, -2), kind }); };
     mkp(10, .8, 1, 1.8, .24, 'warm'); mkp(8, 1.08, 1.2, 2.2, .26, 'gold');
   }
+  /* the reading hall: the hearth and every candle breathe on their own phase; embers climb from the logs */
+  const LIBL = [[952, 372, 700, 1, .8], [50, 318, 300, .8, 1.3], [790, 122, 220, .55, 2.1], [1068, 104, 240, .6, 3.4], [1640, 92, 230, .6, 4.2], [1384, 292, 200, .5, 5.1], [512, 160, 170, .4, 6], [672, 292, 170, .4, 7.3], [1280, 190, 220, .35, 8.2]];
+  let emAcc = 0;
+  function libLight(dt, vis) {
+    const s = sNow(), au = A.snd.fireLevel ? A.snd.fireLevel() : 0; g.save(); g.globalCompositeOperation = 'lighter';
+    LIBL.forEach(([x, y, r, a, ph], i) => {
+      const f = i === 0 ? .86 + .08 * Math.sin(T * 5.7) + .05 * Math.sin(T * 9.9 + 1.1) + au * .16 : .82 + .12 * Math.sin(T * (4.6 + i * .7) + ph) + .07 * Math.sin(T * (8.3 + i) + ph * 2), [sx, sy] = toScreen(x, y), R = r * s, gr = g.createRadialGradient(sx, sy, 0, sx, sy, R);
+      gr.addColorStop(0, `rgba(255,${i ? 170 : 150},${i ? 80 : 60},${(a * .34 * f * vis).toFixed(3)})`); gr.addColorStop(.4, `rgba(255,${i ? 130 : 110},50,${(a * .1 * f * vis).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,100,30,0)'); g.fillStyle = gr; g.fillRect(sx - R, sy - R, R * 2, R * 2);
+    }); g.restore();
+    emAcc += dt * (3 + au * 5); while (emAcc > 1) { emAcc--; embers.push({ x: 952 + rnd(-46, 46), y: 392 - rnd(0, 30), vx: rnd(-14, 14), vy: rnd(-105, -45), r: rnd(1, 2), life: 0, max: rnd(1.1, 2.4), ph: rnd(0, 6) }); }
+  }
   function particles(dt, vis) {
     g.clearRect(0, 0, VW, VH); const s = sNow(), padX = VW + 120, padY = VH + 120;
     if (roomName === 'main' && A.fire) {                         // the fire lights the table: one soft gradient, redrawn here, no big blended layers
@@ -59,6 +70,7 @@ A.scene = (() => {
       if (L < 1) { g.globalAlpha = (1 - L) * .5; g.fillStyle = '#05071a'; g.fillRect(0, 0, VW, VH); g.globalAlpha = 1; }
       if (L > .01) { const [fx, fy] = toScreen(FIRE.x, FIRE.y - 40), R = Math.max(VW, VH) * .75 * Math.min(1.6, s / s0 * .7 + .5), gr = g.createRadialGradient(fx, fy, 0, fx, fy, R); gr.addColorStop(0, `rgba(255,150,60,${(.2 * L * f).toFixed(3)})`); gr.addColorStop(.45, `rgba(255,110,40,${(.07 * L * f).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,100,30,0)'); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(0, 0, VW, VH); g.globalCompositeOperation = 'source-over'; }
     }
+    if (roomName === 'lib') libLight(dt, vis);
     g.save(); g.globalCompositeOperation = 'lighter';
     for (const p of dust) {
       p.x += (p.vx + Math.sin(T * p.sp + p.ph) * 5) * dt; p.y += p.vy * dt;
@@ -77,7 +89,7 @@ A.scene = (() => {
     g.restore();
   }
 
-  const roomPlate = name => name === 'main' ? { w: LAY.w, h: LAY.h, img: LAY.img } : { w: LAY.room[0], h: LAY.room[1], img: LAY.rooms[name] };
+  const roomPlate = name => name === 'main' ? { w: LAY.w, h: LAY.h, img: LAY.img } : { w: (LAY.sizes && LAY.sizes[name] || LAY.room)[0], h: (LAY.sizes && LAY.sizes[name] || LAY.room)[1], img: LAY.rooms[name] };
   function setPlates() {
     const want = { main: LAY.img, lab: LAY.rooms.lab, lib: LAY.rooms.lib, cit: LAY.rooms.cit };
     Object.keys(PL).forEach(k => { const el = PL[k], u = want[k]; if (el.dataset.src !== u) { el.dataset.src = u; el.src = u; } });
@@ -112,7 +124,11 @@ A.scene = (() => {
   }
   const press = (h, on) => { HS.forEach(x => x.fxs && x.fxs.forEach(f => f.classList.remove('on'))); if (h && on && h.id !== 'enter') h.fxs.forEach(f => f.classList.add('on')); };
   let labelsT = 0;
-  const showLabels = (ms = 4200) => { A.$('#labels').classList.add('show'); clearTimeout(labelsT); labelsT = setTimeout(() => A.$('#labels').classList.remove('show'), ms); };
+  function untangle() {                                           // labels that would print over each other are stacked apart
+    const L = [...A.$$('#labels .lab')]; L.forEach(l => { if (l.dataset.t0 == null) l.dataset.t0 = parseFloat(l.style.top); l.style.top = l.dataset.t0 + 'px'; }); const rs = L.map(l => l.getBoundingClientRect()), k = sNow();
+    for (let i = 0; i < L.length; i++) for (let j = 0; j < i; j++) { const a = rs[j], b = rs[i]; if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) { L[i].style.top = (parseFloat(L[i].style.top) + (a.bottom - b.top + 8) / k) + 'px'; rs[i] = L[i].getBoundingClientRect(); } }
+  }
+  const showLabels = (ms = 4200) => { untangle(); A.$('#labels').classList.add('show'); clearTimeout(labelsT); labelsT = setTimeout(() => A.$('#labels').classList.remove('show'), ms); };
 
   /* ---- input: drag to look around with inertia, tap an object */
   let drag = null, sweepOn = false;
@@ -154,7 +170,7 @@ A.scene = (() => {
 
   /* ---- frame */
   function loop(now) {
-    if (!running) return; requestAnimationFrame(loop);
+    if (!running) return; requestAnimationFrame(loop); if (frozen) { last = now; return; }
     const dtm = now - last; if (document.hidden) { last = now; return; } if (mode === 'panel' && dtm < 30) return;
     const dt = Math.min(.05, dtm / 1000); last = now; T += dt;
     if (!drag || !drag.moved) { step(cam.x, dt, KC[0], KC[1]); step(cam.y, dt, KC[0], KC[1]); }
@@ -170,7 +186,7 @@ A.scene = (() => {
     setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
       const r = roomPlate(name); roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
       setBg(name); saved = name === 'main' ? saved : null; focusId = null; resize();
-      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lab' && ori === 'portrait' ? 110 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
+      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lab' && ori === 'portrait' ? 110 : 0) + (name === 'lib' && ori === 'portrait' ? 95 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2 + (name === 'lib' && ori === 'landscape' ? RH * .09 : 0); cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
     layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y),
     clientToRoom: (x, y) => toRoom(x, y),
@@ -203,7 +219,7 @@ A.scene = (() => {
     avatar() { const c = mk(200, 200), x = c.getContext('2d'), gr = x.createRadialGradient(100, 90, 4, 100, 100, 120); gr.addColorStop(0, '#2a1d12'); gr.addColorStop(1, '#050302'); x.fillStyle = gr; x.fillRect(0, 0, 200, 200);
       x.font = '500 124px "Cormorant Garamond",Georgia,serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,214,140,.7)'; x.shadowBlur = 24; x.fillStyle = '#f3d79a'; x.fillText('А', 100, 108); return c.toDataURL('image/jpeg', .9); },
     look(u, v, z = 1) { cancelSweep(); cam.x.t = u; cam.y.t = v; cam.z.t = z; clampT(); },
-    lock(v) { locked = v; }, screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
+    freeze(v) { frozen = v; }, lock(v) { locked = v; }, parallax: () => ({ x: gx, y: gy }), screenOf(id, k = 0) { const h = HS.find(o => o.id === id), b = h.parts[k] || h.bb; return toScreen((b[0] + b[2]) / 2, (b[1] + b[3]) / 2); }, cam: () => ({ x: cam.x.x, y: cam.y.x, z: cam.z.x })
   };
   return api;
 })();

@@ -42,13 +42,13 @@ const curtain = A.$('#curtain');
 function enterRoom(tab, obj) {
   const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
   if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
-  busy(); A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
+  busy(); A.tab = tab; A.$('#hint').classList.remove('on'); document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
   const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
   A.snd.whoosh(1);
   if (prev === 'room') { A.scene.focus(obj || OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
 function exitRoom() {
-  if (moving) return; busy(); const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide();
+  if (moving) return; busy(); const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1); if (tab === 'quotes') A.casket.hide(); if (A.mods[tab] && A.mods[tab].hide) A.mods[tab].hide();
   setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); }, 620);
 }
 A.go = (tab, opt = {}) => {

@@ -76,10 +76,9 @@ def lib_sprite(box, size, name):
     w, h = round((sx1 - sx0) * k), round((sy1 - sy0) * k); Image.fromarray(spr, 'RGBA').resize((w, h), Image.LANCZOS).save(OUT + name, optimize=True)
     return [round((sx0 - x0) * k), round((sy0 - y0) * k), w, h], [round((445 - x0) * k), round((960 - y0) * k)]
 LIBP_BOX, LIBL_BOX = (0, 0, 896, 1195), (0, 650, 896, 1154)
-LIB_FP, LIB_BP = lib_sprite(LIBP_BOX, (1080, 1920), 'flame-lp.png'); LIB_FL, LIB_BL = lib_sprite(LIBL_BOX, (1920, 1080), 'flame-ll.png')
 # ---- plates for the rooms
-save(fit(a37, (0, 0, 358, 603), (1080, 1920)), 'lab-p.webp'); save(fit(a37, (0, 648, 358, 1250), (1080, 1920)), 'cit-p.webp'); save(fit(a39w, LIBP_BOX, (1080, 1920)), 'lib-p.webp')
-save(fit(a38, (855, 328, 1280, 610), (1920, 1080)), 'lab-l.webp'); save(fit(a38, (0, 0, 425, 325), (1920, 1080)), 'cit-l.webp'); save(fit(a39w, LIBL_BOX, (1920, 1080)), 'lib-l.webp')
+save(fit(a37, (0, 0, 358, 603), (1080, 1920)), 'lab-p.webp'); save(fit(a37, (0, 648, 358, 1250), (1080, 1920)), 'cit-p.webp')
+save(fit(a38, (855, 328, 1280, 610), (1920, 1080)), 'lab-l.webp'); save(fit(a38, (0, 0, 425, 325), (1920, 1080)), 'cit-l.webp')
 import json, base64
 def uri(n): return 'data:image/png;base64,' + base64.b64encode(open(OUT + n, 'rb').read()).decode()
 R = lambda x0, y0, x1, y1: [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]
@@ -92,6 +91,6 @@ LAB_L = {'rx': 194, 'ry': 36, 'pour': [1129, 544], 'cauldron': R(940, 480, 1330,
 CIT_P = {'slot': [608, 1180], 'card': [540, 820, 760]}; CIT_L = {'slot': [1080, 480], 'card': [960, 470, 460]}
 def shift(hs, dy): return {k: [[[x, y + dy] for x, y in poly] for poly in v] for k, v in hs.items()}
 PAGEQ = [[488, 249], [1084, 183], [1052, 541], [456, 607]]
-LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameImg': uri('flame-h.png'), 'page': PAGEQ, 'home': [1450, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-p.webp', 'cit': 'img/cit-p.webp'}, 'flame': FLAME_RECT, 'libFlame': {'img': uri('flame-lp.png'), 'rect': LIB_FP, 'base': LIB_BP}, 'libRows': [[1660, 40, 1000, 230]], 'libTitle': 150, 'libAdd': [950, 400], 'libHs': {'lab': [R(280, 240, 450, 540), R(0, 960, 130, 1130), R(720, 280, 840, 480)], 'quotes': [R(430, 440, 690, 1090)]}},
-       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameImg': uri('flame-h.png'), 'page': PAGEQ, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-l.webp', 'cit': 'img/cit-l.webp'}, 'flame': FLAME_RECT, 'libFlame': {'img': uri('flame-ll.png'), 'rect': LIB_FL, 'base': LIB_BL}, 'libRows': [[745, 120, 1680, 210]], 'libTitle': 90, 'libAdd': [1800, 760], 'libHs': {'lab': [R(40, 86, 390, 450)], 'quotes': [R(800, 0, 1170, 330)]}}}
+LAY = {'portrait': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameImg': uri('flame-h.png'), 'page': PAGEQ, 'home': [1450, 540], 'lab': LAB_P, 'cit': CIT_P, 'room': [1080, 1920], 'sizes': {'lib': [1671, 941]}, 'rooms': {'lab': 'img/lab-p.webp', 'lib': 'img/lib-room.webp', 'cit': 'img/cit-bg-p.webp'}, 'flame': FLAME_RECT, 'libHs': {'quotes': [R(60, 300, 520, 640)], 'lab': [R(1470, 470, 1671, 720)]}},
+       'landscape': {'img': 'img/hub.webp', 'w': 1920, 'h': 1079, 'hs': HUB, 'fire': [1592, 872], 'fireScale': 1, 'flameImg': uri('flame-h.png'), 'page': PAGEQ, 'home': [960, 540], 'lab': LAB_L, 'cit': CIT_L, 'room': [1920, 1080], 'sizes': {'lib': [1671, 941]}, 'rooms': {'lab': 'img/lab-l.webp', 'lib': 'img/lib-room.webp', 'cit': 'img/cit-bg-l.webp'}, 'flame': FLAME_RECT, 'libHs': {'quotes': [R(60, 300, 520, 640)], 'lab': [R(1470, 470, 1671, 720)]}}}
 open('/home/user/geniy/aisel/src/js/layout.js', 'w').write('A.LAYOUTS = ' + json.dumps(LAY) + ';\n')

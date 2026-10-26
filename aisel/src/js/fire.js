@@ -35,8 +35,8 @@ A.fire = (() => {
       return o;
     } catch (e) { return null; }
   }
-  const hubF = makeFlame(A.$('#fireGl')), libF = makeFlame(A.$('#fireGlLib'));
-  let smoke = [], level = 0, target = 0, libLevel = 0, T = 0, sparkAcc = 0, au = 0, ready = false, smokeOn = false;
+  const hubF = makeFlame(A.$('#fireGl'));
+  let smoke = [], level = 0, target = 0, T = 0, sparkAcc = 0, au = 0, ready = false, smokeOn = false;
   const R = (a, b) => a + Math.random() * (b - a);
   const smk = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(140,140,140,1)'); gr.addColorStop(.2, 'rgba(140,140,140,.5)'); gr.addColorStop(1, 'rgba(140,140,140,0)'); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; })();
 
@@ -44,22 +44,17 @@ A.fire = (() => {
     const L = A.scene.layout(), f = A.scene.fireBase();
     cv.style.cssText = `left:${f.x - BX}px;top:${f.y - BY}px;width:${CW}px;height:${CH}px`;
     if (hubF) { const r = L.flame; hubF.c.style.cssText = `left:${r[0]}px;top:${r[1]}px;width:${r[2]}px;height:${r[3]}px`; hubF.size(r[2], r[3]); hubF.load(L.flameImg); }
-    if (libF && L.libFlame) { const r = L.libFlame.rect; libF.c.style.cssText = `left:${r[0]}px;top:${r[1]}px;width:${r[2]}px;height:${r[3]}px`; libF.size(r[2], r[3]); libF.load(L.libFlame.img); }
     ready = true;
   }
   const flick = t => .93 + .045 * Math.sin(t * 6.3) + .03 * Math.sin(t * 11.3 + 1.3) + .03 * au;     // smooth: never a jump from one frame to the next
   function frame(dt, t) {
     if (!ready) return; T = t; const room = A.scene.room();
     level += (target - level) * Math.min(1, dt * (target > level ? 2.4 : 2.6)); if (Math.abs(target - level) < .002) level = target;
-    libLevel += ((room === 'lib' ? 1 : 0) - libLevel) * Math.min(1, dt * 2.2);
     au += ((A.snd.fireLevel ? A.snd.fireLevel() : 0) - au) * .12;
     if (room === 'main' && A.tab === 'room') {
       if (hubF) hubF.draw(T, level, au);
       if (smoke.length || smokeOn) drawSmoke(dt);
       const f = A.scene.fireBase(); sparkAcc += dt * (2.4 + au * 4) * level * level; while (sparkAcc > 1) { sparkAcc--; A.scene.spark(f.x + R(-34, 34), f.y - R(30, 100)); }
-    } else if (room === 'lib' && libF) {
-      libF.draw(T, libLevel, au);
-      const b = A.scene.layout().libFlame.base; sparkAcc += dt * (2 + au * 4) * libLevel; while (sparkAcc > 1) { sparkAcc--; A.scene.spark(b[0] + R(-40, 40), b[1] - R(40, 130)); }
     }
   }
   function drawSmoke(dt) {

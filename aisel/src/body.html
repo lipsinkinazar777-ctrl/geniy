@@ -11,7 +11,7 @@
     <canvas id="fireGl" class="r-main" aria-hidden="true"></canvas>
     <div id="labels" class="r-main" aria-hidden="true"></div>
     <div id="labLayer" class="r-lab"></div>
-    <div id="libLayer" class="r-lib"><canvas id="fireGlLib" aria-hidden="true"></canvas></div>
+    <div id="libLayer" class="r-lib"></div>
   </div>
 </div>
 <canvas id="scene" aria-hidden="true"></canvas>
@@ -20,13 +20,22 @@
 <div id="hint" aria-hidden="true"></div>
 <div id="curtain" aria-hidden="true"></div>
 
-<!-- GATE: title over the dark room; the touch unlocks sound and walks into the room -->
-<div id="gate">
-  <p class="gate__small">тихая комната ждёт</p>
-  <h1 class="gate__title">Уголок принцессы <em>Айсель</em></h1>
-  <button class="gate__btn" id="gateBtn"><span>Войти</span></button>
-  <p class="gate__hint">включи звук — так уютнее</p>
+<!-- ENTRANCE: the flythrough with its own sound. No button: the gate opens and she walks into the hall. -->
+<div id="intro" aria-label="Вход">
+  <div class="in__bg" id="introBg"></div>
+  <canvas class="in__amb" id="introAmb" aria-hidden="true"></canvas>
+  <video id="introV" playsinline webkit-playsinline preload="auto" poster="video/poster.jpg" disablepictureinpicture>
+    <source src="video/intro.mp4" type="video/mp4">
+    <source src="video/intro.webm" type="video/webm">
+  </video>
+  <div class="in__shade"></div>
+  <div class="in__title"><p class="in__small">тихая комната ждёт</p><h1>Уголок принцессы <em>Айсель</em></h1><i class="in__rule"></i></div>
+  <p class="in__snd" id="introSnd"><svg viewBox="0 0 24 24" class="ico"><use href="#i-sound"/></svg><span>коснись экрана, чтобы услышать</span></p>
+  <button class="in__skip" id="introSkip">пропустить</button>
 </div>
+
+<div id="hands" aria-hidden="true"></div>
+<div id="lib3d" aria-hidden="false"></div>
 
 <div id="app" hidden>
   <button id="back" aria-label="Назад к столу"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>

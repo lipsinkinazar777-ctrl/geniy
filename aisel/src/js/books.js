@@ -6,7 +6,7 @@
 
   const mod = A.mods.books = {
     init() {},
-    show() { A.lib.show(); },
+    show() { A.scene.lock(true); A.lib.show(); }, hide() { A.lib.hide(); },
     beforeShow() {}, refresh() { render(); mod.repaintDetail && mod.repaintDetail(); }, openBook, editBook
   };
   function render() { A.lib && A.lib.render(); }

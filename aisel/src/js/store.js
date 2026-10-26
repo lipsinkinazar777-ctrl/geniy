@@ -107,14 +107,17 @@ A.SUGGEST = [
 
 const STORY = `/*STORY*/`;
 A.seed = () => {
-  const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now(), cover: {}, sample: true }, extra);
+  const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now() - extra.k * 1000, cover: {}, sample: true }, extra);
+  const AI = 'Алия Айсель';
   A.state.books = [
-    mk('Маленький принц', 'Антуан де Сент-Экзюпери', 96, 'reading', 40, ['tale', 'deep', 'classic']),
-    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true }),
-    mk('Алиса в Стране чудес', 'Льюис Кэрролл', 192, 'want', 0, ['tale', 'funny', 'fantasy']),
-    mk('Гордость и предубеждение', 'Джейн Остин', 416, 'want', 0, ['romance', 'cozy', 'classic'])
+    mk('Фонарь на опушке', AI, 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true, k: 0 }),
+    mk('На проклятом пепле', AI, 320, 'want', 0, ['mist', 'deep'], { k: 1 }),
+    mk('Зов умирающих душ', AI, 352, 'want', 0, ['mist', 'fantasy', 'deep'], { k: 2 }),
+    mk('Маленький принц Ленни', AI, 96, 'want', 0, ['tale', 'cozy'], { k: 3 }),
+    mk('Алиса в Стране чудес', AI, 192, 'want', 0, ['tale', 'funny', 'fantasy'], { k: 4 }),
+    mk('Гордость и предубеждение', AI, 416, 'want', 0, ['romance', 'cozy', 'classic'], { k: 5 })
   ];
-  A.txt.put(A.state.books[1].id, STORY);
-  const lp = A.state.books[0];
-  A.state.quotes = [{ id: A.uid(), bookId: lp.id, bookTitle: lp.title, author: lp.author, text: 'Зорко одно лишь сердце. Самого главного глазами не увидишь.', page: '', tags: ['самое главное', 'сердце'], sticker: '🌙', paper: 'parch', photo: null, date: Date.now(), sample: true }];
+  A.txt.put(A.state.books[0].id, STORY);
+  if (!A.state.quotes.some(q => !q.sample)) A.state.quotes = [{ id: A.uid(), bookId: '', bookTitle: 'Маленький принц', author: 'Антуан де Сент-Экзюпери', text: 'Зорко одно лишь сердце. Самого главного глазами не увидишь.', page: '', tags: ['самое главное', 'сердце'], sticker: '🌙', paper: 'parch', photo: null, date: Date.now(), sample: true }];
+  A.state.seedV = 2;
 };
