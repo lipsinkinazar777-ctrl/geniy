@@ -27,7 +27,7 @@ A.scene = (() => {
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
-  const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
+    const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
   function resize() {
     VW = innerWidth; VH = innerHeight; DPR = 1;
     if (ORI() !== ori) { ori = ORI(); relayout(); }

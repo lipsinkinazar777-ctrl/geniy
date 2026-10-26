@@ -30,7 +30,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   /* ---------------------------------------------------------------- the stage */
   function build() {
     if (built) return; built = true; const ori = A.scene.ori();
-    el = A.h(`<div id="pz" class="pz" hidden><div class="pz__sc" id="pzC">${['green', ...MOODS].map(m => `<img data-m="${m}" src="img/lab-c-${m}.webp" alt="" draggable="false">`).join('')}</div><div class="pz__sc" id="pzT">${['green', ...MOODS].map(m => `<img data-m="${m}" src="img/lab-t-${m}.webp" alt="" draggable="false">`).join('')}</div>
+    el = A.h(`<div id="pz" class="pz" hidden><div class="pz__sc" id="pzC">${['green', ...MOODS].map(m => `<img data-m="${m}" data-src="img/lab-c-${m}.webp" alt="" draggable="false">`).join('')}</div><div class="pz__sc" id="pzT">${['green', ...MOODS].map(m => `<img data-m="${m}" data-src="img/lab-t-${m}.webp" alt="" draggable="false">`).join('')}</div>
       <canvas class="pz__fx" id="pzFx"></canvas><div class="pz__cover" id="pzCover"></div>
       <h2 class="pz__title" id="pzTitle">алхимия</h2><p class="pz__hint" id="pzHint"></p>
       <div class="pz__tray" id="pzTray">${MOODS.map(k => `<button class="pzv" data-k="${k}" aria-label="${A.MOODS[k]}"><span class="pzv__g" style="--c:${RGB[k].join(',')}">${vialSVG(RGB[k], 'tr' + k)}</span><b>${A.MOODS[k]}</b></button>`).join('')}</div>
@@ -54,7 +54,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   function mixOf() { if (!sel.length) return RGB.green.slice(); const m = [0, 0, 0]; sel.forEach(k => RGB[k].forEach((v, i) => m[i] += v / sel.length)); return m; }
   function setMix() {
     mixRgb = mixOf(); spriteCache = {};
-    ['c', 't'].forEach(k => { const imgs = A.$$('img', sc[k]), order = sel.length ? sel : ['green']; imgs.forEach(im => { const i = order.indexOf(im.dataset.m); im.style.opacity = i < 0 ? 0 : (1 / (i + 1)).toFixed(3); im.style.zIndex = i < 0 ? 0 : i + 1; }); });
+    ['c', 't'].forEach(k => { const imgs = A.$$('img', sc[k]), order = sel.length ? sel : ['green']; imgs.forEach(im => { const i = order.indexOf(im.dataset.m); if (i >= 0 && !im.src) im.src = im.dataset.src; im.style.opacity = i < 0 ? 0 : (1 / (i + 1)).toFixed(3); im.style.zIndex = i < 0 ? 0 : i + 1; }); });
     A.$$('.pzv', el).forEach(b => b.classList.toggle('on', sel.includes(b.dataset.k))); A.$('#pzGo', el).classList.toggle('on', sel.length > 0 && mode === 'pick');
     hint(sel.length ? (sel.length < 3 ? 'Добавь ещё или вари' : 'Три настроения: пора варить') : 'Выбери настроения: склянки сами польются в котёл');
   }

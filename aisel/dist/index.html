@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Уголок принцессы Айсель</title>
 <meta name="description" content="Уютный каталог книг: полка, цитаты и зельеварня.">
 <meta name="theme-color" content="#000000">
@@ -608,6 +608,19 @@ body.inroom #back::after,body.panel #back::after{content:"Назад";font:400 1
 #mbox.on .mb__wing{animation:mbk 2.6s linear infinite}
 @keyframes mbk{0%{transform:scaleY(1)}25%{transform:scaleY(.12)}50%{transform:scaleY(-1)}75%{transform:scaleY(-.12)}100%{transform:scaleY(1)}}
 
+/* the dock: portrait phones only, on the desk (not inside a room) */
+#dock{position:fixed;left:10px;right:10px;bottom:calc(var(--sab) + 10px);z-index:29;display:none;gap:2px;padding:6px;border-radius:24px;background:rgba(8,10,10,.58);border:1px solid rgba(255,226,160,.22);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:0 14px 34px rgba(0,0,0,.55)}
+#dock button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0 6px;border-radius:16px;color:#f1dcb0;background:none;transition:transform .35s var(--spring),background .3s,color .4s}
+#dock button:active{transform:scale(.9);background:rgba(255,226,160,.12)}
+#dock .ico{width:23px;height:23px}
+#dock span{font:400 10px/1 var(--f);letter-spacing:.04em;text-transform:lowercase;opacity:.85}
+#dock .tg{opacity:.62}#dock .tg.on{opacity:1;color:#ffc066}#dock .tg.on .ico{filter:drop-shadow(0 0 8px rgba(255,170,70,.7))}
+@media (orientation:portrait){
+  body.ui:not(.inroom):not(.panel) #dock{display:flex;animation:dockin .8s var(--ease) both}
+  body.ui:not(.inroom):not(.panel) #hint{bottom:calc(var(--sab) + 100px)}
+}
+@keyframes dockin{from{opacity:0;transform:translateY(24px)}}
+
 /* ============================================================ the reading hall: 3D books on the rug, the hands, firelight */
 #lib3d{position:fixed;inset:0;z-index:22;pointer-events:none;visibility:hidden;opacity:0;transition:opacity .9s var(--ease),visibility .9s;color:#f6e6bd}
 #lib3d.on{visibility:visible;opacity:1;pointer-events:auto}
@@ -964,6 +977,14 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
 <div id="tint" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
 <div id="hint" aria-hidden="true"></div>
+<nav id="dock" aria-label="Разделы">
+  <button data-d="books"><svg viewBox="0 0 24 24" class="ico"><use href="#i-books"/></svg><span>Книги</span></button>
+  <button data-d="quotes"><svg viewBox="0 0 24 24" class="ico"><use href="#i-quill"/></svg><span>Цитаты</span></button>
+  <button data-d="potion"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flask"/></svg><span>Зелья</span></button>
+  <button data-d="bag"><svg viewBox="0 0 24 24" class="ico"><use href="#i-acorn"/></svg><span>Сумка</span></button>
+  <button data-d="fire" class="tg"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg><span>Камин</span></button>
+  <button data-d="music" class="tg"><svg viewBox="0 0 24 24" class="ico"><use href="#i-note"/></svg><span>Музыка</span></button>
+</nav>
 <div id="curtain" aria-hidden="true"></div>
 
 <!-- ENTRANCE: the flythrough with its own sound. No button: the gate opens and she walks into the hall. -->
@@ -1007,6 +1028,7 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
     <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10.5 3v6L5 19a1.5 1.5 0 0 0 1.3 2.2h11.4A1.5 1.5 0 0 0 19 19l-5.5-10V3"/><path d="M7.5 15h9"/><circle cx="11" cy="17.6" r=".6"/><circle cx="14" cy="16.7" r=".5"/></g></symbol>
     <symbol id="i-acorn" viewBox="0 0 24 24"><path d="M12 2.5c.4 0 .7.3.7.7v1.3c3.4.5 6.1 2.4 6.1 5H5.2c0-2.6 2.700-4.500 6.100-5V3.200c0-.4.300-.7.700-.7zM5.600 11h12.800c-.3 4.300-2.900 8.300-6.400 10.300C8.500 19.300 5.900 15.300 5.600 11z" fill="currentColor"/></symbol>
     <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12.500 2c.600 3.200 3.500 4.800 4.800 8 1.400 3.500-.1 8-4.400 9.800-4.500.2-7.500-3.100-6.900-6.900.3-2 1.800-3.500 2.900-5 .6 1.200.8 2.200 1.700 2.800C10.100 7.800 11 4.500 12.500 2z" fill="currentColor"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.500" cy="16" r="2.500"/></g></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></symbol>
     <symbol id="i-sound" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.500h3.500L12 5.500v13l-4.500-4H4z"/><path d="M15.500 9a4 4 0 0 1 0 6M18 6.500a8 8 0 0 1 0 11"/></g></symbol>
@@ -1434,7 +1456,7 @@ A.scene = (() => {
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
-  const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
+    const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
   function resize() {
     VW = innerWidth; VH = innerHeight; DPR = 1;
     if (ORI() !== ori) { ori = ORI(); relayout(); }
@@ -1767,10 +1789,10 @@ A.musicBox = (() => {
 
   return {
     toggle() {
-      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
+      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.dock && A.dock.refresh(); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
       if (s.music) { A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .09, .45); A.toast && A.toast('Шкатулка играет'); } else { A.snd.tap && A.snd.tap(); A.toast && A.toast('Шкатулка закрыта: тишина'); }
     },
-    sync() { apply(true); },
+    sync() { apply(true); A.dock && A.dock.refresh(); },
     get on() { return on(); }
   };
 })();
@@ -1915,6 +1937,23 @@ A.$('#back').addEventListener('click', () => { A.snd.tap(); A.leave(); });
   addEventListener('pointermove', e => { if (sx != null && e.clientX - sx > 70 && Math.abs(e.clientY - sy) < 60) { sx = null; A.leave(); } }, { passive: true }); addEventListener('pointerup', () => sx = null); })();
 addEventListener('keydown', e => { if (e.key === 'Escape') A.leave(); });
 A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 100, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };
+
+/* ============================================================ the dock: on a phone held upright the desk is bigger than the screen, so the places on it are also one tap away at the bottom.
+   Books, quotes, potions, the bag, and the two switches (fire, music box). It only calls what the objects on the desk call. */
+A.dock = (() => {
+  const el = A.$('#dock'); if (!el) return { refresh() {} };
+  const fire = A.$('[data-d=fire]', el), music = A.$('[data-d=music]', el);
+  function refresh() { fire.classList.toggle('on', !!(A.fire && A.fire.on)); music.classList.toggle('on', !!(A.musicBox && A.musicBox.on)); }
+  el.addEventListener('pointerdown', e => e.stopPropagation());
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return; const d = b.dataset.d; A.vibrate && A.vibrate(10);
+    if (d === 'fire') { A.fire.toggle(); setTimeout(refresh, 60); return; }
+    if (d === 'music') { A.musicBox.toggle(); refresh(); return; }
+    A.snd.chime && A.snd.chime([392, 523.25], .08, .5); A.go(d);
+  });
+  new MutationObserver(refresh).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  refresh(); return { refresh };
+})();
 
 /* ============================================================ the hands: two real hand photos (true alpha) driven like a puppet.
    idle   : they rest at the bottom corners and breathe
@@ -2972,7 +3011,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   /* ---------------------------------------------------------------- the stage */
   function build() {
     if (built) return; built = true; const ori = A.scene.ori();
-    el = A.h(`<div id="pz" class="pz" hidden><div class="pz__sc" id="pzC">${['green', ...MOODS].map(m => `<img data-m="${m}" src="img/lab-c-${m}.webp" alt="" draggable="false">`).join('')}</div><div class="pz__sc" id="pzT">${['green', ...MOODS].map(m => `<img data-m="${m}" src="img/lab-t-${m}.webp" alt="" draggable="false">`).join('')}</div>
+    el = A.h(`<div id="pz" class="pz" hidden><div class="pz__sc" id="pzC">${['green', ...MOODS].map(m => `<img data-m="${m}" data-src="img/lab-c-${m}.webp" alt="" draggable="false">`).join('')}</div><div class="pz__sc" id="pzT">${['green', ...MOODS].map(m => `<img data-m="${m}" data-src="img/lab-t-${m}.webp" alt="" draggable="false">`).join('')}</div>
       <canvas class="pz__fx" id="pzFx"></canvas><div class="pz__cover" id="pzCover"></div>
       <h2 class="pz__title" id="pzTitle">алхимия</h2><p class="pz__hint" id="pzHint"></p>
       <div class="pz__tray" id="pzTray">${MOODS.map(k => `<button class="pzv" data-k="${k}" aria-label="${A.MOODS[k]}"><span class="pzv__g" style="--c:${RGB[k].join(',')}">${vialSVG(RGB[k], 'tr' + k)}</span><b>${A.MOODS[k]}</b></button>`).join('')}</div>
@@ -2996,7 +3035,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   function mixOf() { if (!sel.length) return RGB.green.slice(); const m = [0, 0, 0]; sel.forEach(k => RGB[k].forEach((v, i) => m[i] += v / sel.length)); return m; }
   function setMix() {
     mixRgb = mixOf(); spriteCache = {};
-    ['c', 't'].forEach(k => { const imgs = A.$$('img', sc[k]), order = sel.length ? sel : ['green']; imgs.forEach(im => { const i = order.indexOf(im.dataset.m); im.style.opacity = i < 0 ? 0 : (1 / (i + 1)).toFixed(3); im.style.zIndex = i < 0 ? 0 : i + 1; }); });
+    ['c', 't'].forEach(k => { const imgs = A.$$('img', sc[k]), order = sel.length ? sel : ['green']; imgs.forEach(im => { const i = order.indexOf(im.dataset.m); if (i >= 0 && !im.src) im.src = im.dataset.src; im.style.opacity = i < 0 ? 0 : (1 / (i + 1)).toFixed(3); im.style.zIndex = i < 0 ? 0 : i + 1; }); });
     A.$$('.pzv', el).forEach(b => b.classList.toggle('on', sel.includes(b.dataset.k))); A.$('#pzGo', el).classList.toggle('on', sel.length > 0 && mode === 'pick');
     hint(sel.length ? (sel.length < 3 ? 'Добавь ещё или вари' : 'Три настроения: пора варить') : 'Выбери настроения: склянки сами польются в котёл');
   }

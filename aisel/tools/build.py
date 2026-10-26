@@ -3,7 +3,7 @@
 import pathlib, shutil, json, hashlib, base64
 root = pathlib.Path(__file__).resolve().parent.parent; src = root/'src'; out = root/'dist'
 css = '\n'.join((src/'css'/f).read_text() for f in sorted(p.name for p in (src/'css').glob('*.css')))
-order = ['store','layout','bookart','texts','import','audio','fx','scene','fire','musicbox','ui','hands','library','bookview','quill','quoteslip','books','casket','quotes','potion','goal','bag','intro','app']
+order = ['store','layout','bookart','texts','import','audio','fx','scene','fire','musicbox','ui','dock','hands','library','bookview','quill','quoteslip','books','casket','quotes','potion','goal','bag','intro','app']
 js = '\n'.join((src/'js'/f'{n}.js').read_text() for n in order if (src/'js'/f'{n}.js').exists())
 story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').replace('${','\\${')
 js = js.replace('/*STORY*/', story)
@@ -12,7 +12,7 @@ inner = shell.replace('/*CSS*/', css).replace('<!--BODY-->', body).replace('/*JS
 art = inner.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('<source src="video/intro.webm" type="video/webm">','')
 (root/'artifact.html').write_text(art)
 head, rest = inner.split('<style>', 1)
-page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
+page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
 if out.exists(): shutil.rmtree(out)
 (out/'img').mkdir(parents=True); (out/'lib').mkdir(); (out/'video').mkdir()
 for f in (src/'img').iterdir():
@@ -22,7 +22,7 @@ for f in (src/'lib').iterdir(): shutil.copy(f, out/'lib'/f.name)
 shutil.copytree(src/'video', out/'video', dirs_exist_ok=True)
 (out/'index.html').write_text(page)
 manifest = {
-  "name": "Уголок принцессы Айсель", "short_name": "Уголок Айсель", "description": "Лесной каталог книг: тропа, цитаты, звёзды и зельеварня.",
+  "name": "Уголок принцессы Айсель", "short_name": "Уголок Айсель", "description": "Уютный каталог книг: полка, цитаты и зельеварня.",
   "lang": "ru", "start_url": "./index.html", "scope": "./", "display": "standalone", "orientation": "any",
   "background_color": "#000000", "theme_color": "#000000",
   "icons": [
