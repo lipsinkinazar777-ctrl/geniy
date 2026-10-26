@@ -2,6 +2,7 @@
 --f:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--hand:"Cormorant Garamond",Georgia,serif;
 --ease:cubic-bezier(.22,.9,.24,1);--spring:cubic-bezier(.34,1.56,.64,1);--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--navh:72px;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;height:-webkit-fill-available}body{position:fixed;inset:0;width:100%}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.5 var(--f);overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 button,input,textarea,select{font:inherit;color:inherit;background:none;border:0;outline:0}
 button{cursor:pointer;padding:0}

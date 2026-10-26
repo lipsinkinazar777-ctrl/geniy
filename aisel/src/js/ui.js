@@ -39,11 +39,12 @@ A.tab = 'room'; let moving = false, lockT = 0;
 const busy = (on = true) => { moving = on; clearTimeout(lockT); if (on) lockT = setTimeout(() => { moving = false; }, 3600); };      // a transition can never leave the room stuck
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 const curtain = A.$('#curtain');
-function enterRoom(tab, obj) {
+function enterRoom(tab, obj, opt = {}) {
   const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
   if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
   busy(); A.tab = tab; A.$('#hint').classList.remove('on'); document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
-  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
+  const swap = () => { if (prev !== 'room' && ROOMOF[prev]) { if (prev === 'quotes') A.casket.hide(); A.mods[prev] && A.mods[prev].hide && A.mods[prev].hide(); }   // room to room: the one we leave is closed first, never left standing under the new one
+    A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); if (opt.open && A.lib && A.lib.openBook) setTimeout(() => A.lib.openBook(opt.open), 700); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
   A.snd.whoosh(1);
   if (prev === 'room') { A.scene.focus(obj || OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
@@ -53,7 +54,7 @@ function exitRoom() {
 }
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
-  if (ROOMOF[tab]) return enterRoom(tab, opt.obj);
+  if (ROOMOF[tab]) return enterRoom(tab, opt.obj, opt);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; busy();
@@ -104,6 +105,7 @@ A.settings = () => {
     <div class="glass" style="padding:6px 18px;margin-bottom:16px">
       <div class="set"><span>Звуки</span><button class="tog ${s.sound ? 'on' : ''}" data-k="sound"><i></i></button></div>
       <div class="set"><span>Музыкальная шкатулка</span><button class="tog ${s.music ? 'on' : ''}" data-k="music"><i></i></button></div>
+      <div class="set" style="flex-wrap:wrap;gap:8px"><span>Фоновая музыка</span><div class="bvs__seg bvs__seg--wrap" id="stTrk" style="flex-basis:100%">${A.snd.tracks.map(([k, n]) => `<button data-v="${k}" class="${A.snd.track === k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
       <div class="set"><span>Громкость</span><input type="range" min="0" max="1" step=".05" value="${s.vol}" id="stVol" style="width:55%;accent-color:#f1c76e"></div>
     </div>
     <div class="glass" style="padding:18px;margin-bottom:16px"><div class="eyebrow" style="margin-bottom:12px">цели чтения</div>
@@ -117,6 +119,7 @@ A.settings = () => {
       const q = (x) => A.$(x, sh.el);
       const por = q('#stPortrait'); if (s.portrait) por.style.backgroundImage = `url(${s.portrait})`;
       q('#stFile').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; const url = await A.imgToData(f, 360, .86); s.portrait = url; A.save(); por.style.backgroundImage = `url(${url})`; A.applyPortrait(); A.snd.chime(); });
+      A.$('#stTrk', sh.el).addEventListener('click', e => { const t = e.target.closest('button'); if (!t) return; A.snd.tap(); A.snd.unlock(); s.music = true; A.snd.setTrack(t.dataset.v); A.snd.refresh(); A.$$('#stTrk button', sh.el).forEach(x => x.classList.toggle('on', x === t)); A.$$('.tog[data-k=music]', sh.el).forEach(x => x.classList.add('on')); A.musicBox && A.musicBox.sync(); });
       A.$$('.tog', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.k; s[k] = !s[k]; b.classList.toggle('on', s[k]); A.save(); A.snd.refresh(); if (k === 'music') A.musicBox && A.musicBox.sync(); A.snd.tap(); }));
       q('#stVol').addEventListener('input', e => { s.vol = +e.target.value; A.save(); A.snd.refresh(); });
       A.$$('[data-g]', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.g, g = A.state.goal; g[k] = A.clamp(g[k] + +b.dataset.d, k === 'day' ? 5 : 20, 1000); q(k === 'day' ? '#gDay' : '#gWeek').textContent = g[k]; A.save(); A.snd.tap(); A.mods.path && A.mods.path.refreshGoal && A.mods.path.refreshGoal(); }));

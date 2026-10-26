@@ -36,10 +36,10 @@
 .fin__title .w{display:inline-block;white-space:nowrap}
 
 /* ---------------- entrance: the user's flythrough fills the screen; portrait = cover, landscape = contain over a blurred copy of the first frame */
-#intro{position:fixed;inset:0;z-index:50;background:#000;overflow:hidden;transition:opacity 1.5s var(--ease),visibility 1.5s;-webkit-tap-highlight-color:transparent}
+#intro{position:fixed;inset:0;z-index:50;background:#000 url(video/poster.jpg) center/cover no-repeat;overflow:hidden;transition:opacity 1.5s var(--ease),visibility 1.5s;-webkit-tap-highlight-color:transparent}
 #intro.out{opacity:0;visibility:hidden;pointer-events:none}
-.in__bg{position:absolute;inset:-8%;background:#000 url(video/poster.jpg) center/cover no-repeat;filter:blur(38px) brightness(.5) saturate(1.2);opacity:0;transition:opacity 1s}
-#introV{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;opacity:0;transition:opacity .9s var(--ease)}
+.in__bg{position:absolute;inset:-8%;background:#000 url(video/poster.jpg) center/cover no-repeat;filter:blur(38px) brightness(.5) saturate(1.2);opacity:1}
+#introV{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;opacity:1}
 #intro.play #introV{opacity:1}
 #intro.play .in__bg{opacity:1}
 .in__amb{position:absolute;left:-6%;top:-6%;width:112%;height:112%;filter:blur(22px) brightness(1.25) saturate(1.4);opacity:0;transition:opacity 1.2s}
@@ -64,6 +64,8 @@
 #intro.skippable .in__skip{opacity:1;pointer-events:auto}
 #intro.title .in__skip{opacity:0;pointer-events:none}
 
-.in__seq{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);display:none}
+.in__seq{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s linear;display:none}
 #intro.seq .in__seq{display:block}#intro.seq.play .in__seq{opacity:1}#intro.seq #introV{display:none}
 @media (orientation:landscape){.in__seq{right:auto;left:50%;width:auto;aspect-ratio:9/16;transform:translateX(-50%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}}
+
+@media (orientation:portrait){.in__bg{filter:none;inset:0}}

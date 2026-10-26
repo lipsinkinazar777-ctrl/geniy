@@ -64,10 +64,10 @@ A.fire = (() => {
     ctx.globalAlpha = 1; smokeOn = smoke.length > 0 || (target === 0 && level > .02);
   }
   function set(on, quiet) {
-    if (on === (target > 0) && quiet) { A.snd.setFire(on ? 1 : 0); return; }
+    if (on === (target > 0) && quiet) { A.snd.syncFire(); return; }
     target = on ? 1 : 0; A.state.fireOn = on; A.save && A.save(); document.body.classList.toggle('warm', on); if (!on) smokeOn = true;
-    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.setFire(1), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.setFire(0)); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 8; i++) A.scene.spark(f.x + R(-34, 34), f.y - R(20, 70)); } }
-    else A.snd.setFire(on ? 1 : 0);
+    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.syncFire(), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.syncFire()); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 8; i++) A.scene.spark(f.x + R(-34, 34), f.y - R(20, 70)); } }
+    else A.snd.syncFire();
   }
   return {
     place, reset() {}, attachKnob() {}, init() { place(); },

@@ -15,7 +15,11 @@ A.hands = (() => {
   function layer(side, kind) {
     const a = ART[POSE[side][kind]], im = new Image(); im.src = `img/${POSE[side][kind]}.webp`; im.className = 'hd__img'; im.draggable = false; im.decoding = 'async';
     let top = im, ext = null;
-    if (kind !== 'reach') { top = A.h('<div class="hd__wrap"></div>'); ext = A.h('<div class="hd__ext"></div>'); ext.style.backgroundImage = `url(img/${POSE[side][kind]}.webp)`; top.append(im, ext); im.style.position = 'relative'; }
+    if (kind !== 'reach') { top = A.h('<div class="hd__wrap"></div>'); ext = A.h('<div class="hd__ext"></div>'); top.append(im, ext); im.style.position = 'relative';
+      /* the sleeve goes on below the picture: the picture's last rows, averaged into one smooth strip (the embroidery would smear into stripes if the real rows were stretched) */
+      im.addEventListener('load', () => { try { const w = im.naturalWidth, h = im.naturalHeight, c = document.createElement('canvas'); c.width = w; c.height = 1; const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.drawImage(im, 0, h - 10, w, 8, 0, 0, w, 1);
+        const d = x.getImageData(0, 0, w, 1).data, o = new Uint8ClampedArray(w * 4); for (let i = 0; i < w; i++) { let r = 0, g = 0, b = 0, a = 0, n = 0; for (let j = Math.max(0, i - 7); j <= Math.min(w - 1, i + 7); j++) { r += d[j * 4]; g += d[j * 4 + 1]; b += d[j * 4 + 2]; a += d[j * 4 + 3]; n++; } o[i * 4] = r / n; o[i * 4 + 1] = g / n; o[i * 4 + 2] = b / n; o[i * 4 + 3] = a / n; }
+        x.putImageData(new ImageData(o, w, 1), 0, 0); ext.style.backgroundImage = `url(${c.toDataURL()})`; } catch (e) {} }, { once: true }); if (im.complete && im.naturalWidth) im.dispatchEvent(new Event('load')); }
     const pg = kind === 'page', s = { img: top, im, ext, art: a, x: new Sp(0, pg ? 230 : 120, pg ? 27 : 18), y: new Sp(0, pg ? 230 : 120, pg ? 27 : 18), r: new Sp(0, 90, 15), s: new Sp(1, 110, 17), o: new Sp(kind === 'reach' ? 1 : 0, 150, 22) };
     return s;
   }
@@ -31,7 +35,7 @@ A.hands = (() => {
       const o = sides[side], a = ART[POSE[side].reach], w = a.w * L.k, h = a.h * L.k;
       o.base = side === 'L' ? { left: -w * .1, top: L.vh - h * .78 } : { left: L.vw - w * .88, top: L.vh - h * .74 };
       const st = o.reach.img.style; st.width = w + 'px'; st.height = h + 'px'; st.left = o.base.left + 'px'; st.top = o.base.top + 'px'; st.transformOrigin = `${a.piv[0] * L.k}px ${a.piv[1] * L.k}px`;
-      ['grasp', 'page'].forEach(kd => { const b = ART[POSE[side][kd]], sc = L.k * gk, l = o[kd], s2 = l.im.style; s2.width = b.w * sc + 'px'; s2.height = b.h * sc + 'px'; l.img.style.width = b.w * sc + 'px'; l.img.style.height = b.h * sc + 'px'; l.ext.style.width = b.w * sc + 'px'; l.ext.style.height = L.vh + 'px'; l.ext.style.backgroundSize = `${b.w * sc}px ${b.h * sc * 40}px`; });
+      ['grasp', 'page'].forEach(kd => { const b = ART[POSE[side][kd]], sc = L.k * gk, l = o[kd], s2 = l.im.style; s2.width = b.w * sc + 'px'; s2.height = b.h * sc + 'px'; l.img.style.width = b.w * sc + 'px'; l.img.style.height = b.h * sc + 'px'; l.ext.style.width = b.w * sc + 'px'; l.ext.style.height = L.vh + 'px'; l.ext.style.backgroundSize = '100% 100%'; });
     });
   }
   /* pivot / tip of the reach sprite on screen at rest */
@@ -57,7 +61,8 @@ A.hands = (() => {
         placeLayer('L', 'grasp', [lx, ey], ART['pose-2'].edge); placeLayer('R', 'grasp', [rx, ey], ART['pose-3'].edge);
       } }
     if (mode === 'carry' && carryFn) { const c = carryFn(); if (c) { const l = sides[carrySide].grasp, a = ART[POSE[carrySide].grasp], sc0 = L.k * gk;
-        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0; l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
+        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0;      // c.r is the arm's angle; the carried thing turns on its own (c.prop.r)
+        l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
         if (propEl && c.prop) propEl.style.transform = `translate3d(${c.prop.x.toFixed(1)}px,${c.prop.y.toFixed(1)}px,0) rotate(${(c.prop.r || 0).toFixed(2)}deg) scale(${(c.prop.s || 1).toFixed(3)})`; if (propEl && c.clip != null) propEl.style.clipPath = c.clip; } }
     if (mode === 'pinch' && pinchFn) { const p = pinchFn(); if (p) { const side = p.side; placeLayer(side, 'page', [p.x, p.y], ART[POSE[side].page].tip); reachTo(side, [p.x, p.y], .85); } }
     ['L', 'R'].forEach(side => {

@@ -21,6 +21,7 @@
 --f:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;--serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;--hand:"Cormorant Garamond",Georgia,serif;
 --ease:cubic-bezier(.22,.9,.24,1);--spring:cubic-bezier(.34,1.56,.64,1);--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--navh:72px;color-scheme:dark}
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%;height:-webkit-fill-available}body{position:fixed;inset:0;width:100%}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.5 var(--f);overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 button,input,textarea,select{font:inherit;color:inherit;background:none;border:0;outline:0}
 button{cursor:pointer;padding:0}
@@ -70,10 +71,10 @@ body.warm #vignette{background:radial-gradient(120% 90% at 50% 45%,transparent 5
 .fin__title .w{display:inline-block;white-space:nowrap}
 
 /* ---------------- entrance: the user's flythrough fills the screen; portrait = cover, landscape = contain over a blurred copy of the first frame */
-#intro{position:fixed;inset:0;z-index:50;background:#000;overflow:hidden;transition:opacity 1.5s var(--ease),visibility 1.5s;-webkit-tap-highlight-color:transparent}
+#intro{position:fixed;inset:0;z-index:50;background:#000 url(video/poster.jpg) center/cover no-repeat;overflow:hidden;transition:opacity 1.5s var(--ease),visibility 1.5s;-webkit-tap-highlight-color:transparent}
 #intro.out{opacity:0;visibility:hidden;pointer-events:none}
-.in__bg{position:absolute;inset:-8%;background:#000 url(video/poster.jpg) center/cover no-repeat;filter:blur(38px) brightness(.5) saturate(1.2);opacity:0;transition:opacity 1s}
-#introV{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;opacity:0;transition:opacity .9s var(--ease)}
+.in__bg{position:absolute;inset:-8%;background:#000 url(video/poster.jpg) center/cover no-repeat;filter:blur(38px) brightness(.5) saturate(1.2);opacity:1}
+#introV{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;opacity:1}
 #intro.play #introV{opacity:1}
 #intro.play .in__bg{opacity:1}
 .in__amb{position:absolute;left:-6%;top:-6%;width:112%;height:112%;filter:blur(22px) brightness(1.25) saturate(1.4);opacity:0;transition:opacity 1.2s}
@@ -98,9 +99,11 @@ body.warm #vignette{background:radial-gradient(120% 90% at 50% 45%,transparent 5
 #intro.skippable .in__skip{opacity:1;pointer-events:auto}
 #intro.title .in__skip{opacity:0;pointer-events:none}
 
-.in__seq{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease);display:none}
+.in__seq{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s linear;display:none}
 #intro.seq .in__seq{display:block}#intro.seq.play .in__seq{opacity:1}#intro.seq #introV{display:none}
 @media (orientation:landscape){.in__seq{right:auto;left:50%;width:auto;aspect-ratio:9/16;transform:translateX(-50%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent);mask-image:linear-gradient(90deg,transparent,#000 22%,#000 78%,transparent)}}
+
+@media (orientation:portrait){.in__bg{filter:none;inset:0}}
 
 /* ---------------- app shell */
 #app{position:fixed;inset:0;z-index:10}
@@ -638,9 +641,9 @@ body.inroom #back::after,body.panel #back::after{content:"Назад";font:400 1
 .bk__cv{position:absolute;left:0;top:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:calc(var(--hx,5%)) 50%}
 .bk__lining{position:absolute;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;background:radial-gradient(90% 70% at 50% 40%,#e7d6a8,#cdb683);box-shadow:inset 0 0 26px rgba(80,45,8,.55);border:1px solid rgba(120,80,20,.35)}
 .bk__shadow{position:absolute;left:50%;height:46px;transform:translate(-50%,-12px) rotateX(90deg);transform-origin:50% 0;background:radial-gradient(closest-side,rgba(0,0,0,.65),rgba(0,0,0,.25) 60%,transparent);pointer-events:none}
-.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 70px);text-align:center;padding:0 94px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
+.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 62px);text-align:center;padding:0 22px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
 .lb__tag b{display:block;font:italic 500 clamp(26px,7.4vw,40px)/1.08 var(--serif);color:#f6e6bd;text-wrap:balance}
-.lb__tag small{display:block;margin-top:9px;font:400 11px/1 var(--f);letter-spacing:.3em;text-transform:uppercase;color:#e9c984}
+.lb__tag small{display:block;margin-top:10px;font:400 10.5px/1.5 var(--f);letter-spacing:.2em;text-wrap:balance;text-transform:uppercase;color:#e9c984}
 .lb__tag.pop b{animation:tagin .55s cubic-bezier(.2,.9,.3,1)}
 #lib3d.bv .lb__tag{opacity:0;transition:opacity .5s}
 @media (orientation:landscape){.lb__tag{top:calc(var(--sat) + 14px)}.lb__tag b{font-size:clamp(20px,4.6vw,30px)}}
@@ -770,7 +773,7 @@ body.bv-open #back{opacity:0!important;pointer-events:none!important}
 .bv__x .ico{width:24px;height:24px}.bv__aa{font:italic 500 22px/1 var(--serif)}
 .bv__t{flex:1;min-width:0;text-align:center;line-height:1.15;color:#f1e1b8}
 .bv__t b{display:block;font:italic 500 18px/1.15 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 14px rgba(255,190,90,.35)}
-.bv__t small{font:300 10px/1 var(--f);letter-spacing:.24em;text-transform:uppercase;opacity:.55}
+.bv__t small{display:block;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:300 10px/1.2 var(--f);letter-spacing:.2em;text-transform:uppercase;opacity:.55}
 .bv__stage{position:absolute;left:0;right:0;top:calc(var(--sat) + 58px);bottom:calc(var(--sab) + 88px)}
 .bv__book{position:absolute;perspective:2600px;perspective-origin:50% 45%;opacity:0;transform:translateY(22px) scale(.97);transition:opacity .6s var(--ease),transform .9s var(--ease)}
 .bv.in .bv__book{opacity:1;transform:none}
@@ -877,7 +880,7 @@ textarea.lined::placeholder{color:rgba(60,38,12,.38)}
 .qslip__in cite{position:relative;display:block;margin-top:14px;text-align:right;font:italic 500 15px/1.2 var(--ff);opacity:.7}
 @media (orientation:landscape){.rb{height:40px;padding-top:9px}.bv__tabs{height:40px;bottom:calc(var(--sab) + 26px)}.bv__stage{bottom:calc(var(--sab) + 78px)}}
 body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-still #scene{display:none}
-.bv__book{touch-action:pan-y}.im{overflow-y:auto;scrollbar-width:none}.im::-webkit-scrollbar{display:none}
+.bv__book{touch-action:none}.im,.im *,textarea{touch-action:pan-y}.im{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}.im::-webkit-scrollbar{display:none}
 .qrow{flex-wrap:wrap;justify-content:center}
 @media (orientation:landscape){
   .bv__bar{height:calc(var(--sat) + 50px);padding:6px 10px 0;justify-content:space-between;pointer-events:none;align-items:flex-start}.bv__bar>*{pointer-events:auto}.bv__t{display:none}
@@ -907,6 +910,27 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
 .qs__x{position:absolute;right:14px;top:calc(var(--sat) + 14px);width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#f6e6bd;background:rgba(8,10,10,.55);border:1px solid rgba(255,226,160,.45)}
 .qs__x .ico{width:22px;height:22px}
 @media (orientation:landscape){.qs__card{top:50%;padding:16px 22px 14px;gap:6px}.qs__card h3{font-size:24px}.qs__card textarea.lined{height:96px;min-height:96px;font-size:20px;line-height:30px}}
+
+.bvs__seg--wrap{flex-wrap:wrap}.bvs__seg--wrap button{flex:1 1 30%;padding:8px 4px;font-size:13px}.bvs__row--trk{align-items:flex-start}
+
+/* page-turn cost: the segments of the turning leaf carry no noise layer and no blend, and the pages are painted independently */
+.ls__in::before{display:none}.ls{will-change:auto}.bv__pg{contain:layout paint}
+
+/* PDF pages and the go-to panel */
+.pdfpg{position:absolute;inset:0;background:#f2e6c4}.pdfpg img{display:block;width:100%;height:100%;object-fit:contain;-webkit-user-drag:none;pointer-events:none}
+.pdfpg.wait::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px;border-radius:50%;border:2px solid rgba(110,70,20,.25);border-top-color:rgba(110,70,20,.7);animation:pdfsp .9s linear infinite}@keyframes pdfsp{to{transform:rotate(360deg)}}
+.bv[data-th=night] .pdfpg{background:#17120d}.bv[data-th=night] .pdfpg img{filter:invert(.9) hue-rotate(180deg) brightness(.88) contrast(1.05)}
+.bv__ribbon{display:none!important}
+#bvPg{pointer-events:auto;cursor:pointer;padding:10px 0 10px 10px;margin:-10px 0 -10px -10px;text-decoration:underline;text-decoration-color:rgba(233,201,132,.4);text-underline-offset:4px}
+.bv__jump{position:absolute;inset:0;z-index:12;display:grid;place-items:end center;padding:0 12px calc(var(--sab) + 12px);background:rgba(3,2,2,.55);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;pointer-events:none}
+.bv.jump .bv__jump{opacity:1;visibility:visible;pointer-events:auto}
+.bj__in{position:relative;width:min(100%,460px);max-height:78%;overflow:auto;padding:20px 18px 16px;border-radius:22px;background:rgba(14,9,6,.97);border:1px solid rgba(255,214,140,.28);box-shadow:0 24px 60px rgba(0,0,0,.7);transform:translateY(24px);transition:transform .45s var(--ease);color:#f1e1b8;touch-action:pan-y}
+.bv.jump .bj__in{transform:none}
+.bj__in b{display:block;font:italic 500 21px/1.2 var(--serif)}.bj__in small{display:block;margin:4px 0 12px;font:300 11px/1 var(--f);letter-spacing:.16em;text-transform:uppercase;opacity:.6}
+.bj__x{position:absolute;right:10px;top:8px;width:36px;height:36px;font-size:26px;line-height:1;color:#e9c984}
+.bj__row{display:flex;gap:10px;align-items:center;margin:8px 0}.bj__row input{flex:1;min-width:0;height:46px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,214,140,.25);background:rgba(255,255,255,.05);font:400 17px/1 var(--serif);color:#f6e6bd;-webkit-user-select:text;user-select:text}
+.bj__row .seal{margin:0;padding:12px 18px;font-size:15px;flex:none}.bj__in input[type=range]{width:100%;accent-color:#e9c984;margin:6px 0 10px}
+.bj__res{display:grid;gap:6px;margin-top:6px}.bj__res button{display:flex;gap:10px;text-align:left;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);color:#f1e1b8}.bj__res button span{flex:none;font:500 11px/1.5 var(--f);letter-spacing:.1em;color:#e9c984;text-transform:uppercase;width:64px}.bj__res button i{font:italic 400 14px/1.35 var(--serif);opacity:.85}.bj__hint{margin:6px 2px;font:italic 400 15px/1.3 var(--serif);opacity:.7}
 
 /* ============================================================ the archive: a parchment scroll between two rods, soft-focus drawer behind it */
 #cask{position:fixed;inset:0;z-index:27;pointer-events:none;touch-action:none;user-select:none;visibility:hidden}
@@ -1158,7 +1182,7 @@ const STORY = `# Фонарь на опушке
 Конец.`;
 A.seed = () => {
   const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now() - extra.k * 1000, cover: {}, sample: true }, extra);
-  const AI = 'Алия Айсель';
+  const AI = 'Хакимова Айсель';
   A.state.books = [
     mk('Фонарь на опушке', AI, 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true, k: 0 }),
     mk('На проклятом пепле', AI, 320, 'want', 0, ['mist', 'deep'], { k: 1 }),
@@ -1185,7 +1209,9 @@ A.txt = (() => {
   return {
     put: async (id, text) => { const d = await open(); if (!d) { mem[id] = text; return; } await tx('readwrite', s => s.put(text, id)); },
     get: async (id) => { const d = await open(); if (!d) return mem[id] || ''; return (await tx('readonly', s => s.get(id))) || ''; },
-    del: async (id) => { const d = await open(); if (!d) { delete mem[id]; return; } await tx('readwrite', s => s.delete(id)); },
+    putBin: async (id, buf) => { const d = await open(); if (!d) { mem[id + ':bin'] = buf; return; } await tx('readwrite', s => s.put(buf, id + ':bin')); },
+    getBin: async (id) => { const d = await open(); if (!d) return mem[id + ':bin'] || null; return (await tx('readonly', s => s.get(id + ':bin'))) || null; },
+    del: async (id) => { const d = await open(); if (!d) { delete mem[id]; delete mem[id + ':bin']; return; } await tx('readwrite', s => { s.delete(id); s.delete(id + ':bin'); return null; }); },
     migrate: async () => { for (const b of A.state.books) if (b.text) { await A.txt.put(b.id, b.text); b.hasText = true; delete b.text; } A.save(); }
   };
 })();
@@ -1230,7 +1256,7 @@ A.importer = (() => {
 
   async function pdf(file, prog) {
     await need('lib/pdf.min.js'); const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js';
-    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise; let info = {}; try { info = (await doc.getMetadata()).info || {}; } catch (e) {}
+    const ab = await file.arrayBuffer(), doc = await lib.getDocument({ data: new Uint8Array(ab.slice(0)) }).promise; let info = {}; try { info = (await doc.getMetadata()).info || {}; } catch (e) {}
     const paras = []; let cur = '';
     const flush = () => { if (cur.trim()) paras.push(cur.trim()); cur = ''; };
     for (let p = 1; p <= doc.numPages; p++) {
@@ -1245,22 +1271,28 @@ A.importer = (() => {
     }
     flush(); let cover = null;
     try { const page = await doc.getPage(1), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: 360 / vp0.width }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise; cover = c.toDataURL('image/jpeg', .78); } catch (e) {}
-    return { title: (info.Title || '').trim() || nameOf(file), author: (info.Author || '').trim(), text: clean(paras.join('\n\n')), cover, pdf: true, pageCount: doc.numPages };
+    let aspect = 1.414; try { const v = (await doc.getPage(1)).getViewport({ scale: 1 }); aspect = v.height / v.width; } catch (e) {}
+    const junk = /^(untitled|без\s*названия|microsoft|document|doc\d*|new\s|слайд)/i, meta0 = (info.Title || '').trim(), meta = junk.test(meta0) || /\.(docx?|indd|qxd|pdf|tex)$/i.test(meta0) ? '' : meta0, fname = nameOf(file), cyr = /[А-Яа-яЁё]/, au0 = (info.Author || '').trim();
+    return { title: meta && !(cyr.test(fname) && !cyr.test(meta)) ? meta : fname, author: /^(anonymous|unknown|admin|user|author|\w{0,3})$/i.test(au0) ? '' : au0, text: clean(paras.join('\n\n')), cover, pdf: true, pageCount: doc.numPages, aspect, buf: ab };
   }
 
+  /* a stored PDF opened for reading: its pages are drawn on demand */
+  async function pdfDoc(buf) { await need('lib/pdf.min.js'); const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js'; return lib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise; }
+
   return {
+    pdfDoc,
     ACCEPT: '.txt,.md,.text,.epub,.pdf,text/plain,text/markdown,application/pdf,application/epub+zip',
     async read(file, prog) {
       if (file.size > 60e6) throw new Error('big'); const n = file.name.toLowerCase(); let r;
       if (n.endsWith('.pdf') || file.type === 'application/pdf') r = await pdf(file, prog); else if (n.endsWith('.epub')) r = await epub(file, prog); else r = await plain(file);
-      if (!r.text || r.text.length < 20) throw new Error(r.pdf ? 'scan' : 'empty'); return r;
+      if (!r.pdf && (!r.text || r.text.length < 20)) throw new Error('empty'); return r;       // a PDF without a text layer (a scan) still reads: its pages are shown as pictures
     }
   };
 })();
 
 /* ============================================================ sound: everything is synthesised (no files), so it works offline */
 A.snd = (() => {
-  let ctx, master, amb, sfx, mus, rev, noise, fireBus, an, anBuf, lvl = 0, started = false, fire = 0, mood = 'path';
+  let ctx, master, amb, sfx, mus, rev, noise, fireBus, an, anBuf, comp0, lvl = 0, started = false, fire = 0, mood = 'path', cur = null, trackT = 0;
   const timers = [];
   const S = () => A.state.settings;
   const SCALES = { path: [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33], books: [146.83, 196, 220, 246.94, 293.66, 392, 440, 493.88], quotes: [174.61, 220, 261.63, 293.66, 349.23, 440, 523.25], sky: [329.63, 392, 493.88, 587.33, 659.25, 783.99, 987.77], potion: [110, 130.81, 164.81, 196, 261.63, 329.63] };
@@ -1278,7 +1310,8 @@ A.snd = (() => {
     const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
     ctx = new AC();
     master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; comp.connect(master);
+    const comp = comp0 = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; comp.connect(master);
+    ctx.onstatechange = () => { if (ctx.state !== 'running' && S().sound !== false && !document.hidden) setTimeout(() => { try { ctx.resume(); } catch (e) {} }, 250); };
     rev = ctx.createConvolver(); rev.buffer = impulse(2.6, 2.4); const rg = ctx.createGain(); rg.gain.value = .38; rev.connect(rg); rg.connect(comp);
     amb = ctx.createGain(); amb.gain.value = 1; amb.connect(comp);
     fireBus = ctx.createGain(); fireBus.gain.value = S().fireVol != null ? S().fireVol : .85; fireBus.connect(amb); an = ctx.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = .6; fireBus.connect(an); anBuf = new Uint8Array(an.fftSize);
@@ -1287,7 +1320,7 @@ A.snd = (() => {
     noise = makeNoise(4);
     applyVol(); return true;
   }
-  function applyVol() { if (!ctx) return; const v = S().sound ? S().vol : 0; master.gain.cancelScheduledValues(now()); master.gain.linearRampToValueAtTime(v * .9, now() + .35); mus.gain.cancelScheduledValues(now()); mus.gain.setTargetAtTime(S().music ? .9 : 0, now(), .18); }
+  function applyVol() { if (!ctx) return; const v = S().sound ? (S().vol != null ? S().vol : .8) : 0, t = now(); master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(v * .9, t + .35); mus.gain.cancelScheduledValues(now()); mus.gain.setTargetAtTime(S().music ? .9 : 0, now(), .18); }
 
   /* ---- ambient bed */
   function bed() {
@@ -1315,22 +1348,68 @@ A.snd = (() => {
     timers.push(setTimeout(crack, 400));
     // music box + pad
     const note = (f, vel = 1, when) => { const t = when || now(); [[1, .05], [2, .014], [3, .005]].forEach(([m, p]) => osc(m === 1 ? 'triangle' : 'sine', f * m, t, .004, p * vel, m === 1 ? 2.2 : 1.1, mus)); };
-    loop(() => { if (!S().music) return; const sc = SCALES[mood] || SCALES.path, i = Math.floor(Math.random() * sc.length), t = now() + .05, arp = Math.random() < .4; note(sc[i], 1, t); if (arp) { note(sc[(i + 2) % sc.length], .8, t + .32); note(sc[(i + 4) % sc.length], .7, t + .62); } else if (Math.random() < .35) note(sc[i] * 2, .5, t + .4); }, 1.8, 4.2);
-    padLoop(); started = true;
+    loop(() => { if (!S().music || (S().track || 'box') !== 'box') return; const sc = SCALES[mood] || SCALES.path, i = Math.floor(Math.random() * sc.length), t = now() + .05, arp = Math.random() < .4; note(sc[i], 1, t); if (arp) { note(sc[(i + 2) % sc.length], .8, t + .32); note(sc[(i + 4) % sc.length], .7, t + .62); } else if (Math.random() < .35) note(sc[i] * 2, .5, t + .4); }, 1.8, 4.2);
+    padLoop(); started = true; startTrack(S().track || 'box');
   }
   let fireG;
   function padLoop() {
     const roots = { path: [110, 164.81, 196], books: [73.42, 110, 146.83], quotes: [87.31, 130.81, 174.61], sky: [82.41, 123.47, 164.81], potion: [55, 82.41, 110] };
-    const run = () => { if (!ctx) return; const r = roots[mood] || roots.path, t = now(); r.forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(), l = ctx.createBiquadFilter(); o.type = 'sine'; o.frequency.value = f * (1 + (i - 1) * .002); l.type = 'lowpass'; l.frequency.value = 600; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(S().music ? .016 : 0, t + 4); g.gain.linearRampToValueAtTime(0.0001, t + 9); o.connect(l); l.connect(g); g.connect(mus); o.start(t); o.stop(t + 9.2); }); timers.push(setTimeout(run, 7500)); };
+    const run = () => { if (!ctx) return; const r = roots[mood] || roots.path, t = now(); r.forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(), l = ctx.createBiquadFilter(); o.type = 'sine'; o.frequency.value = f * (1 + (i - 1) * .002); l.type = 'lowpass'; l.frequency.value = 600; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(S().music && (S().track || 'box') === 'box' ? .016 : 0, t + 4); g.gain.linearRampToValueAtTime(0.0001, t + 9); o.connect(l); l.connect(g); g.connect(mus); o.start(t); o.stop(t + 9.2); }); timers.push(setTimeout(run, 7500)); };
     run();
+  }
+
+
+  /* ---- background tracks for reading: each is generated live (no files), all go through the same music bus, so the music switch silences every one of them */
+  const TRACKS = [['box', 'Шкатулка'], ['piano', 'Пианино'], ['rain', 'Дождь'], ['strings', 'Струнные'], ['night', 'Ночной лес'], ['none', 'Тишина']];
+  const CH = { piano: [[[110, 164.81, 220, 261.63, 329.63], 55], [[87.31, 130.81, 174.61, 220, 261.63], 43.65], [[130.81, 164.81, 196, 261.63, 329.63], 65.41], [[98, 146.83, 196, 246.94, 293.66], 49]],
+    strings: [[146.83, 174.61, 220, 293.66], [116.54, 146.83, 174.61, 233.08], [174.61, 220, 261.63, 349.23], [130.81, 196, 261.63, 329.63]] };
+  function noiseSrc(g, type, f, q, gain, lfoF, lfoA) { const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), gg = ctx.createGain(); s.buffer = noise; s.loop = true; fl.type = type; fl.frequency.value = f; fl.Q.value = q; gg.gain.value = gain; s.connect(fl); fl.connect(gg); gg.connect(g); s.start(); const o = [s]; if (lfoF) { const l = ctx.createOscillator(), la = ctx.createGain(); l.frequency.value = lfoF; la.gain.value = lfoA; l.connect(la); la.connect(gg.gain); l.start(); o.push(l); } return o; }
+  function stopTrack() {
+    if (!cur) return; const c = cur; cur = null; c.stops.forEach(f => f()); const t = now(); c.g.gain.cancelScheduledValues(t); c.g.gain.setValueAtTime(c.g.gain.value, t); c.g.gain.linearRampToValueAtTime(0, t + 1.2);
+    setTimeout(() => { c.srcs.forEach(o => { try { o.stop(); } catch (e) {} }); try { c.g.disconnect(); } catch (e) {} }, 1500);
+  }
+  function startTrack(id) {
+    if (!ctx) return; stopTrack(); if (id === 'box' || id === 'none' || !TRACKS.some(t => t[0] === id)) return;
+    const g = ctx.createGain(); g.gain.value = 0; g.connect(mus); const c = cur = { id, g, stops: [], srcs: [] }, live = () => cur === c && ctx;
+    g.gain.setValueAtTime(0, now()); g.gain.linearRampToValueAtTime(1, now() + 2.5);
+    const add = (...o) => o.flat().forEach(x => c.srcs.push(x)), ev = (fn, a, b) => c.stops.push(loop(() => { if (live()) fn(); }, a, b));
+    if (id === 'piano') {
+      let ci = 0; const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2200; lp.connect(g);
+      const key = (f, t, v) => { osc('triangle', f, t, .006, .05 * v, 2.6, lp); osc('sine', f * 2, t, .004, .018 * v, 1.4, lp); osc('sine', f * 3.01, t, .003, .004 * v, .6, lp); };
+      const chord = () => { if (!live()) return; const [ns, b] = CH.piano[ci++ % 4], t = now() + .05; key(b, t, 1.1); key(b * 2, t + .02, .6);
+        let k = 0; ns.concat(ns.slice(1, 4).reverse()).forEach((f, i) => { if (Math.random() < .86) key(f * (Math.random() < .2 ? 2 : 1), t + .45 + i * (.5 + Math.random() * .14), .75 - i * .03); k++; });
+        timers.push(setTimeout(chord, 6200)); };
+      chord();
+    } else if (id === 'rain') {
+      add(noiseSrc(g, 'bandpass', 2600, .5, .05, .09, .02), noiseSrc(g, 'lowpass', 520, .6, .06, .05, .02), noiseSrc(g, 'highpass', 5200, .7, .012));
+      ev(() => noiseHit(now() + .01, .02 + Math.random() * .02, 'highpass', 3000 + Math.random() * 3500, 1, .018 + Math.random() * .02, g), .05, .3);
+      ev(() => { const t = now() + .05; noiseHit(t, 3.2, 'lowpass', 140, .7, .09, g, 60); }, 22, 48);
+      ev(() => { const r = [220, 261.63, 329.63, 392][Math.random() * 4 | 0], t = now() + .05; osc('sine', r, t, 1.4, .012, 4.5, g); }, 6, 11);
+    } else if (id === 'strings') {
+      let ci = 0; const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 760; lp.connect(g);
+      const pad = () => { if (!live()) return; const t = now(), d = 9.5; CH.strings[ci++ % 4].forEach((f, i) => [-3, 3].forEach(dt => { const o = ctx.createOscillator(), gg = ctx.createGain(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = dt + i; gg.gain.setValueAtTime(.0001, t); gg.gain.linearRampToValueAtTime(.011, t + 3.6); gg.gain.linearRampToValueAtTime(.0001, t + d + 1); o.connect(gg); gg.connect(lp); o.start(t); o.stop(t + d + 1.2); }));
+        osc('sine', CH.strings[(ci - 1) % 4][0] / 2, t, 3, .03, d, g); timers.push(setTimeout(pad, d * 1000 - 1500)); };
+      pad();
+    } else if (id === 'night') {
+      add(noiseSrc(g, 'bandpass', 380, .45, .07, .06, .035), noiseSrc(g, 'highpass', 3800, .8, .006, .1, .004));
+      ev(() => { const t = now() + .02, f = 4000 + Math.random() * 500, n = 3 + (Math.random() * 5 | 0); for (let i = 0; i < n; i++) osc('sine', f, t + i * .05, .005, .012, .035, g); }, .3, 1.1);
+      ev(() => { const t = now() + .05; osc('sine', 392, t, .06, .035, .4, g, 340); osc('sine', 349, t + .6, .06, .03, .5, g, 300); }, 8, 16);
+      const dr = ctx.createOscillator(), dg = ctx.createGain(); dr.type = 'sine'; dr.frequency.value = 55; dg.gain.value = .02; dr.connect(dg); dg.connect(g); dr.start(); add(dr);
+    }
   }
 
   /* ---- public */
   const api = {
     get ready() { return !!ctx; },
-    unlock() { if (!init()) return; if (ctx.state === 'suspended') ctx.resume(); if (!started) bed(); applyVol(); },
+    unlock() { if (!init()) return; if (ctx.state !== 'running') ctx.resume(); if (!started) bed(); applyVol(); },
     setMood(m) { mood = m; },
-    setFire(v) { fire = v; if (fireG && ctx) { fireG.gain.cancelScheduledValues(now()); fireG.gain.setTargetAtTime(v ? .13 : .0001, now(), v ? .5 : .7); } },
+    /* the fire's sound follows ONE decision: in the library and the open book it is the library fireplace, elsewhere the hub fire. Off means silent right now, not slowly */
+    setFire(v) { fire = v ? 1 : 0; if (fireG && ctx) { const t = now(); fireG.gain.cancelScheduledValues(t); fireG.gain.setValueAtTime(fireG.gain.value, t); if (v) fireG.gain.setTargetAtTime(.13, t, .5); else fireG.gain.linearRampToValueAtTime(0, t + .2); } },
+    fireWanted() { const lib = A.tab === 'books' || (A.bookview && A.bookview.isOpen()); return lib ? A.state.libFire !== false : !!(A.fire && A.fire.on); },
+    syncFire() { api.setFire(api.fireWanted() ? 1 : 0); },
+    _dbg: () => ctx && ({ state: ctx.state, master: +master.gain.value.toFixed(3), mus: +mus.gain.value.toFixed(3), fireG: fireG ? +fireG.gain.value.toFixed(4) : null, fire, track: cur && cur.id }),
+    tracks: TRACKS, get track() { return S().track || 'box'; },
+    setTrack(id) { S().track = id; A.save && A.save(); if (ctx && started) { startTrack(id); applyVol(); } },
     refresh() { applyVol(); },
     suspend() { if (ctx && ctx.state === 'running') ctx.suspend(); },
     resume() { if (ctx && S().sound && ctx.state === 'suspended') ctx.resume(); },
@@ -1354,6 +1433,7 @@ A.snd = (() => {
     stream(sec = 5) { if (!ctx) return; const t = now(); noiseHit(t, sec, 'bandpass', 1500, .7, .05, amb, 2300); },
     shooting() { if (!ctx) return; const t = now(); noiseHit(t, .9, 'highpass', 3000, 1, .05, sfx, 9000); osc('sine', 2093, t, .01, .03, .9, sfx, 3136); }
   };
+  ['pointerdown', 'touchend'].forEach(ev => addEventListener(ev, () => { if (ctx && S().sound !== false && ctx.state !== 'running') ctx.resume(); applyVol(); }, { capture: true, passive: true }));
   document.addEventListener('visibilitychange', () => document.hidden ? api.suspend() : api.resume());
   return api;
 })();
@@ -1704,10 +1784,10 @@ A.fire = (() => {
     ctx.globalAlpha = 1; smokeOn = smoke.length > 0 || (target === 0 && level > .02);
   }
   function set(on, quiet) {
-    if (on === (target > 0) && quiet) { A.snd.setFire(on ? 1 : 0); return; }
+    if (on === (target > 0) && quiet) { A.snd.syncFire(); return; }
     target = on ? 1 : 0; A.state.fireOn = on; A.save && A.save(); document.body.classList.toggle('warm', on); if (!on) smokeOn = true;
-    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.setFire(1), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.setFire(0)); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 8; i++) A.scene.spark(f.x + R(-34, 34), f.y - R(20, 70)); } }
-    else A.snd.setFire(on ? 1 : 0);
+    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.syncFire(), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.syncFire()); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 8; i++) A.scene.spark(f.x + R(-34, 34), f.y - R(20, 70)); } }
+    else A.snd.syncFire();
   }
   return {
     place, reset() {}, attachKnob() {}, init() { place(); },
@@ -1821,11 +1901,12 @@ A.tab = 'room'; let moving = false, lockT = 0;
 const busy = (on = true) => { moving = on; clearTimeout(lockT); if (on) lockT = setTimeout(() => { moving = false; }, 3600); };      // a transition can never leave the room stuck
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
 const curtain = A.$('#curtain');
-function enterRoom(tab, obj) {
+function enterRoom(tab, obj, opt = {}) {
   const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
   if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
   busy(); A.tab = tab; A.$('#hint').classList.remove('on'); document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
-  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
+  const swap = () => { if (prev !== 'room' && ROOMOF[prev]) { if (prev === 'quotes') A.casket.hide(); A.mods[prev] && A.mods[prev].hide && A.mods[prev].hide(); }   // room to room: the one we leave is closed first, never left standing under the new one
+    A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); if (opt.open && A.lib && A.lib.openBook) setTimeout(() => A.lib.openBook(opt.open), 700); curtain.classList.remove('on'); setTimeout(() => { busy(false); }, 900); };
   A.snd.whoosh(1);
   if (prev === 'room') { A.scene.focus(obj || OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
 }
@@ -1835,7 +1916,7 @@ function exitRoom() {
 }
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
-  if (ROOMOF[tab]) return enterRoom(tab, opt.obj);
+  if (ROOMOF[tab]) return enterRoom(tab, opt.obj, opt);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; busy();
@@ -1886,6 +1967,7 @@ A.settings = () => {
     <div class="glass" style="padding:6px 18px;margin-bottom:16px">
       <div class="set"><span>Звуки</span><button class="tog ${s.sound ? 'on' : ''}" data-k="sound"><i></i></button></div>
       <div class="set"><span>Музыкальная шкатулка</span><button class="tog ${s.music ? 'on' : ''}" data-k="music"><i></i></button></div>
+      <div class="set" style="flex-wrap:wrap;gap:8px"><span>Фоновая музыка</span><div class="bvs__seg bvs__seg--wrap" id="stTrk" style="flex-basis:100%">${A.snd.tracks.map(([k, n]) => `<button data-v="${k}" class="${A.snd.track === k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
       <div class="set"><span>Громкость</span><input type="range" min="0" max="1" step=".05" value="${s.vol}" id="stVol" style="width:55%;accent-color:#f1c76e"></div>
     </div>
     <div class="glass" style="padding:18px;margin-bottom:16px"><div class="eyebrow" style="margin-bottom:12px">цели чтения</div>
@@ -1899,6 +1981,7 @@ A.settings = () => {
       const q = (x) => A.$(x, sh.el);
       const por = q('#stPortrait'); if (s.portrait) por.style.backgroundImage = `url(${s.portrait})`;
       q('#stFile').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; const url = await A.imgToData(f, 360, .86); s.portrait = url; A.save(); por.style.backgroundImage = `url(${url})`; A.applyPortrait(); A.snd.chime(); });
+      A.$('#stTrk', sh.el).addEventListener('click', e => { const t = e.target.closest('button'); if (!t) return; A.snd.tap(); A.snd.unlock(); s.music = true; A.snd.setTrack(t.dataset.v); A.snd.refresh(); A.$$('#stTrk button', sh.el).forEach(x => x.classList.toggle('on', x === t)); A.$$('.tog[data-k=music]', sh.el).forEach(x => x.classList.add('on')); A.musicBox && A.musicBox.sync(); });
       A.$$('.tog', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.k; s[k] = !s[k]; b.classList.toggle('on', s[k]); A.save(); A.snd.refresh(); if (k === 'music') A.musicBox && A.musicBox.sync(); A.snd.tap(); }));
       q('#stVol').addEventListener('input', e => { s.vol = +e.target.value; A.save(); A.snd.refresh(); });
       A.$$('[data-g]', sh.el).forEach(b => b.addEventListener('click', () => { const k = b.dataset.g, g = A.state.goal; g[k] = A.clamp(g[k] + +b.dataset.d, k === 'day' ? 5 : 20, 1000); q(k === 'day' ? '#gDay' : '#gWeek').textContent = g[k]; A.save(); A.snd.tap(); A.mods.path && A.mods.path.refreshGoal && A.mods.path.refreshGoal(); }));
@@ -1938,7 +2021,11 @@ A.hands = (() => {
   function layer(side, kind) {
     const a = ART[POSE[side][kind]], im = new Image(); im.src = `img/${POSE[side][kind]}.webp`; im.className = 'hd__img'; im.draggable = false; im.decoding = 'async';
     let top = im, ext = null;
-    if (kind !== 'reach') { top = A.h('<div class="hd__wrap"></div>'); ext = A.h('<div class="hd__ext"></div>'); ext.style.backgroundImage = `url(img/${POSE[side][kind]}.webp)`; top.append(im, ext); im.style.position = 'relative'; }
+    if (kind !== 'reach') { top = A.h('<div class="hd__wrap"></div>'); ext = A.h('<div class="hd__ext"></div>'); top.append(im, ext); im.style.position = 'relative';
+      /* the sleeve goes on below the picture: the picture's last rows, averaged into one smooth strip (the embroidery would smear into stripes if the real rows were stretched) */
+      im.addEventListener('load', () => { try { const w = im.naturalWidth, h = im.naturalHeight, c = document.createElement('canvas'); c.width = w; c.height = 1; const x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.drawImage(im, 0, h - 10, w, 8, 0, 0, w, 1);
+        const d = x.getImageData(0, 0, w, 1).data, o = new Uint8ClampedArray(w * 4); for (let i = 0; i < w; i++) { let r = 0, g = 0, b = 0, a = 0, n = 0; for (let j = Math.max(0, i - 7); j <= Math.min(w - 1, i + 7); j++) { r += d[j * 4]; g += d[j * 4 + 1]; b += d[j * 4 + 2]; a += d[j * 4 + 3]; n++; } o[i * 4] = r / n; o[i * 4 + 1] = g / n; o[i * 4 + 2] = b / n; o[i * 4 + 3] = a / n; }
+        x.putImageData(new ImageData(o, w, 1), 0, 0); ext.style.backgroundImage = `url(${c.toDataURL()})`; } catch (e) {} }, { once: true }); if (im.complete && im.naturalWidth) im.dispatchEvent(new Event('load')); }
     const pg = kind === 'page', s = { img: top, im, ext, art: a, x: new Sp(0, pg ? 230 : 120, pg ? 27 : 18), y: new Sp(0, pg ? 230 : 120, pg ? 27 : 18), r: new Sp(0, 90, 15), s: new Sp(1, 110, 17), o: new Sp(kind === 'reach' ? 1 : 0, 150, 22) };
     return s;
   }
@@ -1954,7 +2041,7 @@ A.hands = (() => {
       const o = sides[side], a = ART[POSE[side].reach], w = a.w * L.k, h = a.h * L.k;
       o.base = side === 'L' ? { left: -w * .1, top: L.vh - h * .78 } : { left: L.vw - w * .88, top: L.vh - h * .74 };
       const st = o.reach.img.style; st.width = w + 'px'; st.height = h + 'px'; st.left = o.base.left + 'px'; st.top = o.base.top + 'px'; st.transformOrigin = `${a.piv[0] * L.k}px ${a.piv[1] * L.k}px`;
-      ['grasp', 'page'].forEach(kd => { const b = ART[POSE[side][kd]], sc = L.k * gk, l = o[kd], s2 = l.im.style; s2.width = b.w * sc + 'px'; s2.height = b.h * sc + 'px'; l.img.style.width = b.w * sc + 'px'; l.img.style.height = b.h * sc + 'px'; l.ext.style.width = b.w * sc + 'px'; l.ext.style.height = L.vh + 'px'; l.ext.style.backgroundSize = `${b.w * sc}px ${b.h * sc * 40}px`; });
+      ['grasp', 'page'].forEach(kd => { const b = ART[POSE[side][kd]], sc = L.k * gk, l = o[kd], s2 = l.im.style; s2.width = b.w * sc + 'px'; s2.height = b.h * sc + 'px'; l.img.style.width = b.w * sc + 'px'; l.img.style.height = b.h * sc + 'px'; l.ext.style.width = b.w * sc + 'px'; l.ext.style.height = L.vh + 'px'; l.ext.style.backgroundSize = '100% 100%'; });
     });
   }
   /* pivot / tip of the reach sprite on screen at rest */
@@ -1980,7 +2067,8 @@ A.hands = (() => {
         placeLayer('L', 'grasp', [lx, ey], ART['pose-2'].edge); placeLayer('R', 'grasp', [rx, ey], ART['pose-3'].edge);
       } }
     if (mode === 'carry' && carryFn) { const c = carryFn(); if (c) { const l = sides[carrySide].grasp, a = ART[POSE[carrySide].grasp], sc0 = L.k * gk;
-        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0; l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
+        l.x.x = l.x.t = c.x - a.edge[0] * sc0; l.y.x = l.y.t = c.y - a.edge[1] * sc0; l.r.x = l.r.t = c.r || 0;      // c.r is the arm's angle; the carried thing turns on its own (c.prop.r)
+        l.s.x = l.s.t = c.s || 1; l.x.v = l.y.v = l.r.v = l.s.v = 0;     // the hand is welded to what it carries
         if (propEl && c.prop) propEl.style.transform = `translate3d(${c.prop.x.toFixed(1)}px,${c.prop.y.toFixed(1)}px,0) rotate(${(c.prop.r || 0).toFixed(2)}deg) scale(${(c.prop.s || 1).toFixed(3)})`; if (propEl && c.clip != null) propEl.style.clipPath = c.clip; } }
     if (mode === 'pinch' && pinchFn) { const p = pinchFn(); if (p) { const side = p.side; placeLayer(side, 'page', [p.x, p.y], ART[POSE[side].page].tip); reachTo(side, [p.x, p.y], .85); } }
     ['L', 'R'].forEach(side => {
@@ -2047,7 +2135,7 @@ A.lib = (() => {
   const sgn = Math.sign, wait = ms => new Promise(r => setTimeout(r, ms)), ease = k => 1 - Math.pow(1 - A.clamp(k, 0, 1), 3), rnd = (a, b) => a + Math.random() * (b - a);
   let stage, tagEl, noteEl, poolEl, delEl, askEl, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, fl = 1, kick = 0, hs = [], others = new Sp(0, 46, 9.5), fireOn = true, fireL = new Sp(1, 26, 8.5), offEl = null, darkEl = null, fireBtn = null;
   const order = { reading: 0, want: 1, done: 2 };
-  const fireSnd = () => A.snd.setFire(fireOn ? 1 : 0);
+  const fireSnd = () => A.snd.syncFire();
 
   const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, vw * .16, 230) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
@@ -2245,6 +2333,7 @@ A.lib = (() => {
       if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
     hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); A.snd.setFire(A.fire && A.fire.on ? 1 : 0); clearTimeout(hoverT); root.classList.remove('pick'); hs.forEach(h => h.remove()); hs = []; A.scene.push && A.scene.push(1); A.qslip && A.qslip.close(); if (raf) { cancelAnimationFrame(raf); raf = 0; } },
+    openBook(id) { const i = items.findIndex(it => it.b && it.b.id === id); if (i < 0 || busy) return false; p = pt = i; pv = 0; draw(); label(); wake(); setTimeout(() => { if (active && !busy) select(items[i]); }, 650); return true; },
     get active() { return active; }, fireLevel: () => fireL.x, _items: () => items
   };
 })();
@@ -2260,7 +2349,7 @@ A.bookview = (() => {
   const prefs = () => Object.assign({ size: 21, font: 'serif', theme: 'parch' }, A.state.settings.reader || {});
   const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
   const TABS = [['read', 'Читать'], ['impr', 'Впечатление'], ['quotes', 'Цитаты']];
-  let posT = 0, stillT = 0, warmT = 0, leafTok = 0, el, book, bookEl, pgL, pgR, leaf, castL, castR, fsh, strips = [], stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
+  let pdfMode = false, pdfDoc = null, pdfCache = new Map(), pdfQ = [], pdfRun = false, pdfCur = 0, srchTok = 0, jumpOpen = false, posT = 0, stillT = 0, warmT = 0, leafTok = 0, el, book, bookEl, pgL, pgR, leaf, castL, castR, fsh, strips = [], stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
 
   /* ---------------------------------------------------------------- pagination (lazy: a page is measured only when it is needed) */
   function makePager(paras, measure) {
@@ -2310,10 +2399,14 @@ A.bookview = (() => {
       <nav class="bv__tabs" id="bvTabs">${TABS.map(([k, n], i) => `<button class="rb rb--${i}" data-t="${k}"><span>${n}</span></button>`).join('')}</nav>
       <footer class="bv__foot"><div class="bv__line"><i id="bvProg"></i></div><span id="bvPg"></span></footer>
       <button class="bv__fin" id="bvFin" hidden>Дочитала</button>
+      <div class="bv__jump" id="bvJump"><div class="bj__in"><button class="bj__x" id="bjX" aria-label="Закрыть">×</button><b>Перейти к странице</b><small id="bjCur"></small>
+        <div class="bj__row"><input id="bjN" type="number" inputmode="numeric" min="1" placeholder="стр."><button class="seal" id="bjGo">Перейти</button></div><input type="range" id="bjR" min="1" max="2" value="1">
+        <div class="bj__row"><input id="bjQ" type="search" placeholder="Найти слово в книге" autocomplete="off"><button class="seal seal--ghost" id="bjFind">Найти</button></div><div class="bj__res" id="bjRes"></div></div></div>
       <button class="bv__sel" id="bvSel" hidden><svg viewBox="0 0 24 24" class="ico"><use href="#i-quill"/></svg>В цитаты</button>
       <div class="bv__set" id="bvSet"><div class="bvs__row"><span>Размер</span><input type="range" min="16" max="32" step="1" id="bvSize"></div>
         <div class="bvs__row"><span>Шрифт</span><div class="bvs__seg" id="bvFont"><button data-v="serif" style="font-family:${FONTS.serif}">Сказка</button><button data-v="book" style="font-family:${FONTS.book}">Книга</button><button data-v="sans" style="font-family:${FONTS.sans}">Строгий</button></div></div>
         <div class="bvs__row"><span>Бумага</span><div class="bvs__seg" id="bvTh"><button data-v="parch">Пергамент</button><button data-v="night">Ночь</button></div></div>
+        <div class="bvs__row bvs__row--trk"><span>Музыка</span><div class="bvs__seg bvs__seg--wrap" id="bvTrk">${A.snd.tracks.map(([k, n]) => `<button data-v="${k}">${n}</button>`).join('')}</div></div>
         <div class="bvs__row"><span>Костёр</span><input type="range" min="0" max="1" step=".05" id="bvFire"></div></div>
     </div>`);
     document.body.appendChild(el); bookEl = A.$('#bvBook', el); pgL = A.$('#pgL', el); pgR = A.$('#pgR', el); leaf = A.$('#bvLeaf', el); castL = A.$('.bv__cast--l', el); castR = A.$('.bv__cast--r', el); fsh = A.$('#bvFsh', el); stage = A.$('#bvStage', el);
@@ -2321,8 +2414,15 @@ A.bookview = (() => {
     A.$$('#bvTabs .rb', el).forEach(b => b.addEventListener('click', () => { A.snd.tap(); switchTab(b.dataset.t); }));
     const setP = (k, v) => { A.state.settings.reader = Object.assign(prefs(), { [k]: v }); A.save(); applyPrefs(); if (k !== 'theme') repaginate(); markPrefs(); };
     A.$('#bvSize', el).addEventListener('input', e => setP('size', +e.target.value));
-    A.$('#bvFire', el).addEventListener('input', e => { A.snd.fireVol(+e.target.value); if (+e.target.value > 0) A.snd.setFire(1); });
+    A.$('#bvFire', el).addEventListener('input', e => { A.snd.fireVol(+e.target.value); A.snd.syncFire(); });
+    A.$('#bvTrk', el).addEventListener('click', e => { const t = e.target.closest('button'); if (!t) return; A.snd.tap(); A.snd.unlock(); A.state.settings.music = true; A.snd.setTrack(t.dataset.v); A.snd.refresh(); A.$$('#bvTrk button', el).forEach(x => x.classList.toggle('on', x === t)); A.musicBox && A.musicBox.sync(); });
     [['#bvFont', 'font'], ['#bvTh', 'theme']].forEach(([s, k]) => A.$(s, el).addEventListener('click', e => { const t = e.target.closest('button'); if (t) { A.snd.tap(); setP(k, t.dataset.v); } }));
+    A.$('#bvPg', el).addEventListener('click', () => { A.snd.tap(); jumpOpen ? jumpClose() : jumpOpenUI(); });
+    A.$('#bjX', el).addEventListener('click', () => { A.snd.tap(); jumpClose(); }); A.$('#bvJump', el).addEventListener('pointerdown', e => { if (e.target.id === 'bvJump') jumpClose(); e.stopPropagation(); });
+    A.$('#bjGo', el).addEventListener('click', () => { const v = +A.$('#bjN', el).value || +A.$('#bjR', el).value; jumpTo(v); });
+    A.$('#bjN', el).addEventListener('keydown', e => { if (e.key === 'Enter') jumpTo(+e.target.value); }); A.$('#bjR', el).addEventListener('input', e => { A.$('#bjN', el).value = e.target.value; }); A.$('#bjR', el).addEventListener('change', e => jumpTo(+e.target.value));
+    A.$('#bjFind', el).addEventListener('click', () => findWord(A.$('#bjQ', el).value)); A.$('#bjQ', el).addEventListener('keydown', e => { if (e.key === 'Enter') findWord(e.target.value); });
+    A.$('#bjRes', el).addEventListener('click', e => { const b = e.target.closest('button'); if (b) { A.snd.tap(); jumpTo(+b.dataset.p); } });
     A.$('#bvFin', el).addEventListener('click', () => { const bk = book; close(); setTimeout(() => { if (bk.status !== 'done') { bk.status = 'done'; bk.finished = null; A.finishBook(bk); A.mods.books && A.mods.books.refresh(); } }, 900); });
     A.$('#bvSel', el).addEventListener('click', () => { if (!selPara) return; const t = selPara.textContent.trim(); clearSel(); comp.text = t; switchTab('quotes'); });
     bookEl.addEventListener('pointerdown', onDown); bookEl.addEventListener('pointermove', onMove); bookEl.addEventListener('pointerup', onUp); bookEl.addEventListener('pointercancel', () => { cancelPress(); if (drag && drag.flip) settle(); drag = null; });
@@ -2333,14 +2433,67 @@ A.bookview = (() => {
   /* ---------------------------------------------------------------- geometry + preferences */
   function layout() {
     const vw = innerWidth, vh = innerHeight, land = vw > vh * 1.08; el.classList.toggle('land', land); const r = stage.getBoundingClientRect(); let W = r.width, H = r.height, pw, ph;
-    if (land) { ph = Math.min(H - 16, 560); pw = Math.min((W - 24) / 2, ph * .86); } else { pw = Math.min(W - 24, 460); ph = Math.min(H - 14, pw * 1.78); }
+    const asp = pdfMode && book && book.pdfAspect ? A.clamp(book.pdfAspect, .8, 2.2) : 0;                  // a PDF's pages keep their own proportions: the book is shaped like the file
+    if (land) { ph = Math.min(H - 16, 560); pw = Math.min((W - 24) / 2, ph * (asp ? 1 / asp : .86)); if (asp) ph = Math.min(ph, pw * asp); } else { pw = Math.min(W - 24, asp ? 560 : 460); ph = Math.min(H - 14, pw * (asp || 1.78)); if (asp) pw = Math.min(pw, ph / asp); }
     pw = Math.floor(pw); ph = Math.floor(ph); const bw = land ? pw * 2 : pw, bx = Math.round((W - bw) / 2), by = Math.round((H - ph) / 2);
     g = { vw, vh, land, pw, ph, bw, bx, by, W, H };
     bookEl.style.cssText = `left:${bx}px;top:${by}px;width:${bw}px;height:${ph}px;--pw:${pw}px;--ph:${ph}px;--px:${Math.round(pw * .095)}px;--pt:${Math.round(ph * .055)}px;--pb:${Math.round(ph * .085)}px`;
     el.style.setProperty('--fs', Math.round(prefs().size * (land ? .86 : 1)) + 'px');
   }
   function applyPrefs() { const P = prefs(); el.dataset.th = P.theme; el.style.setProperty('--ff', FONTS[P.font]); document.querySelector('meta[name=theme-color]').setAttribute('content', '#0a0605'); }
-  function markPrefs() { const P = prefs(); A.$$('#bvFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#bvTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); A.$('#bvSize', el).value = P.size; A.$('#bvFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; }
+  function markPrefs() { const P = prefs(); A.$$('#bvTrk button', el).forEach(x => x.classList.toggle('on', x.dataset.v === A.snd.track)); A.$$('#bvFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#bvTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); A.$('#bvSize', el).value = P.size; A.$('#bvFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; }
+
+
+  /* ---------------------------------------------------------------- a PDF reads as itself: its pages are drawn on demand (the nearest ones first) and turn like the leaves of a book */
+  const pdfPager = () => { const N = pdfDoc.numPages; return { get: i => i >= 0 && i < N ? 'pdf' + i : null, count: () => N, finished: true, pageOfChar: pos => A.clamp(Math.floor(pos), 0, N - 1), fracOf: n => A.clamp(n, 0, N) / N, tot: N }; };
+  function pdfGet(i, hi) {
+    let e = pdfCache.get(i); if (e) { if (hi && !e.url && !e.run) { const k = pdfQ.indexOf(e); if (k > 0) { pdfQ.splice(k, 1); pdfQ.unshift(e); } } return e.p; }
+    e = { i, url: null, run: false }; e.p = new Promise(res => { e.res = res; }); pdfCache.set(i, e); hi ? pdfQ.unshift(e) : pdfQ.push(e); pdfPump(); return e.p;
+  }
+  async function pdfPump() {
+    if (pdfRun) return; pdfRun = true;
+    while (pdfQ.length) { const e = pdfQ.shift(); if (!pdfDoc || e.gone) { e.res(null); continue; } e.run = true; try { e.url = await pdfRender(e.i); } catch (x) { e.url = null; } e.run = false; e.res(e.url); if (e.url) pdfEvict(); }
+    pdfRun = false;
+  }
+  async function pdfRender(i) {
+    const doc = pdfDoc, page = await doc.getPage(i + 1), v0 = page.getViewport({ scale: 1 }), sc = A.clamp(g.pw * Math.min(devicePixelRatio || 1, 2.2) / v0.width, .6, 2.4), vp = page.getViewport({ scale: sc });
+    const c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height); const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: x, viewport: vp }).promise; x.globalCompositeOperation = 'multiply'; x.fillStyle = '#f2e6c4'; x.fillRect(0, 0, c.width, c.height);           // white paper becomes the book's paper
+    return new Promise(r => c.toBlob(b => r(b ? URL.createObjectURL(b) : null), 'image/jpeg', .88));
+  }
+  function pdfEvict() { if (pdfCache.size <= 20) return; [...pdfCache.keys()].filter(k => Math.abs(k - pdfCur) > 8).forEach(k => { const e = pdfCache.get(k); if (e.url) URL.revokeObjectURL(e.url); e.gone = true; pdfCache.delete(k); }); }
+  function pdfReset() { pdfCache.forEach(e => { if (e.url) URL.revokeObjectURL(e.url); e.gone = true; }); pdfCache.clear(); pdfQ.length = 0; }
+  function pdfWarm() { if (!pdfMode || !pdfDoc || S.tab !== 'read') return; const f0 = g.land ? S.i * 2 : S.i; pdfCur = Math.max(0, f0 - 1); for (let i = f0 - 2; i <= f0 + 4; i++) if (i >= 0 && i < pdfDoc.numPages) pdfGet(i, i >= f0 - 1 && i <= f0 + 1); }
+  function pdfFace(i) {
+    const d = pageEl('', 'pdfpg'), im = new Image(); im.alt = ''; im.draggable = false; d.appendChild(im); const e = pdfCache.get(i);
+    if (e && e.url) im.src = e.url; else { d.classList.add('wait'); pdfGet(i, true).then(u => { if (u) { im.src = u; d.classList.remove('wait'); } }); } return d;
+  }
+
+  /* ---------------------------------------------------------------- go to a page / find a word */
+  const tick = () => new Promise(r => setTimeout(r, 0));
+  const totalPages = () => hasText ? (pdfMode ? pdfDoc.numPages : pager.count()) : 0;
+  async function jumpTo(N) {
+    if (fl || busyW || !hasText) return; N = Math.round(N); if (!(N >= 1)) return; const tot = totalPages(); N = Math.min(N, tot); jumpClose();
+    const note = A.$('#bjNote', el);
+    if (!pdfMode) { for (let k = 0; k <= N; k++) { pager.get(k); if (k % 6 === 5) await tick(); } }
+    else { const f = N; await Promise.race([Promise.all([f - 1, f, f + 1].filter(i => i >= 0 && i < tot).map(i => pdfGet(i, true))), new Promise(r => setTimeout(r, 1800))]); }
+    const to = { tab: 'read', i: g.land ? Math.floor(N / 2) : N }; if (S.tab !== 'read') { S = { tab: 'read', i: S.i }; renderSlots(); }
+    if (to.i === S.i) return; const dir = to.i > S.i ? 1 : -1; if (begin(dir, to)) { const f = fl; f.k = 26; f.c = 8.2; launch(f, dir > 0 ? -180 : 0, 120); A.snd.page(); }
+  }
+  const esc_re = t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  async function findWord(q) {
+    const res = A.$('#bjRes', el), tok = ++srchTok; q = q.trim(); res.innerHTML = ''; if (q.length < 2) { res.innerHTML = '<p class="bj__hint">Введи хотя бы две буквы</p>'; return; }
+    const out = [], add = (p, snip) => { out.push(1); const b = document.createElement('button'); b.dataset.p = p; b.innerHTML = `<span>стр. ${p}</span><i></i>`; b.lastChild.textContent = snip; res.appendChild(b); };
+    const low = q.toLowerCase(), snip = (t, at) => '…' + t.slice(Math.max(0, at - 36), at + q.length + 44).replace(/\s+/g, ' ') + '…';
+    if (!pdfMode) { const t = book._text || '', lt = t.toLowerCase(); let at = -1, n = 0; while ((at = lt.indexOf(low, at + 1)) >= 0 && n < 40) { add(pager.pageOfChar(at) + 1, snip(t, at)); n++; if (n % 8 === 0) await tick(); if (tok !== srchTok) return; } }
+    else { res.innerHTML = '<p class="bj__hint" id="bjProg">Ищу по страницам…</p>'; const N = pdfDoc.numPages; for (let p = 1; p <= N && out.length < 40; p++) { if (tok !== srchTok) return; try { const pg = await pdfDoc.getPage(p), tc = await pg.getTextContent(), t = tc.items.map(i => i.str).join(' '), at = t.toLowerCase().indexOf(low); if (at >= 0) { const pr = A.$('#bjProg', el); add(p, snip(t, at)); if (pr) res.appendChild(pr); } } catch (e) {} if (p % 5 === 0) { const pr = A.$('#bjProg', el); if (pr) pr.textContent = `Ищу по страницам… ${p} из ${N}`; await tick(); } } const pr = A.$('#bjProg', el); if (pr) pr.remove(); }
+    if (tok === srchTok && !out.length) res.innerHTML = '<p class="bj__hint">Ничего не нашлось</p>';
+  }
+  function jumpOpenUI() {
+    if (!hasText || S.tab !== 'read') { A.toast('Переход по страницам работает в «Читать»'); return; } jumpOpen = true; el.classList.add('jump'); const tot = totalPages(), cur = Math.max(1, g.land ? S.i * 2 + 1 : S.i), r = A.$('#bjR', el), n = A.$('#bjN', el);
+    r.max = tot; r.value = Math.min(cur, tot); n.value = ''; n.placeholder = `1–${tot}`; A.$('#bjCur', el).textContent = `Сейчас стр. ${cur} из ${tot}`; A.$('#bjRes', el).innerHTML = ''; A.$('#bjQ', el).value = '';
+  }
+  function jumpClose() { jumpOpen = false; el.classList.remove('jump'); srchTok++; const a = document.activeElement; a && a.blur && a.blur(); }
 
   /* ---------------------------------------------------------------- the faces (what a page holds) */
   const savePos = () => { clearTimeout(posT); posT = setTimeout(() => A.save(), 450); };
@@ -2391,7 +2544,7 @@ A.bookview = (() => {
 
   /* ---------------------------------------------------------------- modes: how many faces, which face */
   const modes = {
-    read: { count: () => hasText ? 1 + pager.count() : 1, face: n => !hasText ? (n === 0 ? noText() : blank()) : n === 0 ? titlePage() : (h => h == null ? blank(n) : textFace(h, n))(pager.get(n - 1)) },
+    read: { count: () => hasText ? 1 + pager.count() : 1, face: n => !hasText ? (n === 0 ? noText() : blank()) : n === 0 ? titlePage() : (h => h == null ? blank(n) : pdfMode ? pdfFace(n - 1) : textFace(h, n))(pager.get(n - 1)) },
     impr: { count: () => 2, face: n => n === 0 ? imprInfo() : n === 1 ? imprWrite() : blank() },
     quotes: { count: () => 1 + qpager.count(), face: n => n === 0 ? composer() : qFace(n - 1) }
   };
@@ -2399,7 +2552,7 @@ A.bookview = (() => {
   const slots = st => g.land ? { L: modes[st.tab].face(st.i * 2), R: modes[st.tab].face(st.i * 2 + 1) } : { L: null, R: modes[st.tab].face(st.i) };
   const setSlot = (slot, face) => { const keep = A.$('.sh', slot); slot.innerHTML = ''; if (face) slot.appendChild(face); slot.appendChild(keep || A.h('<i class="sh"></i>')); slot.hidden = false; };
   function renderSlots() {
-    const s = slots(S); if (g.land) { setSlot(pgL, s.L); pgL.style.display = ''; } else pgL.style.display = 'none'; setSlot(pgR, s.R); foot();
+    const s = slots(S); if (g.land) { setSlot(pgL, s.L); pgL.style.display = ''; } else pgL.style.display = 'none'; setSlot(pgR, s.R); foot(); pdfWarm();
   }
   
   function foot() {
@@ -2419,7 +2572,7 @@ A.bookview = (() => {
      the page is a strip of thin segments hinged on each other: the free edge lags behind the finger (it "sails"), flutters a little, every segment is lit by its own angle,
      the lifted page throws a soft shadow over the page below that grows and slides with it, and the fingertip throws its own shadow that loosens as the corner rises. */
   const flipping = () => fl && !fl.flutter;
-  const NS = 9, LIGHT = [-.45, .85, .993];
+  const NS = 7, LIGHT = [-.45, .85, .993];
   function cloneFace(n) { if (!n) return null; const c = n.cloneNode(true); c.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); const o = n.querySelectorAll('textarea'); c.querySelectorAll('textarea').forEach((t, i) => { t.value = o[i] ? o[i].value : ''; t.tabIndex = -1; }); c.querySelectorAll('button,input').forEach(b => { b.tabIndex = -1; }); return c; }
   function buildLeaf(front, back) {
     leaf.innerHTML = ''; strips = []; const sw = g.pw / NS, ov = 1; let parent = leaf;                       // neighbouring segments overlap by a pixel on each side, so no seam can open between them
@@ -2451,7 +2604,7 @@ A.bookview = (() => {
     fl.tx = x; fl.h = A.clamp(h / g.pw, 0, 1); if (!g.land) leaf.style.opacity = (1 - A.clamp((Math.abs(th) - 96) / 66, 0, 1)).toFixed(3);          // with no left page the leaf melts into the dark as it goes by instead of vanishing
     // the shadow of the lifted page on the page below: it stretches to where the free edge is and softens as the page rises
     const over = x >= 0 ? 'R' : 'L', ca = over === 'R' ? castR : castL, cb2 = over === 'R' ? castL : castR, wpx = Math.abs(x), soft = .5 * Math.pow(Math.sin(Math.min(1, fl.h * 1.15) * 1.5708), .8) * (1 - .35 * fl.h);
-    ca.style.cssText = `left:${(over === 'R' ? (g.land ? g.pw : 0) : (g.land ? 0 : -g.pw))}px;width:${(wpx + 26 + fl.h * 34).toFixed(1)}px;opacity:${soft.toFixed(3)};transform:${over === 'R' ? 'none' : `translateX(${(g.pw - wpx - 26 - fl.h * 34).toFixed(1)}px)`};background:linear-gradient(${over === 'R' ? 90 : 270}deg,rgba(24,10,0,.0),rgba(24,10,0,.5) ${Math.max(20, 70 - fl.h * 20).toFixed(0)}%,rgba(24,10,0,.34) ${(92 - fl.h * 6).toFixed(0)}%,rgba(24,10,0,0))`; cb2.style.opacity = 0;
+    const ck = `${over}|${Math.round(wpx / 3)}|${Math.round(fl.h * 24)}|${Math.round(soft * 60)}`; if (ca._k !== ck) { ca._k = ck; ca.style.cssText = `left:${(over === 'R' ? (g.land ? g.pw : 0) : (g.land ? 0 : -g.pw))}px;width:${(wpx + 26 + fl.h * 34).toFixed(1)}px;opacity:${soft.toFixed(3)};transform:${over === 'R' ? 'none' : `translateX(${(g.pw - wpx - 26 - fl.h * 34).toFixed(1)}px)`};background:linear-gradient(${over === 'R' ? 90 : 270}deg,rgba(24,10,0,.0),rgba(24,10,0,.5) ${Math.max(20, 70 - fl.h * 20).toFixed(0)}%,rgba(24,10,0,.34) ${(92 - fl.h * 6).toFixed(0)}%,rgba(24,10,0,0))`; } if (cb2._k !== 0) { cb2._k = 0; cb2.style.opacity = 0; }
     // the shadow of the fingertip: tight and dark while the corner is low, wide and pale as it lifts
     const bx = (g.land ? g.pw : 0) + x, by = g.ph - Math.min(70, g.ph * .1), k = fl.h, sx = 26 + k * 30, sy = 20 + k * 26, wdt = 50 + k * 56, hgt = 30 + k * 34;
     fsh.style.cssText = `left:${(bx + sx - wdt / 2).toFixed(1)}px;top:${(by + sy - hgt / 2).toFixed(1)}px;width:${wdt.toFixed(0)}px;height:${hgt.toFixed(0)}px;opacity:${(fl.pin ? .62 - k * .34 : 0).toFixed(3)}`;
@@ -2509,12 +2662,12 @@ A.bookview = (() => {
   }
   function onMove(e) {
     if (!drag || drag.ui) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-    if (!drag.moved && Math.hypot(dx, dy) > 10) { cancelPress(); if (Math.abs(dx) > Math.abs(dy) * 1.1) { drag.moved = true; if (begin(dx < 0 ? 1 : -1)) { drag.flip = true; fl.k = 140; fl.c = 20; clearSel(); } } else { drag.moved = true; } }
-    if (drag.flip && fl) { const now = performance.now(); drag.v = drag.v * .6 + ((e.clientX - drag.lx) / Math.max(1, now - drag.lt)) * .4; drag.lx = e.clientX; drag.lt = now; const p = A.clamp(Math.abs(dx) / (g.pw * .85), 0, 1); fl.t = fl.dir > 0 ? -180 * p : -180 * (1 - p); fl.t = fl.dir > 0 ? Math.min(0, fl.t) : Math.max(-180, fl.t); fl.ang = fl.t; fl.vd = 180 / (g.pw * .85) * drag.v * 1000; paintLeaf(); }
+    if (!drag.moved && Math.hypot(dx, dy) > 6) { cancelPress(); if (Math.abs(dx) > Math.abs(dy) * .65) { drag.moved = true; if (begin(dx < 0 ? 1 : -1)) { drag.flip = true; fl.k = 140; fl.c = 20; clearSel(); } } else { drag.moved = true; } }
+    if (drag.flip && fl) { const now = performance.now(); drag.v = drag.v * .6 + ((e.clientX - drag.lx) / Math.max(1, now - drag.lt)) * .4; drag.lx = e.clientX; drag.lt = now; const p = A.clamp(Math.abs(dx) / (g.pw * .85), 0, 1); fl.t = fl.dir > 0 ? -180 * p : -180 * (1 - p); fl.t = fl.dir > 0 ? Math.min(0, fl.t) : Math.max(-180, fl.t); fl.ang = fl.t; fl.vd = 180 / (g.pw * .85) * drag.v * 1000; }
   }
   function onUp(e) {
     cancelPress(); if (!drag) return; const d = drag; drag = null; if (d.ui) return;
-    if (d.flip && fl) { const p = fl.dir > 0 ? -fl.ang / 180 : 1 + fl.ang / 180, vel = d.v * fl.dir * -1; const complete = p > .3 || vel > .35; fl.t = fl.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180); fl.k = 58; fl.c = 10.5; fl.v = d.v * 1000 * 180 / (g.pw * .85); fl.hold = false; run(); return; }
+    if (d.flip && fl) { const p = fl.dir > 0 ? -fl.ang / 180 : 1 + fl.ang / 180, vel = d.v * fl.dir * -1; const complete = p > .22 || vel > .25; fl.t = fl.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180); fl.k = 58; fl.c = 10.5; fl.v = d.v * 1000 * 180 / (g.pw * .85); fl.hold = false; run(); return; }
     if (d.moved) { dragStamp = performance.now(); return; }
     if (performance.now() - d.t < 450 && !e.target.closest('.qe')) { const r = bookEl.getBoundingClientRect(), x = (e.clientX - r.left) / r.width; if (selPara) { clearSel(); return; } if (g.land ? x > .5 : x > .58) go(1); else if (g.land ? x <= .5 : x < .42) go(-1); }
   }
@@ -2543,21 +2696,23 @@ A.bookview = (() => {
 
   /* ---------------------------------------------------------------- open / close */
   function repaginate() {
-    if (!el || !g) return; const frac = S.tab === 'read' && hasText && pager ? pager.fracOf(Math.max(0, (g.land ? S.i * 2 + 1 : S.i) - 1)) : (book.pos || 0); layout(); startPagers(); if (S.tab === 'read' && hasText) { const n = pager.pageOfChar(frac * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; } else S.i = Math.min(S.i, spreads(S.tab) - 1); if (fl) { fl = null; leaf.style.display = 'none'; } renderSlots();
+    if (!el || !g) return; const frac = S.tab === 'read' && hasText && pager ? pager.fracOf(Math.max(0, (g.land ? S.i * 2 + 1 : S.i) - 1)) : (book.pos || 0); layout(); if (pdfMode) pdfReset(); startPagers(); if (S.tab === 'read' && hasText) { const n = pager.pageOfChar(frac * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; } else S.i = Math.min(S.i, spreads(S.tab) - 1); if (fl) { fl = null; leaf.style.display = 'none'; } renderSlots();
   }
   const relayout = () => repaginate();
   function startPagers() {
-    A.$$('.bv__meas', bookEl).forEach(m => m.remove()); if (hasText) pager = makePager(paragraphs(book._text || ''), mkMeas('')); qpager = quotesPager();
+    A.$$('.bv__meas', bookEl).forEach(m => m.remove()); if (hasText) pager = pdfMode ? pdfPager() : makePager(paragraphs(book._text || ''), mkMeas('')); qpager = quotesPager();
   }
   async function openBook(bk, opt = {}) {
     if (!el) build(); book = bk; open_ = true; onClose = opt.onClose || null; busyW = false; fl = null; maxFrac = 0; comp = { text: '', page: '' }; freshId = null;
     const text = await A.txt.get(bk.id); book._text = text || ''; hasText = !!(text && text.trim()); textLen = (text || '').length;
+    pdfMode = false; pdfReset(); pdfDoc = null;
+    if (bk.pdf) { try { const bin = await A.txt.getBin(bk.id); if (bin) { pdfDoc = await A.importer.pdfDoc(bin); pdfMode = true; hasText = true; textLen = pdfDoc.numPages; bk.pages = pdfDoc.numPages; if (!bk.pdfAspect) { const v = (await pdfDoc.getPage(1)).getViewport({ scale: 1 }); bk.pdfAspect = v.height / v.width; } } } catch (e) { pdfMode = false; pdfDoc = null; } }
     if (bk.status === 'want') { bk.status = 'reading'; bk.started = bk.started || Date.now(); }
-    if (!bk.pages && hasText) bk.pages = A.pagesEst(text); bk._len = textLen; A.save();
+    if (!bk.pages && hasText) bk.pages = pdfMode ? pdfDoc.numPages : A.pagesEst(text); bk._len = textLen; A.save();
     A.$('#bvT', el).textContent = bk.title; A.$('#bvA', el).textContent = bk.author || ''; el.hidden = false; el.classList.remove('setting', 'in'); applyPrefs(); markPrefs(); layout();
     S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos > .002) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; setTimeout(() => open_ && A.toast(`Закладка: продолжаем со стр. ${n}`, 2800), 1700); }
     leaf.style.display = 'none'; renderSlots(); document.body.classList.add('bv-open'); A.$('#lib3d').classList.add('bv');
-    A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
+    A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.syncFire();
     if (hasText && !A.state.bvTip) { A.state.bvTip = true; A.save(); setTimeout(() => open_ && A.toast('Листай страницы пальцем. Зажми абзац — он станет цитатой.', 4600), 2000); }
     void el.offsetWidth; el.classList.add('in'); setTimeout(() => { if (open_ && !fl && S.tab === 'read') flutter(); }, 1350); clearTimeout(stillT); stillT = setTimeout(() => { if (open_) { document.body.classList.add('bv-still'); A.scene.freeze(true); } }, 900); if (!hasText) setTimeout(() => A.toast('В «Читать» пока пусто — загрузи текст, а впечатления и цитаты работают уже сейчас'), 900);
   }
@@ -2565,8 +2720,8 @@ A.bookview = (() => {
     if (!open_) return; if (busyW) return; open_ = false; clearSel(); cancelPress(); A.quill.hide(); const b = book; clearTimeout(warmT);
     if (fl) { cancelAnimationFrame(raf); raf = 0; fl = null; } leafTok++; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0;
     if (hasText && pager) { b.read = b.read || 0; const reached = Math.round(maxFrac * (b.pages || A.pagesEst('x'.repeat(b._len || 800)))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); }
-    A.save(); el.classList.remove('in', 'setting'); clearTimeout(stillT); document.body.classList.remove('bv-open', 'bv-still'); A.scene.freeze(false); A.$('#lib3d').classList.remove('bv'); A.$('#hands').classList.remove('top'); A.hands.unpinch();
-    document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); A.snd.setFire(A.tab === 'books' || (A.fire && A.fire.on) ? 1 : 0);
+    jumpClose(); A.save(); el.classList.remove('in', 'setting'); clearTimeout(stillT); document.body.classList.remove('bv-open', 'bv-still'); A.scene.freeze(false); A.$('#lib3d').classList.remove('bv'); A.$('#hands').classList.remove('top'); A.hands.unpinch();
+    document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); A.snd.syncFire();
     setTimeout(() => { el.hidden = true; }, 700); const cb = onClose; onClose = null; setTimeout(() => cb && cb(), 160); A.mods.books && A.mods.books.refresh && A.mods.books.refresh();
   }
   return { open: openBook, close, isOpen: () => open_, _dbg: () => ({ fl, raf, S, g, open_, busyW }), _go: go };
@@ -2755,7 +2910,7 @@ A.qslip = (() => {
           const f = e.target.files[0]; if (!f) return; const note = q('#ebImpNote'); note.textContent = 'Читаю файл…';
           try { const r = await A.importer.read(f, (i, n) => { note.textContent = `Читаю страницы: ${i} из ${n}`; });
             pending = r; q('#ebTx').value = ''; if (!b.title.trim() || !old) { b.title = r.title; q('#ebT').value = r.title; } if (r.author && !b.author) { b.author = r.author; q('#ebA').value = r.author; }
-            if (r.cover) b.cover = { img: r.cover }; b.pages = r.pageCount || A.pagesEst(r.text); q('#ebP').value = b.pages; prev(); note.textContent = `Готово: ${r.text.length > 1e6 ? Math.round(r.text.length / 1e5) / 10 + ' млн' : Math.round(r.text.length / 1000) + ' тыс.'} знаков. Нажми «${old ? 'Сохранить' : 'Поставить на полку'}».`; A.snd.chime([659.25, 880], .1, .6);
+            if (r.cover) b.cover = { img: r.cover }; b.pages = r.pageCount || A.pagesEst(r.text); q('#ebP').value = b.pages; prev(); note.textContent = (r.pdf ? `Готово: ${r.pageCount} стр., страницы как в оригинале.` : `Готово: ${r.text.length > 1e6 ? Math.round(r.text.length / 1e5) / 10 + ' млн' : Math.round(r.text.length / 1000) + ' тыс.'} знаков.`) + ` Нажми «${old ? 'Сохранить' : 'Поставить на полку'}».`; A.snd.chime([659.25, 880], .1, .6);
           } catch (err) { note.textContent = err.message === 'scan' ? 'В этом PDF нет текста: похоже на скан. Нужен файл с текстовым слоем.' : err.message === 'big' ? 'Файл слишком большой для телефона.' : err.message === 'lib' ? 'Не удалось загрузить модуль чтения. Проверь интернет и попробуй ещё раз.' : 'Не получилось прочитать этот файл.'; A.toast(note.textContent); }
         });
         q('#ebF').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; b.cover = { img: await A.imgToData(f, 520, .8) }; prev(); A.snd.chime([659.25, 880], .1, .6); });
@@ -2765,9 +2920,9 @@ A.qslip = (() => {
           b.title = b.title.trim(); if (b.status === 'reading' && !b.started) b.started = Date.now(); if (b.status === 'want') b.read = 0; if (b.pages && b.read > b.pages) b.read = b.pages;
           const wasDone = old && old.status === 'done'; const becomeDone = b.status === 'done' && !wasDone;
           if (b.status === 'done') { b.read = b.pages || b.read; if (!wasDone) b.status = 'reading'; }
-          if (pending && pending.text && pending.text.trim()) { b.hasText = true; if (!b.pages) b.pages = A.pagesEst(pending.text); }
+          if (pending && pending.pdf && pending.buf) { b.hasText = true; b.pdf = true; b.pdfAspect = pending.aspect || 1.414; b.pages = pending.pageCount || b.pages; } else if (pending && pending.text && pending.text.trim()) { b.hasText = true; b.pdf = false; if (!b.pages) b.pages = A.pagesEst(pending.text); }
           if (old) Object.assign(old, b); else A.state.books.unshift(b);
-          const target = old || A.state.books[0]; if (pending && pending.text && pending.text.trim()) A.txt.put(target.id, pending.text.trim()); A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
+          const target = old || A.state.books[0]; if (pending && pending.text && pending.text.trim()) A.txt.put(target.id, pending.text.trim()); if (pending && pending.pdf && pending.buf) { if (!(pending.text && pending.text.trim())) A.txt.put(target.id, ' '); A.txt.putBin(target.id, pending.buf); } A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
           if (becomeDone) setTimeout(() => A.finishBook(target), 500); else A.toast(old ? 'Сохранено' : 'Книга на полке');
           render(true);
         });
@@ -3027,24 +3182,27 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   async function brew() {
     if (mode !== 'pick' || scene !== 'c') return; if (!sel.length) { A.toast('Выбери настроение: коснись склянки на полке'); A.snd.owl && A.snd.owl(); A.vibrate(20); return; }
     const my = ++token; mode = 'brew'; el.classList.add('brewing'); hint('Зелье варится…'); A.snd.unlock && A.snd.unlock(); A.snd.brew && A.snd.brew(); A.vibrate([20, 30, 20]); cam.t = 1.1; heat = 1;
-    const ori = innerWidth > innerHeight ? 'landscape' : 'portrait', vH = ori === 'portrait' ? A.clamp(innerHeight * .3, 150, 280) : A.clamp(innerHeight * .46, 120, 200), vW = vH * .295, ox = vW * .95, oy = vH * .6;
+    const ori = innerWidth > innerHeight ? 'landscape' : 'portrait', vH = ori === 'portrait' ? A.clamp(innerHeight * .3, 150, 280) : A.clamp(innerHeight * .46, 120, 200), vW = vH * .295, ox = vW * .5, oy = vH * .5;                       // the fingers close over the bottle's side: the hand is drawn in front, the glass sits half under it
     const vial = mkVial(0, false); vial.style.cssText += `;width:${vW}px;height:${vH}px;transform-origin:${ox}px ${oy}px`; A.$('svg', vial).setAttribute('width', vW); A.$('svg', vial).setAttribute('height', vH);
     A.hands.show(true, true); A.$('#hands').classList.add('top'); const t0 = performance.now(); let dipped = false, whipped = false, placed = false;
-    const geoC = () => { const [lx, ly] = P('c', LIQ.cx - 70, LIQ.cy), s = G.c.zs; return { above: [lx, ly - vH * .72], dip: [lx, ly - vH * .05 + 6 * s], surf: ly + 10 * s, top: [lx + vW * .3, -vH * .6] }; };
+    const geoC = () => { const [lx, ly] = P('c', LIQ.cx - 70, LIQ.cy), s = G.c.zs; return { above: [lx, ly - vH * .72], dip: [lx, ly + vH * .06 + 6 * s], surf: ly + 10 * s, top: [lx + vW * .3, -vH * .6] }; };
     const geoT = () => { const [bx, by] = P('t', VIAL_BASE[0], VIAL_BASE[1]); return { onT: [bx + vW * .45, by - vH * .4], aboveT: [bx + vW * .45, by - vH * .4 - vH * .55] }; };
     const path = t => { let x, y, r = 0, lv = 0, lit = false, clip = 0;
       const C = geoC(); const Tt = G.t && scene === 't' ? geoT() : null;
-      if (t < 1000) { const k = eo(t / 1000); x = lerp(innerWidth + 90, C.above[0], k); y = lerp(innerHeight * .98, C.above[1], k); r = lerp(6, -6, k); }
-      else if (t < 1700) { const k = eio((t - 1000) / 700); x = C.above[0]; y = lerp(C.above[1], C.dip[1], k); r = lerp(-6, -16, k); }
-      else if (t < 3100) { x = C.dip[0]; y = C.dip[1] + Math.sin((t - 1700) / 140) * 2.5; r = -16; lv = A.clamp((t - 1850) / 1100, 0, 1); }
-      else if (t < 3900) { const k = eio((t - 3100) / 800); x = C.dip[0]; y = lerp(C.dip[1], C.above[1] - vH * .15, k); r = lerp(-16, -4, k); lv = 1; lit = true; }
+      if (t < 1000) { const k = eo(t / 1000); x = lerp(innerWidth + 90, C.above[0], k); y = lerp(innerHeight * .98, C.above[1], k); r = lerp(7, -3, k); }
+      else if (t < 1700) { const k = eio((t - 1000) / 700); x = C.above[0]; y = lerp(C.above[1], C.dip[1], k); r = lerp(-3, -5, k); }
+      else if (t < 3100) { x = C.dip[0]; y = C.dip[1] + Math.sin((t - 1700) / 170) * 2.2; r = -5 + Math.sin((t - 1700) / 310) * 1.2; lv = A.clamp((t - 1850) / 1100, 0, 1); }
+      else if (t < 3900) { const k = eio((t - 3100) / 800); x = C.dip[0]; y = lerp(C.dip[1], C.above[1] - vH * .15, k); r = lerp(-5, -2, k); lv = 1; lit = true; }
       else if (t < 4700) { const k = eio((t - 3900) / 800); x = lerp(C.above[0], C.top[0], k); y = lerp(C.above[1] - vH * .15, C.top[1], k); r = lerp(-4, 4, k); lv = 1; lit = true; }
       else { const T2 = Tt || geoT(), k = eio(A.clamp((t - 4900) / 1500, 0, 1)); x = lerp(T2.aboveT[0] + vW * .3, T2.onT[0], k); y = lerp(-vH * .6, T2.onT[1], k); r = lerp(4, 0, k); lv = 1; lit = true; }
       const bottom = y - oy + vH, inLiquid = t > 1150 && t < 3300; clip = inLiquid ? Math.max(0, bottom - C.surf) : 0;
       return { x, y, r, lv, lit, clip, prop: { x: x - ox, y: y - oy, r, s: 1 } }; };
     A.hands.carry('R', () => { const t = performance.now() - t0, c = path(t); vial.style.setProperty('--lv', (c.lv * 220).toFixed(1)); vial.classList.toggle('pv--lit', c.lit);
       if (!dipped && t > 1450) { dipped = true; ripple(); A.snd.bubble(); for (let i = 0; i < 30; i++) bubbles.push(newBubble(1.6)); }
-      return { x: c.x, y: c.y, r: c.r, s: 1, prop: c.prop, clip: c.clip ? `inset(0 0 ${c.clip}px 0)` : 'none', snap: t < 40 }; }, vial);
+      const sx = innerWidth * 1.05, sy = innerHeight * 1.12, arm = A.clamp(-Math.atan2(sx - c.x, sy - c.y) * 180 / Math.PI, -40, 40);      // the arm runs from the shoulder (bottom right) to the hand
+      let clip = 'none'; if (c.clip > 0) { const Y = vH - c.clip, pts = [`0 0`, `100% 0`]; for (let i = 8; i >= 0; i--) pts.push(`${(i / 8 * 100).toFixed(1)}% ${(Y + 1.8 * Math.sin(T * 6 + i * 1.3)).toFixed(1)}px`); clip = `polygon(${pts.join(',')})`; }
+      if (t > 1450 && t < 3200) { if (Math.random() < .12) ripple(); if (Math.random() < .5) { const [bx] = [LIQ.cx - 70]; bubbles.push({ x: bx + R(-14, 14), y: LIQ.cy + R(-6, 8), r: R(1.8, 4), max: R(.5, 1), life: 0 }); } }
+      return { x: c.x, y: c.y, r: arm, s: 1, prop: c.prop, clip, snap: t < 40 }; }, vial);
     await sleep(1500); if (my !== token) return; for (let i = 0; i < 40; i++) bubbles.push(newBubble(1.5)); heat = 1.2; A.snd.bubble();
     await sleep(1500); if (my !== token) return; A.snd.unlock2 && A.snd.unlock2();
     await sleep(1300); if (my !== token) return; whip('t'); A.snd.whoosh && A.snd.whoosh(1);
@@ -3066,7 +3224,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
     A.$('#rcAgain', bt).addEventListener('click', again);
     const add = A.$('#rcAdd', bt), open = A.$('#rcOpen', bt);
     add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 30); add.textContent = 'Добавлено ✓'; add.disabled = true; });
-    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books'); setTimeout(() => { if (bk && bk.hasText) A.reader.open(bk, null); else if (bk) A.mods.books.openBook(bk.id); }, 1800); });
+    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books', { open: bk && bk.id }); });
   }
   function again() { A.snd.tap(); const my = ++token; el.classList.remove('result'); clearResult(); whip('c'); sel = []; mode = 'pick'; setMix(); }
   function clearResult() { if (table) { table.vial.remove(); table = null; } A.$('#pzTag', el).classList.remove('on'); A.$('#pzBtns', el).classList.remove('on'); steam.length = 0; }
@@ -3287,9 +3445,12 @@ A.introInit = () => A.intro = (() => {
 
 /* ============================================================ boot: the entrance video (intro.js) -> the hub room, the fire lights */
 (() => {
-  A.load(); A.txt.migrate(); A.musicBox && A.musicBox.sync();
+  A.load(); A.txt.migrate();
+  { const OLD = /^\s*Алия\s+Айсель\s*$/i, NEW = 'Хакимова Айсель'; let ch = false; [...A.state.books, ...A.state.quotes].forEach(x => { if (x.author && OLD.test(x.author)) { x.author = NEW; ch = true; } }); if (ch) A.save(); } A.musicBox && A.musicBox.sync();
   if (!A.state.books.length && !A.state.quotes.length && A.state.samples) A.seed();
   else if (A.state.seedV !== 2 && A.state.books.length && A.state.books.every(b => b.sample)) A.seed();      // an untouched older sample shelf becomes her own six books
+  /* phones report the new size a moment after a rotation (and when the browser bars slide): settle with a few extra resizes */
+  { let rt = 0; const settle = () => { clearTimeout(rt); [120, 380, 900].forEach(ms => setTimeout(() => dispatchEvent(new Event('resize')), ms)); }; addEventListener('orientationchange', settle); if (window.visualViewport) { let vt = 0; visualViewport.addEventListener('resize', () => { clearTimeout(vt); vt = setTimeout(() => dispatchEvent(new Event('resize')), 160); }); } }
   A.scene.init(); A.scene.start(); A.introInit();
   if ('serviceWorker' in navigator && /^https?:/.test(location.protocol)) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   A.debug = { enter: () => A.intro && A.intro.finish() };

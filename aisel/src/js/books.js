@@ -81,7 +81,7 @@
           const f = e.target.files[0]; if (!f) return; const note = q('#ebImpNote'); note.textContent = 'Читаю файл…';
           try { const r = await A.importer.read(f, (i, n) => { note.textContent = `Читаю страницы: ${i} из ${n}`; });
             pending = r; q('#ebTx').value = ''; if (!b.title.trim() || !old) { b.title = r.title; q('#ebT').value = r.title; } if (r.author && !b.author) { b.author = r.author; q('#ebA').value = r.author; }
-            if (r.cover) b.cover = { img: r.cover }; b.pages = r.pageCount || A.pagesEst(r.text); q('#ebP').value = b.pages; prev(); note.textContent = `Готово: ${r.text.length > 1e6 ? Math.round(r.text.length / 1e5) / 10 + ' млн' : Math.round(r.text.length / 1000) + ' тыс.'} знаков. Нажми «${old ? 'Сохранить' : 'Поставить на полку'}».`; A.snd.chime([659.25, 880], .1, .6);
+            if (r.cover) b.cover = { img: r.cover }; b.pages = r.pageCount || A.pagesEst(r.text); q('#ebP').value = b.pages; prev(); note.textContent = (r.pdf ? `Готово: ${r.pageCount} стр., страницы как в оригинале.` : `Готово: ${r.text.length > 1e6 ? Math.round(r.text.length / 1e5) / 10 + ' млн' : Math.round(r.text.length / 1000) + ' тыс.'} знаков.`) + ` Нажми «${old ? 'Сохранить' : 'Поставить на полку'}».`; A.snd.chime([659.25, 880], .1, .6);
           } catch (err) { note.textContent = err.message === 'scan' ? 'В этом PDF нет текста: похоже на скан. Нужен файл с текстовым слоем.' : err.message === 'big' ? 'Файл слишком большой для телефона.' : err.message === 'lib' ? 'Не удалось загрузить модуль чтения. Проверь интернет и попробуй ещё раз.' : 'Не получилось прочитать этот файл.'; A.toast(note.textContent); }
         });
         q('#ebF').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; b.cover = { img: await A.imgToData(f, 520, .8) }; prev(); A.snd.chime([659.25, 880], .1, .6); });
@@ -91,9 +91,9 @@
           b.title = b.title.trim(); if (b.status === 'reading' && !b.started) b.started = Date.now(); if (b.status === 'want') b.read = 0; if (b.pages && b.read > b.pages) b.read = b.pages;
           const wasDone = old && old.status === 'done'; const becomeDone = b.status === 'done' && !wasDone;
           if (b.status === 'done') { b.read = b.pages || b.read; if (!wasDone) b.status = 'reading'; }
-          if (pending && pending.text && pending.text.trim()) { b.hasText = true; if (!b.pages) b.pages = A.pagesEst(pending.text); }
+          if (pending && pending.pdf && pending.buf) { b.hasText = true; b.pdf = true; b.pdfAspect = pending.aspect || 1.414; b.pages = pending.pageCount || b.pages; } else if (pending && pending.text && pending.text.trim()) { b.hasText = true; b.pdf = false; if (!b.pages) b.pages = A.pagesEst(pending.text); }
           if (old) Object.assign(old, b); else A.state.books.unshift(b);
-          const target = old || A.state.books[0]; if (pending && pending.text && pending.text.trim()) A.txt.put(target.id, pending.text.trim()); A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
+          const target = old || A.state.books[0]; if (pending && pending.text && pending.text.trim()) A.txt.put(target.id, pending.text.trim()); if (pending && pending.pdf && pending.buf) { if (!(pending.text && pending.text.trim())) A.txt.put(target.id, ' '); A.txt.putBin(target.id, pending.buf); } A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
           if (becomeDone) setTimeout(() => A.finishBook(target), 500); else A.toast(old ? 'Сохранено' : 'Книга на полке');
           render(true);
         });

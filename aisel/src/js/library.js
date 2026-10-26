@@ -11,7 +11,7 @@ A.lib = (() => {
   const sgn = Math.sign, wait = ms => new Promise(r => setTimeout(r, ms)), ease = k => 1 - Math.pow(1 - A.clamp(k, 0, 1), 3), rnd = (a, b) => a + Math.random() * (b - a);
   let stage, tagEl, noteEl, poolEl, delEl, askEl, built = false, lastOri = '', items = [], p = 0, pv = 0, pt = 0, drag = null, G = null, active = false, busy = false, raf = 0, last = 0, T = 0, sel = null, hoverT = 0, lastIdx = -1, parx = 0, pary = 0, fl = 1, kick = 0, hs = [], others = new Sp(0, 46, 9.5), fireOn = true, fireL = new Sp(1, 26, 8.5), offEl = null, darkEl = null, fireBtn = null;
   const order = { reading: 0, want: 1, done: 2 };
-  const fireSnd = () => A.snd.setFire(fireOn ? 1 : 0);
+  const fireSnd = () => A.snd.syncFire();
 
   const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, vw * .16, 230) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
@@ -209,6 +209,7 @@ A.lib = (() => {
       if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
     hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); A.snd.setFire(A.fire && A.fire.on ? 1 : 0); clearTimeout(hoverT); root.classList.remove('pick'); hs.forEach(h => h.remove()); hs = []; A.scene.push && A.scene.push(1); A.qslip && A.qslip.close(); if (raf) { cancelAnimationFrame(raf); raf = 0; } },
+    openBook(id) { const i = items.findIndex(it => it.b && it.b.id === id); if (i < 0 || busy) return false; p = pt = i; pv = 0; draw(); label(); wake(); setTimeout(() => { if (active && !busy) select(items[i]); }, 650); return true; },
     get active() { return active; }, fireLevel: () => fireL.x, _items: () => items
   };
 })();

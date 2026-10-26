@@ -38,7 +38,7 @@ A.importer = (() => {
 
   async function pdf(file, prog) {
     await need('lib/pdf.min.js'); const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js';
-    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise; let info = {}; try { info = (await doc.getMetadata()).info || {}; } catch (e) {}
+    const ab = await file.arrayBuffer(), doc = await lib.getDocument({ data: new Uint8Array(ab.slice(0)) }).promise; let info = {}; try { info = (await doc.getMetadata()).info || {}; } catch (e) {}
     const paras = []; let cur = '';
     const flush = () => { if (cur.trim()) paras.push(cur.trim()); cur = ''; };
     for (let p = 1; p <= doc.numPages; p++) {
@@ -53,15 +53,21 @@ A.importer = (() => {
     }
     flush(); let cover = null;
     try { const page = await doc.getPage(1), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: 360 / vp0.width }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise; cover = c.toDataURL('image/jpeg', .78); } catch (e) {}
-    return { title: (info.Title || '').trim() || nameOf(file), author: (info.Author || '').trim(), text: clean(paras.join('\n\n')), cover, pdf: true, pageCount: doc.numPages };
+    let aspect = 1.414; try { const v = (await doc.getPage(1)).getViewport({ scale: 1 }); aspect = v.height / v.width; } catch (e) {}
+    const junk = /^(untitled|без\s*названия|microsoft|document|doc\d*|new\s|слайд)/i, meta0 = (info.Title || '').trim(), meta = junk.test(meta0) || /\.(docx?|indd|qxd|pdf|tex)$/i.test(meta0) ? '' : meta0, fname = nameOf(file), cyr = /[А-Яа-яЁё]/, au0 = (info.Author || '').trim();
+    return { title: meta && !(cyr.test(fname) && !cyr.test(meta)) ? meta : fname, author: /^(anonymous|unknown|admin|user|author|\w{0,3})$/i.test(au0) ? '' : au0, text: clean(paras.join('\n\n')), cover, pdf: true, pageCount: doc.numPages, aspect, buf: ab };
   }
 
+  /* a stored PDF opened for reading: its pages are drawn on demand */
+  async function pdfDoc(buf) { await need('lib/pdf.min.js'); const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js'; return lib.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise; }
+
   return {
+    pdfDoc,
     ACCEPT: '.txt,.md,.text,.epub,.pdf,text/plain,text/markdown,application/pdf,application/epub+zip',
     async read(file, prog) {
       if (file.size > 60e6) throw new Error('big'); const n = file.name.toLowerCase(); let r;
       if (n.endsWith('.pdf') || file.type === 'application/pdf') r = await pdf(file, prog); else if (n.endsWith('.epub')) r = await epub(file, prog); else r = await plain(file);
-      if (!r.text || r.text.length < 20) throw new Error(r.pdf ? 'scan' : 'empty'); return r;
+      if (!r.pdf && (!r.text || r.text.length < 20)) throw new Error('empty'); return r;       // a PDF without a text layer (a scan) still reads: its pages are shown as pictures
     }
   };
 })();

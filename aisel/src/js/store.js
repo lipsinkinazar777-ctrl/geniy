@@ -108,7 +108,7 @@ A.SUGGEST = [
 const STORY = `/*STORY*/`;
 A.seed = () => {
   const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now() - extra.k * 1000, cover: {}, sample: true }, extra);
-  const AI = 'Алия Айсель';
+  const AI = 'Хакимова Айсель';
   A.state.books = [
     mk('Фонарь на опушке', AI, 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true, k: 0 }),
     mk('На проклятом пепле', AI, 320, 'want', 0, ['mist', 'deep'], { k: 1 }),

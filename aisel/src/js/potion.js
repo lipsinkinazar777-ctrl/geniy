@@ -80,24 +80,27 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
   async function brew() {
     if (mode !== 'pick' || scene !== 'c') return; if (!sel.length) { A.toast('Выбери настроение: коснись склянки на полке'); A.snd.owl && A.snd.owl(); A.vibrate(20); return; }
     const my = ++token; mode = 'brew'; el.classList.add('brewing'); hint('Зелье варится…'); A.snd.unlock && A.snd.unlock(); A.snd.brew && A.snd.brew(); A.vibrate([20, 30, 20]); cam.t = 1.1; heat = 1;
-    const ori = innerWidth > innerHeight ? 'landscape' : 'portrait', vH = ori === 'portrait' ? A.clamp(innerHeight * .3, 150, 280) : A.clamp(innerHeight * .46, 120, 200), vW = vH * .295, ox = vW * .95, oy = vH * .6;
+    const ori = innerWidth > innerHeight ? 'landscape' : 'portrait', vH = ori === 'portrait' ? A.clamp(innerHeight * .3, 150, 280) : A.clamp(innerHeight * .46, 120, 200), vW = vH * .295, ox = vW * .5, oy = vH * .5;                       // the fingers close over the bottle's side: the hand is drawn in front, the glass sits half under it
     const vial = mkVial(0, false); vial.style.cssText += `;width:${vW}px;height:${vH}px;transform-origin:${ox}px ${oy}px`; A.$('svg', vial).setAttribute('width', vW); A.$('svg', vial).setAttribute('height', vH);
     A.hands.show(true, true); A.$('#hands').classList.add('top'); const t0 = performance.now(); let dipped = false, whipped = false, placed = false;
-    const geoC = () => { const [lx, ly] = P('c', LIQ.cx - 70, LIQ.cy), s = G.c.zs; return { above: [lx, ly - vH * .72], dip: [lx, ly - vH * .05 + 6 * s], surf: ly + 10 * s, top: [lx + vW * .3, -vH * .6] }; };
+    const geoC = () => { const [lx, ly] = P('c', LIQ.cx - 70, LIQ.cy), s = G.c.zs; return { above: [lx, ly - vH * .72], dip: [lx, ly + vH * .06 + 6 * s], surf: ly + 10 * s, top: [lx + vW * .3, -vH * .6] }; };
     const geoT = () => { const [bx, by] = P('t', VIAL_BASE[0], VIAL_BASE[1]); return { onT: [bx + vW * .45, by - vH * .4], aboveT: [bx + vW * .45, by - vH * .4 - vH * .55] }; };
     const path = t => { let x, y, r = 0, lv = 0, lit = false, clip = 0;
       const C = geoC(); const Tt = G.t && scene === 't' ? geoT() : null;
-      if (t < 1000) { const k = eo(t / 1000); x = lerp(innerWidth + 90, C.above[0], k); y = lerp(innerHeight * .98, C.above[1], k); r = lerp(6, -6, k); }
-      else if (t < 1700) { const k = eio((t - 1000) / 700); x = C.above[0]; y = lerp(C.above[1], C.dip[1], k); r = lerp(-6, -16, k); }
-      else if (t < 3100) { x = C.dip[0]; y = C.dip[1] + Math.sin((t - 1700) / 140) * 2.5; r = -16; lv = A.clamp((t - 1850) / 1100, 0, 1); }
-      else if (t < 3900) { const k = eio((t - 3100) / 800); x = C.dip[0]; y = lerp(C.dip[1], C.above[1] - vH * .15, k); r = lerp(-16, -4, k); lv = 1; lit = true; }
+      if (t < 1000) { const k = eo(t / 1000); x = lerp(innerWidth + 90, C.above[0], k); y = lerp(innerHeight * .98, C.above[1], k); r = lerp(7, -3, k); }
+      else if (t < 1700) { const k = eio((t - 1000) / 700); x = C.above[0]; y = lerp(C.above[1], C.dip[1], k); r = lerp(-3, -5, k); }
+      else if (t < 3100) { x = C.dip[0]; y = C.dip[1] + Math.sin((t - 1700) / 170) * 2.2; r = -5 + Math.sin((t - 1700) / 310) * 1.2; lv = A.clamp((t - 1850) / 1100, 0, 1); }
+      else if (t < 3900) { const k = eio((t - 3100) / 800); x = C.dip[0]; y = lerp(C.dip[1], C.above[1] - vH * .15, k); r = lerp(-5, -2, k); lv = 1; lit = true; }
       else if (t < 4700) { const k = eio((t - 3900) / 800); x = lerp(C.above[0], C.top[0], k); y = lerp(C.above[1] - vH * .15, C.top[1], k); r = lerp(-4, 4, k); lv = 1; lit = true; }
       else { const T2 = Tt || geoT(), k = eio(A.clamp((t - 4900) / 1500, 0, 1)); x = lerp(T2.aboveT[0] + vW * .3, T2.onT[0], k); y = lerp(-vH * .6, T2.onT[1], k); r = lerp(4, 0, k); lv = 1; lit = true; }
       const bottom = y - oy + vH, inLiquid = t > 1150 && t < 3300; clip = inLiquid ? Math.max(0, bottom - C.surf) : 0;
       return { x, y, r, lv, lit, clip, prop: { x: x - ox, y: y - oy, r, s: 1 } }; };
     A.hands.carry('R', () => { const t = performance.now() - t0, c = path(t); vial.style.setProperty('--lv', (c.lv * 220).toFixed(1)); vial.classList.toggle('pv--lit', c.lit);
       if (!dipped && t > 1450) { dipped = true; ripple(); A.snd.bubble(); for (let i = 0; i < 30; i++) bubbles.push(newBubble(1.6)); }
-      return { x: c.x, y: c.y, r: c.r, s: 1, prop: c.prop, clip: c.clip ? `inset(0 0 ${c.clip}px 0)` : 'none', snap: t < 40 }; }, vial);
+      const sx = innerWidth * 1.05, sy = innerHeight * 1.12, arm = A.clamp(-Math.atan2(sx - c.x, sy - c.y) * 180 / Math.PI, -40, 40);      // the arm runs from the shoulder (bottom right) to the hand
+      let clip = 'none'; if (c.clip > 0) { const Y = vH - c.clip, pts = [`0 0`, `100% 0`]; for (let i = 8; i >= 0; i--) pts.push(`${(i / 8 * 100).toFixed(1)}% ${(Y + 1.8 * Math.sin(T * 6 + i * 1.3)).toFixed(1)}px`); clip = `polygon(${pts.join(',')})`; }
+      if (t > 1450 && t < 3200) { if (Math.random() < .12) ripple(); if (Math.random() < .5) { const [bx] = [LIQ.cx - 70]; bubbles.push({ x: bx + R(-14, 14), y: LIQ.cy + R(-6, 8), r: R(1.8, 4), max: R(.5, 1), life: 0 }); } }
+      return { x: c.x, y: c.y, r: arm, s: 1, prop: c.prop, clip, snap: t < 40 }; }, vial);
     await sleep(1500); if (my !== token) return; for (let i = 0; i < 40; i++) bubbles.push(newBubble(1.5)); heat = 1.2; A.snd.bubble();
     await sleep(1500); if (my !== token) return; A.snd.unlock2 && A.snd.unlock2();
     await sleep(1300); if (my !== token) return; whip('t'); A.snd.whoosh && A.snd.whoosh(1);
@@ -119,7 +122,7 @@ const mkVial = (lv, lit, rgb) => { const c = rgb || vivid(mixRgb); return A.h(`<
     A.$('#rcAgain', bt).addEventListener('click', again);
     const add = A.$('#rcAdd', bt), open = A.$('#rcOpen', bt);
     add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 30); add.textContent = 'Добавлено ✓'; add.disabled = true; });
-    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books'); setTimeout(() => { if (bk && bk.hasText) A.reader.open(bk, null); else if (bk) A.mods.books.openBook(bk.id); }, 1800); });
+    open && open.addEventListener('click', () => { const bk = b.id ? b : A.state.books.find(x => x.title === b.title); A.snd.page(); A.go('books', { open: bk && bk.id }); });
   }
   function again() { A.snd.tap(); const my = ++token; el.classList.remove('result'); clearResult(); whip('c'); sel = []; mode = 'pick'; setMix(); }
   function clearResult() { if (table) { table.vial.remove(); table = null; } A.$('#pzTag', el).classList.remove('on'); A.$('#pzBtns', el).classList.remove('on'); steam.length = 0; }

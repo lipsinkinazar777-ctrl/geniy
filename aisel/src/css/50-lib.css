@@ -28,9 +28,9 @@
 .bk__cv{position:absolute;left:0;top:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:calc(var(--hx,5%)) 50%}
 .bk__lining{position:absolute;transform:rotateY(180deg);backface-visibility:hidden;-webkit-backface-visibility:hidden;background:radial-gradient(90% 70% at 50% 40%,#e7d6a8,#cdb683);box-shadow:inset 0 0 26px rgba(80,45,8,.55);border:1px solid rgba(120,80,20,.35)}
 .bk__shadow{position:absolute;left:50%;height:46px;transform:translate(-50%,-12px) rotateX(90deg);transform-origin:50% 0;background:radial-gradient(closest-side,rgba(0,0,0,.65),rgba(0,0,0,.25) 60%,transparent);pointer-events:none}
-.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 70px);text-align:center;padding:0 94px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
+.lb__tag{position:absolute;left:0;right:0;top:calc(var(--sat) + 62px);text-align:center;padding:0 22px;pointer-events:none;text-shadow:0 0 22px rgba(255,190,90,.55),0 2px 16px #000}
 .lb__tag b{display:block;font:italic 500 clamp(26px,7.4vw,40px)/1.08 var(--serif);color:#f6e6bd;text-wrap:balance}
-.lb__tag small{display:block;margin-top:9px;font:400 11px/1 var(--f);letter-spacing:.3em;text-transform:uppercase;color:#e9c984}
+.lb__tag small{display:block;margin-top:10px;font:400 10.5px/1.5 var(--f);letter-spacing:.2em;text-wrap:balance;text-transform:uppercase;color:#e9c984}
 .lb__tag.pop b{animation:tagin .55s cubic-bezier(.2,.9,.3,1)}
 #lib3d.bv .lb__tag{opacity:0;transition:opacity .5s}
 @media (orientation:landscape){.lb__tag{top:calc(var(--sat) + 14px)}.lb__tag b{font-size:clamp(20px,4.6vw,30px)}}

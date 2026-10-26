@@ -6,7 +6,9 @@ A.txt = (() => {
   return {
     put: async (id, text) => { const d = await open(); if (!d) { mem[id] = text; return; } await tx('readwrite', s => s.put(text, id)); },
     get: async (id) => { const d = await open(); if (!d) return mem[id] || ''; return (await tx('readonly', s => s.get(id))) || ''; },
-    del: async (id) => { const d = await open(); if (!d) { delete mem[id]; return; } await tx('readwrite', s => s.delete(id)); },
+    putBin: async (id, buf) => { const d = await open(); if (!d) { mem[id + ':bin'] = buf; return; } await tx('readwrite', s => s.put(buf, id + ':bin')); },
+    getBin: async (id) => { const d = await open(); if (!d) return mem[id + ':bin'] || null; return (await tx('readonly', s => s.get(id + ':bin'))) || null; },
+    del: async (id) => { const d = await open(); if (!d) { delete mem[id]; delete mem[id + ':bin']; return; } await tx('readwrite', s => { s.delete(id); s.delete(id + ':bin'); return null; }); },
     migrate: async () => { for (const b of A.state.books) if (b.text) { await A.txt.put(b.id, b.text); b.hasText = true; delete b.text; } A.save(); }
   };
 })();
