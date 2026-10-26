@@ -125,7 +125,7 @@
 .pz__btns{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 26px);display:flex;justify-content:center;gap:12px;padding:0 16px;opacity:0;transform:translateY(16px);transition:opacity .8s .6s,transform .9s .6s var(--ease);pointer-events:none;z-index:4}
 .pz__btns.on{opacity:1;transform:none}.pz__btns .seal{pointer-events:auto;margin-top:0}
 .pz .pv--table{position:absolute;left:0;top:0;will-change:transform}
-@media (orientation:landscape){.pzv__g{width:21px;height:72px}.pzv b{font-size:9px}.pz__go{bottom:calc(var(--sab) + 108px)}.pz__hint{top:calc(var(--sat) + 16px);font-size:17px}.pz__title{display:none}}
+@media (orientation:landscape){.pzv__g{width:clamp(21px,4.6vh,38px);height:clamp(72px,15.6vh,130px)}.pzv b{font-size:9px}.pz__go{bottom:calc(var(--sab) + 108px)}.pz__hint{top:calc(var(--sat) + 16px);font-size:17px}.pz__title{display:none}}
 
 /* take a book off the shelf */
 .lb__del{position:absolute;right:12px;top:calc(var(--sat) + 8px);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;pointer-events:none;z-index:5;color:#f1dcb0;background:rgba(8,10,10,.5);border:1px solid rgba(255,226,160,.32);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(0,0,0,.5);opacity:0;transform:scale(.8);transition:opacity .45s,transform .5s var(--spring)}

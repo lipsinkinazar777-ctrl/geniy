@@ -1,7 +1,7 @@
 /* ============================================================ the room: a first-person desk you look around and touch
    one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  const ORI = () => innerWidth >= innerHeight ? 'landscape' : 'portrait';
+  const ORI = () => innerWidth > innerHeight ? 'landscape' : 'portrait';
   const LAYOUTS = A.LAYOUTS;                                               // desk plates + hotspot polygons for both orientations (tools/make_main.py)
   const ROOMKEY = { lab: 'lab', lib: 'lib', cit: 'cit' };
   let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
@@ -27,10 +27,14 @@ A.scene = (() => {
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
-    const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
+    /* the desk always fills the screen (no bars, whatever the aspect: phone upright, square window, tablet, laptop); what does not fit is reached by panning */
+  const fitScale = () => Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1);
+  /* where the camera rests on the desk: the narrower the window, the further right (book, fire, music box); a wide window rests in the middle */
+  const homeX = () => { const vis = RH * VW / VH; return A.clamp(RW - vis / 2 - 120, RW / 2, 1560); };
+  const narrowNow = () => document.body.classList.toggle('narrow', VW / VH < 1.45);
   function resize() {
-    VW = innerWidth; VH = innerHeight; DPR = 1;
-    if (ORI() !== ori) { ori = ORI(); relayout(); }
+    VW = innerWidth; VH = innerHeight; DPR = 1; narrowNow();
+    if (ORI() !== ori) { ori = ORI(); relayout(); } else if (roomName === 'main') HOME.cx = homeX();
     s0 = fitScale();
     cv.width = VW; cv.height = VH; g.setTransform(1, 0, 0, 1, 0, 0); clampT(); dirty = true;
   }
@@ -98,7 +102,7 @@ A.scene = (() => {
     setBg(roomName);
   }
   function relayout() {
-    LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = LAY.home[0]; HOME.cy = LAY.home[1];
+    LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = roomName === 'main' ? homeX() : LAY.home[0]; HOME.cy = LAY.home[1];
     const r = roomPlate(roomName); RW = r.w; RH = r.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; setPlates(); s0 = fitScale();
     room.dataset.ori = ori; buildHotspots(); buildHs(); refreshPage(); A.fire && A.fire.place && A.fire.place();
     A.mods.potion && A.mods.potion.rebuild && A.mods.potion.rebuild(); A.lib && A.lib.rebuild && A.lib.rebuild(); A.casket && A.casket.relayout && A.casket.relayout();
@@ -162,7 +166,7 @@ A.scene = (() => {
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
     if (h.act === 'music') { A.musicBox.toggle(); return; }
     if (h.act === 'enter') { A.snd.chime && A.snd.chime([392, 523.25, 659.25], .1, .6); A.snd.page && A.snd.page(); api.showZones(); return; }
-    if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
+    if (h.act === 'read') { A.snd.page && A.snd.page(); A.go('books'); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab, { obj: h.id });
   }
   if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });

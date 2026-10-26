@@ -53,10 +53,10 @@ A.musicBox = (() => {
 
   return {
     toggle() {
-      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.dock && A.dock.refresh(); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
+      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
       if (s.music) { A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .09, .45); A.toast && A.toast('Шкатулка играет'); } else { A.snd.tap && A.snd.tap(); A.toast && A.toast('Шкатулка закрыта: тишина'); }
     },
-    sync() { apply(true); A.dock && A.dock.refresh(); },
+    sync() { apply(true); },
     get on() { return on(); }
   };
 })();

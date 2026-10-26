@@ -608,19 +608,6 @@ body.inroom #back::after,body.panel #back::after{content:"Назад";font:400 1
 #mbox.on .mb__wing{animation:mbk 2.6s linear infinite}
 @keyframes mbk{0%{transform:scaleY(1)}25%{transform:scaleY(.12)}50%{transform:scaleY(-1)}75%{transform:scaleY(-.12)}100%{transform:scaleY(1)}}
 
-/* the dock: portrait phones only, on the desk (not inside a room) */
-#dock{position:fixed;left:10px;right:10px;bottom:calc(var(--sab) + 10px);z-index:29;display:none;gap:2px;padding:6px;border-radius:24px;background:rgba(8,10,10,.58);border:1px solid rgba(255,226,160,.22);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:0 14px 34px rgba(0,0,0,.55)}
-#dock button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0 6px;border-radius:16px;color:#f1dcb0;background:none;transition:transform .35s var(--spring),background .3s,color .4s}
-#dock button:active{transform:scale(.9);background:rgba(255,226,160,.12)}
-#dock .ico{width:23px;height:23px}
-#dock span{font:400 10px/1 var(--f);letter-spacing:.04em;text-transform:lowercase;opacity:.85}
-#dock .tg{opacity:.62}#dock .tg.on{opacity:1;color:#ffc066}#dock .tg.on .ico{filter:drop-shadow(0 0 8px rgba(255,170,70,.7))}
-@media (orientation:portrait){
-  body.ui:not(.inroom):not(.panel) #dock{display:flex;animation:dockin .8s var(--ease) both}
-  body.ui:not(.inroom):not(.panel) #hint{bottom:calc(var(--sab) + 100px)}
-}
-@keyframes dockin{from{opacity:0;transform:translateY(24px)}}
-
 /* ============================================================ the reading hall: 3D books on the rug, the hands, firelight */
 #lib3d{position:fixed;inset:0;z-index:22;pointer-events:none;visibility:hidden;opacity:0;transition:opacity .9s var(--ease),visibility .9s;color:#f6e6bd}
 #lib3d.on{visibility:visible;opacity:1;pointer-events:auto}
@@ -748,7 +735,7 @@ body.inroom #back::after,body.panel #back::after{content:"Назад";font:400 1
 .pz__btns{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 26px);display:flex;justify-content:center;gap:12px;padding:0 16px;opacity:0;transform:translateY(16px);transition:opacity .8s .6s,transform .9s .6s var(--ease);pointer-events:none;z-index:4}
 .pz__btns.on{opacity:1;transform:none}.pz__btns .seal{pointer-events:auto;margin-top:0}
 .pz .pv--table{position:absolute;left:0;top:0;will-change:transform}
-@media (orientation:landscape){.pzv__g{width:21px;height:72px}.pzv b{font-size:9px}.pz__go{bottom:calc(var(--sab) + 108px)}.pz__hint{top:calc(var(--sat) + 16px);font-size:17px}.pz__title{display:none}}
+@media (orientation:landscape){.pzv__g{width:clamp(21px,4.6vh,38px);height:clamp(72px,15.6vh,130px)}.pzv b{font-size:9px}.pz__go{bottom:calc(var(--sab) + 108px)}.pz__hint{top:calc(var(--sat) + 16px);font-size:17px}.pz__title{display:none}}
 
 /* take a book off the shelf */
 .lb__del{position:absolute;right:12px;top:calc(var(--sat) + 8px);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;pointer-events:none;z-index:5;color:#f1dcb0;background:rgba(8,10,10,.5);border:1px solid rgba(255,226,160,.32);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(0,0,0,.5);opacity:0;transform:scale(.8);transition:opacity .45s,transform .5s var(--spring)}
@@ -977,14 +964,6 @@ body.bv-still #lib3d{visibility:hidden!important}body.bv-still #stageBg,body.bv-
 <div id="tint" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
 <div id="hint" aria-hidden="true"></div>
-<nav id="dock" aria-label="Разделы">
-  <button data-d="books"><svg viewBox="0 0 24 24" class="ico"><use href="#i-books"/></svg><span>Книги</span></button>
-  <button data-d="quotes"><svg viewBox="0 0 24 24" class="ico"><use href="#i-quill"/></svg><span>Цитаты</span></button>
-  <button data-d="potion"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flask"/></svg><span>Зелья</span></button>
-  <button data-d="bag"><svg viewBox="0 0 24 24" class="ico"><use href="#i-acorn"/></svg><span>Сумка</span></button>
-  <button data-d="fire" class="tg"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg><span>Камин</span></button>
-  <button data-d="music" class="tg"><svg viewBox="0 0 24 24" class="ico"><use href="#i-note"/></svg><span>Музыка</span></button>
-</nav>
 <div id="curtain" aria-hidden="true"></div>
 
 <!-- ENTRANCE: the flythrough with its own sound. No button: the gate opens and she walks into the hall. -->
@@ -1430,7 +1409,7 @@ A.fx = (() => {
 /* ============================================================ the room: a first-person desk you look around and touch
    one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  const ORI = () => innerWidth >= innerHeight ? 'landscape' : 'portrait';
+  const ORI = () => innerWidth > innerHeight ? 'landscape' : 'portrait';
   const LAYOUTS = A.LAYOUTS;                                               // desk plates + hotspot polygons for both orientations (tools/make_main.py)
   const ROOMKEY = { lab: 'lab', lib: 'lib', cit: 'cit' };
   let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
@@ -1456,10 +1435,14 @@ A.scene = (() => {
   const sNow = () => s0 * cam.z.x;
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
-    const fitScale = () => { if (roomName !== 'main') return Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1); const cover = Math.max(VW / RW, VH / RH), contain = Math.min(VW / RW, VH / RH); return cover / contain <= 1.8 ? Math.min(cover, contain * 1.3) : cover; };   // close aspects: show (almost) the whole frame and let a soft blurred copy fill the rest; far aspects: cover and pan
+    /* the desk always fills the screen (no bars, whatever the aspect: phone upright, square window, tablet, laptop); what does not fit is reached by panning */
+  const fitScale = () => Math.max(VW / RW, VH / RH) * (roomName === 'lib' && VW > VH ? 1.3 : 1);
+  /* where the camera rests on the desk: the narrower the window, the further right (book, fire, music box); a wide window rests in the middle */
+  const homeX = () => { const vis = RH * VW / VH; return A.clamp(RW - vis / 2 - 120, RW / 2, 1560); };
+  const narrowNow = () => document.body.classList.toggle('narrow', VW / VH < 1.45);
   function resize() {
-    VW = innerWidth; VH = innerHeight; DPR = 1;
-    if (ORI() !== ori) { ori = ORI(); relayout(); }
+    VW = innerWidth; VH = innerHeight; DPR = 1; narrowNow();
+    if (ORI() !== ori) { ori = ORI(); relayout(); } else if (roomName === 'main') HOME.cx = homeX();
     s0 = fitScale();
     cv.width = VW; cv.height = VH; g.setTransform(1, 0, 0, 1, 0, 0); clampT(); dirty = true;
   }
@@ -1527,7 +1510,7 @@ A.scene = (() => {
     setBg(roomName);
   }
   function relayout() {
-    LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = LAY.home[0]; HOME.cy = LAY.home[1];
+    LAY = LAYOUTS[ori]; FIRE.x = LAY.fire[0]; FIRE.y = LAY.fire[1]; HOME.cx = roomName === 'main' ? homeX() : LAY.home[0]; HOME.cy = LAY.home[1];
     const r = roomPlate(roomName); RW = r.w; RH = r.h; room.style.width = RW + 'px'; room.style.height = RH + 'px'; setPlates(); s0 = fitScale();
     room.dataset.ori = ori; buildHotspots(); buildHs(); refreshPage(); A.fire && A.fire.place && A.fire.place();
     A.mods.potion && A.mods.potion.rebuild && A.mods.potion.rebuild(); A.lib && A.lib.rebuild && A.lib.rebuild(); A.casket && A.casket.relayout && A.casket.relayout();
@@ -1591,7 +1574,7 @@ A.scene = (() => {
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
     if (h.act === 'music') { A.musicBox.toggle(); return; }
     if (h.act === 'enter') { A.snd.chime && A.snd.chime([392, 523.25, 659.25], .1, .6); A.snd.page && A.snd.page(); api.showZones(); return; }
-    if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
+    if (h.act === 'read') { A.snd.page && A.snd.page(); A.go('books'); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab, { obj: h.id });
   }
   if (window.DeviceOrientationEvent) addEventListener('deviceorientation', e => { if (e.gamma == null) return; gxT = A.clamp(e.gamma / 30, -1, 1) * -16; gyT = A.clamp(((e.beta || 45) - 50) / 40, -1, 1) * -10; }, { passive: true });
@@ -1789,10 +1772,10 @@ A.musicBox = (() => {
 
   return {
     toggle() {
-      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.dock && A.dock.refresh(); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
+      const s = A.state.settings; s.music = !on(); A.save && A.save(); A.snd.unlock && A.snd.unlock(); A.snd.refresh && A.snd.refresh(); apply(false); A.vibrate && A.vibrate(s.music ? [10, 20, 12] : 10);
       if (s.music) { A.snd.chime && A.snd.chime([659.25, 783.99, 987.77], .09, .45); A.toast && A.toast('Шкатулка играет'); } else { A.snd.tap && A.snd.tap(); A.toast && A.toast('Шкатулка закрыта: тишина'); }
     },
-    sync() { apply(true); A.dock && A.dock.refresh(); },
+    sync() { apply(true); },
     get on() { return on(); }
   };
 })();
@@ -1938,23 +1921,6 @@ A.$('#back').addEventListener('click', () => { A.snd.tap(); A.leave(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') A.leave(); });
 A.fab = { el: null, show(onClick, label = '+') { const f = A.fab.el || (A.fab.el = A.h(`<button class="fab" aria-label="Добавить"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg></button>`)); if (!f.isConnected) A.$('#app').appendChild(f); f.onclick = () => { A.snd.tap(); A.fx.sparks(innerWidth - 46, innerHeight - 100, 12); onClick(); }; setTimeout(() => f.classList.add('show'), 50); }, hide() { A.fab.el && A.fab.el.classList.remove('show'); } };
 
-/* ============================================================ the dock: on a phone held upright the desk is bigger than the screen, so the places on it are also one tap away at the bottom.
-   Books, quotes, potions, the bag, and the two switches (fire, music box). It only calls what the objects on the desk call. */
-A.dock = (() => {
-  const el = A.$('#dock'); if (!el) return { refresh() {} };
-  const fire = A.$('[data-d=fire]', el), music = A.$('[data-d=music]', el);
-  function refresh() { fire.classList.toggle('on', !!(A.fire && A.fire.on)); music.classList.toggle('on', !!(A.musicBox && A.musicBox.on)); }
-  el.addEventListener('pointerdown', e => e.stopPropagation());
-  el.addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b) return; const d = b.dataset.d; A.vibrate && A.vibrate(10);
-    if (d === 'fire') { A.fire.toggle(); setTimeout(refresh, 60); return; }
-    if (d === 'music') { A.musicBox.toggle(); refresh(); return; }
-    A.snd.chime && A.snd.chime([392, 523.25], .08, .5); A.go(d);
-  });
-  new MutationObserver(refresh).observe(document.body, { attributes: true, attributeFilter: ['class'] });
-  refresh(); return { refresh };
-})();
-
 /* ============================================================ the hands: two real hand photos (true alpha) driven like a puppet.
    idle   : they rest at the bottom corners and breathe
    hover  : the nearer hand swings toward a book (arm pivots at the sleeve, stretches a little)
@@ -2083,7 +2049,7 @@ A.lib = (() => {
   const order = { reading: 0, want: 1, done: 2 };
   const fireSnd = () => A.snd.setFire(fireOn ? 1 : 0);
 
-  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, 132) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
+  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, vw * .16, 230) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
   const PAPER = 'radial-gradient(120% 90% at 50% 40%,#efe2bd,#e0cd9b 70%,#cdb883)';
 

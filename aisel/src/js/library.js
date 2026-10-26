@@ -13,7 +13,7 @@ A.lib = (() => {
   const order = { reading: 0, want: 1, done: 2 };
   const fireSnd = () => A.snd.setFire(fireOn ? 1 : 0);
 
-  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, 132) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
+  const geo = () => { const vw = innerWidth, vh = innerHeight, land = vw > vh, W0 = land ? Math.min(vh * .34, vw * .16, 230) : Math.min(vw * .5, 210); return { vw, vh, land, W0, base: land ? vh * .935 : vh * .9, cx: vw / 2, step: W0 * .86 }; };
   const natOf = k => BA[k] || BA.lantern;
   const PAPER = 'radial-gradient(120% 90% at 50% 40%,#efe2bd,#e0cd9b 70%,#cdb883)';
 
