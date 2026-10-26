@@ -823,7 +823,7 @@ A.importer = (() => {
 
   async function plain(file) {
     const buf = await file.arrayBuffer(); let t = new TextDecoder('utf-8').decode(buf);
-    if ((t.match(/�/g) || []).length > t.length * .002) t = new TextDecoder('windows-1251').decode(buf);
+    if ((t.match(/\uFFFD/g) || []).length > t.length * .002) t = new TextDecoder('windows-1251').decode(buf);
     return { title: nameOf(file), author: '', text: clean(t) };
   }
 

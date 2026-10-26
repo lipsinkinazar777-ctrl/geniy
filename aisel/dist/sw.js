@@ -1,4 +1,4 @@
-const V = 'aisel-751daf4c', FILES = ["./", "index.html", "manifest.webmanifest", "img/apple-touch-icon.png", "img/bowl.webp", "img/icon-192.png", "img/icon-512.png", "img/icon-maskable-512.png", "img/lab.webp", "img/lib.webp", "img/loc-0.webp", "img/loc-1.webp", "img/loc-2.webp", "img/loc-3.webp", "img/loc-4.webp", "img/loc-5.webp", "img/loc-6.webp", "img/loc-7.webp", "img/room.webp"];
+const V = 'aisel-cb6d5e0a', FILES = ["./", "index.html", "manifest.webmanifest", "img/apple-touch-icon.png", "img/bowl.webp", "img/icon-192.png", "img/icon-512.png", "img/icon-maskable-512.png", "img/lab.webp", "img/lib.webp", "img/loc-0.webp", "img/loc-1.webp", "img/loc-2.webp", "img/loc-3.webp", "img/loc-4.webp", "img/loc-5.webp", "img/loc-6.webp", "img/loc-7.webp", "img/room.webp"];
 self.addEventListener('install', e => { e.waitUntil(caches.open(V).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith('aisel-') && k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', e => {
