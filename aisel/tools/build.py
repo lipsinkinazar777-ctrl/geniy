@@ -9,6 +9,7 @@ story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').re
 js = js.replace('/*STORY*/', story)
 shell = (src/'shell.html').read_text(); body = (src/'body.html').read_text()
 inner = shell.replace('/*CSS*/', css).replace('<!--BODY-->', body).replace('/*JS*/', js)
+(root/'artifact.html').write_text(inner.replace('<link rel="manifest" href="manifest.webmanifest">',''))
 head, rest = inner.split('<style>', 1)
 page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
 if out.exists(): shutil.rmtree(out)
