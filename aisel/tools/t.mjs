@@ -6,7 +6,7 @@ const [pre = 't', w = 390, h = 844, steps = 'shot:a', touch = '1'] = process.arg
 const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--autoplay-policy=no-user-gesture-required'] });
 const pg = await (await b.newContext({ viewport: { width: +w, height: +h }, deviceScaleFactor: +(process.env.DSF || 2), hasTouch: touch === '1', isMobile: touch === '1' })).newPage();
 const errs = []; pg.on('pageerror', e => errs.push('PAGEERR ' + e.message)); pg.on('console', m => { if (m.type() === 'error' && !/fonts\.g|ERR_|net::|webm|mp4/.test(m.text())) errs.push(m.text()); if (m.type() === 'log' && m.text().startsWith('>>')) console.log(m.text()); });
-await pg.goto('file://' + path.resolve('dist/index.html'));
+await pg.goto('file://' + path.resolve(process.env.PAGE || 'dist/index.html'));
 for (const st of steps.split(';')) { const [k, ...r] = st.split(':'), v = r.join(':'); if (!k) continue;
   if (k === 'shot') await pg.screenshot({ path: `${SP}/${pre}_${v}.png` });
   else if (k === 'eclip') { const [sel, nm, pad = 20] = v.split('|'); const r = await pg.evaluate(`(()=>{const b=document.querySelector('${sel}').getBoundingClientRect();return [b.left,b.top,b.width,b.height]})()`); await pg.screenshot({ path: `${SP}/${pre}_${nm}.png`, clip: { x: Math.max(0, r[0] - +pad), y: Math.max(0, r[1] - +pad), width: r[2] + 2 * +pad, height: r[3] + 2 * +pad } }); }

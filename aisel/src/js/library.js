@@ -55,20 +55,21 @@ A.lib = (() => {
     const L = it.lift.x, O = it.open.x, Z = it.zoom.x;
     if (L || O || Z) {
       const f = it.n.face, fw = f[2] - f[0], fh = f[3] - f[1];
-      ry *= 1 - L; dim *= 1 - L; y -= L * g.W0 * .5; z += L * 330; rx += L * 7; s *= 1 + L * .34;
+      ry *= 1 - L; dim *= 1 - L; y -= L * g.W0 * .45; z += L * 150; rx += L * 6; s *= 1 + L * .2;
       x += O * fw * s * .5;                                                                      // the swung cover and the book are centred together
       const k = Z; if (k) { const S = g.land ? Math.min(g.vh * .78 / fh, g.vw * .22 / fw) : Math.min(g.vh * .72 / fh, g.vw * .9 / fw); const cxn = g.cx - (x - g.cx) * 0; s = s + (S - s) * k; x = x + (g.cx - x) * k - (g.land ? 0 : 0); y = y + ((g.vh * .5) - (g.base - fh * s0 * .5) - y) * k * .0; ry *= 1 - k; rx *= 1 - k; z *= 1 - k; it.zy = k; }
     }
     it.s = s; it.x = x; it.y = y; it.z = z; it.ry = ry; it.rx = rx; it.dim = dim;
   }
+  const setS = (el, k, v) => { const c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; if (k === 'dim') el.style.setProperty('--dim', v); else el.style[k] = v; } };
   function paint(it) {
     const g = G, f = it.n.face, fw = f[2] - f[0], fh = f[3] - f[1], Z = it.zoom.x;
     // anchor: bottom-centre of the book body stands on the rug; zoom pulls it to the middle of the screen
     const by = g.base + it.y + (Z ? ((g.vh * .5 + fh * it.s * .5) - g.base - it.y) * Z : 0);
-    it.el.style.transform = `translate3d(${(it.x + parx * (1 + Math.max(0, it.z) / 500)).toFixed(2)}px,${(by + pary).toFixed(2)}px,${it.z.toFixed(1)}px) rotateY(${it.ry.toFixed(2)}deg) rotateX(${it.rx.toFixed(2)}deg) scale(${it.s.toFixed(4)})`;
-    it.box.style.transform = `translate(${-(f[0] + fw / 2).toFixed(1)}px,${-f[3]}px)`;
-    it.cv.style.transform = `translateZ(${parseFloat(it.box.style.getPropertyValue('--D')) / 2}px) rotateY(${(-it.open.x * 168).toFixed(2)}deg)`;
-    it.el.style.setProperty('--dim', it.dim.toFixed(3)); it.el.style.zIndex = 100 - Math.round(Math.abs(it.pos) * 10) + (it === sel ? 50 : 0);
+    setS(it.el, 'transform', `translate3d(${(it.x + parx * (1 + Math.max(0, it.z) / 500)).toFixed(1)}px,${(by + pary).toFixed(1)}px,${it.z.toFixed(1)}px) rotateY(${it.ry.toFixed(2)}deg) rotateX(${it.rx.toFixed(2)}deg) scale(${it.s.toFixed(4)})`);
+    if (!it.placed) { it.placed = true; it.box.style.transform = `translate(${-(f[0] + fw / 2).toFixed(1)}px,${-f[3]}px)`; it.D = parseFloat(it.box.style.getPropertyValue('--D')); }
+    setS(it.cv, 'transform', `translateZ(${it.D / 2}px) rotateY(${(-it.open.x * 168).toFixed(1)}deg)`);
+    setS(it.el, 'dim', it.dim.toFixed(2)); setS(it.el, 'zIndex', String(100 - Math.round(Math.abs(it.pos) * 10) + (it === sel ? 50 : 0)));
   }
   function draw() {
     items.forEach((it, i) => { const d = i - p; it.pos = d; const vis = Math.abs(d) < 4.6; if (!vis) { if (it.on) { it.el.style.display = 'none'; it.on = false; } return; } if (!it.on) { it.el.style.display = ''; it.on = true; } place(it, d); paint(it); });
@@ -154,7 +155,7 @@ A.lib = (() => {
   function doors() {
     hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };
     Object.entries(H).forEach(([k, polys]) => polys.forEach(pl => {
-      const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateToScreen(Math.min(...xs), Math.min(...ys)), b = A.scene.plateToScreen(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
+      const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateFinal(Math.min(...xs), Math.min(...ys)), b = A.scene.plateFinal(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
       if (cx < 24 || cx > innerWidth - 24 || b[1] < 0) return;
       const el = A.h(`<button class="lb__door" aria-label="${NM[k][0]}" style="left:${a[0]}px;top:${a[1]}px;width:${b[0] - a[0]}px;height:${b[1] - a[1]}px"><i></i><span>${NM[k][0]}</span></button>`);
       el.addEventListener('pointerdown', e => e.stopPropagation()); el.addEventListener('click', () => { if (busy) return; A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.vibrate(10); A.go(NM[k][1]); }); root.appendChild(el); hs.push(el);
@@ -166,6 +167,7 @@ A.lib = (() => {
     show() {
       init(); active = true; busy = false; sel = null; root.classList.add('on'); G = geo(); A.hands.show(true); A.snd.setFire(1); doors(); render(); wake();
       root.classList.add('hints'); setTimeout(() => root.classList.remove('hints'), 5200); rehover();
+      if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
     hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); clearTimeout(hoverT); puffs.length = 0; hs.forEach(h => h.remove()); hs = []; if (raf) { cancelAnimationFrame(raf); raf = 0; } },
     get active() { return active; }

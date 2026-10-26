@@ -9,7 +9,7 @@ A.scene = (() => {
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
   const PL = { main: A.$('#pl-main'), lab: A.$('#pl-lab'), lib: A.$('#pl-lib'), cit: A.$('#pl-cit') }, BG = A.$('#stageBg');
   const setBg = name => { const u = PL[name] && PL[name].src; if (u) BG.style.backgroundImage = `url("${u}")`; };
-  const DEFS = [['enter', 'Войти', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['enter', 'Закладка', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const hit = (rx, ry) => roomName !== 'main' ? null : HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
@@ -188,7 +188,7 @@ A.scene = (() => {
       setBg(name); saved = name === 'main' ? saved : null; focusId = null; resize();
       cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lab' && ori === 'portrait' ? 110 : 0) + (name === 'lib' && ori === 'portrait' ? 95 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2 + (name === 'lib' && ori === 'landscape' ? RH * .09 : 0); cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
-    layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y),
+    layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y), plateFinal: (x, y) => [VW / 2 + (x - cam.x.t) * s0 + gx, VH / 2 + (y - cam.y.t) * s0 + gy],
     clientToRoom: (x, y) => toRoom(x, y),
     returnMain(id) {
       api.setRoom('main'); const h = HS.find(o => o.id === id);

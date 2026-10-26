@@ -45,6 +45,8 @@ A.introInit = () => A.intro = (() => {
     if (p && p.then) p.then(() => { if (!v.muted) { soundOn = true; el.classList.add('snd'); } }).catch(() => mute().catch(() => { el.classList.add('play'); const go = () => { v.play().catch(finish); unmute(); }; addEventListener('pointerdown', go, { once: true }); }));
     tOut = setTimeout(() => { if (!played && !el.classList.contains('play')) finish(); }, 9000);          // never a stuck door: no video in 9 s means we simply walk in
   }
-  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) finish(); else start();
+  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) finish();
+  else if (window.__INTRO) fetch(window.__INTRO).then(r => r.blob()).then(b => { v.src = URL.createObjectURL(b); start(); }).catch(finish);
+  else start();
   return { finish, unmute, get done() { return done; } };
 })();

@@ -16,7 +16,7 @@
 .bk__plus{position:absolute;left:55%;top:34%;width:26%;aspect-ratio:1;transform:translate(-50%,0)}
 .bk__plus::before,.bk__plus::after{content:"";position:absolute;left:50%;top:50%;background:linear-gradient(180deg,#ffe9ad,#c8932f);box-shadow:0 0 14px rgba(255,200,100,.6);border-radius:2px}
 .bk__plus::before{width:14%;height:100%;transform:translate(-50%,-50%)}.bk__plus::after{height:14%;width:100%;transform:translate(-50%,-50%)}
-.bk__lit{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(130% 80% at 62% -6%,rgba(255,176,90,.9),rgba(255,120,40,.35) 45%,transparent 70%);opacity:.5}
+.bk__lit{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 80% at 62% -6%,rgba(255,170,80,.34),rgba(255,120,40,.12) 45%,transparent 70%);opacity:.5}
 .bk__spine{background:linear-gradient(90deg,var(--lcl),var(--lc) 40%,#000);background-size:100% 100%;box-shadow:inset 0 0 0 1px rgba(255,210,120,.18);transform:rotateY(-90deg);transform-origin:50% 50%}
 .bk__spine::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 12%,rgba(231,185,92,.9) 12% 12.8%,transparent 12.8% 27%);mix-blend-mode:normal;opacity:.85}
 .bk__edge{background:repeating-linear-gradient(90deg,#d9c8a0 0 1.2px,#f2e6c8 1.2px 3px);box-shadow:inset 0 0 12px rgba(80,50,10,.5);transform:rotateY(90deg)}
@@ -34,11 +34,11 @@
 #lib3d.bv .lb__tag{opacity:0;transition:opacity .5s}
 @media (orientation:landscape){.lb__tag{top:calc(var(--sat) + 14px)}.lb__tag b{font-size:clamp(20px,4.6vw,30px)}}
 #lbFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.lb__note{position:absolute;left:30px;right:30px;top:30%;text-align:center;font:italic 400 24px/1.3 var(--serif);pointer-events:none}
+.lb__note{position:absolute;left:30px;right:30px;top:34%;text-align:center;font:italic 400 22px/1.3 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.6),0 2px 12px #000;pointer-events:none;opacity:0;transition:opacity 1.2s}.lb__note.on{opacity:.92}
 .lb__door{position:absolute;background:none;border-radius:40%;pointer-events:auto;z-index:3}
 .lb__door i{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,140,.3),transparent);opacity:0;transition:opacity .4s}
 .lb__door:active i{opacity:1}
-.lb__door span{position:absolute;left:50%;top:-4px;transform:translateX(-50%);white-space:nowrap;font:italic 400 18px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 2px 10px #000;opacity:0;transition:opacity .8s;pointer-events:none}
+.lb__door span{position:absolute;left:50%;top:34%;transform:translateX(-50%);white-space:nowrap;font:italic 400 18px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 2px 10px #000;opacity:0;transition:opacity .8s;pointer-events:none}
 #lib3d.hints .lb__door span{opacity:.9}
 /* the hands */
 #hands{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden}
@@ -59,3 +59,4 @@
 .qc{transition:color 1.4s,text-shadow 1.4s}
 @keyframes qink{from{clip-path:inset(-20% 100% -20% 0)}to{clip-path:inset(-20% -10% -20% -10%)}}
 .qw{white-space:nowrap}
+#lib3d::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.6),transparent 13%,transparent 87%,rgba(0,0,0,.6)),linear-gradient(0deg,rgba(0,0,0,.45),transparent 30%)}

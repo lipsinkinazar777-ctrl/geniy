@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Concatenates src/ into dist/: index.html, manifest.webmanifest, sw.js and img/ (installable, offline-capable PWA)
-import pathlib, shutil, json, hashlib
+import pathlib, shutil, json, hashlib, base64
 root = pathlib.Path(__file__).resolve().parent.parent; src = root/'src'; out = root/'dist'
 css = '\n'.join((src/'css'/f).read_text() for f in sorted(p.name for p in (src/'css').glob('*.css')))
 order = ['store','layout','bookart','texts','import','audio','fx','scene','fire','ui','map','hands','library','bookview','quill','books','casket','quotes','sky','potion','goal','bag','intro','app']
@@ -9,7 +9,10 @@ story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').re
 js = js.replace('/*STORY*/', story)
 shell = (src/'shell.html').read_text(); body = (src/'body.html').read_text()
 inner = shell.replace('/*CSS*/', css).replace('<!--BODY-->', body).replace('/*JS*/', js)
-(root/'artifact.html').write_text(inner.replace('<link rel="manifest" href="manifest.webmanifest">',''))
+art = inner.replace('<link rel="manifest" href="manifest.webmanifest">','').replace('<source src="video/intro.mp4" type="video/mp4">','').replace('<source src="video/intro.webm" type="video/webm">','')
+# the artifact host may not answer byte-range requests, which iOS needs for <video>: the film travels inside the page and is played from a blob URL
+art = art.replace('<script>', '<script>window.__INTRO="data:video/mp4;base64,' + base64.b64encode((src/'video'/'intro.mp4').read_bytes()).decode() + '";</script>\n<script>', 1)
+(root/'artifact.html').write_text(art)
 head, rest = inner.split('<style>', 1)
 page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
 if out.exists(): shutil.rmtree(out)

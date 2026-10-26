@@ -641,7 +641,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .bk__plus{position:absolute;left:55%;top:34%;width:26%;aspect-ratio:1;transform:translate(-50%,0)}
 .bk__plus::before,.bk__plus::after{content:"";position:absolute;left:50%;top:50%;background:linear-gradient(180deg,#ffe9ad,#c8932f);box-shadow:0 0 14px rgba(255,200,100,.6);border-radius:2px}
 .bk__plus::before{width:14%;height:100%;transform:translate(-50%,-50%)}.bk__plus::after{height:14%;width:100%;transform:translate(-50%,-50%)}
-.bk__lit{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(130% 80% at 62% -6%,rgba(255,176,90,.9),rgba(255,120,40,.35) 45%,transparent 70%);opacity:.5}
+.bk__lit{position:absolute;inset:0;pointer-events:none;background:radial-gradient(130% 80% at 62% -6%,rgba(255,170,80,.34),rgba(255,120,40,.12) 45%,transparent 70%);opacity:.5}
 .bk__spine{background:linear-gradient(90deg,var(--lcl),var(--lc) 40%,#000);background-size:100% 100%;box-shadow:inset 0 0 0 1px rgba(255,210,120,.18);transform:rotateY(-90deg);transform-origin:50% 50%}
 .bk__spine::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 12%,rgba(231,185,92,.9) 12% 12.8%,transparent 12.8% 27%);mix-blend-mode:normal;opacity:.85}
 .bk__edge{background:repeating-linear-gradient(90deg,#d9c8a0 0 1.2px,#f2e6c8 1.2px 3px);box-shadow:inset 0 0 12px rgba(80,50,10,.5);transform:rotateY(90deg)}
@@ -659,11 +659,11 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 #lib3d.bv .lb__tag{opacity:0;transition:opacity .5s}
 @media (orientation:landscape){.lb__tag{top:calc(var(--sat) + 14px)}.lb__tag b{font-size:clamp(20px,4.6vw,30px)}}
 #lbFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.lb__note{position:absolute;left:30px;right:30px;top:30%;text-align:center;font:italic 400 24px/1.3 var(--serif);pointer-events:none}
+.lb__note{position:absolute;left:30px;right:30px;top:34%;text-align:center;font:italic 400 22px/1.3 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.6),0 2px 12px #000;pointer-events:none;opacity:0;transition:opacity 1.2s}.lb__note.on{opacity:.92}
 .lb__door{position:absolute;background:none;border-radius:40%;pointer-events:auto;z-index:3}
 .lb__door i{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,140,.3),transparent);opacity:0;transition:opacity .4s}
 .lb__door:active i{opacity:1}
-.lb__door span{position:absolute;left:50%;top:-4px;transform:translateX(-50%);white-space:nowrap;font:italic 400 18px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 2px 10px #000;opacity:0;transition:opacity .8s;pointer-events:none}
+.lb__door span{position:absolute;left:50%;top:34%;transform:translateX(-50%);white-space:nowrap;font:italic 400 18px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 2px 10px #000;opacity:0;transition:opacity .8s;pointer-events:none}
 #lib3d.hints .lb__door span{opacity:.9}
 /* the hands */
 #hands{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden}
@@ -684,6 +684,7 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden}
 .qc{transition:color 1.4s,text-shadow 1.4s}
 @keyframes qink{from{clip-path:inset(-20% 100% -20% 0)}to{clip-path:inset(-20% -10% -20% -10%)}}
 .qw{white-space:nowrap}
+#lib3d::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.6),transparent 13%,transparent 87%,rgba(0,0,0,.6)),linear-gradient(0deg,rgba(0,0,0,.45),transparent 30%)}
 
 /* ============================================================ the open book: leather, paper, ribbons, the quill's slip */
 .bv{position:fixed;inset:0;z-index:35;color:#33230f;--fs:21px;--ff:"Cormorant Garamond",Georgia,serif;--fl:.9;visibility:hidden;pointer-events:none;-webkit-user-select:none;user-select:none}
@@ -785,7 +786,7 @@ textarea.lined::placeholder{color:rgba(60,38,12,.38)}
 .bv__line{flex:1;height:1px;background:rgba(240,225,190,.16);overflow:hidden}
 .bv__line i{display:block;height:100%;background:#e9c984;transform-origin:0 0;transform:scaleX(0);transition:transform .7s var(--ease);box-shadow:0 0 8px #e9c984}
 .bv__fin{position:absolute;left:50%;bottom:calc(var(--sab) + 82px);transform:translateX(-50%);z-index:8;padding:13px 28px;border-radius:999px;background:radial-gradient(120% 140% at 30% 20%,#c4363b,#7d1519 70%);color:#ffe9c8;font:500 17px/1 var(--serif);box-shadow:0 8px 24px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,220,200,.35)}
-.bv__sel{position:fixed;z-index:9;transform:translate(-50%,-100%);display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:rgba(12,8,5,.92);color:#f6e6bd;font:500 15px/1 var(--serif);border:1px solid rgba(255,214,140,.5);box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 24px rgba(255,190,90,.25)}
+.bv__sel{position:fixed;z-index:9;transform:translate(-50%,-100%);width:max-content;max-width:80vw;display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;background:rgba(12,8,5,.92);color:#f6e6bd;font:500 15px/1 var(--serif);border:1px solid rgba(255,214,140,.5);box-shadow:0 10px 30px rgba(0,0,0,.6),0 0 24px rgba(255,190,90,.25)}
 .bv__sel .ico{width:18px;height:18px;color:#e9c984}
 .bv__sel.in{animation:selin .45s var(--spring)}@keyframes selin{from{opacity:0;transform:translate(-50%,-70%) scale(.8)}}
 .bv__set{position:absolute;left:12px;right:12px;top:calc(var(--sat) + 62px);z-index:8;padding:8px 18px;border-radius:22px;background:rgba(10,7,5,.9);border:1px solid rgba(255,214,140,.22);box-shadow:0 20px 50px rgba(0,0,0,.6);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .4s,transform .5s var(--ease);max-width:440px;margin:0 auto;color:#f1e1b8}
@@ -1326,7 +1327,7 @@ A.scene = (() => {
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
   const PL = { main: A.$('#pl-main'), lab: A.$('#pl-lab'), lib: A.$('#pl-lib'), cit: A.$('#pl-cit') }, BG = A.$('#stageBg');
   const setBg = name => { const u = PL[name] && PL[name].src; if (u) BG.style.backgroundImage = `url("${u}")`; };
-  const DEFS = [['enter', 'Войти', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['enter', 'Закладка', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Книжный зал', { tab: 'books' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const hit = (rx, ry) => roomName !== 'main' ? null : HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
@@ -1505,7 +1506,7 @@ A.scene = (() => {
       setBg(name); saved = name === 'main' ? saved : null; focusId = null; resize();
       cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lab' && ori === 'portrait' ? 110 : 0) + (name === 'lib' && ori === 'portrait' ? 95 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2 + (name === 'lib' && ori === 'landscape' ? RH * .09 : 0); cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
-    layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y),
+    layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y), plateFinal: (x, y) => [VW / 2 + (x - cam.x.t) * s0 + gx, VH / 2 + (y - cam.y.t) * s0 + gy],
     clientToRoom: (x, y) => toRoom(x, y),
     returnMain(id) {
       api.setRoom('main'); const h = HS.find(o => o.id === id);
@@ -1987,20 +1988,21 @@ A.lib = (() => {
     const L = it.lift.x, O = it.open.x, Z = it.zoom.x;
     if (L || O || Z) {
       const f = it.n.face, fw = f[2] - f[0], fh = f[3] - f[1];
-      ry *= 1 - L; dim *= 1 - L; y -= L * g.W0 * .5; z += L * 330; rx += L * 7; s *= 1 + L * .34;
+      ry *= 1 - L; dim *= 1 - L; y -= L * g.W0 * .45; z += L * 150; rx += L * 6; s *= 1 + L * .2;
       x += O * fw * s * .5;                                                                      // the swung cover and the book are centred together
       const k = Z; if (k) { const S = g.land ? Math.min(g.vh * .78 / fh, g.vw * .22 / fw) : Math.min(g.vh * .72 / fh, g.vw * .9 / fw); const cxn = g.cx - (x - g.cx) * 0; s = s + (S - s) * k; x = x + (g.cx - x) * k - (g.land ? 0 : 0); y = y + ((g.vh * .5) - (g.base - fh * s0 * .5) - y) * k * .0; ry *= 1 - k; rx *= 1 - k; z *= 1 - k; it.zy = k; }
     }
     it.s = s; it.x = x; it.y = y; it.z = z; it.ry = ry; it.rx = rx; it.dim = dim;
   }
+  const setS = (el, k, v) => { const c = el._s || (el._s = {}); if (c[k] !== v) { c[k] = v; if (k === 'dim') el.style.setProperty('--dim', v); else el.style[k] = v; } };
   function paint(it) {
     const g = G, f = it.n.face, fw = f[2] - f[0], fh = f[3] - f[1], Z = it.zoom.x;
     // anchor: bottom-centre of the book body stands on the rug; zoom pulls it to the middle of the screen
     const by = g.base + it.y + (Z ? ((g.vh * .5 + fh * it.s * .5) - g.base - it.y) * Z : 0);
-    it.el.style.transform = `translate3d(${(it.x + parx * (1 + Math.max(0, it.z) / 500)).toFixed(2)}px,${(by + pary).toFixed(2)}px,${it.z.toFixed(1)}px) rotateY(${it.ry.toFixed(2)}deg) rotateX(${it.rx.toFixed(2)}deg) scale(${it.s.toFixed(4)})`;
-    it.box.style.transform = `translate(${-(f[0] + fw / 2).toFixed(1)}px,${-f[3]}px)`;
-    it.cv.style.transform = `translateZ(${parseFloat(it.box.style.getPropertyValue('--D')) / 2}px) rotateY(${(-it.open.x * 168).toFixed(2)}deg)`;
-    it.el.style.setProperty('--dim', it.dim.toFixed(3)); it.el.style.zIndex = 100 - Math.round(Math.abs(it.pos) * 10) + (it === sel ? 50 : 0);
+    setS(it.el, 'transform', `translate3d(${(it.x + parx * (1 + Math.max(0, it.z) / 500)).toFixed(1)}px,${(by + pary).toFixed(1)}px,${it.z.toFixed(1)}px) rotateY(${it.ry.toFixed(2)}deg) rotateX(${it.rx.toFixed(2)}deg) scale(${it.s.toFixed(4)})`);
+    if (!it.placed) { it.placed = true; it.box.style.transform = `translate(${-(f[0] + fw / 2).toFixed(1)}px,${-f[3]}px)`; it.D = parseFloat(it.box.style.getPropertyValue('--D')); }
+    setS(it.cv, 'transform', `translateZ(${it.D / 2}px) rotateY(${(-it.open.x * 168).toFixed(1)}deg)`);
+    setS(it.el, 'dim', it.dim.toFixed(2)); setS(it.el, 'zIndex', String(100 - Math.round(Math.abs(it.pos) * 10) + (it === sel ? 50 : 0)));
   }
   function draw() {
     items.forEach((it, i) => { const d = i - p; it.pos = d; const vis = Math.abs(d) < 4.6; if (!vis) { if (it.on) { it.el.style.display = 'none'; it.on = false; } return; } if (!it.on) { it.el.style.display = ''; it.on = true; } place(it, d); paint(it); });
@@ -2086,7 +2088,7 @@ A.lib = (() => {
   function doors() {
     hs.forEach(h => h.remove()); hs = []; const H = A.scene.layout().libHs || {}, NM = { lab: ['Алхимия', 'potion'], quotes: ['Архив цитат', 'quotes'] };
     Object.entries(H).forEach(([k, polys]) => polys.forEach(pl => {
-      const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateToScreen(Math.min(...xs), Math.min(...ys)), b = A.scene.plateToScreen(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
+      const xs = pl.map(q => q[0]), ys = pl.map(q => q[1]), a = A.scene.plateFinal(Math.min(...xs), Math.min(...ys)), b = A.scene.plateFinal(Math.max(...xs), Math.max(...ys)), cx = (a[0] + b[0]) / 2;
       if (cx < 24 || cx > innerWidth - 24 || b[1] < 0) return;
       const el = A.h(`<button class="lb__door" aria-label="${NM[k][0]}" style="left:${a[0]}px;top:${a[1]}px;width:${b[0] - a[0]}px;height:${b[1] - a[1]}px"><i></i><span>${NM[k][0]}</span></button>`);
       el.addEventListener('pointerdown', e => e.stopPropagation()); el.addEventListener('click', () => { if (busy) return; A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.vibrate(10); A.go(NM[k][1]); }); root.appendChild(el); hs.push(el);
@@ -2098,6 +2100,7 @@ A.lib = (() => {
     show() {
       init(); active = true; busy = false; sel = null; root.classList.add('on'); G = geo(); A.hands.show(true); A.snd.setFire(1); doors(); render(); wake();
       root.classList.add('hints'); setTimeout(() => root.classList.remove('hints'), 5200); rehover();
+      if (!A.state.libTip) { A.state.libTip = true; A.save(); setTimeout(() => { if (!active) return; noteEl.textContent = 'Листай книги пальцем. Коснись книги, и она раскроется.'; noteEl.classList.add('on'); setTimeout(() => noteEl.classList.remove('on'), 5500); }, 1800); }
     },
     hide() { active = false; busy = false; root.classList.remove('on'); A.hands.show(false); clearTimeout(hoverT); puffs.length = 0; hs.forEach(h => h.remove()); hs = []; if (raf) { cancelAnimationFrame(raf); raf = 0; } },
     get active() { return active; }
@@ -2356,6 +2359,7 @@ A.bookview = (() => {
     S = { tab: 'read', i: 0 }; startPagers(); if (hasText && bk.pos) { const n = pager.pageOfChar(bk.pos * textLen) + 1; S.i = g.land ? Math.floor(n / 2) : n; }
     leaf.style.display = 'none'; renderSlots(); document.body.classList.add('bv-open'); A.$('#lib3d').classList.add('bv');
     A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
+    if (hasText && !A.state.bvTip) { A.state.bvTip = true; A.save(); setTimeout(() => open_ && A.toast('Листай страницы пальцем. Зажми абзац — он станет цитатой.', 4600), 2000); }
     void el.offsetWidth; el.classList.add('in'); clearTimeout(stillT); stillT = setTimeout(() => { if (open_) { document.body.classList.add('bv-still'); A.scene.freeze(true); } }, 900); if (!hasText) setTimeout(() => A.toast('В «Читать» пока пусто — загрузи текст, а впечатления и цитаты работают уже сейчас'), 900);
   }
   function close() {
@@ -2988,7 +2992,9 @@ A.introInit = () => A.intro = (() => {
     if (p && p.then) p.then(() => { if (!v.muted) { soundOn = true; el.classList.add('snd'); } }).catch(() => mute().catch(() => { el.classList.add('play'); const go = () => { v.play().catch(finish); unmute(); }; addEventListener('pointerdown', go, { once: true }); }));
     tOut = setTimeout(() => { if (!played && !el.classList.contains('play')) finish(); }, 9000);          // never a stuck door: no video in 9 s means we simply walk in
   }
-  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) finish(); else start();
+  if (!v.canPlayType || (!v.canPlayType('video/mp4') && !v.canPlayType('video/webm'))) finish();
+  else if (window.__INTRO) fetch(window.__INTRO).then(r => r.blob()).then(b => { v.src = URL.createObjectURL(b); start(); }).catch(finish);
+  else start();
   return { finish, unmute, get done() { return done; } };
 })();
 
