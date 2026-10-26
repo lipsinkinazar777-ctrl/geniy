@@ -1578,7 +1578,7 @@ A.scene = (() => {
   function setPlates() {
     const want = { main: LAY.img, lab: LAY.rooms.lab, lib: LAY.rooms.lib, cit: LAY.rooms.cit };
     Object.keys(PL).forEach(k => { const el = PL[k], u = want[k]; if (el.dataset.src !== u) { el.dataset.src = u; el.src = u; } });
-    PL.main.onload = () => { if (roomName === 'main') setBg('main'); };
+    Object.keys(PL).forEach(k => { PL[k].onload = () => { if (roomName === k) setBg(k); dirty = true; }; });
     setBg(roomName);
   }
   function relayout() {
@@ -3416,7 +3416,7 @@ A.introInit = () => A.intro = (() => {
   function toSeq() {
     if (seq || done || played) return; seq = true; el.classList.add('seq'); clearTimeout(tFail); try { v.pause(); } catch (e) {}
     const url = i => `video/seq/f${String(i + 1).padStart(3, '0')}.webp`; let next = 0, ok = 0;
-    const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; im.onerror = () => { pull(); }; im.src = url(i); };
+    const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; let tr = 0; im.onerror = () => { if (++tr <= 3) setTimeout(() => { im.src = url(i) + '?r=' + tr; }, 300 * tr); else pull(); }; im.src = url(i); };
     for (let k = 0; k < 6; k++) pull();
     audio = new Audio('video/intro.mp3'); audio.preload = 'auto';
     tFail = setTimeout(() => { if (!tStart) finish(); }, 6000);                                         // not even the stills arrive: walk in anyway
@@ -3437,6 +3437,11 @@ A.introInit = () => A.intro = (() => {
 
 /* ============================================================ boot: the entrance video (intro.js) -> the hub room, the fire lights */
 (() => {
+  /* a picture that did not arrive (a dropped request on a phone) is asked for again, a few times, with a growing pause; a broken one that is already in the page is healed the same way */
+  { const tries = new WeakMap(), heal = im => { if (!(im instanceof HTMLImageElement)) return; const src = im.getAttribute('src'); if (!src || src.startsWith('data:') || src.startsWith('blob:')) return; const n = (tries.get(im) || 0) + 1; if (n > 6) return; tries.set(im, n);
+      const base = src.replace(/[?&]r=\d+$/, ''); setTimeout(() => { im.src = base + (base.includes('?') ? '&' : '?') + 'r=' + n; }, 400 * n * n); };
+    addEventListener('error', e => heal(e.target), true);
+    const sweep = () => document.querySelectorAll('img[src]').forEach(im => { if (im.complete && im.naturalWidth === 0 && !im.closest('[hidden]')) heal(im); }); setInterval(sweep, 4000); addEventListener('online', sweep); }
   A.load(); A.txt.migrate();
   { const OLD = /^\s*Алия\s+Айсель\s*$/i, NEW = 'Хакимова Айсель'; let ch = false; [...A.state.books, ...A.state.quotes].forEach(x => { if (x.author && OLD.test(x.author)) { x.author = NEW; ch = true; } }); if (ch) A.save(); } A.musicBox && A.musicBox.sync();
   if (!A.state.books.length && !A.state.quotes.length && A.state.samples) A.seed();

@@ -98,7 +98,7 @@ A.scene = (() => {
   function setPlates() {
     const want = { main: LAY.img, lab: LAY.rooms.lab, lib: LAY.rooms.lib, cit: LAY.rooms.cit };
     Object.keys(PL).forEach(k => { const el = PL[k], u = want[k]; if (el.dataset.src !== u) { el.dataset.src = u; el.src = u; } });
-    PL.main.onload = () => { if (roomName === 'main') setBg('main'); };
+    Object.keys(PL).forEach(k => { PL[k].onload = () => { if (roomName === k) setBg(k); dirty = true; }; });
     setBg(roomName);
   }
   function relayout() {

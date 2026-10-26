@@ -9,7 +9,7 @@ BANDS = {'lantern': (408, 425, 161, 283), 'prince': (379, 393, 137, 241), 'souls
 for n, (y0, y1, x0, x1) in BANDS.items():
     src = keep / f'book-{n}.webp'; dst = root / f'src/img/book-{n}.webp'
     if not src.exists(): shutil.copy(dst, src)
-    im = cv2.imread(str(src)); h, w = im.shape[:2]; pad = 6
+    im0 = cv2.imread(str(src), cv2.IMREAD_UNCHANGED); alpha = im0[..., 3] if im0.shape[2] == 4 else None; im = im0[..., :3].copy(); h, w = im.shape[:2]; pad = 6
     ya, yb, xa, xb = y0 - pad, y1 + pad, x0 - pad, x1 + pad
     reg = im[ya:yb, xa:xb].astype(int); gold = ((reg[..., 2] > 120) & (reg[..., 1] > 85) & (reg[..., 2] > reg[..., 0] + 20)).astype(np.uint8) * 255
     gold = cv2.dilate(gold, np.ones((5, 5), np.uint8)); mask = np.zeros((h, w), np.uint8); mask[ya:yb, xa:xb] = gold
@@ -29,4 +29,6 @@ for n, (y0, y1, x0, x1) in BANDS.items():
     sh = cv2.GaussianBlur(a, (0, 0), 1.1)[..., None]
     r = out[py:py + lh, px:px + lw]; r[...] = r * (1 - sh * .45)                      # a soft dark edge like the printed lettering
     r[...] = r * (1 - a[..., None]) + fill * a[..., None]
-    cv2.imwrite(str(dst), np.clip(out, 0, 255).astype(np.uint8), [cv2.IMWRITE_WEBP_QUALITY, 92]); print(n, 'ok', (lw, lh))
+    res = np.clip(out, 0, 255).astype(np.uint8)
+    if alpha is not None: res = np.dstack([res, alpha])                                # the cut-out edges (transparency) are kept
+    cv2.imwrite(str(dst), res, [cv2.IMWRITE_WEBP_QUALITY, 92]); print(n, 'ok', (lw, lh), res.shape)

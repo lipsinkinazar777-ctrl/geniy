@@ -50,7 +50,7 @@ A.introInit = () => A.intro = (() => {
   function toSeq() {
     if (seq || done || played) return; seq = true; el.classList.add('seq'); clearTimeout(tFail); try { v.pause(); } catch (e) {}
     const url = i => `video/seq/f${String(i + 1).padStart(3, '0')}.webp`; let next = 0, ok = 0;
-    const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; im.onerror = () => { pull(); }; im.src = url(i); };
+    const pull = () => { if (next >= N) return; const i = next++, im = new Image(); im.onload = () => { frames[i] = im; ok++; if (ok === 10 && !tStart) { tStart = performance.now(); el.classList.add('play'); begin(); requestAnimationFrame(tick); } pull(); }; let tr = 0; im.onerror = () => { if (++tr <= 3) setTimeout(() => { im.src = url(i) + '?r=' + tr; }, 300 * tr); else pull(); }; im.src = url(i); };
     for (let k = 0; k < 6; k++) pull();
     audio = new Audio('video/intro.mp3'); audio.preload = 'auto';
     tFail = setTimeout(() => { if (!tStart) finish(); }, 6000);                                         // not even the stills arrive: walk in anyway
