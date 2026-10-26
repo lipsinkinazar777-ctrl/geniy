@@ -17,7 +17,7 @@ A.fire = (() => {
         u.x+=sw; u.y+=(fbm(vec2(v.x*3.,T*2.1))-.5)*.035*hs;
         vec4 c=texture2D(S,clamp(u,0.,1.));
         float fl=.9+.1*sin(T*13.)*sin(T*7.3)+A*.18+(fbm(vec2(T*4.,hs))-.5)*.2;
-        float rr=length((vec2(v.x,1.-hs)-vec2(.5,.6))/vec2(.5,.58)); float a=c.a*smoothstep(1.,.78,hs)*smoothstep(1.02,.55,rr)*clamp(L*1.6,0.,1.);
+        float rr=length((vec2(v.x,1.-hs)-vec2(.5,.6))/vec2(.5,.58)); float a=c.a*smoothstep(0.,.1,hh)*smoothstep(1.,.78,hs)*smoothstep(1.02,.55,rr)*clamp(L*1.6,0.,1.);
         vec3 col=c.rgb*fl*(1.12+.25*(1.-hs));
         gl_FragColor=vec4(col*a,a);
       }`;
@@ -72,7 +72,7 @@ A.fire = (() => {
     if (target === 0 && L > .015 && Math.random() < dt * 30 * L) smoke.push({ x: BX + R(-26, 26), y: BY - R(10, 40), vy: -R(30, 62), vx: R(-8, 8), life: 0, ttl: R(2.4, 4), s: R(28, 46) });
     for (let i = smoke.length - 1; i >= 0; i--) { const p = smoke[i]; p.life += dt; if (p.life > p.ttl) { smoke.splice(i, 1); continue; } const k = p.life / p.ttl; p.x += (p.vx + Math.sin(T * 1.6 + i) * 10) * dt; p.y += p.vy * dt; const r = p.s * (1 + k * 2.4); ctx.globalAlpha = .2 * (1 - k) * Math.min(1, k * 6); ctx.drawImage(S.smoke, p.x - r, p.y - r, r * 2, r * 2); }
     ctx.globalAlpha = 1;
-    sparkAcc += dt * (14 + au * 40) * L * L; while (sparkAcc > 1) { sparkAcc--; const f = A.scene.fireBase(); A.scene.spark(f.x + R(-60, 60), f.y - R(40, 260)); }
+    sparkAcc += dt * (3 + au * 7) * L * L; while (sparkAcc > 1) { sparkAcc--; const f = A.scene.fireBase(); A.scene.spark(f.x + R(-40, 40), f.y - R(30, 110)); }
   }
 
   function set(on, quiet) {

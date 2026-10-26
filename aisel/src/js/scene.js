@@ -7,7 +7,7 @@ A.scene = (() => {
   let ori = ORI(), LAY = LAYOUTS[ori], RW = LAY.w, RH = LAY.h, roomName = 'main';
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
   const FIRE = { x: 0, y: 0 }; const HOME = { cx: 0, cy: 0, z: 1 };
-  const DEFS = [['fire', 'Костёр', { act: 'fire' }], ['read', 'Продолжить чтение', { act: 'read' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
+  const DEFS = [['enter', 'Войти', { act: 'enter' }], ['fire', 'Костёр', { act: 'fire' }], ['read', 'Читать', { act: 'read' }], ['lab', 'Алхимия', { tab: 'potion' }], ['quotes', 'Архив цитат', { tab: 'quotes' }], ['sky', 'Небо', { tab: 'sky' }], ['path', 'Лесная тропа', { tab: 'path' }], ['bag', 'Сумка', { tab: 'bag' }], ['lib', 'Библиотека', { tab: 'books' }]];
   let HS = [];
   const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
   const hit = (rx, ry) => HS.find(h => h.P.some(p => inPoly(rx, ry, p))) || null;
@@ -60,12 +60,10 @@ A.scene = (() => {
     }
     for (let i = embers.length - 1; i >= 0; i--) {
       const e = embers[i]; e.life += dt; if (e.life > e.max) { embers.splice(i, 1); continue; }
-      e.vx += (Math.sin(T * 2.6 + e.ph) * 70 + 8) * dt; e.vy *= 1 - .22 * dt; e.vy -= 18 * dt; e.x += e.vx * dt; e.y += e.vy * dt;
-      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), px = e.px == null ? sx : e.px, py = e.py == null ? sy : e.py; e.px = sx; e.py = sy;
-      const w = Math.max(.7, e.r * s * 1.7 * (.35 + k * .65)), flick = .65 + .35 * Math.sin(T * 30 + e.ph * 9);
-      g.globalAlpha = Math.min(1, k * 1.5) * flick * vis; g.lineCap = 'round'; g.lineWidth = w;
-      g.strokeStyle = k > .6 ? 'rgb(255,226,150)' : k > .3 ? 'rgb(255,150,48)' : 'rgb(230,70,18)'; g.beginPath(); g.moveTo(px - (sx - px) * 1.4, py - (sy - py) * 1.4); g.lineTo(sx, sy); g.stroke();
-      const r = w * 3.4; g.globalAlpha *= .45; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
+      e.vx += (Math.sin(T * 2.6 + e.ph) * 26) * dt; e.vy *= 1 - .6 * dt; e.x += e.vx * dt; e.y += e.vy * dt;
+      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), w = Math.max(.6, e.r * s * 1.1 * k), flick = .6 + .4 * Math.sin(T * 24 + e.ph * 9);
+      g.globalAlpha = Math.min(1, k * 1.6) * flick * vis * .8; g.fillStyle = k > .55 ? 'rgb(255,214,140)' : k > .25 ? 'rgb(255,150,48)' : 'rgb(220,70,20)'; g.beginPath(); g.arc(sx, sy, w, 0, 6.283); g.fill();
+      const r = w * 4; g.globalAlpha *= .35; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
     }
     g.restore();
   }
@@ -125,6 +123,7 @@ A.scene = (() => {
   function tap(h, sx, sy) {
     if (!h) { showLabels(); A.snd.tap && A.snd.tap(); A.fx.sparks(sx, sy, 6, '#ffd98a'); return; }
     A.vibrate(12); if (h.act === 'fire') { A.fire.toggle(); return; }
+    if (h.act === 'enter') { A.snd.chime && A.snd.chime([392, 523.25, 659.25], .1, .6); A.snd.page && A.snd.page(); api.showZones(); return; }
     if (h.act === 'read') { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) { A.snd.page(); A.reader.open(b, null); } else A.go('books'); return; }
     A.snd.chime && A.snd.chime([392, 523.25], .08, .6); A.go(h.tab);
   }
@@ -162,8 +161,9 @@ A.scene = (() => {
     },
     dolly(z0 = 1.3) { cam.z.x = z0; cam.z.v = 0; cam.z.t = 1; },
     start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(loop); },
+    showZones() { cancelSweep(); A.$('#hsFx').classList.add('zones'); showLabels(7000); clearTimeout(api._zt); api._zt = setTimeout(() => A.$('#hsFx').classList.remove('zones'), 7000); const h = A.$('#hint'); h.textContent = 'Коснись подсвеченной зоны'; h.classList.add('on'); setTimeout(() => h.classList.remove('on'), 5000); },
     mode: () => mode, hs: id => HS.find(h => h.id === id), fireBase: () => FIRE, refreshPage, showLabels,
-    spark(x, y) { embers.push({ x, y, vx: rnd(-70, 80), vy: rnd(-330, -90), r: rnd(.8, 2.6), life: 0, max: rnd(1.4, 4.2), ph: rnd(0, 6) }); },
+    spark(x, y) { embers.push({ x, y, vx: rnd(-14, 14), vy: rnd(-95, -35), r: rnd(.9, 1.8), life: 0, max: rnd(.9, 2), ph: rnd(0, 6) }); },
     enter(first) {                                         // walk into the room: dolly in from the dark, then look around once
       mode = 'room'; locked = false; cam.z.x = 2.1; cam.z.v = 0; cam.z.t = 1; cam.x.x = HOME.cx - 40; cam.x.t = HOME.cx; cam.y.x = HOME.cy - 120; cam.y.t = HOME.cy; cam.x.v = cam.y.v = 0;
       stage.classList.add('in'); if (first) setTimeout(() => api.sweep(), 2300); setTimeout(() => showLabels(first ? 6500 : 3200), first ? 1500 : 900);

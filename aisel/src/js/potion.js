@@ -10,7 +10,7 @@
     init() { build(); }, beforeShow() {}, rebuild() { built = false; if (A.scene.room() === 'lab') build(); },
     show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } hint('Коснись склянки, чтобы влить её в котёл'); }
   };
-  const hint = s => { const h = A.$('#labHint', layer); if (!h) return; h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); };
+  const hint = s => { const h = A.$('#labHint', layer); if (!h) return; h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); clearTimeout(hint._t); hint._t = setTimeout(() => h.classList.remove('on'), 4200); };
   function build() {
     const ori = A.scene.ori(); if (built && lastOri === ori) return; built = true; lastOri = ori; L = A.scene.layout(); LAB = L.lab; layer = A.$('#labLayer');
     layer.innerHTML = `<canvas id="labCv" width="${L.room[0]}" height="${L.room[1]}"></canvas><div class="lab__t"><small>алхимическая лаборатория</small></div><div class="lab__hint" id="labHint"></div><div class="lab__res" id="labRes"></div>
@@ -25,14 +25,14 @@
     if (brewing) return; const k = b.dataset.k; A.snd.bubble(); A.vibrate(10);
     if (sel.has(k)) { sel.delete(k); b.classList.remove('on'); }
     else { if (sel.size >= 2) { const f = [...sel][0]; sel.delete(f); A.$(`.mood3[data-k="${f}"]`, layer).classList.remove('on'); } sel.add(k); b.classList.add('on'); const [x, y] = LAB.bottles[k]; for (let i = 0; i < 34; i++) pours.push({ x, y, tx: LAB.pour[0] + R(-70, 70), ty: LAB.pour[1] + R(-8, 14), t: -i * .014, c: FL[k], arc: R(160, 260) }); setTimeout(() => { ripples.push({ x: LAB.pour[0], y: LAB.pour[1] + 6, r: 6, a: 1 }); for (let i = 0; i < 10; i++) bubbles.push(nb()); A.snd.bubble(); }, 520); }
-    mix(); hint(sel.size ? (sel.size < 2 ? 'Можно добавить ещё одно настроение или сразу варить: коснись котла' : 'Теперь коснись котла') : 'Коснись склянки, чтобы влить её в котёл');
+    mix(); hint(sel.size ? (sel.size < 2 ? 'Добавь ещё одну или коснись котла' : 'Коснись котла') : 'Коснись склянки, чтобы влить её в котёл');
   }
   const nb = () => ({ x: LAB.pour[0] + R(-.9, .9) * 150, y: LAB.pour[1] + R(-6, 12), r: R(3, 10), v: R(30, 60), ph: R(0, 6.3), life: 0, max: R(.8, 1.8) });
 
   function frame(now) {
     requestAnimationFrame(frame); if (A.scene.room() !== 'lab' || !cx) { last = now; return; }
     const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; hot += ((brewing ? 1 : .3 + .12 * sel.size) - hot) * dt * 2;
-    cx.clearRect(0, 0, cv.width, cv.height); liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(','), [px, py] = LAB.pour, w = 150, h = 34;
+    cx.clearRect(0, 0, cv.width, cv.height); liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(','), [px, py] = LAB.pour, w = LAB.rx || 150, h = LAB.ry || 34;
     // the liquid in the mouth of the cauldron
     cx.save(); cx.beginPath(); cx.ellipse(px, py + 4, w, h, 0, 0, 6.283); cx.clip();
     const lg = cx.createRadialGradient(px, py, 0, px, py, w); lg.addColorStop(0, col); lg.addColorStop(1, `rgb(${liq.map(v => Math.round(v * .3))})`); cx.globalAlpha = .88; cx.fillStyle = lg; cx.fillRect(px - w, py - h, w * 2, h * 2 + 10); cx.globalAlpha = 1;
