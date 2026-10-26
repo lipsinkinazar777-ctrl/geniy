@@ -1,6 +1,6 @@
 /* ============================================================ sound: everything is synthesised (no files), so it works offline */
 A.snd = (() => {
-  let ctx, master, amb, sfx, mus, rev, noise, started = false, fire = 0, mood = 'path';
+  let ctx, master, amb, sfx, mus, rev, noise, fireBus, an, anBuf, lvl = 0, started = false, fire = 0, mood = 'path';
   const timers = [];
   const S = () => A.state.settings;
   const SCALES = { path: [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33], books: [146.83, 196, 220, 246.94, 293.66, 392, 440, 493.88], quotes: [174.61, 220, 261.63, 293.66, 349.23, 440, 523.25], sky: [329.63, 392, 493.88, 587.33, 659.25, 783.99, 987.77], potion: [110, 130.81, 164.81, 196, 261.63, 329.63] };
@@ -21,6 +21,7 @@ A.snd = (() => {
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; comp.connect(master);
     rev = ctx.createConvolver(); rev.buffer = impulse(2.6, 2.4); const rg = ctx.createGain(); rg.gain.value = .38; rev.connect(rg); rg.connect(comp);
     amb = ctx.createGain(); amb.gain.value = 1; amb.connect(comp);
+    fireBus = ctx.createGain(); fireBus.gain.value = S().fireVol != null ? S().fireVol : .85; fireBus.connect(amb); an = ctx.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = .6; fireBus.connect(an); anBuf = new Uint8Array(an.fftSize);
     sfx = ctx.createGain(); sfx.gain.value = 1; sfx.connect(comp); sfx.connect(rev);
     mus = ctx.createGain(); mus.gain.value = .9; mus.connect(comp); mus.connect(rev);
     noise = makeNoise(4);
@@ -39,7 +40,7 @@ A.snd = (() => {
     s2.buffer = noise; s2.loop = true; hp.type = 'highpass'; hp.frequency.value = 3800; g2.gain.value = .006; l2.frequency.value = .11; lg2.gain.value = .005; l2.connect(lg2); lg2.connect(g2.gain); s2.connect(hp); hp.connect(g2); g2.connect(amb); s2.start(); l2.start();
     // fire roar (level driven)
     const s3 = ctx.createBufferSource(), lp3 = ctx.createBiquadFilter(); fireG = ctx.createGain();
-    s3.buffer = noise; s3.loop = true; lp3.type = 'lowpass'; lp3.frequency.value = 520; fireG.gain.value = 0; s3.connect(lp3); lp3.connect(fireG); fireG.connect(amb); s3.start();
+    s3.buffer = noise; s3.loop = true; lp3.type = 'lowpass'; lp3.frequency.value = 520; fireG.gain.value = 0; s3.connect(lp3); lp3.connect(fireG); fireG.connect(fireBus); s3.start();
     // crickets
     loop(() => { const t = now() + .02, f = 4100 + Math.random() * 500, n = 3 + (Math.random() * 4 | 0); for (let i = 0; i < n; i++) osc('sine', f, t + i * .045, .006, .004 + (mood === 'sky' ? .004 : 0), .03, amb); }, .5, 1.7);
     // birds (daylight scenes only)
@@ -47,7 +48,7 @@ A.snd = (() => {
     // owl
     loop(() => { if (mood !== 'sky' && Math.random() < .7) return; const t = now() + .05; osc('sine', 392, t, .05, .02, .35, amb, 340); osc('sine', 349, t + .55, .05, .018, .45, amb, 300); }, 14, 30);
     // fire crackle
-    const crack = () => { if (fire < .04) { timers.push(setTimeout(crack, 350)); return; } const t = now() + .01, pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null; if (pn) { pn.pan.value = (Math.random() * 2 - 1) * .7; pn.connect(amb); } const d = pn || amb, lvl = .4 + fire * 1.6;
+    const crack = () => { if (fire < .04) { timers.push(setTimeout(crack, 350)); return; } const t = now() + .01, pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null; if (pn) { pn.pan.value = (Math.random() * 2 - 1) * .7; pn.connect(fireBus); } const d = pn || fireBus, lvl = .4 + fire * 1.6;
       noiseHit(t, .012 + Math.random() * .02, 'highpass', 1800 + Math.random() * 2500, 1, (.03 + fire * .1) * (.5 + Math.random()), d); if (Math.random() < .16 + fire * .22) noiseHit(t, .07 + Math.random() * .05, 'bandpass', 600 + Math.random() * 600, 3, .05 + fire * .09, d);
       if (Math.random() < .05) { for (let i = 0; i < 4; i++) noiseHit(t + i * .018, .012, 'highpass', 2500, 1, .09 * fire, d); }
       timers.push(setTimeout(crack, (110 + Math.random() * 480) / lvl)); };
@@ -85,6 +86,8 @@ A.snd = (() => {
     pop() { if (!ctx) return; osc('sine', 700, now(), .002, .06, .08, sfx, 180); },
     brew() { if (!ctx) return; const t = now(); noiseHit(t, 1.8, 'bandpass', 600, 2, .07, sfx, 3200); [293.66, 349.23, 440, 587.33, 698.46, 880].forEach((f, i) => osc('triangle', f, t + .15 * i, .01, .045, 1.4)); },
     quill() { if (!ctx) return; const t = now(); for (let i = 0; i < 4; i++) noiseHit(t + i * .06, .05, 'bandpass', 3000 + i * 500, 2, .03, sfx); },
+    fireVol(v) { S().fireVol = v; if (fireBus && ctx) fireBus.gain.setTargetAtTime(v, now(), .08); },
+    fireLevel() { if (!an) return 0; an.getByteTimeDomainData(anBuf); let m = 0; for (let i = 0; i < anBuf.length; i++) { const x = (anBuf[i] - 128) / 128; m += x * x; } lvl += (Math.min(1, Math.sqrt(m / anBuf.length) * 9) - lvl) * .5; return lvl; },
     fireOut() { if (!ctx) return; const t = now(); noiseHit(t, 1.1, 'highpass', 2200, .8, .1, sfx, 7000); noiseHit(t + .05, .5, 'bandpass', 500, 1.2, .08, sfx, 200); },
     fireLit() { if (!ctx) return; noiseHit(now(), .5, 'bandpass', 800, 1.5, .12, sfx, 2400); osc('sine', 220, now() + .05, .01, .04, .5); },
     owl() { if (!ctx) return; const t = now(); osc('sine', 392, t, .05, .05, .35, sfx, 340); osc('sine', 349, t + .55, .05, .045, .45, sfx, 300); },

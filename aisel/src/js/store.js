@@ -110,10 +110,11 @@ A.seed = () => {
   const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now(), cover: {}, sample: true }, extra);
   A.state.books = [
     mk('Маленький принц', 'Антуан де Сент-Экзюпери', 96, 'reading', 40, ['tale', 'deep', 'classic']),
-    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { text: STORY }),
+    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true }),
     mk('Алиса в Стране чудес', 'Льюис Кэрролл', 192, 'want', 0, ['tale', 'funny', 'fantasy']),
     mk('Гордость и предубеждение', 'Джейн Остин', 416, 'want', 0, ['romance', 'cozy', 'classic'])
   ];
+  A.txt.put(A.state.books[1].id, STORY);
   const lp = A.state.books[0];
   A.state.quotes = [{ id: A.uid(), bookId: lp.id, bookTitle: lp.title, author: lp.author, text: 'Зорко одно лишь сердце. Самого главного глазами не увидишь.', page: '', tags: ['самое главное', 'сердце'], sticker: '🌙', paper: 'parch', photo: null, date: Date.now(), sample: true }];
 };

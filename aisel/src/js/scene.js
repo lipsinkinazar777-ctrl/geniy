@@ -1,23 +1,25 @@
 /* ============================================================ the room: a first-person desk you look around and touch
    one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  const RW = 2368, RH = 1320, U = RW / 1500;                  // room plate size; hotspot art is drawn in 1500-wide units
+  let RW = 2368, RH = 1320, roomName = 'main'; const U = 2368 / 1500;     // plate size of the current room; main-table hotspot art is drawn in 1500-wide units
+  const ROOMS = { main: { w: 2368, h: 1320, img: 'img/room.webp' }, lab: { w: 1080, h: 1920, img: 'img/lab.webp' }, lib: { w: 1080, h: 1920, img: 'img/lib.webp' } };
+  const BOWL = { x: 1960, y: 1030, k: 500 / 760 };               // the iron fire bowl on the table (rim centre, room px)
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
-  const FIRE = { x: 945 * U, y: 372 * U };                    // base of the flame, room px
-  const HOME = { cx: 930 * U, cy: RH * .5, z: 1 };
+  const FIRE = { x: BOWL.x, y: BOWL.y + 8 };                  // base of the flame, room px
+  const HOME = { cx: 1850, cy: RH * .5, z: 1 };
 
   /* ---- objects (polygons in plate units).  act:'fire' toggles the flame, tab opens a panel */
   const P = (...a) => a;
   const HS = [
-    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([835, 235], [1070, 235], [1075, 400], [830, 400])], pad: 4 },
+    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([1040, 500], [1420, 500], [1420, 760], [1040, 760])] },
     { id: 'knob', act: 'fire', n: 'Живой костёр', circle: [210, 590, 95] },
     { id: 'matches', act: 'fire', n: 'Спички', polys: [P([203, 396], [312, 338], [338, 372], [232, 440])] },
     { id: 'quill', tab: 'quotes', n: 'Цитаты', polys: [P([1092, 78], [1195, 78], [1205, 170], [1100, 170]), P([1160, 0], [1285, 0], [1215, 95], [1160, 85])] },
-    { id: 'potion', tab: 'potion', n: 'Зельеварня', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
+    { id: 'potion', tab: 'potion', n: 'Лаборатория', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
     { id: 'stars', tab: 'sky', n: 'Небо', polys: [P([1215, 168], [1500, 298], [1500, 474], [1312, 430], [1246, 336])] },
     { id: 'scope', tab: 'path', n: 'Лесная карта', polys: [P([1242, 62], [1335, 46], [1500, 160], [1500, 212], [1424, 192])] },
     { id: 'bag', tab: 'bag', n: 'Сумка', polys: [P([1072, 172], [1236, 238], [1324, 332], [1330, 522], [1292, 524], [1238, 396], [1108, 262])] },
-    { id: 'book', tab: 'books', n: 'Книга', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
+    { id: 'book', tab: 'books', n: 'Библиотека', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
   ];
   HS.forEach(h => {
     h.P = h.circle ? [P(...[...Array(18)].map((_, i) => [h.circle[0] + Math.cos(i / 18 * 6.283) * h.circle[2], h.circle[1] + Math.sin(i / 18 * 6.283) * h.circle[2]]))] : h.polys;
@@ -37,7 +39,7 @@ A.scene = (() => {
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
   function resize() {
-    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH * .64 / RH);
+    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
     cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); clampT(); dirty = true;
   }
   function apply() {
@@ -70,13 +72,17 @@ A.scene = (() => {
     }
     for (let i = embers.length - 1; i >= 0; i--) {
       const e = embers[i]; e.life += dt; if (e.life > e.max) { embers.splice(i, 1); continue; }
-      e.x += (e.vx + Math.sin(T * 3 + e.ph) * 14) * dt; e.y += e.vy * dt; e.vy *= .995;
-      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), r = e.r * s * 3.4 * (.4 + k * .6) + 1.5;
-      g.globalAlpha = Math.min(1, k * 1.4) * .95 * vis; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
+      e.vx += (Math.sin(T * 2.6 + e.ph) * 70 + 8) * dt; e.vy *= 1 - .22 * dt; e.vy -= 18 * dt; e.x += e.vx * dt; e.y += e.vy * dt;
+      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), px = e.px == null ? sx : e.px, py = e.py == null ? sy : e.py; e.px = sx; e.py = sy;
+      const w = Math.max(.7, e.r * s * 1.7 * (.35 + k * .65)), flick = .65 + .35 * Math.sin(T * 30 + e.ph * 9);
+      g.globalAlpha = Math.min(1, k * 1.5) * flick * vis; g.lineCap = 'round'; g.lineWidth = w;
+      g.strokeStyle = k > .6 ? 'rgb(255,226,150)' : k > .3 ? 'rgb(255,150,48)' : 'rgb(230,70,18)'; g.beginPath(); g.moveTo(px - (sx - px) * 1.4, py - (sy - py) * 1.4); g.lineTo(sx, sy); g.stroke();
+      const r = w * 3.4; g.globalAlpha *= .45; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
     }
     g.restore();
   }
 
+  function placeBowl() { const b = A.$('#bowlImg'); if (b) b.style.cssText = `left:${BOWL.x - 380 * BOWL.k}px;top:${BOWL.y - 215 * BOWL.k}px;width:${760 * BOWL.k}px;height:${560 * BOWL.k}px`; }
   /* ---- the open book on the table speaks: it shows what she is reading (handwriting follows the page's perspective) */
   const quadMatrix = (w, h, q) => {
     const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q, dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, det = dx1 * dy2 - dx2 * dy1;
@@ -110,12 +116,12 @@ A.scene = (() => {
   let drag = null, sweepOn = false;
   const cancelSweep = () => { sweepOn = false; };
   stage.addEventListener('pointerdown', e => {
-    if (locked || e.button > 0) return; cancelSweep(); stage.setPointerCapture(e.pointerId);
+    if (locked || e.button > 0 || roomName !== 'main') return; cancelSweep(); stage.setPointerCapture(e.pointerId);
     const [rx, ry] = toRoom(e.clientX, e.clientY); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, vx: 0, vy: 0, h: hit(rx, ry), lx: e.clientX, ly: e.clientY, lt: performance.now() };
     press(drag.h, true);
   });
   stage.addEventListener('pointermove', e => {
-    if (!drag) { if (!locked && e.pointerType === 'mouse') { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); stage.style.cursor = h ? 'pointer' : 'grab'; press(h, true); } return; }
+    if (!drag) { if (!locked && roomName === 'main' && e.pointerType === 'mouse') { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); stage.style.cursor = h ? 'pointer' : 'grab'; press(h, true); } return; }
     if (e.pointerId !== drag.id) return; const s = sNow();
     if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 9) { drag.moved = true; press(null); stage.classList.add('grab'); }
     if (drag.moved) {
@@ -155,10 +161,23 @@ A.scene = (() => {
 
   /* ---- public */
   const api = {
-    init() { resize(); seed(); buildHs(); refreshPage(); },
+    init() { resize(); seed(); buildHs(); refreshPage(); placeBowl(); },
+    room: () => roomName, bowl: () => ({ x: BOWL.x, y: BOWL.y, k: BOWL.k }),
+    setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
+      const r = ROOMS[name]; roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
+      A.$('#roomImg').src = r.img; saved = name === 'main' ? saved : null; focusId = null; resize();
+      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
+    },
+    clientToRoom: (x, y) => toRoom(x, y),
+    returnMain(id) {
+      api.setRoom('main'); const h = HS.find(o => o.id === id);
+      if (h) { cam.z.x = A.clamp(.58 * Math.min(VW, VH) / (h.big * s0), 1.5, 3.4); cam.x.x = h.c[0]; cam.y.x = h.c[1]; cam.x.v = cam.y.v = cam.z.v = 0; }
+      saved = null; cam.x.t = HOME.cx; cam.y.t = HOME.cy; cam.z.t = 1; mode = 'room'; locked = false; clampT(); refreshPage();
+    },
+    dolly(z0 = 1.3) { cam.z.x = z0; cam.z.v = 0; cam.z.t = 1; },
     start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(loop); },
     mode: () => mode, hs: id => HS.find(h => h.id === id), fireBase: () => FIRE, refreshPage, showLabels,
-    spark(x, y) { embers.push({ x, y, vx: rnd(-26, 36), vy: rnd(-150, -50), r: rnd(.9, 2.2), life: 0, max: rnd(1.8, 3.8), ph: rnd(0, 6) }); },
+    spark(x, y) { embers.push({ x, y, vx: rnd(-70, 80), vy: rnd(-330, -90), r: rnd(.8, 2.6), life: 0, max: rnd(1.4, 4.2), ph: rnd(0, 6) }); },
     enter(first) {                                         // walk into the room: dolly in from the dark, then look around once
       mode = 'room'; locked = false; cam.z.x = 2.1; cam.z.v = 0; cam.z.t = 1; cam.x.x = HOME.cx - 40; cam.x.t = HOME.cx; cam.y.x = HOME.cy - 120; cam.y.t = HOME.cy; cam.x.v = cam.y.v = 0;
       stage.classList.add('in'); if (first) setTimeout(() => api.sweep(), 2300); setTimeout(() => showLabels(first ? 6500 : 3200), first ? 1500 : 900);

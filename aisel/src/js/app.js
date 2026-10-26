@@ -1,7 +1,7 @@
 /* ============================================================ boot: gate (title over the dark room) -> walk into the room -> the fire lights */
 (() => {
   const $ = A.$;
-  A.load();
+  A.load(); A.txt.migrate();
   if (!A.state.books.length && !A.state.quotes.length && A.state.samples) A.seed();
   A.scene.init(); A.scene.start();
   let entered = false;

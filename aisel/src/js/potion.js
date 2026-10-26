@@ -1,101 +1,103 @@
-/* ============================================================ Зельеварня: flasks of moods + ingredients -> cauldron -> a book to read tonight */
+/* ============================================================ alchemy lab: flasks on the shelf, jars on the bench, an iron cauldron you feed with your own hands */
 (() => {
-  const FLASKS = [
-    { k: 'cozy', c: '#f0b25a' }, { k: 'fantasy', c: '#9b7bff' }, { k: 'detective', c: '#5aa6b0' },
-    { k: 'romance', c: '#e86a8f' }, { k: 'melancholy', c: '#5f86d6' }, { k: 'adventure', c: '#58c28a' }
-  ];
+  const FLASKS = [{ k: 'cozy', c: '#f0b25a' }, { k: 'fantasy', c: '#9b7bff' }, { k: 'detective', c: '#5aa6b0' }, { k: 'romance', c: '#e86a8f' }, { k: 'melancholy', c: '#5f86d6' }, { k: 'adventure', c: '#58c28a' }];
+  const JAR = {
+    moss: '<g fill="#6fbf7f"><circle cx="30" cy="62" r="12"/><circle cx="42" cy="58" r="11"/><circle cx="34" cy="50" r="10"/><circle cx="22" cy="56" r="9"/></g><g fill="#9be3a5" opacity=".6"><circle cx="36" cy="52" r="4"/><circle cx="26" cy="58" r="3"/></g>',
+    fly: '<g fill="#eaff8c"><circle cx="24" cy="48" r="3"/><circle cx="40" cy="42" r="2.4"/><circle cx="34" cy="60" r="3.2"/><circle cx="46" cy="56" r="2"/><circle cx="22" cy="64" r="2"/></g><circle cx="34" cy="54" r="22" fill="#f4ff9e" opacity=".22"/>',
+    dew: '<g fill="#8fc7ff"><path d="M30 44c4 6 7 9 7 13a7 7 0 0 1-14 0c0-4 3-7 7-13z"/><path d="M44 52c3 4 5 6 5 9a5 5 0 0 1-10 0c0-3 2-5 5-9z" opacity=".8"/></g><ellipse cx="34" cy="72" rx="20" ry="4" fill="#8fc7ff" opacity=".4"/>',
+    cin: '<g stroke="#b5703c" stroke-width="5" stroke-linecap="round"><path d="M20 70L44 42"/><path d="M28 72L50 50"/><path d="M16 62L34 44"/></g><g stroke="#e0a066" stroke-width="1.5" opacity=".7"><path d="M22 66L42 44"/></g>',
+    leaf: '<g fill="#d9a441"><path d="M20 66c2-12 10-18 22-18-2 12-10 18-22 18z"/><path d="M34 70c0-9 6-15 16-16-1 9-7 15-16 16z" fill="#c4762f"/></g>'
+  };
   const INGR = [
-    { id: 'moss', n: 'лунный мох', c: '#7fd29a', b: ['cozy', 'tale'], ic: '<path d="M5 18c2-6 4-9 7-9s5 3 7 9M8 18c1-3 2-5 4-5s3 2 4 5"/>' },
-    { id: 'fly', n: 'светлячок', c: '#e6f58a', b: ['fantasy', 'adventure'], ic: '<circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2M6.5 6.5l1.400 1.400M16.100 16.100l1.400 1.400M17.500 6.500l-1.400 1.400M7.900 16.100l-1.400 1.400"/>' },
-    { id: 'dew', n: 'капля росы', c: '#8fc7ff', b: ['melancholy', 'deep'], ic: '<path d="M12 4c3 4 5 6.500 5 9.500a5 5 0 0 1-10 0C7 10.500 9 8 12 4z"/>' },
-    { id: 'cin', n: 'корица', c: '#d79a63', b: ['romance', 'cozy'], ic: '<path d="M6 17L17 6M9 19L19 8M5 14L14 5"/>' },
-    { id: 'leaf', n: 'сухой лист', c: '#d9a441', b: ['mist', 'detective', 'classic'], ic: '<path d="M19 5C9 5 5 10 5 15c0 1.500.4 2.800 1 4 6 0 13-3 13-14zM6 19c3-6 7-9 11-11"/>' }
+    { id: 'moss', n: 'лунный мох', c: '#7fd29a', b: ['cozy', 'tale'] }, { id: 'fly', n: 'светлячки', c: '#e6f58a', b: ['fantasy', 'adventure'] }, { id: 'dew', n: 'роса', c: '#8fc7ff', b: ['melancholy', 'deep'] },
+    { id: 'cin', n: 'корица', c: '#d79a63', b: ['romance', 'cozy'] }, { id: 'leaf', n: 'сухой лист', c: '#d9a441', b: ['mist', 'detective', 'classic'] }
   ];
-  let el, sel = new Set(), ing = [], brewing = false, cv, cx, bubbles = [], steam = [], liquid = '#2d5a52', liqT = '#2d5a52', t = 0, run = false, last = 0;
-
-  const flaskSVG = (c) => `<svg viewBox="0 0 64 88" class="fl"><defs><linearGradient id="g${c.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="1" stop-color="${c}" stop-opacity=".55"/></linearGradient></defs>
-    <path d="M24 6h16M26 6v20L8 66c-3 8 1 16 10 16h28c9 0 13-8 10-16L38 26V6" fill="rgba(255,255,255,.04)" stroke="rgba(255,226,160,.7)" stroke-width="1.2" stroke-linejoin="round"/>
-    <path d="M14 52c8-4 14 4 22 0s12-4 14 0l5 14c3 8-1 14-9 14H18c-8 0-12-6-9-14z" fill="url(#g${c.slice(1)})"/><path d="M28 10v14" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="22" cy="62" rx="3" ry="9" fill="#fff" opacity=".12"/><circle cx="32" cy="0" r="0"/></svg>`;
+  const POT = { x: 540, y: 1135, rx: 238, ry: 58 };
+  let layer, cv, cx, sel = new Set(), ing = [], brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, hot = 0, flames = [];
+  const R = (a, b) => a + Math.random() * (b - a), hex = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+  const flask = c => `<svg viewBox="0 0 64 88" class="fl"><defs><linearGradient id="g${c.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="1" stop-color="${c}" stop-opacity=".5"/></linearGradient></defs><path d="M24 6h16M26 6v20L8 66c-3 8 1 16 10 16h28c9 0 13-8 10-16L38 26V6" fill="rgba(255,255,255,.05)" stroke="rgba(255,226,160,.75)" stroke-width="1.3" stroke-linejoin="round"/><path d="M14 52c8-4 14 4 22 0s12-4 14 0l5 14c3 8-1 14-9 14H18c-8 0-12-6-9-14z" fill="url(#g${c.slice(1)})"/><path d="M28 10v14" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="22" cy="62" rx="3" ry="9" fill="#fff" opacity=".14"/></svg>`;
+  const jar = g => `<svg viewBox="0 0 68 92" class="jar"><rect x="22" y="2" width="24" height="12" rx="3" fill="#7a5436"/><rect x="24" y="4" width="20" height="3" fill="#a07850" opacity=".7"/><path d="M18 14h32v6c8 4 12 12 12 24v30c0 8-6 14-14 14H20c-8 0-14-6-14-14V44c0-12 4-20 12-24z" fill="rgba(210,230,235,.10)" stroke="rgba(255,226,160,.6)" stroke-width="1.3"/>${JAR[g.id]}<path d="M14 40v38" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".22"/></svg>`;
 
   A.mods.potion = {
-    init(root) {
-      el = root;
-      root.innerHTML = `<div class="wrap potion"><div data-rise><div class="eyebrow">чтение по рецептам</div><h1 class="h1"><em>Зельеварня</em></h1><p class="sub">Выбери настроение вечера и брось в котёл пару ингредиентов. Лес подскажет, что читать.</p></div>
-        <div class="flasks" data-rise id="flasks">${FLASKS.map(f => `<button class="flask" data-k="${f.k}" style="--c:${f.c}">${flaskSVG(f.c)}<span>${A.MOODS[f.k]}</span></button>`).join('')}</div>
-        <div class="cauldron" data-rise id="cauldron"><canvas id="potCv"></canvas><div class="cauldron__hint" id="potHint">Выбери до двух настроений</div></div>
-        <div class="ingr" data-rise id="ingr">${INGR.map(g => `<button class="ing" data-id="${g.id}" style="--c:${g.c}"><svg viewBox="0 0 24 24" class="ico">${g.ic}</svg><span>${g.n}</span></button>`).join('')}</div>
-        <div style="text-align:center;margin-top:20px" data-rise><button class="btn btn--gold" id="potGo">Сварить зелье</button></div>
-        <div id="potRes"></div><div style="height:30px"></div></div>`;
-      cv = A.$('#potCv', root); cx = cv.getContext('2d');
-      A.$('#flasks', root).addEventListener('click', e => { const b = e.target.closest('.flask'); if (b) toggle(b); });
-      A.$$('.ing', root).forEach(b => bindDrag(b));
-      A.$('#potGo', root).addEventListener('click', brew);
-    },
-    show() { A.rise(el); size(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } },
-    beforeShow() {}
+    init() { build(); }, beforeShow() {},
+    show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } sizeCv(); }
   };
-  const hint = s => { const h = A.$('#potHint', el); h.textContent = s; };
-  function size() { const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0); }
-  function toggle(b) {
+  function build() {
+    if (built) return; built = true; layer = A.$('#labLayer');
+    layer.innerHTML = `<canvas id="labCv" width="1080" height="1920"></canvas><div class="lab__moon"></div>
+      <div class="lab__t"><small>алхимическая лаборатория</small></div>
+      ${FLASKS.map((f, i) => `<button class="flask3" data-k="${f.k}" style="--c:${f.c};left:${102 + i * 148}px"><div class="fl3">${flask(f.c)}</div><span>${A.MOODS[f.k]}</span></button>`).join('')}
+      <div class="lab__hint" id="labHint">Выбери настроение на полке</div>
+      ${INGR.map((g, i) => `<div class="ing3" data-id="${g.id}" style="--c:${g.c};left:${112 + i * 176}px"><div class="jar3">${jar(g)}</div><span>${g.n}</span></div>`).join('')}
+      <button class="lab__pot" aria-label="Котёл"></button><div class="lab__res" id="labRes"></div>`;
+    cv = A.$('#labCv'); cx = cv.getContext('2d');
+    A.$$('.flask3', layer).forEach(b => { b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', () => pickFlask(b)); });
+    A.$$('.ing3', layer).forEach(bindDrag);
+    const pot = A.$('.lab__pot', layer); pot.addEventListener('pointerdown', e => e.stopPropagation()); pot.addEventListener('click', brew);
+  }
+  const sizeCv = () => {};
+  const hint = s => { const h = A.$('#labHint', layer); h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); };
+  const status = () => sel.size ? (ing.length ? 'Теперь коснись котла: пора варить' : 'Добавь ингредиенты или вари сразу: коснись котла') : ing.length ? 'Выбери настроение на полке' : 'Выбери настроение на полке';
+  function mix() { const cs = [...sel].map(k => FLASKS.find(f => f.k === k).c).concat(ing.map(i => i.c)); liqT = cs.length ? [0, 1, 2].map(i => Math.round(cs.map(h => hex(h)[i]).reduce((a, c) => a + c, 0) / cs.length * .9)) : [40, 90, 82]; }
+  function pickFlask(b) {
     if (brewing) return; const k = b.dataset.k; A.snd.bubble();
-    if (sel.has(k)) sel.delete(k); else { if (sel.size >= 2) { const first = [...sel][0]; sel.delete(first); A.$(`.flask[data-k="${first}"]`, el).classList.remove('on'); } sel.add(k); pour(b); }
-    b.classList.toggle('on', sel.has(k)); mixColor(); hint(sel.size ? `В котле: ${[...sel].map(x => A.MOODS[x]).join(' + ')}${ing.length ? ' · ' + ing.length + ' ингр.' : ''}` : 'Выбери до двух настроений');
+    if (sel.has(k)) { sel.delete(k); b.classList.remove('on'); } else { if (sel.size >= 2) { const f = [...sel][0]; sel.delete(f); A.$(`.flask3[data-k="${f}"]`, layer).classList.remove('on'); } sel.add(k); b.classList.add('on'); pourFrom(b); }
+    mix(); hint(status());
   }
-  function pour(b) { const r = b.getBoundingClientRect(), c = A.$('#cauldron', el).getBoundingClientRect(); A.fx.sparks(r.left + r.width / 2, r.top + r.height * .3, 10, b.style.getPropertyValue('--c')); for (let i = 0; i < 9; i++) bubbles.push(newBubble(.5 + (Math.random() - .5) * .3)); }
-  function mixColor() { const cs = [...sel].map(k => FLASKS.find(f => f.k === k).c).concat(ing.map(i => i.c)); if (!cs.length) { liqT = '#2d5a52'; return; } const rgb = cs.map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16))), m = [0, 1, 2].map(i => Math.round(rgb.reduce((a, c) => a + c[i], 0) / rgb.length)); liqT = `rgb(${m})`; }
-  const hex = c => c.startsWith('#') ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.match(/\d+/g).slice(0, 3).map(Number);
-  let cur = [45, 90, 82];
-  function newBubble(x) { return { x, y: 0.62, r: 2 + Math.random() * 5, v: .12 + Math.random() * .2, ph: Math.random() * 6 }; }
+  function pourFrom(b) { const r = b.getBoundingClientRect(), p = toPlate(r.left + r.width / 2, r.top + r.height * .3), c = b.style.getPropertyValue('--c'); setTimeout(() => { for (let i = 0; i < 26; i++) pours.push({ x: p[0] + R(-6, 6), y: p[1], tx: POT.x + R(-60, 60), ty: POT.y + R(-8, 14), t: -i * .018, c, life: 0 }); }, 120); }
+  const toPlate = (sx, sy) => { const [x, y] = A.scene.clientToRoom(sx, sy); return [x, y]; };
 
-  function bindDrag(b) {
-    let drag = null, ghost = null;
-    b.addEventListener('pointerdown', e => { if (brewing) return; b.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, moved: false }; });
-    b.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (!drag.moved && Math.hypot(dx, dy) > 8) { drag.moved = true; ghost = b.cloneNode(true); ghost.classList.add('ghost'); document.body.appendChild(ghost); b.classList.add('lift'); } if (ghost) { ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px'; const hot = overPot(e.clientX, e.clientY); A.$('#cauldron', el).classList.toggle('hot', hot); } });
-    const end = e => { if (!drag) return; const moved = drag.moved; drag = null; b.classList.remove('lift'); A.$('#cauldron', el).classList.remove('hot'); if (ghost) { const ok = overPot(e.clientX, e.clientY); ghost.remove(); ghost = null; if (ok) drop(b); } else if (!moved) drop(b); };
-    b.addEventListener('pointerup', end); b.addEventListener('pointercancel', () => { drag = null; if (ghost) { ghost.remove(); ghost = null; } b.classList.remove('lift'); });
+  function bindDrag(el) {
+    let st = null, gh = null; const jarEl = A.$('.jar3', el);
+    el.addEventListener('pointerdown', e => { if (brewing) return; e.stopPropagation(); el.setPointerCapture(e.pointerId); const r = jarEl.getBoundingClientRect(); st = { w: r.width, h: r.height, dx: e.clientX - (r.left + r.width / 2), dy: e.clientY - (r.top + r.height / 2), moved: false, x: e.clientX, y: e.clientY }; });
+    el.addEventListener('pointermove', e => { if (!st) return; if (!st.moved && Math.hypot(e.clientX - st.x, e.clientY - st.y) > 6) { st.moved = true; gh = jarEl.cloneNode(true); gh.classList.add('ghost3'); gh.style.width = st.w + 'px'; gh.style.height = st.h + 'px'; document.body.appendChild(gh); el.classList.add('lift'); A.snd.tap(); }
+      if (gh) { gh.style.left = (e.clientX - st.dx) + 'px'; gh.style.top = (e.clientY - st.dy) + 'px'; const [px, py] = toPlate(e.clientX, e.clientY); gh.classList.toggle('over', overPot(px, py)); gh.style.transform = `translate(-50%,-50%) scale(${1.25}) rotate(${overPot(px, py) ? 38 : 0}deg)`; } });
+    const end = e => { if (!st) return; const s = st; st = null; el.classList.remove('lift'); if (gh) { const [px, py] = toPlate(e.clientX, e.clientY), ok = overPot(px, py); if (ok) drop(el, px, py); gh.classList.add('back'); const g = gh; gh = null; g.style.transition = 'all .5s cubic-bezier(.3,1.3,.5,1)'; if (!ok) { const r = jarEl.getBoundingClientRect(); g.style.left = (r.left + r.width / 2) + 'px'; g.style.top = (r.top + r.height / 2) + 'px'; g.style.transform = 'translate(-50%,-50%) scale(1)'; } else g.style.opacity = 0; setTimeout(() => g.remove(), 520); } else if (!s.moved) { hint('Возьми банку пальцем и перетащи в котёл'); jarEl.classList.remove('wob'); void jarEl.offsetWidth; jarEl.classList.add('wob'); } };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', () => { st = null; if (gh) { gh.remove(); gh = null; } el.classList.remove('lift'); });
   }
-  const overPot = (x, y) => { const r = A.$('#cauldron', el).getBoundingClientRect(); return x > r.left && x < r.right && y > r.top - 20 && y < r.bottom + 20; };
-  function drop(b) {
-    const g = INGR.find(i => i.id === b.dataset.id); const has = ing.includes(g);
-    if (has) { ing = ing.filter(i => i !== g); b.classList.remove('on'); A.snd.tap(); }
-    else { if (ing.length >= 3) { A.toast('В котёл помещается три ингредиента'); return; } ing.push(g); b.classList.add('on'); A.snd.pop(); const r = A.$('#cauldron', el).getBoundingClientRect(); A.fx.sparks(r.left + r.width / 2, r.top + r.height * .45, 16, g.c); for (let i = 0; i < 8; i++) bubbles.push(newBubble(.5 + (Math.random() - .5) * .4)); }
-    mixColor(); hint(sel.size ? `В котле: ${[...sel].map(x => A.MOODS[x]).join(' + ')}${ing.length ? ' · ' + ing.length + ' ингр.' : ''}` : ing.length ? 'Теперь выбери настроение' : 'Выбери до двух настроений');
+  const overPot = (x, y) => Math.pow((x - POT.x) / (POT.rx + 70), 2) + Math.pow((y - POT.y) / (POT.ry + 150), 2) < 1;
+  function drop(el, px, py) {
+    const g = INGR.find(i => i.id === el.dataset.id);
+    if (ing.includes(g)) { A.toast('Это уже в котле'); return; } if (ing.length >= 3) { A.toast('В котёл помещается три ингредиента'); return; }
+    ing.push(g); A.snd.pop(); A.vibrate(15); mix(); for (let i = 0; i < 18; i++) pours.push({ x: POT.x + R(-30, 30), y: POT.y - 160 - R(0, 60), tx: POT.x + R(-50, 50), ty: POT.y + R(-6, 14), t: -i * .02, c: g.c, life: 0 });
+    setTimeout(() => { ripples.push({ x: POT.x + R(-30, 30), y: POT.y + 4, r: 6, a: 1 }); for (let i = 0; i < 10; i++) bubbles.push(nb()); A.snd.bubble(); }, 380); hint(status());
   }
+  const nb = () => ({ x: POT.x + R(-.8, .8) * POT.rx * .8, y: POT.y + R(-8, 10), r: R(3, 11), v: R(30, 60), ph: R(0, 6.3), life: 0, max: R(.8, 1.8) });
 
   function frame(now) {
-    requestAnimationFrame(frame); if (A.tab !== 'potion') { last = now; return; }
-    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt;
-    const w = cv.clientWidth, h = cv.clientHeight; if (!w) return; cx.clearRect(0, 0, w, h);
-    const tg = hex(liqT); cur = cur.map((v, i) => v + (tg[i] - v) * Math.min(1, dt * 3)); const col = `rgb(${cur.map(Math.round)})`, k = brewing ? 1 : .4;
-    // glow behind
-    const gl = cx.createRadialGradient(w / 2, h * .5, 0, w / 2, h * .5, w * .6); gl.addColorStop(0, `rgba(${cur.map(Math.round)},${.28 * (brewing ? 1.6 : 1)})`); gl.addColorStop(1, 'rgba(0,0,0,0)'); cx.fillStyle = gl; cx.fillRect(0, 0, w, h);
-    const cxm = w / 2, top = h * .42, rw = w * .34, body = h * .34;
-    // pot body
-    cx.save(); const pg = cx.createLinearGradient(cxm - rw, 0, cxm + rw, 0); pg.addColorStop(0, '#050606'); pg.addColorStop(.35, '#1a1d1c'); pg.addColorStop(.6, '#0b0d0c'); pg.addColorStop(1, '#030404');
-    cx.fillStyle = pg; cx.beginPath(); cx.moveTo(cxm - rw, top); cx.bezierCurveTo(cxm - rw * 1.18, top + body * .9, cxm - rw * .7, top + body * 1.35, cxm, top + body * 1.35); cx.bezierCurveTo(cxm + rw * .7, top + body * 1.35, cxm + rw * 1.18, top + body * .9, cxm + rw, top); cx.closePath(); cx.fill();
-    cx.strokeStyle = 'rgba(255,226,160,.35)'; cx.lineWidth = 1; cx.stroke();
-    // rim + liquid
-    cx.fillStyle = '#0a0c0b'; cx.beginPath(); cx.ellipse(cxm, top, rw, rw * .22, 0, 0, 6.3); cx.fill(); cx.strokeStyle = 'rgba(255,226,160,.55)'; cx.stroke();
-    const lg = cx.createRadialGradient(cxm, top, 0, cxm, top, rw); lg.addColorStop(0, col); lg.addColorStop(1, `rgba(${cur.map(v => Math.round(v * .45))},1)`);
-    cx.fillStyle = lg; cx.beginPath(); cx.ellipse(cxm, top, rw * .9, rw * .17, 0, 0, 6.3); cx.fill();
-    cx.globalCompositeOperation = 'lighter'; cx.globalAlpha = .16 + .1 * Math.sin(t * 3); cx.fillStyle = col; cx.beginPath(); cx.ellipse(cxm, top - 4, rw * .5, rw * .08, 0, 0, 6.3); cx.fill(); cx.globalAlpha = 1;
-    // bubbles
-    if (Math.random() < dt * (brewing ? 40 : 4 + sel.size * 3 + ing.length * 2)) bubbles.push(newBubble(.5 + (Math.random() - .5) * .45));
-    bubbles = bubbles.filter(b => { b.y -= b.v * dt * (brewing ? 2.4 : 1); if (b.y < .38) { if (brewing && Math.random() < .3) A.snd.bubble(); return false; } const bx = cxm + (b.x - .5) * rw * 1.6 + Math.sin(t * 3 + b.ph) * 3, by = top + (b.y - .42) * h * .5; cx.globalAlpha = .55; cx.strokeStyle = `rgba(255,255,255,.7)`; cx.beginPath(); cx.arc(bx, by, b.r * (1 - (b.y - .38) * .2), 0, 6.3); cx.stroke(); cx.fillStyle = col; cx.globalAlpha = .12; cx.fill(); cx.globalAlpha = 1; return true; });
-    // steam
-    if (Math.random() < dt * (3 + k * 8)) steam.push({ x: cxm + (Math.random() - .5) * rw, y: top - 4, vx: (Math.random() - .5) * 6, vy: -(12 + Math.random() * 18), life: 0, max: 2.4 + Math.random() * 2, s: 14 + Math.random() * 20 });
-    steam = steam.filter(s => { s.life += dt; if (s.life > s.max) return false; s.x += (s.vx + Math.sin(t * 1.4 + s.max) * 6) * dt; s.y += s.vy * dt; const kk = s.life / s.max, r = s.s * (1 + kk * 1.6); const g2 = cx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r); g2.addColorStop(0, `rgba(${cur.map(v => Math.round(120 + v * .5))},${.2 * (1 - kk)})`); g2.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g2; cx.fillRect(s.x - r, s.y - r, r * 2, r * 2); return true; });
-    cx.restore();
+    requestAnimationFrame(frame); if (A.scene.room() !== 'lab') { last = now; return; }
+    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; hot += ((brewing ? 1 : .35 + .1 * (sel.size + ing.length)) - hot) * dt * 2;
+    cx.clearRect(0, 0, 1080, 1920);
+    liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(',');
     // fire under the pot
-    cx.save(); cx.globalCompositeOperation = 'lighter'; const fy = top + body * 1.38; const fg = cx.createRadialGradient(cxm, fy, 0, cxm, fy, rw * 1.2); fg.addColorStop(0, `rgba(255,150,60,${.5 + .15 * Math.sin(t * 9)})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(0, fy - rw * 1.2, w, rw * 2.4); cx.restore();
+    cx.globalCompositeOperation = 'lighter';
+    const fg = cx.createRadialGradient(540, 1430, 0, 540, 1430, 330); fg.addColorStop(0, `rgba(255,150,60,${.32 + .12 * Math.sin(t * 9) * hot})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(100, 1150, 880, 560);
+    if (Math.random() < dt * (30 + 50 * hot)) flames.push({ x: 540 + R(-120, 120), y: 1452, vy: -R(60, 150), life: 0, ttl: R(.4, .8), s: R(10, 22) });
+    flames = flames.filter(f => { f.life += dt; if (f.life > f.ttl) return false; const k = f.life / f.ttl; f.y += f.vy * dt; f.x += Math.sin(t * 8 + f.s) * 12 * dt; cx.globalAlpha = (1 - k) * .55; const g = cx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.s * (1 - k * .5)); g.addColorStop(0, 'rgba(255,200,90,1)'); g.addColorStop(1, 'rgba(255,90,20,0)'); cx.fillStyle = g; cx.fillRect(f.x - 30, f.y - 40, 60, 80); return true; });
+    cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
+    // the liquid
+    cx.save(); cx.beginPath(); cx.ellipse(POT.x, POT.y + 6, POT.rx - 4, POT.ry - 2, 0, 0, 6.283); cx.clip();
+    const lg = cx.createRadialGradient(POT.x, POT.y, 0, POT.x, POT.y, POT.rx); lg.addColorStop(0, col); lg.addColorStop(1, `rgb(${liq.map(v => Math.round(v * .35))})`); cx.fillStyle = lg; cx.fillRect(POT.x - POT.rx, POT.y - POT.ry, POT.rx * 2, POT.ry * 2 + 20);
+    cx.globalCompositeOperation = 'lighter'; cx.globalAlpha = .18 + .12 * Math.sin(t * 2.4) + hot * .12; cx.fillStyle = col; cx.beginPath(); cx.ellipse(POT.x - 40, POT.y - 8, POT.rx * .5, POT.ry * .4, 0, 0, 6.283); cx.fill(); cx.globalAlpha = 1;
+    for (let i = ripples.length - 1; i >= 0; i--) { const r = ripples[i]; r.r += dt * 120; r.a -= dt * .9; if (r.a <= 0) { ripples.splice(i, 1); continue; } cx.strokeStyle = `rgba(255,255,255,${r.a * .5})`; cx.lineWidth = 2; cx.beginPath(); cx.ellipse(r.x, r.y, r.r, r.r * .26, 0, 0, 6.283); cx.stroke(); }
+    if (Math.random() < dt * (3 + hot * 30)) bubbles.push(nb());
+    bubbles = bubbles.filter(b => { b.life += dt; if (b.life > b.max) { if (brewing && Math.random() < .5) A.snd.bubble(); return false; } const k = b.life / b.max; cx.globalAlpha = .6 * (1 - k * .5); cx.strokeStyle = 'rgba(255,255,255,.75)'; cx.lineWidth = 1.6; cx.beginPath(); cx.arc(b.x + Math.sin(t * 3 + b.ph) * 4, b.y - b.v * b.life * .3, b.r * (1 + k * .6), 0, 6.283); cx.stroke(); cx.fillStyle = `rgba(${rgb},.2)`; cx.fill(); return true; });
+    cx.restore(); cx.globalAlpha = 1;
+    // steam
+    if (Math.random() < dt * (5 + hot * 24)) steam.push({ x: POT.x + R(-.7, .7) * POT.rx, y: POT.y - 10, vx: R(-10, 10), vy: -R(30, 70), life: 0, max: R(2.4, 4.4), s: R(36, 64) });
+    steam = steam.filter(s => { s.life += dt; if (s.life > s.max) return false; const k = s.life / s.max; s.x += (s.vx + Math.sin(t * 1.3 + s.max) * 14) * dt; s.y += s.vy * dt; const r = s.s * (1 + k * 1.8), g = cx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r); g.addColorStop(0, `rgba(${liq.map(v => Math.round(150 + v * .35)).join(',')},${.2 * (1 - k)})`); g.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g; cx.fillRect(s.x - r, s.y - r, r * 2, r * 2); return true; });
+    // liquid streams from flasks and jars
+    cx.globalCompositeOperation = 'lighter';
+    pours = pours.filter(p => { p.t += dt * 1.8; if (p.t < 0) return true; if (p.t > 1) { if (Math.random() < .3) ripples.push({ x: p.tx, y: p.ty, r: 4, a: .7 }); return false; } const k = p.t, x = p.x + (p.tx - p.x) * k, y = p.y + (p.ty - p.y) * k - Math.sin(k * Math.PI) * 120; cx.globalAlpha = .9; const g = cx.createRadialGradient(x, y, 0, x, y, 14); g.addColorStop(0, p.c); g.addColorStop(1, 'rgba(0,0,0,0)'); cx.fillStyle = g; cx.fillRect(x - 14, y - 14, 28, 28); return true; });
+    sparks = sparks.filter(s => { s.life += dt; if (s.life > s.max) return false; s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 260 * dt; cx.globalAlpha = 1 - s.life / s.max; cx.fillStyle = '#ffd98a'; cx.fillRect(s.x, s.y, 3, 3); return true; });
+    cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
   }
 
   function brew() {
-    if (brewing) return; if (!sel.size && !ing.length) { A.toast('Выбери настроение или брось ингредиент в котёл'); A.snd.owl(); return; }
-    brewing = true; const res = A.$('#potRes', el); res.innerHTML = ''; hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); const r = A.$('#cauldron', el).getBoundingClientRect();
-    let n = 0; const iv = setInterval(() => { A.fx.sparks(r.left + r.width / 2, r.top + r.height * .42, 8, '#ffd98a'); A.snd.bubble(); if (++n > 6) clearInterval(iv); }, 380);
-    A.$('#cauldron', el).classList.add('boil');
-    setTimeout(() => { const pick = recommend(); brewing = false; A.$('#cauldron', el).classList.remove('boil'); show(pick); }, 3000);
+    if (brewing) return; if (!sel.size && !ing.length) { A.toast('Выбери настроение на полке или брось ингредиент в котёл'); A.snd.owl(); return; }
+    brewing = true; A.$('#labRes', layer).classList.remove('on'); hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); layer.classList.add('boil');
+    let n = 0; const iv = setInterval(() => { for (let i = 0; i < 10; i++) sparks.push({ x: POT.x + R(-110, 110), y: POT.y, vx: R(-90, 90), vy: -R(160, 360), life: 0, max: R(.6, 1.2) }); for (let i = 0; i < 6; i++) bubbles.push(nb()); A.snd.bubble(); if (++n > 7) clearInterval(iv); }, 380);
+    setTimeout(() => { const pick = recommend(); brewing = false; layer.classList.remove('boil'); show(pick); }, 3200);
   }
   function recommend() {
     const want = new Set([...sel]); ing.forEach(i => i.b.forEach(m => want.add(m)));
@@ -103,18 +105,17 @@
     const score = b => { const tg = b.tags || b.m || []; let s = 0; tg.forEach(m => { if (sel.has(m)) s += 3; else if (want.has(m)) s += 1; }); return s + Math.random() * .9; };
     const own = mine.map(b => ({ b, s: score(b), own: true })).filter(x => x.s >= 1.5).sort((a, b) => b.s - a.s)[0];
     const cands = A.SUGGEST.filter(x => !have.has(x.t.toLowerCase())).map(x => ({ b: { title: x.t, author: x.a, pages: x.p, tags: x.m }, s: score(x) })).sort((a, b) => b.s - a.s);
-    return own || cands[0] || { b: A.SUGGEST[0] && { title: A.SUGGEST[0].t, author: A.SUGGEST[0].a, pages: A.SUGGEST[0].p, tags: A.SUGGEST[0].m }, s: 0 };
+    return own || cands[0] || { b: { title: A.SUGGEST[0].t, author: A.SUGGEST[0].a, pages: A.SUGGEST[0].p, tags: A.SUGGEST[0].m }, s: 0 };
   }
   function show(p) {
-    const b = p.b, res = A.$('#potRes', el); A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .5, 30, 220); A.vibrate(30); hint('Зелье готово');
+    const b = p.b, res = A.$('#labRes', layer); A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .5, 30, 220); A.vibrate(30); hint('');
     const why = [...sel].map(k => A.MOODS[k]).concat(ing.map(i => i.n)).join(' · ');
-    res.innerHTML = `<div class="reco glass" style="margin-top:22px"><div class="eyebrow">на этот вечер</div><div class="reco__row">${A.coverHTML(b, 'reco__cover')}<div><h3>${A.esc(b.title)}</h3><p class="sub" style="font-size:16px">${A.esc(b.author || '')}</p><p class="reco__why">${why ? 'рецепт: ' + A.esc(why) : ''}</p>${(b.tags || []).slice(0, 3).map(m => `<span class="tag">${A.MOODS[m] || m}</span>`).join('')}</div></div>
-      <div class="row" style="margin-top:16px">${p.own ? `<button class="btn btn--gold" id="rcOpen">Открыть книгу</button>` : `<button class="btn btn--gold" id="rcAdd">Добавить в «Хочу»</button>`}<button class="btn btn--ghost" id="rcAgain">Ещё раз</button></div></div>`;
-    A.rise(res); res.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    A.$('#rcAgain', res).addEventListener('click', () => { A.snd.tap(); res.innerHTML = ''; sel.clear(); ing = []; A.$$('.flask,.ing', el).forEach(x => x.classList.remove('on')); mixColor(); hint('Выбери до двух настроений'); el.scrollTo({ top: 0, behavior: 'smooth' }); });
+    res.innerHTML = `<div class="scroll3"><small>на этот вечер</small><div class="scroll3__row">${A.coverHTML(b, 'reco__cover')}<div><h3>${A.esc(b.title)}</h3><p>${A.esc(b.author || '')}</p><em>${why ? 'рецепт: ' + A.esc(why) : ''}</em></div></div>
+      <div class="scroll3__btn">${p.own ? `<button class="btn btn--gold" id="rcOpen">Открыть</button>` : `<button class="btn btn--gold" id="rcAdd">В «Хочу»</button>`}<button class="btn btn--ghost" id="rcAgain">Ещё раз</button></div></div>`;
+    res.classList.add('on'); [...res.querySelectorAll('button')].forEach(x => x.addEventListener('pointerdown', e => e.stopPropagation()));
+    A.$('#rcAgain', res).addEventListener('click', () => { A.snd.tap(); res.classList.remove('on'); sel.clear(); ing = []; A.$$('.flask3', layer).forEach(x => x.classList.remove('on')); mix(); hint('Выбери настроение на полке'); });
     const add = A.$('#rcAdd', res), open = A.$('#rcOpen', res);
-    add && add.addEventListener('click', () => { const nb = { id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }; A.state.books.push(nb); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 24); A.toast('Книга добавлена на полку'); add.disabled = true; add.textContent = 'Добавлено'; });
-    open && open.addEventListener('click', () => { A.snd.page(); A.go('books'); setTimeout(() => A.mods.books.openBook(b.id), 900); });
+    add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 24); A.toast('Книга ждёт тебя на полке'); add.disabled = true; add.textContent = 'Добавлено'; });
+    open && open.addEventListener('click', () => { A.snd.page(); const bk = A.state.books.find(x => x.title === b.title); A.go('books'); setTimeout(() => { if (bk) bk.hasText ? A.reader.open(bk, null) : A.mods.books.openBook(bk.id); }, 1700); });
   }
-  addEventListener('resize', () => { if (cv && cv.isConnected) size(); });
 })();

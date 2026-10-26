@@ -33,11 +33,26 @@ A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth /
 /* ---------------------------------------------------------------- the room is the router:
    touching an object glides the camera in, the object "opens" as a full-screen panel with an iris from that spot, and back reverses it */
 const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
+const ROOMOF = { books: 'lib', potion: 'lab' }, MOOD = { books: 'books', potion: 'potion' };
 const OBJ = { books: 'book', quotes: 'quill', potion: 'potion', sky: 'stars', path: 'scope', bag: 'bag' };
 A.tab = 'room'; let moving = false;
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
+const curtain = A.$('#curtain');
+function enterRoom(tab) {
+  const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
+  if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
+  moving = true; A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
+  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); };
+  A.snd.whoosh(1);
+  if (prev === 'room') { A.scene.focus(OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
+}
+function exitRoom() {
+  if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1);
+  setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); }, 620);
+}
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
+  if (ROOMOF[tab]) return enterRoom(tab);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; moving = true;
@@ -60,6 +75,7 @@ A.go = (tab, opt = {}) => {
 };
 A.leave = () => {
   if (A.reader && A.reader.isOpen()) return A.reader.close();
+  if (ROOMOF[A.tab]) return exitRoom();
   if (A.tab === 'room' || moving) return; moving = true; const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
   const [x, y] = A.scene.focusPoint(), R = irisR(x, y); A.snd.whoosh(-1);
   const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); moving = false; };

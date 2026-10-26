@@ -33,7 +33,7 @@ right = poly_mask([(650, 188), (786, 135), (856, 142), (933, 207), (1045, 378), 
 pm = np.maximum(np.asarray(left), np.asarray(right)).astype(np.float32)
 pmi = Image.fromarray(pm.astype(np.uint8), 'L').filter(ImageFilter.MinFilter(9)).filter(ImageFilter.GaussianBlur(2))
 stones = Image.new('L', (W, H), 0); ImageDraw.Draw(stones).ellipse([735, 292, 862, 350], fill=255)
-mask = np.clip(np.asarray(pmi).astype(np.float32) - np.asarray(stones.filter(ImageFilter.GaussianBlur(4))).astype(np.float32), 0, 255)
+mask = np.clip(np.asarray(pmi).astype(np.float32), 0, 255)   # the old stone ring goes too: the fire lives in its own bowl now
 rng = np.random.default_rng(7)
 def fnoise(sc):
     n = rng.normal(0, 1, (H // sc + 2, W // sc + 2)).astype(np.float32); return np.asarray(Image.fromarray(n, 'F').resize((W, H), Image.BICUBIC))

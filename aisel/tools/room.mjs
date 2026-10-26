@@ -9,6 +9,7 @@ const errs = []; pg.on('pageerror', e => errs.push('PAGEERR ' + e.message)); pg.
 await pg.goto('file://' + path.resolve('dist/index.html')); await pg.waitForTimeout(1500);
 for (const st of steps.split(';')) { const [k, ...r] = st.split(':'), v = r.join(':');
   if (k === 'shot') await pg.screenshot({ path: `${SP}/${pre}_${v}.png` });
+  else if (k === 'file') { const [sel, fp] = v.split('|'); await pg.setInputFiles(sel, fp); }
   else if (k === 'wait') await pg.waitForTimeout(+v);
   else if (k === 'click') await pg.click(v);
   else if (k === 'eval') { try { await pg.evaluate(v); } catch (e) { errs.push('EVAL ' + e.message); } }

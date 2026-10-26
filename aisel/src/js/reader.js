@@ -4,22 +4,24 @@ A.reader = (() => {
   const FONTS = { serif: '"Cormorant Garamond",Georgia,serif', book: 'Georgia,"Times New Roman",serif', sans: '"Inter Tight",system-ui,sans-serif' };
   const THEMES = { oled: ['#000', '#d9d3c4', '#e9c984'], sepia: ['#f1e4c7', '#3b2a17', '#8a5a1f'], dusk: ['#0b1018', '#c9d3e6', '#8fb0ff'] };
   const DEF = { size: 22, font: 'serif', lh: 1.6, theme: 'oled' };
-  let el, b, view, flow, pw = 0, ph = 0, pages = 1, cur = 0, maxSeen = 0, off = 0, offV = 0, offT = 0, raf = 0, open_ = false, fromRect = null, drag = null, p = null;
+  let emb = 0, el, b, view, flow, pw = 0, ph = 0, pages = 1, cur = 0, maxSeen = 0, off = 0, offV = 0, offT = 0, raf = 0, open_ = false, fromRect = null, drag = null, p = null;
   const prefs = () => Object.assign({}, DEF, A.state.settings.reader || {});
 
   function build() {
     el = A.h(`<div id="reader" class="rd" hidden><div class="rd__bar"><button class="rd__b" id="rdBack" aria-label="Закрыть"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="rd__t"><b id="rdT"></b><small id="rdA"></small></div><button class="rd__b rd__b--aa" id="rdAa" aria-label="Шрифт и фон">Aa</button><button class="rd__b" id="rdInfo" aria-label="О книге"><svg viewBox="0 0 24 24" class="ico"><circle cx="5.500" cy="12" r="1.100" fill="currentColor"/><circle cx="12" cy="12" r="1.100" fill="currentColor"/><circle cx="18.500" cy="12" r="1.100" fill="currentColor"/></svg></button></div>
       <div class="rd__view" id="rdView"><div class="rd__flow" id="rdFlow"></div></div><div class="rd__edge rd__edge--l"></div><div class="rd__edge rd__edge--r"></div>
-      <div class="rd__foot"><div class="rd__line"><i id="rdProg"></i></div><span id="rdPg"></span></div><button class="rd__fin" id="rdFin" hidden>Дочитала</button>
+      <div class="rd__ember" id="rdEmber"></div><div class="rd__foot"><div class="rd__line"><i id="rdProg"></i></div><span id="rdPg"></span></div><button class="rd__fin" id="rdFin" hidden>Дочитала</button>
       <div class="rd__set" id="rdSet"><div class="rd__row"><span>Размер</span><input type="range" min="16" max="34" step="1" id="rdSize"></div>
       <div class="rd__row"><span>Шрифт</span><div class="rd__seg" id="rdFont"><button data-v="serif" style="font-family:${FONTS.serif}">Сказка</button><button data-v="book" style="font-family:${FONTS.book}">Книга</button><button data-v="sans" style="font-family:${FONTS.sans}">Строгий</button></div></div>
       <div class="rd__row"><span>Строки</span><div class="rd__seg" id="rdLh"><button data-v="1.4">Плотно</button><button data-v="1.6">Ровно</button><button data-v="1.85">Свободно</button></div></div>
+      <div class="rd__row"><span>Костёр</span><input type="range" min="0" max="1" step=".05" id="rdFire"></div>
       <div class="rd__row"><span>Фон</span><div class="rd__seg rd__seg--th" id="rdTh"><button data-v="oled" style="--c:#000"><i></i>Ночь</button><button data-v="dusk" style="--c:#0b1018"><i></i>Сумерки</button><button data-v="sepia" style="--c:#f1e4c7"><i></i>Бумага</button></div></div></div></div>`);
     document.body.appendChild(el); view = A.$('#rdView', el); flow = A.$('#rdFlow', el);
     A.$('#rdBack', el).addEventListener('click', () => close()); A.$('#rdInfo', el).addEventListener('click', () => { A.snd.tap(); A.mods.books.openBook(b.id); });
     A.$('#rdAa', el).addEventListener('click', () => { A.snd.tap(); el.classList.toggle('setting'); });
     const set = (k, v) => { A.state.settings.reader = Object.assign(prefs(), { [k]: v }); A.save(); style(); paginate(true); mark(); };
     A.$('#rdSize', el).addEventListener('input', e => set('size', +e.target.value));
+    A.$('#rdFire', el).addEventListener('input', e => { A.snd.fireVol(+e.target.value); if (+e.target.value > 0) A.snd.setFire(1); });
     [['#rdFont', 'font', x => x], ['#rdLh', 'lh', x => +x], ['#rdTh', 'theme', x => x]].forEach(([s, k, f]) => A.$(s, el).addEventListener('click', e => { const t = e.target.closest('button'); if (t) { A.snd.tap(); set(k, f(t.dataset.v)); } }));
     A.$('#rdFin', el).addEventListener('click', () => { const bk = b; close(); setTimeout(() => { if (bk.status !== 'done') { bk.status = 'done'; bk.finished = null; A.finishBook(bk); A.mods.books && A.mods.books.refresh(); } }, 700); });
     // pages
@@ -41,7 +43,7 @@ A.reader = (() => {
   function style() {
     const P = prefs(), T = THEMES[P.theme]; el.dataset.th = P.theme; el.style.setProperty('--bg', T[0]); el.style.setProperty('--fg', T[1]); el.style.setProperty('--ac', T[2]);
     flow.style.fontFamily = FONTS[P.font]; flow.style.fontSize = P.size + 'px'; flow.style.lineHeight = P.lh;
-    A.$('#rdSize', el).value = P.size; mark(); document.querySelector('meta[name=theme-color]').setAttribute('content', T[0]);
+    A.$('#rdSize', el).value = P.size; A.$('#rdFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; mark(); document.querySelector('meta[name=theme-color]').setAttribute('content', T[0]);
   }
   function mark() { const P = prefs(); A.$$('#rdFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#rdLh button', el).forEach(x => x.classList.toggle('on', +x.dataset.v === P.lh)); A.$$('#rdTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); }
   function paginate(keep) {
@@ -63,19 +65,20 @@ A.reader = (() => {
     A.$('#rdFin', el).hidden = !(cur === pages - 1 && b.status !== 'done');
   }
 
-  function openReader(book, rect) {
-    if (!el) build(); b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
-    A.$('#rdT', el).textContent = b.title; A.$('#rdA', el).textContent = b.author || ''; flow.innerHTML = html(b.text || ''); style();
+  async function openReader(book, rect) {
+    if (!el) build(); const text = await A.txt.get(book.id); if (!text) { A.toast('Текст этой книги не найден: загрузи файл заново'); return; } b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
+    A.$('#rdT', el).textContent = b.title; A.$('#rdA', el).textContent = b.author || ''; flow.innerHTML = html(text); style();
     el.hidden = false; el.classList.remove('setting'); el.classList.add('chrome'); if (b.status === 'want') { b.status = 'reading'; b.started = b.started || Date.now(); } p = b.read || 0;
-    if (!b.pages) b.pages = A.pagesEst(b.text); maxSeen = 0; A.save();
+    if (!b.pages) b.pages = A.pagesEst(text); b._len = text.length; maxSeen = 0; A.save();
     paginate(false); maxSeen = cur; A.snd.page(); A.snd.setMood('books');
+    A.snd.unlock && A.snd.unlock(); A.snd.setFire(1); clearInterval(emb); emb = setInterval(() => { const l = A.snd.fireLevel(); el.style.setProperty('--em', (.35 + l * .9 + Math.sin(performance.now() / 380) * .08).toFixed(3)); }, 90);
     if (!A.reduceMotion) { const r = fromRect, W = innerWidth, H = innerHeight, from = r ? `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 8px)` : 'inset(46% 20% 46% 20% round 18px)';
       el.animate([{ clipPath: from, opacity: .2 }, { clipPath: 'inset(0px 0px 0px 0px round 0px)', opacity: 1 }], { duration: 760, easing: 'cubic-bezier(.3,.9,.15,1)' });
       flow.animate([{ opacity: 0, transform: `translate3d(${-cur * pw}px,18px,0) scale(.98)` }, { opacity: 1, transform: `translate3d(${-cur * pw}px,0,0) scale(1)` }], { duration: 700, delay: 280, easing: 'ease-out', fill: 'backwards' }); }
   }
   function close() {
-    if (!open_) return; open_ = false; b.pos = cur / pages; const reached = Math.round((maxSeen + 1) / pages * (b.pages || A.pagesEst(b.text))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); A.save();
-    const fin = () => { el.hidden = true; el.getAnimations().forEach(a => a.cancel()); document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); A.mods.books && A.mods.books.refresh && A.mods.books.refresh(); };
+    if (!open_) return; open_ = false; b.pos = cur / pages; const reached = Math.round((maxSeen + 1) / pages * (b.pages || A.pagesEst('x'.repeat(b._len || 800)))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); A.save();
+    const fin = () => { clearInterval(emb); A.snd.setFire(A.fire.on ? 1 : 0); el.hidden = true; el.getAnimations().forEach(a => a.cancel()); document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); A.mods.books && A.mods.books.refresh && A.mods.books.refresh(); };
     if (A.reduceMotion) return fin(); const r = fromRect, W = innerWidth, H = innerHeight, to = r ? `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 8px)` : 'inset(46% 20% 46% 20% round 18px)';
     el.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)', opacity: 1 }, { clipPath: to, opacity: .1 }], { duration: 560, easing: 'cubic-bezier(.6,0,.3,1)', fill: 'forwards' }).finished.then(fin);
   }

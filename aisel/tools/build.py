@@ -3,7 +3,7 @@
 import pathlib, shutil, json, hashlib
 root = pathlib.Path(__file__).resolve().parent.parent; src = root/'src'; out = root/'dist'
 css = '\n'.join((src/'css'/f).read_text() for f in sorted(p.name for p in (src/'css').glob('*.css')))
-order = ['store','audio','fx','scene','fire','ui','map','books','quotes','sky','potion','goal','bag','reader','app']
+order = ['store','texts','import','audio','fx','scene','fire','ui','map','library','books','quotes','sky','potion','goal','bag','reader','app']
 js = '\n'.join((src/'js'/f'{n}.js').read_text() for n in order if (src/'js'/f'{n}.js').exists())
 story = (src/'story.txt').read_text().replace('\\','\\\\').replace('`','\\`').replace('${','\\${')
 js = js.replace('/*STORY*/', story)
@@ -13,10 +13,11 @@ inner = shell.replace('/*CSS*/', css).replace('<!--BODY-->', body).replace('/*JS
 head, rest = inner.split('<style>', 1)
 page = '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + head + '<style>' + rest.split('</style>',1)[0] + '</style>\n</head>\n<body>\n' + rest.split('</style>',1)[1] + '\n</body>\n</html>\n'
 if out.exists(): shutil.rmtree(out)
-(out/'img').mkdir(parents=True)
+(out/'img').mkdir(parents=True); (out/'lib').mkdir()
 for f in (src/'img').iterdir():
     if f.name.startswith('bg-'): continue          # old forest plates are not used by the room
     shutil.copy(f, out/'img'/f.name)
+for f in (src/'lib').iterdir(): shutil.copy(f, out/'lib'/f.name)
 (out/'index.html').write_text(page)
 manifest = {
   "name": "Уголок принцессы Айсель", "short_name": "Уголок Айсель", "description": "Лесной каталог книг: тропа, цитаты, звёзды и зельеварня.",
@@ -28,7 +29,7 @@ manifest = {
     {"src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}]
 }
 (out/'manifest.webmanifest').write_text(json.dumps(manifest, ensure_ascii=False, indent=1))
-files = ['./', 'index.html', 'manifest.webmanifest'] + ['img/' + f.name for f in sorted((out/'img').iterdir())]
+files = ['./', 'index.html', 'manifest.webmanifest'] + ['img/' + f.name for f in sorted((out/'img').iterdir())]   # lib/ (pdf.js, JSZip) is cached on first use
 ver = hashlib.md5((page + ''.join(f.name + str(f.stat().st_size) for f in (out/'img').iterdir())).encode()).hexdigest()[:8]
 sw = f'''const V = 'aisel-{ver}', FILES = {json.dumps(files)};
 self.addEventListener('install', e => {{ e.waitUntil(caches.open(V).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); }});

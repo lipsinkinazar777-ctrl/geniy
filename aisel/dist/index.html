@@ -409,7 +409,7 @@ html,body{background:#000}
 #room{opacity:.45}#stage.in #room{opacity:1}
 #roomImg{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
 #dim{position:absolute;inset:0;background:#0a1226;opacity:.62;mix-blend-mode:multiply;pointer-events:none}
-#glow{position:absolute;opacity:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(closest-side,rgba(255,168,76,.3),rgba(255,128,44,.13) 42%,rgba(255,100,30,.06) 72%,rgba(255,100,30,0));will-change:opacity}
+#glow{position:absolute;opacity:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(closest-side,rgba(255,160,70,.17),rgba(255,120,40,.09) 40%,rgba(255,100,30,.06) 72%,rgba(255,100,30,0));will-change:opacity}
 #fireCv{position:absolute;pointer-events:none}
 #pageTxt{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;color:#3a220f;font-family:"Caveat","Cormorant Garamond",cursive;text-align:center;mix-blend-mode:multiply;padding:30px 24px;opacity:.88}
 #pageTxt h2{margin:0;font:600 84px/1 "Caveat",cursive}
@@ -493,27 +493,115 @@ body.panel #back{opacity:1;transform:none;pointer-events:auto}
 .rd__seg--th button{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px}
 .rd__seg--th i{width:22px;height:22px;border-radius:50%;background:var(--c);border:1px solid rgba(255,226,160,.5)}
 .rd[data-th=sepia] .rd__bar{background:linear-gradient(180deg,#f1e4c7,transparent)}
-#room{-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 10%,#000 90%,transparent 100%)}
+
+/* ---------------- rooms: only the current room's layers are shown */
+#room > .r-main,#room > .r-lab,#room > .r-lib{display:none}
+#room[data-room=main] > .r-main,#room[data-room=lab] > .r-lab,#room[data-room=lib] > .r-lib{display:block}
+#room[data-room=main] > canvas.r-main{display:block}
+#room:not([data-room=main]){-webkit-mask-image:none;mask-image:none}
+#bowlImg{position:absolute;pointer-events:none;user-select:none;-webkit-user-drag:none}
+#dim{background:#080c1c}
+#shade{position:absolute;inset:0;mix-blend-mode:multiply;pointer-events:none;opacity:0}
+#curtain{position:fixed;inset:0;z-index:26;background:#000;opacity:0;pointer-events:none;transition:opacity .6s ease}
+#curtain.on{opacity:1}
+body.inroom #back{opacity:1;transform:none;pointer-events:auto}
+/* library */
+#libLayer,#labLayer{position:absolute;inset:0;overflow:hidden;color:#f6e6bd}
+.lib__t{position:absolute;top:118px;left:0;right:0;text-align:center;pointer-events:none}
+.lib__t small{display:block;font:400 25px/1 var(--f);letter-spacing:.42em;text-transform:uppercase;color:#e9c984;margin-bottom:14px}
+.lib__t b{font:italic 400 84px/1 var(--serif);text-shadow:0 0 30px rgba(255,190,90,.6)}
+.shelf3{position:absolute;left:104px;right:104px;height:340px;overflow:hidden;touch-action:none;border-radius:6px;background:linear-gradient(180deg,#0d0805,#1d120b 72%,#0e0805);box-shadow:inset 0 16px 44px rgba(0,0,0,.85),inset 0 0 0 2px rgba(255,226,160,.07),0 18px 40px rgba(0,0,0,.6)}
+.shelf3::after{content:"";position:absolute;left:0;right:0;bottom:0;height:32px;background:linear-gradient(180deg,#6a4626,#3d2514 55%,#1f1209);box-shadow:0 -2px 0 rgba(255,222,170,.22);pointer-events:none}
+.shelf3__in{position:absolute;left:0;bottom:32px;display:flex;align-items:flex-end;gap:7px;padding:0 20px;will-change:transform}
+.sp{flex:none;position:relative;width:var(--w);height:var(--h);border-radius:5px 5px 1px 1px;display:flex;align-items:center;justify-content:center;overflow:visible;color:#ecd8a8;background:linear-gradient(90deg,hsl(var(--hu) 38% 11%),hsl(var(--hu) 42% 28%) 36%,hsl(var(--hu) 38% 19%) 64%,hsl(var(--hu) 34% 9%));box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),4px 0 10px rgba(0,0,0,.65);transition:transform .5s var(--spring),filter .35s}
+.sp__band{position:absolute;left:0;right:0;top:20px;height:7px;border-block:1.5px solid rgba(233,201,132,.8);background:rgba(0,0,0,.2)}
+.sp__band--b{top:auto;bottom:20px}
+.sp b{writing-mode:vertical-rl;font:500 var(--fs,23px)/1.15 var(--serif);white-space:nowrap;max-height:calc(var(--h) - 90px);overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em;text-shadow:0 1px 3px #000;padding:0 3px}
+.sp em{display:none}
+.sp__rib{position:absolute;top:-6px;right:9px;width:10px;height:42px;background:#a82846;clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);box-shadow:0 0 10px rgba(168,40,70,.6)}
+.sp__star{position:absolute;bottom:34px;left:50%;width:14px;height:14px;margin-left:-7px;background:#f1c76e;clip-path:polygon(50% 0,62% 36%,100% 38%,70% 60%,80% 100%,50% 76%,20% 100%,30% 60%,0 38%,38% 36%);filter:drop-shadow(0 0 6px rgba(255,200,110,.8))}
+.sp__txt{position:absolute;top:36px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:#ffd98a;opacity:.8;box-shadow:0 0 8px #ffd98a}
+.sp.out{transform:translate3d(0,-26px,0) scale(1.12);z-index:5;filter:brightness(1.35) drop-shadow(0 18px 20px rgba(0,0,0,.75))}
+.sp:active{transform:scale(.96)}
+.lib__lect{position:absolute;left:200px;top:1265px;width:680px;height:230px;background:none;border-radius:40%}
+.lib__add{position:absolute;left:50%;top:1640px;width:122px;height:122px;margin-left:-61px;border-radius:50%;display:grid;place-items:center;color:#f4d795;background:rgba(10,8,6,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 14px 44px rgba(0,0,0,.6),0 0 40px rgba(255,200,110,.25),inset 0 0 0 2px rgba(255,226,160,.5);transition:transform .5s var(--spring)}
+.lib__add svg{width:54px;height:54px}
+.lib__add:active{transform:scale(.9)}
+.lib__note{position:absolute;top:700px;left:80px;right:80px;text-align:center;font:italic 400 40px/1.3 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.5)}
+/* alchemy lab */
+#labCv{position:absolute;inset:0;width:1080px;height:1920px;pointer-events:none}
+.lab__moon{position:absolute;left:300px;top:340px;width:480px;height:1150px;pointer-events:none;mix-blend-mode:screen;background:linear-gradient(180deg,rgba(150,190,255,.2),rgba(120,160,230,.07) 55%,transparent);clip-path:polygon(0 0,100% 0,170% 100%,-70% 100%);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 24%,transparent 100%);animation:moonp 7s ease-in-out infinite}
+@keyframes moonp{50%{opacity:.6}}
+.lab__t{position:absolute;top:64px;left:0;right:0;text-align:center;font:400 25px/1 var(--f);letter-spacing:.42em;text-transform:uppercase;color:#e9c984;text-shadow:0 0 20px rgba(255,190,90,.5)}
+.flask3{position:absolute;top:762px;width:146px;height:230px;text-align:center;touch-action:none}
+.fl3{height:160px;display:grid;place-items:end center;transform-origin:50% 100%;transition:transform .7s var(--spring),filter .5s}
+.fl3 svg{width:112px;height:152px;filter:drop-shadow(0 10px 14px rgba(0,0,0,.7))}
+.flask3 span{display:block;margin-top:34px;font:italic 400 25px/1 var(--serif);white-space:nowrap;color:#f6e6bd;text-shadow:0 2px 8px #000}
+.flask3.on .fl3{transform:translateY(-30px) rotate(-16deg);filter:drop-shadow(0 0 26px var(--c))}
+.flask3:active .fl3{transform:scale(.92)}
+.lab__hint{position:absolute;top:1005px;left:60px;right:60px;text-align:center;font:italic 400 36px/1.2 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.5),0 2px 10px #000;opacity:0}
+.lab__hint.on{animation:hintin 1.2s forwards}
+@keyframes hintin{from{opacity:0;transform:translateY(12px)}to{opacity:.95;transform:none}}
+.ing3{position:absolute;top:1590px;width:170px;height:290px;text-align:center;touch-action:none;cursor:grab}
+.jar3{transition:transform .5s var(--spring),opacity .3s}
+.jar3 svg{width:150px;height:200px;filter:drop-shadow(0 14px 16px rgba(0,0,0,.65))}
+.ing3 span{display:block;margin-top:14px;font:italic 400 30px/1 var(--serif);color:#f6e6bd;text-shadow:0 2px 8px #000}
+.ing3.lift .jar3{opacity:.25}
+.jar3.wob{animation:wob .7s}
+@keyframes wob{25%{transform:rotate(-6deg) translateY(-8px)}60%{transform:rotate(5deg)}}
+.ghost3{position:fixed;z-index:200;pointer-events:none;transform:translate(-50%,-50%) scale(1.25);filter:drop-shadow(0 22px 22px rgba(0,0,0,.6));transition:transform .25s var(--spring)}
+.ghost3 svg{width:100%;height:100%}
+.ghost3.over{filter:drop-shadow(0 0 26px rgba(255,214,140,.8))}
+.lab__pot{position:absolute;left:250px;top:1060px;width:580px;height:420px;background:none;border-radius:50%}
+#labLayer.boil .lab__pot{animation:potshake .22s infinite}
+@keyframes potshake{50%{transform:translate(2px,-2px)}}
+.lab__res{position:absolute;left:130px;right:130px;top:120px;opacity:0;pointer-events:none;transform:translateY(40px) scale(.94);transition:opacity .7s,transform 1s var(--spring)}
+.lab__res.on{opacity:1;pointer-events:auto;transform:none}
+.scroll3{padding:46px 42px 40px;border-radius:12px;color:#3a2210;background:radial-gradient(120% 90% at 30% 10%,#f1dfb6,#d9bd88 70%,#b99a62);box-shadow:0 30px 70px rgba(0,0,0,.7),inset 0 0 60px rgba(120,80,30,.35)}
+.scroll3 small{display:block;font:500 24px/1 var(--f);letter-spacing:.34em;text-transform:uppercase;color:#7a4e1c;margin-bottom:24px}
+.scroll3__row{display:flex;gap:34px;align-items:flex-start}
+.scroll3 .reco__cover{width:200px;flex:none}
+.scroll3 h3{margin:0 0 8px;font:500 50px/1.08 var(--serif)}
+.scroll3 p{margin:0 0 10px;font:italic 400 34px/1.2 var(--serif);color:#5a3a1a}
+.scroll3 em{font:400 26px/1.35 var(--f);color:#7a5a30;letter-spacing:.03em;font-style:normal}
+.scroll3__btn{display:flex;gap:18px;margin-top:34px}.scroll3__btn .btn{flex:1;height:84px;font-size:22px}
+.scroll3 .btn--ghost{color:#3a2210;border-color:rgba(58,34,16,.4);background:rgba(58,34,16,.06)}
+/* the fire keeps crackling under any book */
+.rd__ember{position:absolute;left:0;right:0;bottom:0;height:36%;pointer-events:none;z-index:1;mix-blend-mode:screen;background:radial-gradient(80% 100% at 50% 128%,rgba(255,130,40,calc(var(--em,.3)*.55)),rgba(255,90,20,calc(var(--em,.3)*.12)) 55%,transparent 75%)}
+.rd[data-th=sepia] .rd__ember{mix-blend-mode:multiply;background:radial-gradient(80% 100% at 50% 128%,rgba(255,150,60,calc(var(--em,.3)*.5)),transparent 70%)}
+.rd__view,.rd__foot,.rd__bar{z-index:3}
+
+#fireGl{position:absolute;pointer-events:none;mix-blend-mode:screen}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+#stage,#gate,#app,#curtain,#scene,#tint,#vignette{width:100vw;height:100vh;height:100dvh}
+.wrap{max-width:none!important;padding-left:max(20px,5vw)!important;padding-right:max(20px,5vw)!important}
+.sheet{max-width:none!important}
 
 </style>
 </head>
 <body>
 
 <div id="stage" aria-label="Комната с книгой на столе">
-  <div id="room">
+  <div id="room" data-room="main">
     <img id="roomImg" src="img/room.webp" alt="" draggable="false">
-    <div id="dim"></div>
-    <div id="pageTxt" aria-hidden="true"></div>
-    <div id="hsFx" aria-hidden="true"></div>
-    <canvas id="fireCv" width="420" height="480" aria-hidden="true"></canvas>
-    <div id="glow"></div>
-    <div id="labels" aria-hidden="true"></div>
+    <img id="bowlImg" class="r-main" src="img/bowl.webp" alt="" draggable="false">
+    <div id="pageTxt" class="r-main" aria-hidden="true"></div>
+    <div id="dim" class="r-main"></div>
+    <div id="shade" class="r-main"></div>
+    <div id="hsFx" class="r-main" aria-hidden="true"></div>
+    <canvas id="fireCv" class="r-main" width="720" height="820" aria-hidden="true"></canvas>
+    <canvas id="fireGl" class="r-main" aria-hidden="true"></canvas>
+    <div id="glow" class="r-main"></div>
+    <div id="labels" class="r-main" aria-hidden="true"></div>
+    <div id="labLayer" class="r-lab"></div>
+    <div id="libLayer" class="r-lib"></div>
   </div>
 </div>
 <canvas id="scene" aria-hidden="true"></canvas>
 <div id="tint" aria-hidden="true"></div>
 <div id="vignette" aria-hidden="true"></div>
 <div id="hint" aria-hidden="true"></div>
+<div id="curtain" aria-hidden="true"></div>
 
 <!-- GATE: title over the dark room; the touch unlocks sound and walks into the room -->
 <div id="gate">
@@ -701,17 +789,99 @@ A.seed = () => {
   const mk = (title, author, pages, status, read, tags, extra = {}) => Object.assign({ id: A.uid(), title, author, pages, read, status, rating: 0, tags, impression: '', added: Date.now(), cover: {}, sample: true }, extra);
   A.state.books = [
     mk('Маленький принц', 'Антуан де Сент-Экзюпери', 96, 'reading', 40, ['tale', 'deep', 'classic']),
-    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { text: STORY }),
+    mk('Фонарь на опушке', 'Для Айсель', 3, 'reading', 0, ['tale', 'cozy', 'mist'], { hasText: true }),
     mk('Алиса в Стране чудес', 'Льюис Кэрролл', 192, 'want', 0, ['tale', 'funny', 'fantasy']),
     mk('Гордость и предубеждение', 'Джейн Остин', 416, 'want', 0, ['romance', 'cozy', 'classic'])
   ];
+  A.txt.put(A.state.books[1].id, STORY);
   const lp = A.state.books[0];
   A.state.quotes = [{ id: A.uid(), bookId: lp.id, bookTitle: lp.title, author: lp.author, text: 'Зорко одно лишь сердце. Самого главного глазами не увидишь.', page: '', tags: ['самое главное', 'сердце'], sticker: '🌙', paper: 'parch', photo: null, date: Date.now(), sample: true }];
 };
 
+/* ============================================================ book texts live in IndexedDB (a PDF is megabytes; localStorage stays small) */
+A.txt = (() => {
+  let db = null, mem = {};
+  const open = () => new Promise(res => { if (db !== null) return res(db); try { const rq = indexedDB.open('aisel-texts', 1); rq.onupgradeneeded = () => rq.result.createObjectStore('t'); rq.onsuccess = () => { db = rq.result; res(db); }; rq.onerror = () => { db = false; res(false); }; } catch (e) { db = false; res(false); } });
+  const tx = async (mode, fn) => { const d = await open(); if (!d) return fn(null); return new Promise((res, rej) => { const t = d.transaction('t', mode), r = fn(t.objectStore('t')); t.oncomplete = () => res(r && r.result); t.onerror = () => rej(t.error); }); };
+  return {
+    put: async (id, text) => { const d = await open(); if (!d) { mem[id] = text; return; } await tx('readwrite', s => s.put(text, id)); },
+    get: async (id) => { const d = await open(); if (!d) return mem[id] || ''; return (await tx('readonly', s => s.get(id))) || ''; },
+    del: async (id) => { const d = await open(); if (!d) { delete mem[id]; return; } await tx('readwrite', s => s.delete(id)); },
+    migrate: async () => { for (const b of A.state.books) if (b.text) { await A.txt.put(b.id, b.text); b.hasText = true; delete b.text; } A.save(); }
+  };
+})();
+
+/* ============================================================ importing her own books: .txt .md .epub .pdf -> {title, author, text, cover}
+   pdf.js and JSZip ship with the app (lib/) and load only when a file of that kind is picked */
+A.importer = (() => {
+  const loaded = {};
+  const need = (src) => loaded[src] || (loaded[src] = new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('lib')); }; document.head.appendChild(s); }));
+  const tick = () => new Promise(r => setTimeout(r, 0));
+  const clean = t => t.replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  const thumb = (src, max = 360) => new Promise(res => { const im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .8)); }; im.onerror = () => res(null); im.src = src; });
+  const nameOf = f => f.name.replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').trim();
+
+  async function plain(file) {
+    const buf = await file.arrayBuffer(); let t = new TextDecoder('utf-8').decode(buf);
+    if ((t.match(/�/g) || []).length > t.length * .002) t = new TextDecoder('windows-1251').decode(buf);
+    return { title: nameOf(file), author: '', text: clean(t) };
+  }
+
+  async function epub(file, prog) {
+    await need('lib/jszip.min.js'); const zip = await JSZip.loadAsync(file), rd = async p => { const f = zip.file(p) || zip.file(decodeURIComponent(p)); return f ? f.async('string') : ''; };
+    const cont = await rd('META-INF/container.xml'), opfPath = (/full-path="([^"]+)"/.exec(cont) || [])[1]; if (!opfPath) throw new Error('epub');
+    const opf = new DOMParser().parseFromString(await rd(opfPath), 'application/xml'), base = opfPath.includes('/') ? opfPath.replace(/[^/]+$/, '') : '';
+    const g = (n) => { const e = opf.getElementsByTagNameNS('*', n)[0]; return e ? e.textContent.trim() : ''; };
+    const items = {}; [...opf.getElementsByTagName('item')].forEach(i => items[i.getAttribute('id')] = i);
+    const spine = [...opf.getElementsByTagName('itemref')].map(r => items[r.getAttribute('idref')]).filter(Boolean);
+    const out = []; let n = 0;
+    for (const it of spine) {
+      const href = it.getAttribute('href'), type = it.getAttribute('media-type') || ''; if (!/html|xml/.test(type)) continue;
+      const doc = new DOMParser().parseFromString(await rd(base + href), 'text/html'); doc.querySelectorAll('script,style,nav').forEach(x => x.remove());
+      let buf = ''; const BLOCK = /^(P|DIV|H[1-6]|LI|BLOCKQUOTE|SECTION|ARTICLE|TR|PRE)$/;
+      const walk = (nd) => { if (nd.nodeType === 3) { buf += nd.nodeValue.replace(/\s+/g, ' '); return; } if (nd.nodeType !== 1) return; const tg = nd.tagName; if (tg === 'BR') { buf += '\n'; return; } if (/^H[1-6]$/.test(tg)) buf += '\n\n# '; nd.childNodes.forEach(walk); if (BLOCK.test(tg)) buf += '\n\n'; };
+      if (doc.body) walk(doc.body); out.push(buf.replace(/[ \t]*\n[ \t]*/g, '\n').replace(/\n{3,}/g, '\n\n').trim()); prog && prog(++n, spine.length); if (n % 4 === 0) await tick();
+    }
+    let cover = null; try {
+      const meta = [...opf.getElementsByTagName('meta')].find(m => m.getAttribute('name') === 'cover'); let ci = meta ? items[meta.getAttribute('content')] : null; ci = ci || [...Object.values(items)].find(i => /cover-image/.test(i.getAttribute('properties') || ''));
+      if (ci) { const f = zip.file(base + ci.getAttribute('href')) || zip.file(decodeURIComponent(base + ci.getAttribute('href'))); if (f) { const b64 = await f.async('base64'); cover = await thumb(`data:${ci.getAttribute('media-type') || 'image/jpeg'};base64,${b64}`); } }
+    } catch (e) {}
+    return { title: g('title') || nameOf(file), author: g('creator'), text: clean(out.filter(Boolean).join('\n\n')), cover };
+  }
+
+  async function pdf(file, prog) {
+    await need('lib/pdf.min.js'); const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = 'lib/pdf.worker.min.js';
+    const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise; let info = {}; try { info = (await doc.getMetadata()).info || {}; } catch (e) {}
+    const paras = []; let cur = '';
+    const flush = () => { if (cur.trim()) paras.push(cur.trim()); cur = ''; };
+    for (let p = 1; p <= doc.numPages; p++) {
+      const page = await doc.getPage(p), tc = await page.getTextContent(), lines = []; let ly = null, line = '', lh = 12, first = true;
+      for (const it of tc.items) { if (!('str' in it)) continue; const y = it.transform[5], h = it.height || 10; if (ly !== null && Math.abs(y - ly) > h * .55) { lines.push({ s: line, y: ly, h: lh }); line = ''; } line += it.str; if (it.hasEOL) line += ' '; ly = y; lh = h || lh; }
+      if (line) lines.push({ s: line, y: ly, h: lh });
+      let prevY = null; for (const L of lines) { const s = L.s.replace(/\s+/g, ' ').trim(); if (!s || /^\d{1,4}$/.test(s) || /^-?\s*\d+\s*-?$/.test(s)) { continue; }
+        const gap = prevY !== null ? Math.abs(prevY - L.y) : 0; if (prevY !== null && gap > L.h * 1.85) flush();
+        if (cur && /[-­]$/.test(cur) && /^[a-zа-яё]/.test(s)) cur = cur.replace(/[-­]$/, '') + s; else cur += (cur ? ' ' : '') + s; prevY = L.y; first = false; }
+      if (/[.!?…»”"]$/.test(cur.trim())) flush();
+      prog && prog(p, doc.numPages); if (p % 3 === 0) await tick();
+    }
+    flush(); let cover = null;
+    try { const page = await doc.getPage(1), vp0 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: 360 / vp0.width }), c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise; cover = c.toDataURL('image/jpeg', .78); } catch (e) {}
+    return { title: (info.Title || '').trim() || nameOf(file), author: (info.Author || '').trim(), text: clean(paras.join('\n\n')), cover, pdf: true, pageCount: doc.numPages };
+  }
+
+  return {
+    ACCEPT: '.txt,.md,.text,.epub,.pdf,text/plain,text/markdown,application/pdf,application/epub+zip',
+    async read(file, prog) {
+      if (file.size > 60e6) throw new Error('big'); const n = file.name.toLowerCase(); let r;
+      if (n.endsWith('.pdf') || file.type === 'application/pdf') r = await pdf(file, prog); else if (n.endsWith('.epub')) r = await epub(file, prog); else r = await plain(file);
+      if (!r.text || r.text.length < 20) throw new Error(r.pdf ? 'scan' : 'empty'); return r;
+    }
+  };
+})();
+
 /* ============================================================ sound: everything is synthesised (no files), so it works offline */
 A.snd = (() => {
-  let ctx, master, amb, sfx, mus, rev, noise, started = false, fire = 0, mood = 'path';
+  let ctx, master, amb, sfx, mus, rev, noise, fireBus, an, anBuf, lvl = 0, started = false, fire = 0, mood = 'path';
   const timers = [];
   const S = () => A.state.settings;
   const SCALES = { path: [220, 261.63, 293.66, 329.63, 392, 440, 523.25, 587.33], books: [146.83, 196, 220, 246.94, 293.66, 392, 440, 493.88], quotes: [174.61, 220, 261.63, 293.66, 349.23, 440, 523.25], sky: [329.63, 392, 493.88, 587.33, 659.25, 783.99, 987.77], potion: [110, 130.81, 164.81, 196, 261.63, 329.63] };
@@ -732,6 +902,7 @@ A.snd = (() => {
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; comp.connect(master);
     rev = ctx.createConvolver(); rev.buffer = impulse(2.6, 2.4); const rg = ctx.createGain(); rg.gain.value = .38; rev.connect(rg); rg.connect(comp);
     amb = ctx.createGain(); amb.gain.value = 1; amb.connect(comp);
+    fireBus = ctx.createGain(); fireBus.gain.value = S().fireVol != null ? S().fireVol : .85; fireBus.connect(amb); an = ctx.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = .6; fireBus.connect(an); anBuf = new Uint8Array(an.fftSize);
     sfx = ctx.createGain(); sfx.gain.value = 1; sfx.connect(comp); sfx.connect(rev);
     mus = ctx.createGain(); mus.gain.value = .9; mus.connect(comp); mus.connect(rev);
     noise = makeNoise(4);
@@ -750,7 +921,7 @@ A.snd = (() => {
     s2.buffer = noise; s2.loop = true; hp.type = 'highpass'; hp.frequency.value = 3800; g2.gain.value = .006; l2.frequency.value = .11; lg2.gain.value = .005; l2.connect(lg2); lg2.connect(g2.gain); s2.connect(hp); hp.connect(g2); g2.connect(amb); s2.start(); l2.start();
     // fire roar (level driven)
     const s3 = ctx.createBufferSource(), lp3 = ctx.createBiquadFilter(); fireG = ctx.createGain();
-    s3.buffer = noise; s3.loop = true; lp3.type = 'lowpass'; lp3.frequency.value = 520; fireG.gain.value = 0; s3.connect(lp3); lp3.connect(fireG); fireG.connect(amb); s3.start();
+    s3.buffer = noise; s3.loop = true; lp3.type = 'lowpass'; lp3.frequency.value = 520; fireG.gain.value = 0; s3.connect(lp3); lp3.connect(fireG); fireG.connect(fireBus); s3.start();
     // crickets
     loop(() => { const t = now() + .02, f = 4100 + Math.random() * 500, n = 3 + (Math.random() * 4 | 0); for (let i = 0; i < n; i++) osc('sine', f, t + i * .045, .006, .004 + (mood === 'sky' ? .004 : 0), .03, amb); }, .5, 1.7);
     // birds (daylight scenes only)
@@ -758,7 +929,7 @@ A.snd = (() => {
     // owl
     loop(() => { if (mood !== 'sky' && Math.random() < .7) return; const t = now() + .05; osc('sine', 392, t, .05, .02, .35, amb, 340); osc('sine', 349, t + .55, .05, .018, .45, amb, 300); }, 14, 30);
     // fire crackle
-    const crack = () => { if (fire < .04) { timers.push(setTimeout(crack, 350)); return; } const t = now() + .01, pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null; if (pn) { pn.pan.value = (Math.random() * 2 - 1) * .7; pn.connect(amb); } const d = pn || amb, lvl = .4 + fire * 1.6;
+    const crack = () => { if (fire < .04) { timers.push(setTimeout(crack, 350)); return; } const t = now() + .01, pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null; if (pn) { pn.pan.value = (Math.random() * 2 - 1) * .7; pn.connect(fireBus); } const d = pn || fireBus, lvl = .4 + fire * 1.6;
       noiseHit(t, .012 + Math.random() * .02, 'highpass', 1800 + Math.random() * 2500, 1, (.03 + fire * .1) * (.5 + Math.random()), d); if (Math.random() < .16 + fire * .22) noiseHit(t, .07 + Math.random() * .05, 'bandpass', 600 + Math.random() * 600, 3, .05 + fire * .09, d);
       if (Math.random() < .05) { for (let i = 0; i < 4; i++) noiseHit(t + i * .018, .012, 'highpass', 2500, 1, .09 * fire, d); }
       timers.push(setTimeout(crack, (110 + Math.random() * 480) / lvl)); };
@@ -796,6 +967,8 @@ A.snd = (() => {
     pop() { if (!ctx) return; osc('sine', 700, now(), .002, .06, .08, sfx, 180); },
     brew() { if (!ctx) return; const t = now(); noiseHit(t, 1.8, 'bandpass', 600, 2, .07, sfx, 3200); [293.66, 349.23, 440, 587.33, 698.46, 880].forEach((f, i) => osc('triangle', f, t + .15 * i, .01, .045, 1.4)); },
     quill() { if (!ctx) return; const t = now(); for (let i = 0; i < 4; i++) noiseHit(t + i * .06, .05, 'bandpass', 3000 + i * 500, 2, .03, sfx); },
+    fireVol(v) { S().fireVol = v; if (fireBus && ctx) fireBus.gain.setTargetAtTime(v, now(), .08); },
+    fireLevel() { if (!an) return 0; an.getByteTimeDomainData(anBuf); let m = 0; for (let i = 0; i < anBuf.length; i++) { const x = (anBuf[i] - 128) / 128; m += x * x; } lvl += (Math.min(1, Math.sqrt(m / anBuf.length) * 9) - lvl) * .5; return lvl; },
     fireOut() { if (!ctx) return; const t = now(); noiseHit(t, 1.1, 'highpass', 2200, .8, .1, sfx, 7000); noiseHit(t + .05, .5, 'bandpass', 500, 1.2, .08, sfx, 200); },
     fireLit() { if (!ctx) return; noiseHit(now(), .5, 'bandpass', 800, 1.5, .12, sfx, 2400); osc('sine', 220, now() + .05, .01, .04, .5); },
     owl() { if (!ctx) return; const t = now(); osc('sine', 392, t, .05, .05, .35, sfx, 340); osc('sine', 349, t + .55, .05, .045, .45, sfx, 300); },
@@ -857,23 +1030,25 @@ A.fx = (() => {
 /* ============================================================ the room: a first-person desk you look around and touch
    one photographic plate (img/room.webp) + live fire + three-depth parallax dust. Objects are the navigation. */
 A.scene = (() => {
-  const RW = 2368, RH = 1320, U = RW / 1500;                  // room plate size; hotspot art is drawn in 1500-wide units
+  let RW = 2368, RH = 1320, roomName = 'main'; const U = 2368 / 1500;     // plate size of the current room; main-table hotspot art is drawn in 1500-wide units
+  const ROOMS = { main: { w: 2368, h: 1320, img: 'img/room.webp' }, lab: { w: 1080, h: 1920, img: 'img/lab.webp' }, lib: { w: 1080, h: 1920, img: 'img/lib.webp' } };
+  const BOWL = { x: 1960, y: 1030, k: 500 / 760 };               // the iron fire bowl on the table (rim centre, room px)
   const stage = A.$('#stage'), room = A.$('#room'), cv = A.$('#scene'), g = cv.getContext('2d');
-  const FIRE = { x: 945 * U, y: 372 * U };                    // base of the flame, room px
-  const HOME = { cx: 930 * U, cy: RH * .5, z: 1 };
+  const FIRE = { x: BOWL.x, y: BOWL.y + 8 };                  // base of the flame, room px
+  const HOME = { cx: 1850, cy: RH * .5, z: 1 };
 
   /* ---- objects (polygons in plate units).  act:'fire' toggles the flame, tab opens a panel */
   const P = (...a) => a;
   const HS = [
-    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([835, 235], [1070, 235], [1075, 400], [830, 400])], pad: 4 },
+    { id: 'fire', act: 'fire', n: 'Костёр', polys: [P([1040, 500], [1420, 500], [1420, 760], [1040, 760])] },
     { id: 'knob', act: 'fire', n: 'Живой костёр', circle: [210, 590, 95] },
     { id: 'matches', act: 'fire', n: 'Спички', polys: [P([203, 396], [312, 338], [338, 372], [232, 440])] },
     { id: 'quill', tab: 'quotes', n: 'Цитаты', polys: [P([1092, 78], [1195, 78], [1205, 170], [1100, 170]), P([1160, 0], [1285, 0], [1215, 95], [1160, 85])] },
-    { id: 'potion', tab: 'potion', n: 'Зельеварня', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
+    { id: 'potion', tab: 'potion', n: 'Лаборатория', polys: [P([258, 98], [300, 80], [372, 24], [458, 28], [476, 124], [452, 196], [372, 244], [270, 236]), P([984, 24], [1066, 24], [1070, 135], [986, 135])] },
     { id: 'stars', tab: 'sky', n: 'Небо', polys: [P([1215, 168], [1500, 298], [1500, 474], [1312, 430], [1246, 336])] },
     { id: 'scope', tab: 'path', n: 'Лесная карта', polys: [P([1242, 62], [1335, 46], [1500, 160], [1500, 212], [1424, 192])] },
     { id: 'bag', tab: 'bag', n: 'Сумка', polys: [P([1072, 172], [1236, 238], [1324, 332], [1330, 522], [1292, 524], [1238, 396], [1108, 262])] },
-    { id: 'book', tab: 'books', n: 'Книга', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
+    { id: 'book', tab: 'books', n: 'Библиотека', polys: [P([428, 238], [745, 202], [882, 146], [1034, 132], [1262, 436], [1290, 504], [1002, 608], [882, 596], [452, 676], [398, 642])] }
   ];
   HS.forEach(h => {
     h.P = h.circle ? [P(...[...Array(18)].map((_, i) => [h.circle[0] + Math.cos(i / 18 * 6.283) * h.circle[2], h.circle[1] + Math.sin(i / 18 * 6.283) * h.circle[2]]))] : h.polys;
@@ -893,7 +1068,7 @@ A.scene = (() => {
   function limits(z) { const s = s0 * z, hw = VW / (2 * s), hh = VH / (2 * s); return { x0: Math.min(hw, RW / 2), x1: Math.max(RW - hw, RW / 2), y0: Math.min(hh, RH / 2), y1: Math.max(RH - hh, RH / 2) }; }
   const clampT = () => { const l = limits(cam.z.t); cam.x.t = A.clamp(cam.x.t, l.x0, l.x1); cam.y.t = A.clamp(cam.y.t, l.y0, l.y1); };
   function resize() {
-    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH * .64 / RH);
+    VW = innerWidth; VH = innerHeight; DPR = Math.min(devicePixelRatio || 1, 2); s0 = Math.max(VW / RW, VH / RH);                       // always cover: the plate fills the whole screen, no bars
     cv.width = Math.round(VW * DPR); cv.height = Math.round(VH * DPR); g.setTransform(DPR, 0, 0, DPR, 0, 0); clampT(); dirty = true;
   }
   function apply() {
@@ -926,13 +1101,17 @@ A.scene = (() => {
     }
     for (let i = embers.length - 1; i >= 0; i--) {
       const e = embers[i]; e.life += dt; if (e.life > e.max) { embers.splice(i, 1); continue; }
-      e.x += (e.vx + Math.sin(T * 3 + e.ph) * 14) * dt; e.y += e.vy * dt; e.vy *= .995;
-      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), r = e.r * s * 3.4 * (.4 + k * .6) + 1.5;
-      g.globalAlpha = Math.min(1, k * 1.4) * .95 * vis; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
+      e.vx += (Math.sin(T * 2.6 + e.ph) * 70 + 8) * dt; e.vy *= 1 - .22 * dt; e.vy -= 18 * dt; e.x += e.vx * dt; e.y += e.vy * dt;
+      const k = 1 - e.life / e.max, [sx, sy] = toScreen(e.x, e.y), px = e.px == null ? sx : e.px, py = e.py == null ? sy : e.py; e.px = sx; e.py = sy;
+      const w = Math.max(.7, e.r * s * 1.7 * (.35 + k * .65)), flick = .65 + .35 * Math.sin(T * 30 + e.ph * 9);
+      g.globalAlpha = Math.min(1, k * 1.5) * flick * vis; g.lineCap = 'round'; g.lineWidth = w;
+      g.strokeStyle = k > .6 ? 'rgb(255,226,150)' : k > .3 ? 'rgb(255,150,48)' : 'rgb(230,70,18)'; g.beginPath(); g.moveTo(px - (sx - px) * 1.4, py - (sy - py) * 1.4); g.lineTo(sx, sy); g.stroke();
+      const r = w * 3.4; g.globalAlpha *= .45; g.drawImage(SPR.ember, sx - r, sy - r, r * 2, r * 2);
     }
     g.restore();
   }
 
+  function placeBowl() { const b = A.$('#bowlImg'); if (b) b.style.cssText = `left:${BOWL.x - 380 * BOWL.k}px;top:${BOWL.y - 215 * BOWL.k}px;width:${760 * BOWL.k}px;height:${560 * BOWL.k}px`; }
   /* ---- the open book on the table speaks: it shows what she is reading (handwriting follows the page's perspective) */
   const quadMatrix = (w, h, q) => {
     const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q, dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, det = dx1 * dy2 - dx2 * dy1;
@@ -966,12 +1145,12 @@ A.scene = (() => {
   let drag = null, sweepOn = false;
   const cancelSweep = () => { sweepOn = false; };
   stage.addEventListener('pointerdown', e => {
-    if (locked || e.button > 0) return; cancelSweep(); stage.setPointerCapture(e.pointerId);
+    if (locked || e.button > 0 || roomName !== 'main') return; cancelSweep(); stage.setPointerCapture(e.pointerId);
     const [rx, ry] = toRoom(e.clientX, e.clientY); drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), moved: false, vx: 0, vy: 0, h: hit(rx, ry), lx: e.clientX, ly: e.clientY, lt: performance.now() };
     press(drag.h, true);
   });
   stage.addEventListener('pointermove', e => {
-    if (!drag) { if (!locked && e.pointerType === 'mouse') { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); stage.style.cursor = h ? 'pointer' : 'grab'; press(h, true); } return; }
+    if (!drag) { if (!locked && roomName === 'main' && e.pointerType === 'mouse') { const [rx, ry] = toRoom(e.clientX, e.clientY), h = hit(rx, ry); stage.style.cursor = h ? 'pointer' : 'grab'; press(h, true); } return; }
     if (e.pointerId !== drag.id) return; const s = sNow();
     if (!drag.moved && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) > 9) { drag.moved = true; press(null); stage.classList.add('grab'); }
     if (drag.moved) {
@@ -1011,10 +1190,23 @@ A.scene = (() => {
 
   /* ---- public */
   const api = {
-    init() { resize(); seed(); buildHs(); refreshPage(); },
+    init() { resize(); seed(); buildHs(); refreshPage(); placeBowl(); },
+    room: () => roomName, bowl: () => ({ x: BOWL.x, y: BOWL.y, k: BOWL.k }),
+    setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
+      const r = ROOMS[name]; roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
+      A.$('#roomImg').src = r.img; saved = name === 'main' ? saved : null; focusId = null; resize();
+      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2; cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2; cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
+    },
+    clientToRoom: (x, y) => toRoom(x, y),
+    returnMain(id) {
+      api.setRoom('main'); const h = HS.find(o => o.id === id);
+      if (h) { cam.z.x = A.clamp(.58 * Math.min(VW, VH) / (h.big * s0), 1.5, 3.4); cam.x.x = h.c[0]; cam.y.x = h.c[1]; cam.x.v = cam.y.v = cam.z.v = 0; }
+      saved = null; cam.x.t = HOME.cx; cam.y.t = HOME.cy; cam.z.t = 1; mode = 'room'; locked = false; clampT(); refreshPage();
+    },
+    dolly(z0 = 1.3) { cam.z.x = z0; cam.z.v = 0; cam.z.t = 1; },
     start() { if (running) return; running = true; last = performance.now(); requestAnimationFrame(loop); },
     mode: () => mode, hs: id => HS.find(h => h.id === id), fireBase: () => FIRE, refreshPage, showLabels,
-    spark(x, y) { embers.push({ x, y, vx: rnd(-26, 36), vy: rnd(-150, -50), r: rnd(.9, 2.2), life: 0, max: rnd(1.8, 3.8), ph: rnd(0, 6) }); },
+    spark(x, y) { embers.push({ x, y, vx: rnd(-70, 80), vy: rnd(-330, -90), r: rnd(.8, 2.6), life: 0, max: rnd(1.4, 4.2), ph: rnd(0, 6) }); },
     enter(first) {                                         // walk into the room: dolly in from the dark, then look around once
       mode = 'room'; locked = false; cam.z.x = 2.1; cam.z.v = 0; cam.z.t = 1; cam.x.x = HOME.cx - 40; cam.x.t = HOME.cx; cam.y.x = HOME.cy - 120; cam.y.t = HOME.cy; cam.x.v = cam.y.v = 0;
       stage.classList.add('in'); if (first) setTimeout(() => api.sweep(), 2300); setTimeout(() => showLabels(first ? 6500 : 3200), first ? 1500 : 900);
@@ -1039,59 +1231,102 @@ A.scene = (() => {
   return api;
 })();
 
-/* ============================================================ the living fire on the open book (also the knob and the matchbox switch it)
-   flame tongues + coals + smoke on a canvas in room space, warm light that dances over the table, sparks into the parallax layer */
+/* ============================================================ the fire in its iron bowl on the table
+   three flame layers + pulsing coals (driven by the real crackle level) + smoke when it dies + warm pooled light that flickers on wood and paper */
 A.fire = (() => {
-  const cv = A.$('#fireCv'), ctx = cv.getContext('2d'), glow = A.$('#glow'), dim = A.$('#dim'), CW = 420, CH = 480, BX = 210, BY = 410;
-  let ps = [], smoke = [], level = 0, target = 0, T = 0, fl = 1, flT = 1, sparkAcc = 0, knob = null;
-  const R = (a, b) => a + Math.random() * (b - a);
-  const spr = (rgb) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.3, `rgba(${rgb},.55)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
-  const S = { hot: spr('255,244,200'), mid: spr('255,170,50'), red: spr('235,70,20'), smoke: spr('150,150,150') };
-  const COALS = [[-44, 6, 9], [-22, 14, 11], [4, 10, 12], [30, 14, 10], [50, 4, 8], [-6, 2, 8], [16, 2, 9]];
+  const cv = A.$('#fireCv'), ctx = cv.getContext('2d'), glow = A.$('#glow'), dim = A.$('#dim'), shade = A.$('#shade'), CW = 720, CH = 820, BX = 360, BY = 640;
+  const gl = (() => { try { const c = A.$('#fireGl'), g = c.getContext('webgl', { premultipliedAlpha: true, alpha: true, antialias: false }); if (!g) return null;
+    const vs = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+    const fs = `precision highp float; uniform vec2 O; uniform float K,T,L,A; 
+      float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+      float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}
+      float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+      float tongue(vec2 q,float off,float hg,float wd,float ph){
+        float y=q.y/hg; if(y<-.06||y>1.) return 0.;
+        float sway=(fbm(vec2(y*2.1+ph,T*.7+ph))-.5)*1.5*y;
+        float x=(q.x-off)/wd+sway;
+        float tex=fbm(vec2(x*1.6+ph*3.,y*2.3-T*1.8+ph));
+        float w=mix(1.05,.06,pow(y,.62))*(.75+.55*tex);
+        float body=smoothstep(w,w*.02,abs(x+(tex-.5)*.55*(.25+y)));
+        float tex2=fbm(vec2(x*4.3-2.,y*5.-T*3.3));
+        return max(body*(1.-clamp(y,0.,1.)*.92)*(.5+1.05*tex)-tex2*.24*max(y,0.),0.)*smoothstep(-.06,.07,y);
+      }
+      void main(){
+        vec2 q=(gl_FragCoord.xy-O)/K; float lv=L; float au=1.+A*.35;
+        float f=0.;
+        f=max(f,tongue(q,0.,330.*lv*au,86.,0.));
+        f=max(f,tongue(q,-62.,225.*lv,60.,1.7));
+        f=max(f,tongue(q,64.,255.*lv,62.,3.3));
+        f=max(f,tongue(q,-26.,170.*lv,46.,5.1));
+        f=max(f,tongue(q,30.,190.*lv,48.,7.2));
+        f+=.26*exp(-dot(q/vec2(150.,40.),q/vec2(150.,40.)))*lv*smoothstep(-26.,8.,q.y);
+        f=clamp(f*1.0,0.,1.);
+        vec3 c=mix(vec3(.55,.04,0.),vec3(1.,.34,.03),smoothstep(.0,.34,f));
+        c=mix(c,vec3(1.,.66,.08),smoothstep(.3,.7,f));
+        c=mix(c,vec3(1.,.92,.6),smoothstep(.86,1.06,f));
+        float a=smoothstep(.015,.3,f);
+        gl_FragColor=vec4(c*a,a);
+      }`;
+    const sh = (t, src) => { const x = g.createShader(t); g.shaderSource(x, src); g.compileShader(x); if (!g.getShaderParameter(x, g.COMPILE_STATUS)) throw new Error(g.getShaderInfoLog(x)); return x; };
+    const pr = g.createProgram(); g.attachShader(pr, sh(g.VERTEX_SHADER, vs)); g.attachShader(pr, sh(g.FRAGMENT_SHADER, fs)); g.linkProgram(pr); g.useProgram(pr);
+    const b = g.createBuffer(); g.bindBuffer(g.ARRAY_BUFFER, b); g.bufferData(g.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), g.STATIC_DRAW); const a = g.getAttribLocation(pr, 'a'); g.enableVertexAttribArray(a); g.vertexAttribPointer(a, 2, g.FLOAT, false, 0, 0);
+    return { g, c, u: n => g.getUniformLocation(pr, n) };
+  } catch (e) { return null; } })();
+  let ps = [], smoke = [], level = 0, target = 0, T = 0, fl = 1, flT = 1, sparkAcc = 0, knob = null, au = 0, ready = false;
+  const R = (a, b) => a + Math.random() * (b - a), K = 500 / 760, SC = K / .526;
+  const spr = (rgb, mid = .35) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), gr = x.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(mid, `rgba(${rgb},.5)`); gr.addColorStop(1, `rgba(${rgb},0)`); x.fillStyle = gr; x.fillRect(0, 0, 64, 64); return c; };
+  const S = { hot: spr('255,246,210', .25), yel: spr('255,206,90'), mid: spr('255,140,36'), red: spr('222,58,16'), smoke: spr('140,140,140', .2) };
+  const COALS = [...Array(30)].map(() => { const a = Math.random() * 6.283, r = Math.sqrt(Math.random()); return [Math.cos(a) * r * 168 * K, 14 * K * 1.2 + Math.sin(a) * r * 44 * K, R(8, 17) * SC / 1.25, Math.random() * 6.3]; });
 
-  function place() { const f = A.scene.fireBase(); cv.style.cssText = `left:${f.x - BX}px;top:${f.y - BY}px;width:${CW}px;height:${CH}px`; glow.style.cssText = `left:${f.x - 1300}px;top:${f.y - 1050}px;width:2600px;height:2100px`; }
+  function place() {
+    const f = A.scene.fireBase(); const box = `left:${f.x - BX}px;top:${f.y - BY}px;width:${CW}px;height:${CH}px`; cv.style.cssText = box; if (gl) { gl.c.style.cssText = box; gl.c.width = Math.round(CW * .8); gl.c.height = Math.round(CH * .8); }
+    glow.style.cssText = `left:${f.x - 1400}px;top:${f.y - 1100}px;width:2800px;height:2200px`;
+    shade.style.background = `radial-gradient(circle 1700px at ${f.x}px ${f.y}px, rgba(8,10,24,0) 0%, rgba(6,8,20,.30) 38%, rgba(4,5,14,.82) 100%)`; ready = true;
+  }
 
   function frame(dt, t) {
-    T = t; level += (target - level) * Math.min(1, dt * (target > level ? 2.6 : 1.3)); if (Math.abs(target - level) < .002) level = target;
-    flT += (Math.random() - .5) * 1.6 * dt * 12; flT = A.clamp(flT, .6, 1.2); fl += (flT - fl) * Math.min(1, dt * 14);
-    const L = level, flick = (.82 + .18 * Math.sin(T * 11.3) * Math.sin(T * 6.1)) * fl;
-    glow.style.opacity = (L * .9 * flick).toFixed(3); dim.style.opacity = ((1 - L) * .62).toFixed(3);
-    if (knob) knob.style.opacity = (.35 + L * .65).toFixed(3);
-    ctx.clearRect(0, 0, CW, CH);
-    ctx.globalCompositeOperation = 'lighter';
-    // coals: they keep a faint glow after the flames die
-    const ember = Math.max(L, target ? 0 : Math.max(0, L * .0) + .0) , cg = .16 + L * .84;
-    COALS.forEach(([x, y, r], i) => { const p = .6 + .4 * Math.sin(T * (2 + i) + i * 2); ctx.globalAlpha = Math.min(1, cg * p * (.5 + .5 * flick)) * (L > .02 || target ? 1 : .5); const rr = r * 3.2; ctx.drawImage(S.mid, BX + x - rr, BY + y - rr, rr * 2, rr * 2); });
-    // tongues: narrow, tall, orange-dominant blobs; only the root is white-hot
-    if (L > .02) {
-      const n = (50 + 120 * L) * L * dt; for (let i = 0; i < n; i++) ps.push({ x: BX + R(-17, 17) * (.5 + .5 * L), y: BY + R(-2, 8), vx: R(-8, 8), vy: -R(170, 310) * (.55 + .45 * L), life: 0, ttl: R(.6, 1.2), s: R(24, 42) * (.55 + .45 * L), ph: R(0, 6.3) });
-      if (Math.random() < dt * 3.2 * L) ps.push({ x: BX + R(-10, 10), y: BY - 14, vx: R(-14, 14), vy: -R(330, 460), life: 0, ttl: R(.6, .95), s: R(15, 24), ph: 0 });   // a licking tongue
+    if (!ready) return; T = t; level += (target - level) * Math.min(1, dt * (target > level ? 2.4 : 1.1)); if (Math.abs(target - level) < .002) level = target;
+    flT += (Math.random() - .5) * 1.8 * dt * 14; flT = A.clamp(flT, .55, 1.2); fl += (flT - fl) * Math.min(1, dt * 16);
+    au += ((A.snd.fireLevel ? A.snd.fireLevel() : 0) - au) * .4;
+    const L = level, flick = (.8 + .2 * Math.sin(T * 11.3) * Math.sin(T * 6.1) + au * .25) * fl;
+    glow.style.opacity = (L * 1.0 * Math.min(1.15, flick)).toFixed(3); dim.style.opacity = ((1 - L) * .64).toFixed(3); shade.style.opacity = (L * (.9 + (1 - flick) * .35)).toFixed(3);
+    if (knob) knob.style.opacity = (.3 + L * .7).toFixed(3);
+    if (A.tab !== 'room' && A.tab !== 'back' && !A.fire.always) return;       // out of sight (a panel or another room): keep the light state, skip drawing
+    ctx.clearRect(0, 0, CW, CH); ctx.globalCompositeOperation = 'lighter';
+    if (gl) { const g = gl.g, K = gl.c.width / CW; g.viewport(0, 0, gl.c.width, gl.c.height); g.clearColor(0, 0, 0, 0); g.clear(g.COLOR_BUFFER_BIT); if (L > .01) { g.uniform2f(gl.u('O'), BX * K, (CH - BY) * K); g.uniform1f(gl.u('K'), K * SC); g.uniform1f(gl.u('T'), T); g.uniform1f(gl.u('L'), L); g.uniform1f(gl.u('A'), au); g.drawArrays(g.TRIANGLE_STRIP, 0, 4); } }
+    // coals breathe with the crackle
+    const cg = .22 + L * .78;
+    COALS.forEach(([x, y, r, ph], i) => { const p = .5 + .5 * Math.sin(T * (1.4 + i % 5 * .6) + ph), pulse = (.35 + .65 * p) * (.7 + au * 1.1 * (i % 3 === 0 ? 1.4 : .6)); ctx.globalAlpha = Math.min(1, cg * pulse * .85); const rr = r * 1.7; ctx.drawImage(i % 5 ? S.red : S.mid, BX + x - rr, BY + y - rr * .6, rr * 2, rr * 1.2); });
+    // sprite tongues: fallback only when WebGL is missing
+    if (!gl && L > .02) {
+      const n = (70 + 170 * L) * L * dt;
+      for (let i = 0; i < n; i++) { const ly = Math.random() < .5 ? 0 : Math.random() < .6 ? 1 : 2; ps.push({ ly, x: BX + R(-64, 64) * SC * (ly === 0 ? 1 : ly === 1 ? .65 : .35) * (.5 + .5 * L), y: BY + R(-6, 8), vx: R(-10, 10), vy: -R(150, 270) * SC * (.55 + .45 * L) * (ly === 0 ? 1 : ly === 1 ? 1.15 : .8), life: 0, ttl: R(.75, 1.5) * (ly === 2 ? .7 : 1), s: R(26, 46) * SC * (ly === 0 ? 1.15 : ly === 1 ? .9 : .6) * (.55 + .45 * L), ph: R(0, 6.3) }); }
+      if (Math.random() < dt * 3.6 * L) ps.push({ ly: 1, x: BX + R(-30, 30), y: BY - 10, vx: R(-16, 16), vy: -R(330, 470) * SC, life: 0, ttl: R(.6, .95), s: R(16, 26) * SC, ph: 0 });   // a long licking tongue
     }
+    if (gl) ps.length = 0;
     for (let i = ps.length - 1; i >= 0; i--) {
       const p = ps[i]; p.life += dt; if (p.life > p.ttl) { ps.splice(i, 1); continue; } const k = p.life / p.ttl;
-      p.x += (p.vx + Math.sin(T * 8 + p.ph) * 30 * k - (p.x - BX) * 2.2) * dt; p.y += p.vy * dt; p.vy *= 1 - .3 * dt;
-      const sz = p.s * (1 - k * .72), sp = k < .14 ? S.hot : k < .6 ? S.mid : S.red, w = sz * 1.15, h = sz * 2.5;
-      ctx.globalAlpha = Math.min(1, (1 - k) * 1.2) * .5 * Math.min(1, L * 1.4); ctx.drawImage(sp, p.x - w, p.y - h * .62, w * 2, h);
+      p.x += (p.vx + Math.sin(T * 7 + p.ph) * 34 * k - (p.x - BX) * 2.1) * dt; p.y += p.vy * dt; p.vy *= 1 - .28 * dt;
+      const sz = p.s * (1 - k * .74), w = sz * 1.1, h = sz * 2.6;
+      const sp = p.ly === 2 ? (k < .35 ? S.hot : S.yel) : p.ly === 1 ? (k < .5 ? S.mid : S.red) : (k < .45 ? S.mid : S.red);
+      ctx.globalAlpha = Math.min(1, (1 - k) * 1.25) * (p.ly === 0 ? .42 : p.ly === 1 ? .5 : .62) * Math.min(1, L * 1.5); ctx.drawImage(sp, p.x - w, p.y - h * .62, w * 2, h);
     }
-    // base glow
-    const bg = 90 * (.3 + L * .7); ctx.globalAlpha = L * .4 * flick; ctx.drawImage(S.mid, BX - bg * 1.4, BY - bg * .8, bg * 2.8, bg * 1.4);
-    // smoke while the flame is dying
+    const bg = 170 * SC * (.35 + L * .65); ctx.globalAlpha = L * .5 * flick; if (gl) ctx.drawImage(S.red, BX - bg * 1.3, BY - bg * .5, bg * 2.6, bg * 1.0); ctx.globalAlpha = L * .42 * flick; if (!gl) ctx.drawImage(S.mid, BX - bg * 1.2, BY - bg * .8, bg * 2.4, bg * 1.3);
     ctx.globalCompositeOperation = 'source-over';
-    if (target === 0 && L > .015 && Math.random() < dt * 30 * L) smoke.push({ x: BX + R(-24, 24), y: BY - R(10, 50), vy: -R(30, 60), vx: R(-8, 8), life: 0, ttl: R(2, 3.6), s: R(24, 40) });
-    for (let i = smoke.length - 1; i >= 0; i--) { const p = smoke[i]; p.life += dt; if (p.life > p.ttl) { smoke.splice(i, 1); continue; } const k = p.life / p.ttl; p.x += (p.vx + Math.sin(T * 1.6 + i) * 10) * dt; p.y += p.vy * dt; const r = p.s * (1 + k * 2.2); ctx.globalAlpha = .22 * (1 - k) * Math.min(1, k * 6); ctx.drawImage(S.smoke, p.x - r, p.y - r, r * 2, r * 2); }
+    if (target === 0 && L > .015 && Math.random() < dt * 30 * L) smoke.push({ x: BX + R(-40, 40), y: BY - R(10, 40), vy: -R(30, 62), vx: R(-8, 8), life: 0, ttl: R(2.4, 4), s: R(28, 46) });
+    for (let i = smoke.length - 1; i >= 0; i--) { const p = smoke[i]; p.life += dt; if (p.life > p.ttl) { smoke.splice(i, 1); continue; } const k = p.life / p.ttl; p.x += (p.vx + Math.sin(T * 1.6 + i) * 10) * dt; p.y += p.vy * dt; const r = p.s * (1 + k * 2.4); ctx.globalAlpha = .2 * (1 - k) * Math.min(1, k * 6); ctx.drawImage(S.smoke, p.x - r, p.y - r, r * 2, r * 2); }
     ctx.globalAlpha = 1;
-    // sparks fly into the parallax layer
-    sparkAcc += dt * 20 * L * L; while (sparkAcc > 1) { sparkAcc--; const f = A.scene.fireBase(); A.scene.spark(f.x + R(-30, 30), f.y - R(40, 160)); }
+    sparkAcc += dt * (14 + au * 40) * L * L; while (sparkAcc > 1) { sparkAcc--; const f = A.scene.fireBase(); A.scene.spark(f.x + R(-50, 50), f.y - R(40, 200)); }
   }
 
   function set(on, quiet) {
     target = on ? 1 : 0; A.state.fireOn = on; A.save && A.save(); document.body.classList.toggle('warm', on);
-    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.setFire(1), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.setFire(0)); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 16; i++) A.scene.spark(f.x + R(-30, 30), f.y - R(20, 80)); } }
+    if (!quiet) { A.snd.unlock && A.snd.unlock(); on ? (A.snd.fireLit(), setTimeout(() => A.snd.setFire(1), 380)) : (A.snd.fireOut && A.snd.fireOut(), A.snd.setFire(0)); A.vibrate(on ? [14, 30, 20] : 12); if (on) { const f = A.scene.fireBase(); for (let i = 0; i < 18; i++) A.scene.spark(f.x + R(-50, 50), f.y - R(20, 120)); } }
     else A.snd.setFire(on ? 1 : 0);
   }
   return {
     init() { place(); const hs = A.$('#hsFx'); knob = A.h('<i class="knoblight"></i>'); const k = A.scene.hs('knob'); knob.style.cssText = `left:${k.c[0]}px;top:${k.c[1]}px`; hs.appendChild(knob); knob.style.opacity = 0; },
-    frame, set, toggle() { set(!(target > 0)); }, get on() { return target > 0; }, get level() { return level; }
+    frame, set, toggle() { set(!(target > 0)); }, get on() { return target > 0; }, get level() { return level; }, always: false
   };
 })();
 
@@ -1130,11 +1365,26 @@ A.onSticker = s => { setTimeout(() => { A.snd.unlock2(); A.fx.stars(innerWidth /
 /* ---------------------------------------------------------------- the room is the router:
    touching an object glides the camera in, the object "opens" as a full-screen panel with an iris from that spot, and back reverses it */
 const TABS = ['path', 'books', 'quotes', 'sky', 'potion', 'bag'];
+const ROOMOF = { books: 'lib', potion: 'lab' }, MOOD = { books: 'books', potion: 'potion' };
 const OBJ = { books: 'book', quotes: 'quill', potion: 'potion', sky: 'stars', path: 'scope', bag: 'bag' };
 A.tab = 'room'; let moving = false;
 const irisR = (x, y) => Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 40;
+const curtain = A.$('#curtain');
+function enterRoom(tab) {
+  const name = ROOMOF[tab], prev = A.tab; if (prev === tab || moving) return;
+  if (prev !== 'room' && !ROOMOF[prev]) { A.leave(); return setTimeout(() => A.go(tab), 1050); }
+  moving = true; A.tab = tab; document.body.dataset.tab = tab; document.body.classList.add('inroom'); A.snd.setMood(MOOD[tab]); A.fab && A.fab.hide();
+  const swap = () => { A.scene.setRoom(name, 1); A.scene.dolly(1.32); A.mods[tab] && A.mods[tab].show && A.mods[tab].show(); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); };
+  A.snd.whoosh(1);
+  if (prev === 'room') { A.scene.focus(OBJ[tab]); setTimeout(() => curtain.classList.add('on'), 330); setTimeout(swap, 980); } else { curtain.classList.add('on'); setTimeout(swap, 620); }
+}
+function exitRoom() {
+  if (moving) return; moving = true; const tab = A.tab; curtain.classList.add('on'); A.snd.whoosh(-1);
+  setTimeout(() => { A.scene.returnMain(OBJ[tab]); A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('inroom'); A.snd.setMood('room'); curtain.classList.remove('on'); setTimeout(() => { moving = false; }, 900); }, 620);
+}
 A.go = (tab, opt = {}) => {
   if (tab === 'room' || tab === 'back') return A.leave();
+  if (ROOMOF[tab]) return enterRoom(tab);
   const from = A.tab, toEl = A.$('#v-' + tab); if (!toEl) return;
   if (from === tab && !opt.force) { toEl.scrollTo({ top: 0, behavior: 'smooth' }); A.snd.tap(); return; }
   if (moving) return; moving = true;
@@ -1157,6 +1407,7 @@ A.go = (tab, opt = {}) => {
 };
 A.leave = () => {
   if (A.reader && A.reader.isOpen()) return A.reader.close();
+  if (ROOMOF[A.tab]) return exitRoom();
   if (A.tab === 'room' || moving) return; moving = true; const tab = A.tab, el = A.$('#v-' + tab); A.fab && A.fab.hide();
   const [x, y] = A.scene.focusPoint(), R = irisR(x, y); A.snd.whoosh(-1);
   const done = () => { el.classList.remove('active'); el.getAnimations().forEach(a => a.cancel()); el.style.clipPath = ''; A.tab = 'room'; document.body.dataset.tab = 'room'; document.body.classList.remove('panel'); A.scene.unfocus(); A.snd.setMood('room'); moving = false; };
@@ -1286,6 +1537,58 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
   }
 })();
 
+/* ============================================================ the reading room: leather spines on three shelves; touching one pulls it out and opens it */
+A.lib = (() => {
+  let layer, rows = [], built = false;
+  const ROWS_Y = [380, 760, 1140];
+  const hue = b => (b.cover && b.cover.hue != null) ? b.cover.hue : (A.hash(b.title + (b.author || '')) % 360);
+  const dims = b => { const h = A.hash(b.title); return { w: 40 + (h % 26) + Math.min(14, Math.round((b.pages || 120) / 60)), h: 240 + (h >> 3) % 84 }; };
+  const order = { reading: 0, want: 1, done: 2 };
+
+  function init() {
+    if (built) return render(); built = true; layer = A.$('#libLayer');
+    layer.innerHTML = `<div class="lib__t"><small>читальный зал</small><b>Книги Айсель</b></div>
+      ${ROWS_Y.map(y => `<div class="shelf3" style="top:${y}px"><div class="shelf3__in"></div></div>`).join('')}
+      <button class="lib__lect" aria-label="Продолжить чтение"></button>
+      <button class="lib__add" aria-label="Добавить книгу"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></button>
+      <p class="lib__note" id="libNote"></p>`;
+    rows = A.$$('.shelf3', layer);
+    rows.forEach(r => drag(r));
+    A.$('.lib__add', layer).addEventListener('pointerdown', e => e.stopPropagation());
+    A.$('.lib__add', layer).addEventListener('click', () => { A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .88, 16); A.mods.books.editBook(); });
+    A.$('.lib__lect', layer).addEventListener('click', () => { const b = A.state.books.find(x => x.status === 'reading' && x.hasText) || A.state.books.find(x => x.hasText); if (b) openText(b, A.$('.lib__lect', layer)); else { A.snd.owl(); A.toast('Загрузи книгу с текстом кнопкой «+», и она ляжет сюда'); } });
+    render();
+  }
+
+  function render() {
+    if (!built) return; const list = [...A.state.books].sort((a, b) => order[a.status] - order[b.status] || (b.added || 0) - (a.added || 0));
+    const inner = rows.map(r => A.$('.shelf3__in', r)); inner.forEach(n => { n.innerHTML = ''; n._w = 0; n.style.transform = ''; n._x = 0; });
+    list.forEach(b => {
+      const d = dims(b), tgt = inner.reduce((m, n) => n._w < m._w ? n : m, inner[0]), hh = hue(b);
+      const el = A.h(`<button class="sp ${b.status}" data-id="${b.id}" style="--w:${d.w}px;--h:${d.h}px;--hu:${hh};--fs:${Math.max(15, Math.min(25, Math.round((d.h - 104) / Math.max(6, b.title.length) / .52)))}px" aria-label="${A.esc(b.title)}">${b.status === 'reading' ? '<i class="sp__rib"></i>' : ''}<span class="sp__band"></span><b>${A.esc(b.title)}</b><em>${A.esc((b.author || '').split(/[ ,]+/).pop() || '')}</em><span class="sp__band sp__band--b"></span>${b.status === 'done' ? '<i class="sp__star"></i>' : ''}${b.hasText ? '<i class="sp__txt"></i>' : ''}</button>`);
+      el._b = b; tgt.appendChild(el); tgt._w += d.w + 7;
+    });
+    A.$('#libNote', layer).textContent = list.length ? '' : 'Полки пусты. Нажми «+», чтобы поставить первую книгу.';
+  }
+
+  /* drag a shelf sideways; a tap pulls the spine out */
+  function drag(row) {
+    const inner = A.$('.shelf3__in', row); let st = null, vel = 0, raf = 0;
+    const lim = () => Math.min(0, row.clientWidth - inner._w - 40);
+    const set = x => { inner._x = A.clamp(x, lim() - 60, 60); inner.style.transform = `translate3d(${inner._x}px,0,0)`; };
+    const settle = () => { cancelAnimationFrame(raf); const step = () => { const l = lim(), over = inner._x > 0 ? 0 - inner._x : inner._x < l ? l - inner._x : 0; vel *= .94; set(inner._x + vel + over * .16); if (Math.abs(vel) > .3 || Math.abs(over) > .5) raf = requestAnimationFrame(step); }; raf = requestAnimationFrame(step); };
+    row.addEventListener('pointerdown', e => { e.stopPropagation(); row.setPointerCapture(e.pointerId); st = { x: e.clientX, y: e.clientY, x0: inner._x, moved: false, t: performance.now(), tg: e.target.closest('.sp'), lx: e.clientX, long: setTimeout(() => { if (st && !st.moved && st.tg) { st.moved = true; A.vibrate(20); A.mods.books.openBook(st.tg.dataset.id); } }, 560) }; cancelAnimationFrame(raf); });
+    row.addEventListener('pointermove', e => { if (!st) return; const k = 1 / (A.$('#room') ? sc() : 1), dx = (e.clientX - st.x) * k; if (!st.moved && Math.abs(e.clientX - st.x) > 8) { st.moved = true; clearTimeout(st.long); } if (st.moved && !st.done) { vel = (e.clientX - st.lx) * k; st.lx = e.clientX; set(st.x0 + dx); } });
+    const up = e => { if (!st) return; const s = st; st = null; clearTimeout(s.long); if (!s.moved && s.tg && performance.now() - s.t < 500) pull(s.tg); else settle(); };
+    row.addEventListener('pointerup', up); row.addEventListener('pointercancel', () => { st = null; settle(); });
+  }
+  const sc = () => { const m = /scale\(([\d.]+)\)/.exec(A.$('#room').style.transform); return m ? +m[1] : 1; };
+  function pull(sp) { A.snd.page(); A.vibrate(10); A.$$('.sp.out', layer).forEach(x => x.classList.remove('out')); sp.classList.add('out'); const b = sp._b; setTimeout(() => { if (b.hasText) openText(b, sp); else A.mods.books.openBook(b.id); setTimeout(() => sp.classList.remove('out'), 600); }, 360); }
+  function openText(b, el) { A.reader.open(b, el.getBoundingClientRect()); }
+
+  return { init, render, show() { render(); A.rise && 0; } };
+})();
+
 /* ============================================================ "Полка": the catalogue */
 (() => {
   let el, filter = 'all', query = '';
@@ -1293,34 +1596,11 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
   const IMP = ['Мурашки', 'Плакала', 'Не оторваться', 'Уютная', 'Затянуло', 'Заставила думать', 'Смеялась', 'Разочарование'];
 
   const mod = A.mods.books = {
-    init(root) {
-      el = root;
-      root.innerHTML = `<div class="wrap"><div data-rise><div class="eyebrow" id="bkEb"></div><h1 class="h1">Моя <em>полка</em></h1></div>
-        <div class="search glass" data-rise><svg class="ico" viewBox="0 0 24 24"><use href="#i-search"/></svg><input id="bkQ" class="srch" placeholder="Найти книгу или автора" autocomplete="off"></div>
-        <div class="chips" data-rise id="bkF"><button class="chip on" data-f="all">Все</button><button class="chip" data-f="reading">Читаю</button><button class="chip" data-f="want">Хочу</button><button class="chip" data-f="done">Прочитано</button></div>
-        <div id="bkSample"></div><div class="shelf" id="bkGrid"></div></div>`;
-      A.$('#bkQ', root).addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); render(); });
-      A.$('#bkF', root).addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; filter = c.dataset.f; A.$$('#bkF .chip', root).forEach(x => x.classList.toggle('on', x === c)); A.snd.page(); render(); });
-      A.$('#bkGrid', root).addEventListener('click', e => { const c = e.target.closest('.bk'); if (!c) return; A.snd.page(); const bk = A.bookById(c.dataset.id); if (bk && bk.text) A.reader.open(bk, A.$('.bk__c', c).getBoundingClientRect()); else openBook(c.dataset.id); });
-      render();
-    },
-    show() { A.rise(el); render(true); A.fab.show(() => editBook()); },
-    beforeShow() {}, refresh() { el && render(); }, openBook, editBook
+    init() { A.lib.init(); },
+    show() { A.lib.show(); },
+    beforeShow() {}, refresh() { render(); mod.repaintDetail && mod.repaintDetail(); }, openBook, editBook
   };
-
-  function stats() { const b = A.state.books, d = b.filter(x => x.status === 'done').length, r = b.filter(x => x.status === 'reading').length; return `${b.length} ${A.plural(b.length, 'книга', 'книги', 'книг')} · ${r} читаю · ${d} прочитано`; }
-  function render(anim) {
-    A.$('#bkEb', el).textContent = stats();
-    const s = A.state, list = s.books.filter(b => (filter === 'all' || b.status === filter) && (!query || (b.title + ' ' + (b.author || '')).toLowerCase().includes(query)));
-    const order = { reading: 0, want: 1, done: 2 }; list.sort((a, b) => order[a.status] - order[b.status] || b.added - a.added);
-    const hasSample = s.books.some(b => b.sample) || s.quotes.some(q => q.sample);
-    A.$('#bkSample', el).innerHTML = hasSample ? `<div class="glass note" data-rise><span>Это примеры, чтобы было не пусто.</span><button class="btn btn--ghost" id="bkClr">Убрать</button></div>` : '';
-    const clr = A.$('#bkClr', el); clr && clr.addEventListener('click', () => { s.books = s.books.filter(b => !b.sample); s.quotes = s.quotes.filter(q => !q.sample); s.samples = false; A.save(); A.snd.pop(); render(); A.mods.quotes && A.mods.quotes.refresh(); A.mods.path && A.mods.path.rebuild(); A.toast('Полка очищена, теперь она только твоя'); });
-    const g = A.$('#bkGrid', el);
-    if (!list.length) { g.innerHTML = `<div class="empty"><b>${s.books.length ? 'Ничего не нашлось' : 'Полка пока пуста'}</b>${s.books.length ? 'Попробуй другое слово.' : 'Нажми на золотую кнопку, чтобы поселить первую книгу.'}</div>`; return; }
-    g.innerHTML = list.map((b, i) => { const pr = b.pages ? Math.round((b.read || 0) / b.pages * 100) : 0;
-      return `<button class="bk ${anim ? 'fall' : ''}" data-id="${b.id}" style="--i:${i}"><div class="bk__c">${A.coverHTML(b)}${b.status === 'reading' ? `<div class="bk__bar"><i style="width:${pr}%"></i></div><span class="bk__tag">${pr}%</span>` : ''}${b.status === 'done' ? `<span class="bk__tag bk__tag--ok">${b.rating ? '★'.repeat(b.rating) : '✓'}</span>` : ''}${b.status === 'want' ? '<span class="bk__ribbon"></span>' : ''}</div><b class="bk__t">${A.esc(b.title)}</b><i class="bk__a">${A.esc(b.author || '')}</i></button>`; }).join('');
-  }
+  function render() { A.lib && A.lib.render(); }
 
   /* ---------------------------------------------------------------- detail */
   function openBook(id) {
@@ -1332,7 +1612,7 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
       s.body.innerHTML = `<div class="bd"><div class="bd__cover tilt">${A.coverHTML(b)}<span class="bd__glow"></span></div>
         <h2 class="bd__t">${A.esc(b.title)}</h2><p class="sub bd__a">${A.esc(b.author || 'автор неизвестен')}</p>
         <div class="seg" id="bdSt">${Object.keys(ST).map(k => `<button data-s="${k}" class="${b.status === k ? 'on' : ''}">${ST[k]}</button>`).join('')}</div>
-        ${b.text ? '<button class="btn btn--gold" style="width:100%;margin:2px 0 16px" id="bdRead">Читать</button>' : ''}
+        ${b.hasText ? '<button class="btn btn--gold" style="width:100%;margin:2px 0 16px" id="bdRead">Читать</button>' : ''}
         ${b.status !== 'want' ? `<div class="glass bd__pr"><div class="bd__prh"><span>${b.read || 0} из ${b.pages || '?'} стр.</span><b>${pr}%</b></div><div class="wbar big"><i style="width:${pr}%"></i></div>${b.status === 'reading' ? `<div class="row" style="margin-top:14px"><button class="btn btn--gold" id="bdLog">Записать страницы</button><button class="btn btn--ghost" id="bdDone">Дочитала</button></div>` : ''}</div>` : `<button class="btn btn--gold" style="width:100%;margin:6px 0 18px" id="bdStart">Начать читать</button>`}
         <div class="sec__h"><h3>Оценка</h3></div><div class="stars5" id="bdRate">${[1, 2, 3, 4, 5].map(n => `<button data-n="${n}" class="${b.rating >= n ? 'on' : ''}" aria-label="${n}"><svg class="ico" viewBox="0 0 24 24"><use href="#i-star"/></svg></button>`).join('')}</div>
         <div class="sec__h" style="margin-top:22px"><h3>Впечатление</h3></div><div class="chips wrapchips" id="bdImp">${IMP.map(t => `<button class="chip ${(b.imp || []).includes(t) ? 'on' : ''}" data-t="${t}">${t}</button>`).join('')}</div>
@@ -1353,20 +1633,20 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
       q('#bdAddQ').addEventListener('click', () => { A.mods.quotes.editQuote(null, b.id); });
       A.$$('.qmini', s.body).forEach(m => m.addEventListener('click', () => A.mods.quotes.view(m.dataset.id)));
       q('#bdEdit').addEventListener('click', () => { s.close(); setTimeout(() => editBook(b.id), 500); });
-      q('#bdDel').addEventListener('click', () => { const bt = q('#bdDel'); if (bt.dataset.sure) { A.state.books = A.state.books.filter(x => x.id !== b.id); A.state.quotes.forEach(x => { if (x.bookId === b.id) x.bookId = null; }); A.save(); s.close(); A.snd.pop(); A.toast('Книга ушла с полки'); } else { bt.dataset.sure = 1; bt.textContent = 'Точно? Нажми ещё раз'; setTimeout(() => { bt.textContent = 'Удалить'; delete bt.dataset.sure; }, 3200); } });
+      q('#bdDel').addEventListener('click', () => { const bt = q('#bdDel'); if (bt.dataset.sure) { A.state.books = A.state.books.filter(x => x.id !== b.id); A.txt.del(b.id); A.state.quotes.forEach(x => { if (x.bookId === b.id) x.bookId = null; }); A.save(); s.close(); A.snd.pop(); A.toast('Книга ушла с полки'); } else { bt.dataset.sure = 1; bt.textContent = 'Точно? Нажми ещё раз'; setTimeout(() => { bt.textContent = 'Удалить'; delete bt.dataset.sure; }, 3200); } });
       s._repaint = () => paint(s);
     }
     mod._detail = sh;
     function setStatus(k) { const was = b.status; b.status = k; if (k === 'reading' && !b.started) b.started = Date.now(); if (k === 'want') { b.read = 0; } if (k === 'done' && was !== 'done') { b.finished = null; A.finishBook(b); } else A.save(); A.mods.path && A.mods.path.refreshHello && 0; }
   }
   mod.repaintDetail = () => { if (mod._detail && mod._detail.el.isConnected && mod._detail._repaint) mod._detail._repaint(); };
-  const baseRefresh = mod.refresh; mod.refresh = () => { baseRefresh(); mod.repaintDetail(); };
+  
 
   function tilt(card) { if (!card || !A.fine) return; card.addEventListener('pointermove', e => { const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; card.style.transform = `perspective(700px) rotateY(${x * 24}deg) rotateX(${-y * 18}deg)`; }); card.addEventListener('pointerleave', () => card.style.transform = ''); }
 
   /* ---------------------------------------------------------------- add / edit */
   function editBook(id) {
-    const old = id ? A.bookById(id) : null;
+    const old = id ? A.bookById(id) : null; let pending = null;
     const b = old ? JSON.parse(JSON.stringify(old)) : { id: A.uid(), title: '', author: '', pages: 0, read: 0, status: 'want', rating: 0, tags: [], imp: [], impression: '', added: Date.now(), cover: {} };
     A.sheet.open({ title: old ? 'Изменить книгу' : 'Новая книга', tall: true, html: `<div class="eb"><div class="eb__prev" id="ebPrev"></div><div class="eb__f">
       <label class="field"><span>Название</span><input class="in" id="ebT" value="${A.esc(b.title)}" placeholder="Например, Маленький принц"></label>
@@ -1375,7 +1655,8 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
       <div class="row"><label class="field"><span>Страниц</span><input class="in" id="ebP" type="number" inputmode="numeric" min="0" value="${b.pages || ''}"></label><label class="field"><span>Прочитано</span><input class="in" id="ebR" type="number" inputmode="numeric" min="0" value="${b.read || ''}"></label></div>
       <div class="field"><span>Статус</span><div class="seg" id="ebS">${Object.keys(ST).map(k => `<button data-s="${k}" class="${b.status === k ? 'on' : ''}">${ST[k]}</button>`).join('')}</div></div>
       <div class="field"><span>Настроение книги</span><div class="chips wrapchips" id="ebM">${Object.entries(A.MOODS).map(([k, v]) => `<button class="chip ${b.tags.includes(k) ? 'on' : ''}" data-k="${k}">${v}</button>`).join('')}</div></div>
-      <div class="field"><span>Текст истории, чтобы читать здесь</span><textarea class="in" id="ebTx" placeholder="Вставь текст или загрузи файл" style="min-height:110px;font-size:14px">${A.esc(b.text || '')}</textarea><label class="btn btn--ghost" style="margin-top:10px;width:100%">Загрузить файл (.txt, .md)<input type="file" id="ebTf" accept=".txt,.md,.text,text/plain,text/markdown" hidden></label></div>
+      <div class="field"><span>Свой текст для читалки</span><label class="btn btn--ghost imp" style="width:100%"><svg class="ico" viewBox="0 0 24 24"><use href="#i-plus"/></svg>Загрузить PDF, EPUB, TXT<input type="file" id="ebTf" accept="${A.importer.ACCEPT}" hidden></label><p class="sub" id="ebImpNote" style="font-size:15px;margin:8px 2px 0">${b.hasText ? 'Текст уже в читалке. Загрузи другой файл, чтобы заменить.' : 'Название, автор и обложка подтянутся сами.'}</p>
+        <textarea class="in" id="ebTx" placeholder="…или вставь текст сюда" style="min-height:86px;font-size:14px;margin-top:10px"></textarea></div>
       <div class="field"><span>Обложка</span><div class="hues" id="ebH">${[...Array(9)].map((_, i) => { const h = i * 40; return `<button data-h="${h}" style="background:linear-gradient(160deg,hsl(${h} 45% 34%),hsl(${h + 25} 50% 16%))"></button>`; }).join('')}<label class="hues__ph"><svg class="ico" viewBox="0 0 24 24"><use href="#i-camera"/></svg><input type="file" accept="image/*" id="ebF" hidden></label></div></div>
       <button class="btn btn--gold" style="width:100%;margin-top:10px" id="ebOk">${old ? 'Сохранить' : 'Поставить на полку'}</button>`,
       onMount: s => {
@@ -1386,8 +1667,14 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
         A.$$('#ebS button', s.el).forEach(bt => bt.addEventListener('click', () => { b.status = bt.dataset.s; A.$$('#ebS button', s.el).forEach(x => x.classList.toggle('on', x === bt)); A.snd.tap(); }));
         A.$$('#ebM .chip', s.el).forEach(c => c.addEventListener('click', () => { const k = c.dataset.k, i = b.tags.indexOf(k); i >= 0 ? b.tags.splice(i, 1) : b.tags.push(k); c.classList.toggle('on', i < 0); A.snd.tap(); }));
         A.$$('#ebH button', s.el).forEach(h => h.addEventListener('click', () => { b.cover = { hue: +h.dataset.h }; prev(); A.snd.tap(); }));
-        q('#ebTx').addEventListener('input', e => { b.text = e.target.value; if (!old || !old.pages) { b.pages = b.text ? A.pagesEst(b.text) : 0; q('#ebP').value = b.pages || ''; } });
-        q('#ebTf').addEventListener('change', e => { const f = e.target.files[0]; if (!f) return; if (f.size > 3e6) { A.toast('Файл слишком большой для телефона'); return; } const fr = new FileReader(); fr.onload = () => { b.text = String(fr.result); q('#ebTx').value = b.text; if (!b.pages) { b.pages = A.pagesEst(b.text); q('#ebP').value = b.pages; } if (!b.title.trim()) { b.title = f.name.replace(/\.[^.]+$/, ''); q('#ebT').value = b.title; prev(); } A.snd.chime([659.25, 880], .1, .6); A.toast('Текст добавлен, книга откроется как читалка'); }; fr.readAsText(f, 'utf-8'); });
+        q('#ebTx').addEventListener('input', e => { pending = { text: e.target.value }; if (!old || !old.pages) { b.pages = A.pagesEst(e.target.value); q('#ebP').value = b.pages || ''; } });
+        q('#ebTf').addEventListener('change', async e => {
+          const f = e.target.files[0]; if (!f) return; const note = q('#ebImpNote'); note.textContent = 'Читаю файл…';
+          try { const r = await A.importer.read(f, (i, n) => { note.textContent = `Читаю страницы: ${i} из ${n}`; });
+            pending = r; q('#ebTx').value = ''; if (!b.title.trim() || !old) { b.title = r.title; q('#ebT').value = r.title; } if (r.author && !b.author) { b.author = r.author; q('#ebA').value = r.author; }
+            if (r.cover) b.cover = { img: r.cover }; b.pages = r.pageCount || A.pagesEst(r.text); q('#ebP').value = b.pages; prev(); note.textContent = `Готово: ${r.text.length > 1e6 ? Math.round(r.text.length / 1e5) / 10 + ' млн' : Math.round(r.text.length / 1000) + ' тыс.'} знаков. Нажми «${old ? 'Сохранить' : 'Поставить на полку'}».`; A.snd.chime([659.25, 880], .1, .6);
+          } catch (err) { note.textContent = err.message === 'scan' ? 'В этом PDF нет текста: похоже на скан. Нужен файл с текстовым слоем.' : err.message === 'big' ? 'Файл слишком большой для телефона.' : err.message === 'lib' ? 'Не удалось загрузить модуль чтения. Проверь интернет и попробуй ещё раз.' : 'Не получилось прочитать этот файл.'; A.toast(note.textContent); }
+        });
         q('#ebF').addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; b.cover = { img: await A.imgToData(f, 520, .8) }; prev(); A.snd.chime([659.25, 880], .1, .6); });
         A.$$('#ebSug .chip', s.el).forEach(c => c.addEventListener('click', () => { const x = A.SUGGEST[+c.dataset.i]; b.title = x.t; b.author = x.a; b.pages = x.p; b.tags = [...x.m]; q('#ebT').value = x.t; q('#ebA').value = x.a; q('#ebP').value = x.p; A.$$('#ebM .chip', s.el).forEach(m => m.classList.toggle('on', b.tags.includes(m.dataset.k))); prev(); A.snd.twinkle(2); }));
         q('#ebOk').addEventListener('click', () => {
@@ -1395,10 +1682,11 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
           b.title = b.title.trim(); if (b.status === 'reading' && !b.started) b.started = Date.now(); if (b.status === 'want') b.read = 0; if (b.pages && b.read > b.pages) b.read = b.pages;
           const wasDone = old && old.status === 'done'; const becomeDone = b.status === 'done' && !wasDone;
           if (b.status === 'done') { b.read = b.pages || b.read; if (!wasDone) b.status = 'reading'; }
+          if (pending && pending.text && pending.text.trim()) { b.hasText = true; if (!b.pages) b.pages = A.pagesEst(pending.text); }
           if (old) Object.assign(old, b); else A.state.books.unshift(b);
-          const target = old || A.state.books[0]; A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
+          const target = old || A.state.books[0]; if (pending && pending.text && pending.text.trim()) A.txt.put(target.id, pending.text.trim()); A.save(); s.close(); A.snd.coin(); A.fx.sparks(innerWidth / 2, innerHeight * .6, 26);
           if (becomeDone) setTimeout(() => A.finishBook(target), 500); else A.toast(old ? 'Сохранено' : 'Книга на полке');
-          render(true); A.mods.path && A.mods.path.refreshHello && A.mods.path.refreshHello();
+          render(true);
         });
       } });
   }
@@ -1579,104 +1867,106 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
   let ambient = null;
 })();
 
-/* ============================================================ Зельеварня: flasks of moods + ingredients -> cauldron -> a book to read tonight */
+/* ============================================================ alchemy lab: flasks on the shelf, jars on the bench, an iron cauldron you feed with your own hands */
 (() => {
-  const FLASKS = [
-    { k: 'cozy', c: '#f0b25a' }, { k: 'fantasy', c: '#9b7bff' }, { k: 'detective', c: '#5aa6b0' },
-    { k: 'romance', c: '#e86a8f' }, { k: 'melancholy', c: '#5f86d6' }, { k: 'adventure', c: '#58c28a' }
-  ];
+  const FLASKS = [{ k: 'cozy', c: '#f0b25a' }, { k: 'fantasy', c: '#9b7bff' }, { k: 'detective', c: '#5aa6b0' }, { k: 'romance', c: '#e86a8f' }, { k: 'melancholy', c: '#5f86d6' }, { k: 'adventure', c: '#58c28a' }];
+  const JAR = {
+    moss: '<g fill="#6fbf7f"><circle cx="30" cy="62" r="12"/><circle cx="42" cy="58" r="11"/><circle cx="34" cy="50" r="10"/><circle cx="22" cy="56" r="9"/></g><g fill="#9be3a5" opacity=".6"><circle cx="36" cy="52" r="4"/><circle cx="26" cy="58" r="3"/></g>',
+    fly: '<g fill="#eaff8c"><circle cx="24" cy="48" r="3"/><circle cx="40" cy="42" r="2.4"/><circle cx="34" cy="60" r="3.2"/><circle cx="46" cy="56" r="2"/><circle cx="22" cy="64" r="2"/></g><circle cx="34" cy="54" r="22" fill="#f4ff9e" opacity=".22"/>',
+    dew: '<g fill="#8fc7ff"><path d="M30 44c4 6 7 9 7 13a7 7 0 0 1-14 0c0-4 3-7 7-13z"/><path d="M44 52c3 4 5 6 5 9a5 5 0 0 1-10 0c0-3 2-5 5-9z" opacity=".8"/></g><ellipse cx="34" cy="72" rx="20" ry="4" fill="#8fc7ff" opacity=".4"/>',
+    cin: '<g stroke="#b5703c" stroke-width="5" stroke-linecap="round"><path d="M20 70L44 42"/><path d="M28 72L50 50"/><path d="M16 62L34 44"/></g><g stroke="#e0a066" stroke-width="1.5" opacity=".7"><path d="M22 66L42 44"/></g>',
+    leaf: '<g fill="#d9a441"><path d="M20 66c2-12 10-18 22-18-2 12-10 18-22 18z"/><path d="M34 70c0-9 6-15 16-16-1 9-7 15-16 16z" fill="#c4762f"/></g>'
+  };
   const INGR = [
-    { id: 'moss', n: 'лунный мох', c: '#7fd29a', b: ['cozy', 'tale'], ic: '<path d="M5 18c2-6 4-9 7-9s5 3 7 9M8 18c1-3 2-5 4-5s3 2 4 5"/>' },
-    { id: 'fly', n: 'светлячок', c: '#e6f58a', b: ['fantasy', 'adventure'], ic: '<circle cx="12" cy="12" r="3"/><path d="M12 4v2M12 18v2M4 12h2M18 12h2M6.5 6.5l1.400 1.400M16.100 16.100l1.400 1.400M17.500 6.500l-1.400 1.400M7.900 16.100l-1.400 1.400"/>' },
-    { id: 'dew', n: 'капля росы', c: '#8fc7ff', b: ['melancholy', 'deep'], ic: '<path d="M12 4c3 4 5 6.500 5 9.500a5 5 0 0 1-10 0C7 10.500 9 8 12 4z"/>' },
-    { id: 'cin', n: 'корица', c: '#d79a63', b: ['romance', 'cozy'], ic: '<path d="M6 17L17 6M9 19L19 8M5 14L14 5"/>' },
-    { id: 'leaf', n: 'сухой лист', c: '#d9a441', b: ['mist', 'detective', 'classic'], ic: '<path d="M19 5C9 5 5 10 5 15c0 1.500.4 2.800 1 4 6 0 13-3 13-14zM6 19c3-6 7-9 11-11"/>' }
+    { id: 'moss', n: 'лунный мох', c: '#7fd29a', b: ['cozy', 'tale'] }, { id: 'fly', n: 'светлячки', c: '#e6f58a', b: ['fantasy', 'adventure'] }, { id: 'dew', n: 'роса', c: '#8fc7ff', b: ['melancholy', 'deep'] },
+    { id: 'cin', n: 'корица', c: '#d79a63', b: ['romance', 'cozy'] }, { id: 'leaf', n: 'сухой лист', c: '#d9a441', b: ['mist', 'detective', 'classic'] }
   ];
-  let el, sel = new Set(), ing = [], brewing = false, cv, cx, bubbles = [], steam = [], liquid = '#2d5a52', liqT = '#2d5a52', t = 0, run = false, last = 0;
-
-  const flaskSVG = (c) => `<svg viewBox="0 0 64 88" class="fl"><defs><linearGradient id="g${c.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="1" stop-color="${c}" stop-opacity=".55"/></linearGradient></defs>
-    <path d="M24 6h16M26 6v20L8 66c-3 8 1 16 10 16h28c9 0 13-8 10-16L38 26V6" fill="rgba(255,255,255,.04)" stroke="rgba(255,226,160,.7)" stroke-width="1.2" stroke-linejoin="round"/>
-    <path d="M14 52c8-4 14 4 22 0s12-4 14 0l5 14c3 8-1 14-9 14H18c-8 0-12-6-9-14z" fill="url(#g${c.slice(1)})"/><path d="M28 10v14" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="22" cy="62" rx="3" ry="9" fill="#fff" opacity=".12"/><circle cx="32" cy="0" r="0"/></svg>`;
+  const POT = { x: 540, y: 1135, rx: 238, ry: 58 };
+  let layer, cv, cx, sel = new Set(), ing = [], brewing = false, bubbles = [], steam = [], sparks = [], pours = [], ripples = [], liq = [40, 90, 82], liqT = [40, 90, 82], t = 0, last = 0, run = false, built = false, hot = 0, flames = [];
+  const R = (a, b) => a + Math.random() * (b - a), hex = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+  const flask = c => `<svg viewBox="0 0 64 88" class="fl"><defs><linearGradient id="g${c.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="1" stop-color="${c}" stop-opacity=".5"/></linearGradient></defs><path d="M24 6h16M26 6v20L8 66c-3 8 1 16 10 16h28c9 0 13-8 10-16L38 26V6" fill="rgba(255,255,255,.05)" stroke="rgba(255,226,160,.75)" stroke-width="1.3" stroke-linejoin="round"/><path d="M14 52c8-4 14 4 22 0s12-4 14 0l5 14c3 8-1 14-9 14H18c-8 0-12-6-9-14z" fill="url(#g${c.slice(1)})"/><path d="M28 10v14" stroke="rgba(255,255,255,.4)" stroke-width="1.5" stroke-linecap="round"/><ellipse cx="22" cy="62" rx="3" ry="9" fill="#fff" opacity=".14"/></svg>`;
+  const jar = g => `<svg viewBox="0 0 68 92" class="jar"><rect x="22" y="2" width="24" height="12" rx="3" fill="#7a5436"/><rect x="24" y="4" width="20" height="3" fill="#a07850" opacity=".7"/><path d="M18 14h32v6c8 4 12 12 12 24v30c0 8-6 14-14 14H20c-8 0-14-6-14-14V44c0-12 4-20 12-24z" fill="rgba(210,230,235,.10)" stroke="rgba(255,226,160,.6)" stroke-width="1.3"/>${JAR[g.id]}<path d="M14 40v38" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".22"/></svg>`;
 
   A.mods.potion = {
-    init(root) {
-      el = root;
-      root.innerHTML = `<div class="wrap potion"><div data-rise><div class="eyebrow">чтение по рецептам</div><h1 class="h1"><em>Зельеварня</em></h1><p class="sub">Выбери настроение вечера и брось в котёл пару ингредиентов. Лес подскажет, что читать.</p></div>
-        <div class="flasks" data-rise id="flasks">${FLASKS.map(f => `<button class="flask" data-k="${f.k}" style="--c:${f.c}">${flaskSVG(f.c)}<span>${A.MOODS[f.k]}</span></button>`).join('')}</div>
-        <div class="cauldron" data-rise id="cauldron"><canvas id="potCv"></canvas><div class="cauldron__hint" id="potHint">Выбери до двух настроений</div></div>
-        <div class="ingr" data-rise id="ingr">${INGR.map(g => `<button class="ing" data-id="${g.id}" style="--c:${g.c}"><svg viewBox="0 0 24 24" class="ico">${g.ic}</svg><span>${g.n}</span></button>`).join('')}</div>
-        <div style="text-align:center;margin-top:20px" data-rise><button class="btn btn--gold" id="potGo">Сварить зелье</button></div>
-        <div id="potRes"></div><div style="height:30px"></div></div>`;
-      cv = A.$('#potCv', root); cx = cv.getContext('2d');
-      A.$('#flasks', root).addEventListener('click', e => { const b = e.target.closest('.flask'); if (b) toggle(b); });
-      A.$$('.ing', root).forEach(b => bindDrag(b));
-      A.$('#potGo', root).addEventListener('click', brew);
-    },
-    show() { A.rise(el); size(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } },
-    beforeShow() {}
+    init() { build(); }, beforeShow() {},
+    show() { build(); if (!run) { run = true; last = performance.now(); requestAnimationFrame(frame); } sizeCv(); }
   };
-  const hint = s => { const h = A.$('#potHint', el); h.textContent = s; };
-  function size() { const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); cv.width = r.width * d; cv.height = r.height * d; cx.setTransform(d, 0, 0, d, 0, 0); }
-  function toggle(b) {
+  function build() {
+    if (built) return; built = true; layer = A.$('#labLayer');
+    layer.innerHTML = `<canvas id="labCv" width="1080" height="1920"></canvas><div class="lab__moon"></div>
+      <div class="lab__t"><small>алхимическая лаборатория</small></div>
+      ${FLASKS.map((f, i) => `<button class="flask3" data-k="${f.k}" style="--c:${f.c};left:${102 + i * 148}px"><div class="fl3">${flask(f.c)}</div><span>${A.MOODS[f.k]}</span></button>`).join('')}
+      <div class="lab__hint" id="labHint">Выбери настроение на полке</div>
+      ${INGR.map((g, i) => `<div class="ing3" data-id="${g.id}" style="--c:${g.c};left:${112 + i * 176}px"><div class="jar3">${jar(g)}</div><span>${g.n}</span></div>`).join('')}
+      <button class="lab__pot" aria-label="Котёл"></button><div class="lab__res" id="labRes"></div>`;
+    cv = A.$('#labCv'); cx = cv.getContext('2d');
+    A.$$('.flask3', layer).forEach(b => { b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', () => pickFlask(b)); });
+    A.$$('.ing3', layer).forEach(bindDrag);
+    const pot = A.$('.lab__pot', layer); pot.addEventListener('pointerdown', e => e.stopPropagation()); pot.addEventListener('click', brew);
+  }
+  const sizeCv = () => {};
+  const hint = s => { const h = A.$('#labHint', layer); h.classList.remove('on'); void h.offsetWidth; h.textContent = s; h.classList.add('on'); };
+  const status = () => sel.size ? (ing.length ? 'Теперь коснись котла: пора варить' : 'Добавь ингредиенты или вари сразу: коснись котла') : ing.length ? 'Выбери настроение на полке' : 'Выбери настроение на полке';
+  function mix() { const cs = [...sel].map(k => FLASKS.find(f => f.k === k).c).concat(ing.map(i => i.c)); liqT = cs.length ? [0, 1, 2].map(i => Math.round(cs.map(h => hex(h)[i]).reduce((a, c) => a + c, 0) / cs.length * .9)) : [40, 90, 82]; }
+  function pickFlask(b) {
     if (brewing) return; const k = b.dataset.k; A.snd.bubble();
-    if (sel.has(k)) sel.delete(k); else { if (sel.size >= 2) { const first = [...sel][0]; sel.delete(first); A.$(`.flask[data-k="${first}"]`, el).classList.remove('on'); } sel.add(k); pour(b); }
-    b.classList.toggle('on', sel.has(k)); mixColor(); hint(sel.size ? `В котле: ${[...sel].map(x => A.MOODS[x]).join(' + ')}${ing.length ? ' · ' + ing.length + ' ингр.' : ''}` : 'Выбери до двух настроений');
+    if (sel.has(k)) { sel.delete(k); b.classList.remove('on'); } else { if (sel.size >= 2) { const f = [...sel][0]; sel.delete(f); A.$(`.flask3[data-k="${f}"]`, layer).classList.remove('on'); } sel.add(k); b.classList.add('on'); pourFrom(b); }
+    mix(); hint(status());
   }
-  function pour(b) { const r = b.getBoundingClientRect(), c = A.$('#cauldron', el).getBoundingClientRect(); A.fx.sparks(r.left + r.width / 2, r.top + r.height * .3, 10, b.style.getPropertyValue('--c')); for (let i = 0; i < 9; i++) bubbles.push(newBubble(.5 + (Math.random() - .5) * .3)); }
-  function mixColor() { const cs = [...sel].map(k => FLASKS.find(f => f.k === k).c).concat(ing.map(i => i.c)); if (!cs.length) { liqT = '#2d5a52'; return; } const rgb = cs.map(h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16))), m = [0, 1, 2].map(i => Math.round(rgb.reduce((a, c) => a + c[i], 0) / rgb.length)); liqT = `rgb(${m})`; }
-  const hex = c => c.startsWith('#') ? [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16)) : c.match(/\d+/g).slice(0, 3).map(Number);
-  let cur = [45, 90, 82];
-  function newBubble(x) { return { x, y: 0.62, r: 2 + Math.random() * 5, v: .12 + Math.random() * .2, ph: Math.random() * 6 }; }
+  function pourFrom(b) { const r = b.getBoundingClientRect(), p = toPlate(r.left + r.width / 2, r.top + r.height * .3), c = b.style.getPropertyValue('--c'); setTimeout(() => { for (let i = 0; i < 26; i++) pours.push({ x: p[0] + R(-6, 6), y: p[1], tx: POT.x + R(-60, 60), ty: POT.y + R(-8, 14), t: -i * .018, c, life: 0 }); }, 120); }
+  const toPlate = (sx, sy) => { const [x, y] = A.scene.clientToRoom(sx, sy); return [x, y]; };
 
-  function bindDrag(b) {
-    let drag = null, ghost = null;
-    b.addEventListener('pointerdown', e => { if (brewing) return; b.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, moved: false }; });
-    b.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (!drag.moved && Math.hypot(dx, dy) > 8) { drag.moved = true; ghost = b.cloneNode(true); ghost.classList.add('ghost'); document.body.appendChild(ghost); b.classList.add('lift'); } if (ghost) { ghost.style.left = e.clientX + 'px'; ghost.style.top = e.clientY + 'px'; const hot = overPot(e.clientX, e.clientY); A.$('#cauldron', el).classList.toggle('hot', hot); } });
-    const end = e => { if (!drag) return; const moved = drag.moved; drag = null; b.classList.remove('lift'); A.$('#cauldron', el).classList.remove('hot'); if (ghost) { const ok = overPot(e.clientX, e.clientY); ghost.remove(); ghost = null; if (ok) drop(b); } else if (!moved) drop(b); };
-    b.addEventListener('pointerup', end); b.addEventListener('pointercancel', () => { drag = null; if (ghost) { ghost.remove(); ghost = null; } b.classList.remove('lift'); });
+  function bindDrag(el) {
+    let st = null, gh = null; const jarEl = A.$('.jar3', el);
+    el.addEventListener('pointerdown', e => { if (brewing) return; e.stopPropagation(); el.setPointerCapture(e.pointerId); const r = jarEl.getBoundingClientRect(); st = { w: r.width, h: r.height, dx: e.clientX - (r.left + r.width / 2), dy: e.clientY - (r.top + r.height / 2), moved: false, x: e.clientX, y: e.clientY }; });
+    el.addEventListener('pointermove', e => { if (!st) return; if (!st.moved && Math.hypot(e.clientX - st.x, e.clientY - st.y) > 6) { st.moved = true; gh = jarEl.cloneNode(true); gh.classList.add('ghost3'); gh.style.width = st.w + 'px'; gh.style.height = st.h + 'px'; document.body.appendChild(gh); el.classList.add('lift'); A.snd.tap(); }
+      if (gh) { gh.style.left = (e.clientX - st.dx) + 'px'; gh.style.top = (e.clientY - st.dy) + 'px'; const [px, py] = toPlate(e.clientX, e.clientY); gh.classList.toggle('over', overPot(px, py)); gh.style.transform = `translate(-50%,-50%) scale(${1.25}) rotate(${overPot(px, py) ? 38 : 0}deg)`; } });
+    const end = e => { if (!st) return; const s = st; st = null; el.classList.remove('lift'); if (gh) { const [px, py] = toPlate(e.clientX, e.clientY), ok = overPot(px, py); if (ok) drop(el, px, py); gh.classList.add('back'); const g = gh; gh = null; g.style.transition = 'all .5s cubic-bezier(.3,1.3,.5,1)'; if (!ok) { const r = jarEl.getBoundingClientRect(); g.style.left = (r.left + r.width / 2) + 'px'; g.style.top = (r.top + r.height / 2) + 'px'; g.style.transform = 'translate(-50%,-50%) scale(1)'; } else g.style.opacity = 0; setTimeout(() => g.remove(), 520); } else if (!s.moved) { hint('Возьми банку пальцем и перетащи в котёл'); jarEl.classList.remove('wob'); void jarEl.offsetWidth; jarEl.classList.add('wob'); } };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', () => { st = null; if (gh) { gh.remove(); gh = null; } el.classList.remove('lift'); });
   }
-  const overPot = (x, y) => { const r = A.$('#cauldron', el).getBoundingClientRect(); return x > r.left && x < r.right && y > r.top - 20 && y < r.bottom + 20; };
-  function drop(b) {
-    const g = INGR.find(i => i.id === b.dataset.id); const has = ing.includes(g);
-    if (has) { ing = ing.filter(i => i !== g); b.classList.remove('on'); A.snd.tap(); }
-    else { if (ing.length >= 3) { A.toast('В котёл помещается три ингредиента'); return; } ing.push(g); b.classList.add('on'); A.snd.pop(); const r = A.$('#cauldron', el).getBoundingClientRect(); A.fx.sparks(r.left + r.width / 2, r.top + r.height * .45, 16, g.c); for (let i = 0; i < 8; i++) bubbles.push(newBubble(.5 + (Math.random() - .5) * .4)); }
-    mixColor(); hint(sel.size ? `В котле: ${[...sel].map(x => A.MOODS[x]).join(' + ')}${ing.length ? ' · ' + ing.length + ' ингр.' : ''}` : ing.length ? 'Теперь выбери настроение' : 'Выбери до двух настроений');
+  const overPot = (x, y) => Math.pow((x - POT.x) / (POT.rx + 70), 2) + Math.pow((y - POT.y) / (POT.ry + 150), 2) < 1;
+  function drop(el, px, py) {
+    const g = INGR.find(i => i.id === el.dataset.id);
+    if (ing.includes(g)) { A.toast('Это уже в котле'); return; } if (ing.length >= 3) { A.toast('В котёл помещается три ингредиента'); return; }
+    ing.push(g); A.snd.pop(); A.vibrate(15); mix(); for (let i = 0; i < 18; i++) pours.push({ x: POT.x + R(-30, 30), y: POT.y - 160 - R(0, 60), tx: POT.x + R(-50, 50), ty: POT.y + R(-6, 14), t: -i * .02, c: g.c, life: 0 });
+    setTimeout(() => { ripples.push({ x: POT.x + R(-30, 30), y: POT.y + 4, r: 6, a: 1 }); for (let i = 0; i < 10; i++) bubbles.push(nb()); A.snd.bubble(); }, 380); hint(status());
   }
+  const nb = () => ({ x: POT.x + R(-.8, .8) * POT.rx * .8, y: POT.y + R(-8, 10), r: R(3, 11), v: R(30, 60), ph: R(0, 6.3), life: 0, max: R(.8, 1.8) });
 
   function frame(now) {
-    requestAnimationFrame(frame); if (A.tab !== 'potion') { last = now; return; }
-    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt;
-    const w = cv.clientWidth, h = cv.clientHeight; if (!w) return; cx.clearRect(0, 0, w, h);
-    const tg = hex(liqT); cur = cur.map((v, i) => v + (tg[i] - v) * Math.min(1, dt * 3)); const col = `rgb(${cur.map(Math.round)})`, k = brewing ? 1 : .4;
-    // glow behind
-    const gl = cx.createRadialGradient(w / 2, h * .5, 0, w / 2, h * .5, w * .6); gl.addColorStop(0, `rgba(${cur.map(Math.round)},${.28 * (brewing ? 1.6 : 1)})`); gl.addColorStop(1, 'rgba(0,0,0,0)'); cx.fillStyle = gl; cx.fillRect(0, 0, w, h);
-    const cxm = w / 2, top = h * .42, rw = w * .34, body = h * .34;
-    // pot body
-    cx.save(); const pg = cx.createLinearGradient(cxm - rw, 0, cxm + rw, 0); pg.addColorStop(0, '#050606'); pg.addColorStop(.35, '#1a1d1c'); pg.addColorStop(.6, '#0b0d0c'); pg.addColorStop(1, '#030404');
-    cx.fillStyle = pg; cx.beginPath(); cx.moveTo(cxm - rw, top); cx.bezierCurveTo(cxm - rw * 1.18, top + body * .9, cxm - rw * .7, top + body * 1.35, cxm, top + body * 1.35); cx.bezierCurveTo(cxm + rw * .7, top + body * 1.35, cxm + rw * 1.18, top + body * .9, cxm + rw, top); cx.closePath(); cx.fill();
-    cx.strokeStyle = 'rgba(255,226,160,.35)'; cx.lineWidth = 1; cx.stroke();
-    // rim + liquid
-    cx.fillStyle = '#0a0c0b'; cx.beginPath(); cx.ellipse(cxm, top, rw, rw * .22, 0, 0, 6.3); cx.fill(); cx.strokeStyle = 'rgba(255,226,160,.55)'; cx.stroke();
-    const lg = cx.createRadialGradient(cxm, top, 0, cxm, top, rw); lg.addColorStop(0, col); lg.addColorStop(1, `rgba(${cur.map(v => Math.round(v * .45))},1)`);
-    cx.fillStyle = lg; cx.beginPath(); cx.ellipse(cxm, top, rw * .9, rw * .17, 0, 0, 6.3); cx.fill();
-    cx.globalCompositeOperation = 'lighter'; cx.globalAlpha = .16 + .1 * Math.sin(t * 3); cx.fillStyle = col; cx.beginPath(); cx.ellipse(cxm, top - 4, rw * .5, rw * .08, 0, 0, 6.3); cx.fill(); cx.globalAlpha = 1;
-    // bubbles
-    if (Math.random() < dt * (brewing ? 40 : 4 + sel.size * 3 + ing.length * 2)) bubbles.push(newBubble(.5 + (Math.random() - .5) * .45));
-    bubbles = bubbles.filter(b => { b.y -= b.v * dt * (brewing ? 2.4 : 1); if (b.y < .38) { if (brewing && Math.random() < .3) A.snd.bubble(); return false; } const bx = cxm + (b.x - .5) * rw * 1.6 + Math.sin(t * 3 + b.ph) * 3, by = top + (b.y - .42) * h * .5; cx.globalAlpha = .55; cx.strokeStyle = `rgba(255,255,255,.7)`; cx.beginPath(); cx.arc(bx, by, b.r * (1 - (b.y - .38) * .2), 0, 6.3); cx.stroke(); cx.fillStyle = col; cx.globalAlpha = .12; cx.fill(); cx.globalAlpha = 1; return true; });
-    // steam
-    if (Math.random() < dt * (3 + k * 8)) steam.push({ x: cxm + (Math.random() - .5) * rw, y: top - 4, vx: (Math.random() - .5) * 6, vy: -(12 + Math.random() * 18), life: 0, max: 2.4 + Math.random() * 2, s: 14 + Math.random() * 20 });
-    steam = steam.filter(s => { s.life += dt; if (s.life > s.max) return false; s.x += (s.vx + Math.sin(t * 1.4 + s.max) * 6) * dt; s.y += s.vy * dt; const kk = s.life / s.max, r = s.s * (1 + kk * 1.6); const g2 = cx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r); g2.addColorStop(0, `rgba(${cur.map(v => Math.round(120 + v * .5))},${.2 * (1 - kk)})`); g2.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g2; cx.fillRect(s.x - r, s.y - r, r * 2, r * 2); return true; });
-    cx.restore();
+    requestAnimationFrame(frame); if (A.scene.room() !== 'lab') { last = now; return; }
+    const dt = Math.min(.05, (now - last) / 1000); last = now; t += dt; hot += ((brewing ? 1 : .35 + .1 * (sel.size + ing.length)) - hot) * dt * 2;
+    cx.clearRect(0, 0, 1080, 1920);
+    liq = liq.map((v, i) => v + (liqT[i] - v) * Math.min(1, dt * 2.5)); const col = `rgb(${liq.map(Math.round)})`, rgb = liq.map(Math.round).join(',');
     // fire under the pot
-    cx.save(); cx.globalCompositeOperation = 'lighter'; const fy = top + body * 1.38; const fg = cx.createRadialGradient(cxm, fy, 0, cxm, fy, rw * 1.2); fg.addColorStop(0, `rgba(255,150,60,${.5 + .15 * Math.sin(t * 9)})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(0, fy - rw * 1.2, w, rw * 2.4); cx.restore();
+    cx.globalCompositeOperation = 'lighter';
+    const fg = cx.createRadialGradient(540, 1430, 0, 540, 1430, 330); fg.addColorStop(0, `rgba(255,150,60,${.32 + .12 * Math.sin(t * 9) * hot})`); fg.addColorStop(1, 'rgba(255,100,20,0)'); cx.fillStyle = fg; cx.fillRect(100, 1150, 880, 560);
+    if (Math.random() < dt * (30 + 50 * hot)) flames.push({ x: 540 + R(-120, 120), y: 1452, vy: -R(60, 150), life: 0, ttl: R(.4, .8), s: R(10, 22) });
+    flames = flames.filter(f => { f.life += dt; if (f.life > f.ttl) return false; const k = f.life / f.ttl; f.y += f.vy * dt; f.x += Math.sin(t * 8 + f.s) * 12 * dt; cx.globalAlpha = (1 - k) * .55; const g = cx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.s * (1 - k * .5)); g.addColorStop(0, 'rgba(255,200,90,1)'); g.addColorStop(1, 'rgba(255,90,20,0)'); cx.fillStyle = g; cx.fillRect(f.x - 30, f.y - 40, 60, 80); return true; });
+    cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
+    // the liquid
+    cx.save(); cx.beginPath(); cx.ellipse(POT.x, POT.y + 6, POT.rx - 4, POT.ry - 2, 0, 0, 6.283); cx.clip();
+    const lg = cx.createRadialGradient(POT.x, POT.y, 0, POT.x, POT.y, POT.rx); lg.addColorStop(0, col); lg.addColorStop(1, `rgb(${liq.map(v => Math.round(v * .35))})`); cx.fillStyle = lg; cx.fillRect(POT.x - POT.rx, POT.y - POT.ry, POT.rx * 2, POT.ry * 2 + 20);
+    cx.globalCompositeOperation = 'lighter'; cx.globalAlpha = .18 + .12 * Math.sin(t * 2.4) + hot * .12; cx.fillStyle = col; cx.beginPath(); cx.ellipse(POT.x - 40, POT.y - 8, POT.rx * .5, POT.ry * .4, 0, 0, 6.283); cx.fill(); cx.globalAlpha = 1;
+    for (let i = ripples.length - 1; i >= 0; i--) { const r = ripples[i]; r.r += dt * 120; r.a -= dt * .9; if (r.a <= 0) { ripples.splice(i, 1); continue; } cx.strokeStyle = `rgba(255,255,255,${r.a * .5})`; cx.lineWidth = 2; cx.beginPath(); cx.ellipse(r.x, r.y, r.r, r.r * .26, 0, 0, 6.283); cx.stroke(); }
+    if (Math.random() < dt * (3 + hot * 30)) bubbles.push(nb());
+    bubbles = bubbles.filter(b => { b.life += dt; if (b.life > b.max) { if (brewing && Math.random() < .5) A.snd.bubble(); return false; } const k = b.life / b.max; cx.globalAlpha = .6 * (1 - k * .5); cx.strokeStyle = 'rgba(255,255,255,.75)'; cx.lineWidth = 1.6; cx.beginPath(); cx.arc(b.x + Math.sin(t * 3 + b.ph) * 4, b.y - b.v * b.life * .3, b.r * (1 + k * .6), 0, 6.283); cx.stroke(); cx.fillStyle = `rgba(${rgb},.2)`; cx.fill(); return true; });
+    cx.restore(); cx.globalAlpha = 1;
+    // steam
+    if (Math.random() < dt * (5 + hot * 24)) steam.push({ x: POT.x + R(-.7, .7) * POT.rx, y: POT.y - 10, vx: R(-10, 10), vy: -R(30, 70), life: 0, max: R(2.4, 4.4), s: R(36, 64) });
+    steam = steam.filter(s => { s.life += dt; if (s.life > s.max) return false; const k = s.life / s.max; s.x += (s.vx + Math.sin(t * 1.3 + s.max) * 14) * dt; s.y += s.vy * dt; const r = s.s * (1 + k * 1.8), g = cx.createRadialGradient(s.x, s.y, 0, s.x, s.y, r); g.addColorStop(0, `rgba(${liq.map(v => Math.round(150 + v * .35)).join(',')},${.2 * (1 - k)})`); g.addColorStop(1, 'rgba(255,255,255,0)'); cx.fillStyle = g; cx.fillRect(s.x - r, s.y - r, r * 2, r * 2); return true; });
+    // liquid streams from flasks and jars
+    cx.globalCompositeOperation = 'lighter';
+    pours = pours.filter(p => { p.t += dt * 1.8; if (p.t < 0) return true; if (p.t > 1) { if (Math.random() < .3) ripples.push({ x: p.tx, y: p.ty, r: 4, a: .7 }); return false; } const k = p.t, x = p.x + (p.tx - p.x) * k, y = p.y + (p.ty - p.y) * k - Math.sin(k * Math.PI) * 120; cx.globalAlpha = .9; const g = cx.createRadialGradient(x, y, 0, x, y, 14); g.addColorStop(0, p.c); g.addColorStop(1, 'rgba(0,0,0,0)'); cx.fillStyle = g; cx.fillRect(x - 14, y - 14, 28, 28); return true; });
+    sparks = sparks.filter(s => { s.life += dt; if (s.life > s.max) return false; s.x += s.vx * dt; s.y += s.vy * dt; s.vy += 260 * dt; cx.globalAlpha = 1 - s.life / s.max; cx.fillStyle = '#ffd98a'; cx.fillRect(s.x, s.y, 3, 3); return true; });
+    cx.globalAlpha = 1; cx.globalCompositeOperation = 'source-over';
   }
 
   function brew() {
-    if (brewing) return; if (!sel.size && !ing.length) { A.toast('Выбери настроение или брось ингредиент в котёл'); A.snd.owl(); return; }
-    brewing = true; const res = A.$('#potRes', el); res.innerHTML = ''; hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); const r = A.$('#cauldron', el).getBoundingClientRect();
-    let n = 0; const iv = setInterval(() => { A.fx.sparks(r.left + r.width / 2, r.top + r.height * .42, 8, '#ffd98a'); A.snd.bubble(); if (++n > 6) clearInterval(iv); }, 380);
-    A.$('#cauldron', el).classList.add('boil');
-    setTimeout(() => { const pick = recommend(); brewing = false; A.$('#cauldron', el).classList.remove('boil'); show(pick); }, 3000);
+    if (brewing) return; if (!sel.size && !ing.length) { A.toast('Выбери настроение на полке или брось ингредиент в котёл'); A.snd.owl(); return; }
+    brewing = true; A.$('#labRes', layer).classList.remove('on'); hint('Зелье варится…'); A.snd.brew(); A.vibrate([20, 30, 20]); layer.classList.add('boil');
+    let n = 0; const iv = setInterval(() => { for (let i = 0; i < 10; i++) sparks.push({ x: POT.x + R(-110, 110), y: POT.y, vx: R(-90, 90), vy: -R(160, 360), life: 0, max: R(.6, 1.2) }); for (let i = 0; i < 6; i++) bubbles.push(nb()); A.snd.bubble(); if (++n > 7) clearInterval(iv); }, 380);
+    setTimeout(() => { const pick = recommend(); brewing = false; layer.classList.remove('boil'); show(pick); }, 3200);
   }
   function recommend() {
     const want = new Set([...sel]); ing.forEach(i => i.b.forEach(m => want.add(m)));
@@ -1684,20 +1974,19 @@ A.unlockedCount = () => { const p = A.points(); let n = 0; A.LOCS.forEach((l, i)
     const score = b => { const tg = b.tags || b.m || []; let s = 0; tg.forEach(m => { if (sel.has(m)) s += 3; else if (want.has(m)) s += 1; }); return s + Math.random() * .9; };
     const own = mine.map(b => ({ b, s: score(b), own: true })).filter(x => x.s >= 1.5).sort((a, b) => b.s - a.s)[0];
     const cands = A.SUGGEST.filter(x => !have.has(x.t.toLowerCase())).map(x => ({ b: { title: x.t, author: x.a, pages: x.p, tags: x.m }, s: score(x) })).sort((a, b) => b.s - a.s);
-    return own || cands[0] || { b: A.SUGGEST[0] && { title: A.SUGGEST[0].t, author: A.SUGGEST[0].a, pages: A.SUGGEST[0].p, tags: A.SUGGEST[0].m }, s: 0 };
+    return own || cands[0] || { b: { title: A.SUGGEST[0].t, author: A.SUGGEST[0].a, pages: A.SUGGEST[0].p, tags: A.SUGGEST[0].m }, s: 0 };
   }
   function show(p) {
-    const b = p.b, res = A.$('#potRes', el); A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .5, 30, 220); A.vibrate(30); hint('Зелье готово');
+    const b = p.b, res = A.$('#labRes', layer); A.snd.unlock2(); A.fx.fireflies(innerWidth / 2, innerHeight * .5, 30, 220); A.vibrate(30); hint('');
     const why = [...sel].map(k => A.MOODS[k]).concat(ing.map(i => i.n)).join(' · ');
-    res.innerHTML = `<div class="reco glass" style="margin-top:22px"><div class="eyebrow">на этот вечер</div><div class="reco__row">${A.coverHTML(b, 'reco__cover')}<div><h3>${A.esc(b.title)}</h3><p class="sub" style="font-size:16px">${A.esc(b.author || '')}</p><p class="reco__why">${why ? 'рецепт: ' + A.esc(why) : ''}</p>${(b.tags || []).slice(0, 3).map(m => `<span class="tag">${A.MOODS[m] || m}</span>`).join('')}</div></div>
-      <div class="row" style="margin-top:16px">${p.own ? `<button class="btn btn--gold" id="rcOpen">Открыть книгу</button>` : `<button class="btn btn--gold" id="rcAdd">Добавить в «Хочу»</button>`}<button class="btn btn--ghost" id="rcAgain">Ещё раз</button></div></div>`;
-    A.rise(res); res.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    A.$('#rcAgain', res).addEventListener('click', () => { A.snd.tap(); res.innerHTML = ''; sel.clear(); ing = []; A.$$('.flask,.ing', el).forEach(x => x.classList.remove('on')); mixColor(); hint('Выбери до двух настроений'); el.scrollTo({ top: 0, behavior: 'smooth' }); });
+    res.innerHTML = `<div class="scroll3"><small>на этот вечер</small><div class="scroll3__row">${A.coverHTML(b, 'reco__cover')}<div><h3>${A.esc(b.title)}</h3><p>${A.esc(b.author || '')}</p><em>${why ? 'рецепт: ' + A.esc(why) : ''}</em></div></div>
+      <div class="scroll3__btn">${p.own ? `<button class="btn btn--gold" id="rcOpen">Открыть</button>` : `<button class="btn btn--gold" id="rcAdd">В «Хочу»</button>`}<button class="btn btn--ghost" id="rcAgain">Ещё раз</button></div></div>`;
+    res.classList.add('on'); [...res.querySelectorAll('button')].forEach(x => x.addEventListener('pointerdown', e => e.stopPropagation()));
+    A.$('#rcAgain', res).addEventListener('click', () => { A.snd.tap(); res.classList.remove('on'); sel.clear(); ing = []; A.$$('.flask3', layer).forEach(x => x.classList.remove('on')); mix(); hint('Выбери настроение на полке'); });
     const add = A.$('#rcAdd', res), open = A.$('#rcOpen', res);
-    add && add.addEventListener('click', () => { const nb = { id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }; A.state.books.push(nb); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 24); A.toast('Книга добавлена на полку'); add.disabled = true; add.textContent = 'Добавлено'; });
-    open && open.addEventListener('click', () => { A.snd.page(); A.go('books'); setTimeout(() => A.mods.books.openBook(b.id), 900); });
+    add && add.addEventListener('click', () => { A.state.books.push({ id: A.uid(), title: b.title, author: b.author, pages: b.pages || 300, read: 0, status: 'want', rating: 0, tags: [...(b.tags || [])], impression: '', added: Date.now(), cover: {} }); A.save(); A.mods.books && A.mods.books.refresh(); A.snd.coin(); A.fx.stars(innerWidth / 2, innerHeight * .6, 24); A.toast('Книга ждёт тебя на полке'); add.disabled = true; add.textContent = 'Добавлено'; });
+    open && open.addEventListener('click', () => { A.snd.page(); const bk = A.state.books.find(x => x.title === b.title); A.go('books'); setTimeout(() => { if (bk) bk.hasText ? A.reader.open(bk, null) : A.mods.books.openBook(bk.id); }, 1700); });
   }
-  addEventListener('resize', () => { if (cv && cv.isConnected) size(); });
 })();
 
 /* ============================================================ goals: daily pages -> acorns, week bars, stickers, logging + book completion */
@@ -1794,22 +2083,24 @@ A.reader = (() => {
   const FONTS = { serif: '"Cormorant Garamond",Georgia,serif', book: 'Georgia,"Times New Roman",serif', sans: '"Inter Tight",system-ui,sans-serif' };
   const THEMES = { oled: ['#000', '#d9d3c4', '#e9c984'], sepia: ['#f1e4c7', '#3b2a17', '#8a5a1f'], dusk: ['#0b1018', '#c9d3e6', '#8fb0ff'] };
   const DEF = { size: 22, font: 'serif', lh: 1.6, theme: 'oled' };
-  let el, b, view, flow, pw = 0, ph = 0, pages = 1, cur = 0, maxSeen = 0, off = 0, offV = 0, offT = 0, raf = 0, open_ = false, fromRect = null, drag = null, p = null;
+  let emb = 0, el, b, view, flow, pw = 0, ph = 0, pages = 1, cur = 0, maxSeen = 0, off = 0, offV = 0, offT = 0, raf = 0, open_ = false, fromRect = null, drag = null, p = null;
   const prefs = () => Object.assign({}, DEF, A.state.settings.reader || {});
 
   function build() {
     el = A.h(`<div id="reader" class="rd" hidden><div class="rd__bar"><button class="rd__b" id="rdBack" aria-label="Закрыть"><svg viewBox="0 0 24 24" class="ico"><path d="M14.500 5.500 8 12l6.500 6.500" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="rd__t"><b id="rdT"></b><small id="rdA"></small></div><button class="rd__b rd__b--aa" id="rdAa" aria-label="Шрифт и фон">Aa</button><button class="rd__b" id="rdInfo" aria-label="О книге"><svg viewBox="0 0 24 24" class="ico"><circle cx="5.500" cy="12" r="1.100" fill="currentColor"/><circle cx="12" cy="12" r="1.100" fill="currentColor"/><circle cx="18.500" cy="12" r="1.100" fill="currentColor"/></svg></button></div>
       <div class="rd__view" id="rdView"><div class="rd__flow" id="rdFlow"></div></div><div class="rd__edge rd__edge--l"></div><div class="rd__edge rd__edge--r"></div>
-      <div class="rd__foot"><div class="rd__line"><i id="rdProg"></i></div><span id="rdPg"></span></div><button class="rd__fin" id="rdFin" hidden>Дочитала</button>
+      <div class="rd__ember" id="rdEmber"></div><div class="rd__foot"><div class="rd__line"><i id="rdProg"></i></div><span id="rdPg"></span></div><button class="rd__fin" id="rdFin" hidden>Дочитала</button>
       <div class="rd__set" id="rdSet"><div class="rd__row"><span>Размер</span><input type="range" min="16" max="34" step="1" id="rdSize"></div>
       <div class="rd__row"><span>Шрифт</span><div class="rd__seg" id="rdFont"><button data-v="serif" style="font-family:${FONTS.serif}">Сказка</button><button data-v="book" style="font-family:${FONTS.book}">Книга</button><button data-v="sans" style="font-family:${FONTS.sans}">Строгий</button></div></div>
       <div class="rd__row"><span>Строки</span><div class="rd__seg" id="rdLh"><button data-v="1.4">Плотно</button><button data-v="1.6">Ровно</button><button data-v="1.85">Свободно</button></div></div>
+      <div class="rd__row"><span>Костёр</span><input type="range" min="0" max="1" step=".05" id="rdFire"></div>
       <div class="rd__row"><span>Фон</span><div class="rd__seg rd__seg--th" id="rdTh"><button data-v="oled" style="--c:#000"><i></i>Ночь</button><button data-v="dusk" style="--c:#0b1018"><i></i>Сумерки</button><button data-v="sepia" style="--c:#f1e4c7"><i></i>Бумага</button></div></div></div></div>`);
     document.body.appendChild(el); view = A.$('#rdView', el); flow = A.$('#rdFlow', el);
     A.$('#rdBack', el).addEventListener('click', () => close()); A.$('#rdInfo', el).addEventListener('click', () => { A.snd.tap(); A.mods.books.openBook(b.id); });
     A.$('#rdAa', el).addEventListener('click', () => { A.snd.tap(); el.classList.toggle('setting'); });
     const set = (k, v) => { A.state.settings.reader = Object.assign(prefs(), { [k]: v }); A.save(); style(); paginate(true); mark(); };
     A.$('#rdSize', el).addEventListener('input', e => set('size', +e.target.value));
+    A.$('#rdFire', el).addEventListener('input', e => { A.snd.fireVol(+e.target.value); if (+e.target.value > 0) A.snd.setFire(1); });
     [['#rdFont', 'font', x => x], ['#rdLh', 'lh', x => +x], ['#rdTh', 'theme', x => x]].forEach(([s, k, f]) => A.$(s, el).addEventListener('click', e => { const t = e.target.closest('button'); if (t) { A.snd.tap(); set(k, f(t.dataset.v)); } }));
     A.$('#rdFin', el).addEventListener('click', () => { const bk = b; close(); setTimeout(() => { if (bk.status !== 'done') { bk.status = 'done'; bk.finished = null; A.finishBook(bk); A.mods.books && A.mods.books.refresh(); } }, 700); });
     // pages
@@ -1831,7 +2122,7 @@ A.reader = (() => {
   function style() {
     const P = prefs(), T = THEMES[P.theme]; el.dataset.th = P.theme; el.style.setProperty('--bg', T[0]); el.style.setProperty('--fg', T[1]); el.style.setProperty('--ac', T[2]);
     flow.style.fontFamily = FONTS[P.font]; flow.style.fontSize = P.size + 'px'; flow.style.lineHeight = P.lh;
-    A.$('#rdSize', el).value = P.size; mark(); document.querySelector('meta[name=theme-color]').setAttribute('content', T[0]);
+    A.$('#rdSize', el).value = P.size; A.$('#rdFire', el).value = A.state.settings.fireVol != null ? A.state.settings.fireVol : .85; mark(); document.querySelector('meta[name=theme-color]').setAttribute('content', T[0]);
   }
   function mark() { const P = prefs(); A.$$('#rdFont button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.font)); A.$$('#rdLh button', el).forEach(x => x.classList.toggle('on', +x.dataset.v === P.lh)); A.$$('#rdTh button', el).forEach(x => x.classList.toggle('on', x.dataset.v === P.theme)); }
   function paginate(keep) {
@@ -1853,19 +2144,20 @@ A.reader = (() => {
     A.$('#rdFin', el).hidden = !(cur === pages - 1 && b.status !== 'done');
   }
 
-  function openReader(book, rect) {
-    if (!el) build(); b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
-    A.$('#rdT', el).textContent = b.title; A.$('#rdA', el).textContent = b.author || ''; flow.innerHTML = html(b.text || ''); style();
+  async function openReader(book, rect) {
+    if (!el) build(); const text = await A.txt.get(book.id); if (!text) { A.toast('Текст этой книги не найден: загрузи файл заново'); return; } b = book; open_ = true; fromRect = rect || null; cancelAnimationFrame(raf); raf = 0;
+    A.$('#rdT', el).textContent = b.title; A.$('#rdA', el).textContent = b.author || ''; flow.innerHTML = html(text); style();
     el.hidden = false; el.classList.remove('setting'); el.classList.add('chrome'); if (b.status === 'want') { b.status = 'reading'; b.started = b.started || Date.now(); } p = b.read || 0;
-    if (!b.pages) b.pages = A.pagesEst(b.text); maxSeen = 0; A.save();
+    if (!b.pages) b.pages = A.pagesEst(text); b._len = text.length; maxSeen = 0; A.save();
     paginate(false); maxSeen = cur; A.snd.page(); A.snd.setMood('books');
+    A.snd.unlock && A.snd.unlock(); A.snd.setFire(1); clearInterval(emb); emb = setInterval(() => { const l = A.snd.fireLevel(); el.style.setProperty('--em', (.35 + l * .9 + Math.sin(performance.now() / 380) * .08).toFixed(3)); }, 90);
     if (!A.reduceMotion) { const r = fromRect, W = innerWidth, H = innerHeight, from = r ? `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 8px)` : 'inset(46% 20% 46% 20% round 18px)';
       el.animate([{ clipPath: from, opacity: .2 }, { clipPath: 'inset(0px 0px 0px 0px round 0px)', opacity: 1 }], { duration: 760, easing: 'cubic-bezier(.3,.9,.15,1)' });
       flow.animate([{ opacity: 0, transform: `translate3d(${-cur * pw}px,18px,0) scale(.98)` }, { opacity: 1, transform: `translate3d(${-cur * pw}px,0,0) scale(1)` }], { duration: 700, delay: 280, easing: 'ease-out', fill: 'backwards' }); }
   }
   function close() {
-    if (!open_) return; open_ = false; b.pos = cur / pages; const reached = Math.round((maxSeen + 1) / pages * (b.pages || A.pagesEst(b.text))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); A.save();
-    const fin = () => { el.hidden = true; el.getAnimations().forEach(a => a.cancel()); document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); A.mods.books && A.mods.books.refresh && A.mods.books.refresh(); };
+    if (!open_) return; open_ = false; b.pos = cur / pages; const reached = Math.round((maxSeen + 1) / pages * (b.pages || A.pagesEst('x'.repeat(b._len || 800)))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); A.save();
+    const fin = () => { clearInterval(emb); A.snd.setFire(A.fire.on ? 1 : 0); el.hidden = true; el.getAnimations().forEach(a => a.cancel()); document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); A.mods.books && A.mods.books.refresh && A.mods.books.refresh(); };
     if (A.reduceMotion) return fin(); const r = fromRect, W = innerWidth, H = innerHeight, to = r ? `inset(${r.top}px ${W - r.right}px ${H - r.bottom}px ${r.left}px round 8px)` : 'inset(46% 20% 46% 20% round 18px)';
     el.animate([{ clipPath: 'inset(0px 0px 0px 0px round 0px)', opacity: 1 }, { clipPath: to, opacity: .1 }], { duration: 560, easing: 'cubic-bezier(.6,0,.3,1)', fill: 'forwards' }).finished.then(fin);
   }
@@ -1876,7 +2168,7 @@ A.pagesEst = t => Math.max(1, Math.round((t || '').length / 1800));
 /* ============================================================ boot: gate (title over the dark room) -> walk into the room -> the fire lights */
 (() => {
   const $ = A.$;
-  A.load();
+  A.load(); A.txt.migrate();
   if (!A.state.books.length && !A.state.quotes.length && A.state.samples) A.seed();
   A.scene.init(); A.scene.start();
   let entered = false;
