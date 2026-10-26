@@ -29,12 +29,15 @@ body.bv-open #back{opacity:0!important;pointer-events:none!important}
 .bv__pg--l::after,.bv__pg--r::after{content:"";position:absolute;top:0;bottom:0;width:15%;pointer-events:none;z-index:3}
 .bv__pg--r::after{left:0;background:linear-gradient(90deg,rgba(60,34,8,.34),transparent)}
 .bv__pg--l::after{right:0;background:linear-gradient(270deg,rgba(60,34,8,.34),transparent)}
-.bv__leaf{position:absolute;top:0;left:0;width:var(--pw);height:var(--ph);transform-origin:0 50%;transform-style:preserve-3d;display:none;z-index:6;will-change:transform}
+.bv__leaf{position:absolute;top:0;left:0;width:var(--pw);height:var(--ph);transform-style:preserve-3d;display:none;z-index:6;pointer-events:none}
 .land .bv__leaf{left:var(--pw)}
-.lf{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
-.lf--b{transform:rotateY(180deg)}
-.lf__sh{position:absolute;inset:0;pointer-events:none;z-index:4;background:linear-gradient(90deg,rgba(25,10,0,.8),rgba(25,10,0,0) 85%);opacity:calc(var(--k,0)*.5)}
-.lf--b .lf__sh{background:linear-gradient(270deg,rgba(25,10,0,.8),rgba(25,10,0,0) 85%)}
+.ls{position:absolute;top:0;height:100%;transform-style:preserve-3d;transform-origin:0 50%;will-change:transform}
+.ls__f,.ls__b{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ls__b{transform:rotateY(180deg)}
+.ls__in{position:absolute;top:0;height:var(--ph)}
+.ls__sh{position:absolute;inset:0;background:#1c0d02;opacity:0;pointer-events:none;z-index:6}
+.bv__cast{position:absolute;top:0;height:var(--ph);left:0;width:0;opacity:0;pointer-events:none;z-index:5;filter:blur(7px);transform-origin:0 50%}
+.bv__fsh{position:absolute;left:0;top:0;width:60px;height:40px;opacity:0;pointer-events:none;z-index:7;border-radius:50%;background:radial-gradient(closest-side,rgba(20,8,0,.9),rgba(20,8,0,.45) 55%,rgba(20,8,0,0));filter:blur(3px)}
 .bv__gutter{position:absolute;top:0;bottom:0;left:0;width:24px;z-index:7;pointer-events:none;background:linear-gradient(90deg,rgba(30,14,2,.55),transparent)}
 .land .bv__gutter{left:calc(var(--pw) - 22px);width:44px;background:linear-gradient(90deg,transparent,rgba(30,14,2,.35) 40%,rgba(20,8,0,.65) 50%,rgba(30,14,2,.35) 60%,transparent)}
 .bv__meas{position:absolute;left:-9999px;top:0;width:var(--pw);height:var(--ph);visibility:hidden;pointer-events:none;overflow:hidden}

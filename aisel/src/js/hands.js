@@ -10,7 +10,7 @@ A.hands = (() => {
   class Sp { constructor(x, k = 110, c = 17) { this.x = x; this.t = x; this.v = 0; this.k = k; this.c = c; }
     step(dt) { const n = Math.ceil(dt / .008), h = dt / n; for (let i = 0; i < n; i++) { this.v += (this.k * (this.t - this.x) - this.c * this.v) * h; this.x += this.v * h; } } }
   const sides = {}, L = { k: 1, vw: 0, vh: 0 };
-  let carryFn = null, carrySide = 'R', propEl = null, on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
+  let carryFn = null, carrySide = 'R', propEl = null, pcx = null, pcy = null, hoverPt = null, on = false, raf = 0, last = 0, T = 0, mode = 'idle', follow = null, pinchFn = null, hoverSide = null, parX = 0, parXT = 0, gk = 2;
 
   function layer(side, kind) {
     const a = ART[POSE[side][kind]], im = new Image(); im.src = `img/${POSE[side][kind]}.webp`; im.className = 'hd__img'; im.draggable = false; im.decoding = 'async';
@@ -20,7 +20,7 @@ A.hands = (() => {
     return s;
   }
   ['L', 'R'].forEach(side => {
-    const el = A.h(`<div class="hd hd--${side}"></div>`), o = { el, reach: layer(side, 'reach'), grasp: layer(side, 'grasp'), page: layer(side, 'page'), ph: side === 'L' ? 0 : 2.1, lift: new Sp(0, 80, 14) };
+    const el = A.h(`<div class="hd hd--${side}"></div>`), o = { el, reach: layer(side, 'reach'), grasp: layer(side, 'grasp'), page: layer(side, 'page'), ph: side === 'L' ? 0 : 2.1, lift: new Sp(0, 80, 14), ap: new Sp(0, 70, 10.5), sw: new Sp(0, 60, 9) };
     ['reach', 'grasp', 'page'].forEach(k => el.appendChild(o[k].img)); root.appendChild(el); sides[side] = o;
   });
 
@@ -51,7 +51,8 @@ A.hands = (() => {
   function frame(now) {
     raf = requestAnimationFrame(frame); const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt; parX += (parXT - parX) * Math.min(1, dt * 3);
     if (mode === 'grasp' && follow) { const r = follow(); if (r) {
-        const ey = r.top + r.height * .62, lx = r.left + r.width * .06, rx = r.left + r.width * .94;
+        const ey = r.top + r.height * .62, lx = r.left + r.width * .06, rx = r.left + r.width * .94, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        if (pcx != null && dt > 0) { const vx = (cx - pcx) / dt, vy = (cy - pcy) / dt; ['L', 'R'].forEach(sd => { sides[sd].sw.t = A.clamp(vx * .0035, -4.5, 4.5); sides[sd].lift.t = A.clamp(-vy * .006, -9, 9) * .0 + sides[sd].lift.t; }); } pcx = cx; pcy = cy;
         reachTo('L', [lx, ey]); reachTo('R', [rx, ey]);
         placeLayer('L', 'grasp', [lx, ey], ART['pose-2'].edge); placeLayer('R', 'grasp', [rx, ey], ART['pose-3'].edge);
       } }
@@ -65,9 +66,10 @@ A.hands = (() => {
         const l = o[kd]; ['x', 'y', 'r', 's', 'o'].forEach(n => l[n].step(dt));
         let bx = 0, by = 0, br = 0;
         if (kd === 'reach' && breath) { by = Math.sin(T * 1.05 + o.ph) * 2.6 * L.k * 4; br = Math.sin(T * .72 + o.ph + 1) * .45; bx = Math.sin(T * .6 + o.ph) * 1.2 * L.k * 4; }
-        o.lift.step(dt);
+        o.lift.step(dt); o.ap.step(dt); o.sw.step(dt);
         const st = l.img.style; st.opacity = A.clamp(l.o.x, 0, 1).toFixed(3);
-        st.transform = `translate3d(${(l.x.x + bx + parX * (side === 'L' ? 1 : -1)).toFixed(2)}px,${(l.y.x + by + o.lift.x).toFixed(2)}px,0) rotate(${(l.r.x + br).toFixed(3)}deg) scale(${l.s.x.toFixed(4)})`;
+        const gr = kd === 'grasp' ? 1 : 0, apx = gr * o.ap.x * (side === 'L' ? -1 : 1), apy = gr * Math.abs(o.ap.x) * .35, rsw = gr * o.sw.x * (side === 'L' ? 1 : -1);
+        st.transform = `translate3d(${(l.x.x + bx + apx + parX * (side === 'L' ? 1 : -1)).toFixed(2)}px,${(l.y.x + by + apy + o.lift.x).toFixed(2)}px,0) rotate(${(l.r.x + br + rsw).toFixed(3)}deg) scale(${l.s.x.toFixed(4)})`;
         st.display = l.o.x < .01 && l.o.t < .01 ? 'none' : '';
       });
     });
@@ -81,12 +83,12 @@ A.hands = (() => {
       if (v) { ['L', 'R'].forEach(s => { const o = sides[s]; ['reach', 'grasp', 'page'].forEach(k => { o[k].o.x = o[k].o.t = 0; }); if (quiet) { o.lift.x = o.lift.t = o.reach.img.height * .8; return; } toIdle(s); o.lift.x = o.reach.img.height * .55; o.lift.t = 0; o.reach.o.x = 0; o.reach.o.t = 1; }); mode = quiet ? 'away' : 'idle'; loop(); }
       else { ['L', 'R'].forEach(s => { sides[s].lift.t = sides[s].reach.img.height * .6; ['reach', 'grasp', 'page'].forEach(k => sides[s][k].o.t = 0); }); setTimeout(() => { if (!on && raf) { cancelAnimationFrame(raf); raf = 0; } root.classList.remove('on'); }, 1200); }
     },
-    idle() { mode = 'idle'; follow = pinchFn = null; hoverSide = null; ['L', 'R'].forEach(toIdle); },
+    idle() { mode = 'idle'; follow = pinchFn = null; hoverSide = null; hoverPt = null; ['L', 'R'].forEach(toIdle); },
     hover(pt) {                                                        // pt = screen point near a book, or null to relax
       if (mode !== 'idle' && mode !== 'hover') return; if (!pt) { api.idle(); return; }
-      mode = 'hover'; hoverSide = pt[0] < L.vw * .5 ? 'L' : 'R'; const other = hoverSide === 'L' ? 'R' : 'L'; reachTo(hoverSide, pt, .92); toIdle(other); setO(hoverSide, 'reach', 1);
+      mode = 'hover'; hoverSide = pt[0] < L.vw * .5 ? 'L' : 'R'; const other = hoverSide === 'L' ? 'R' : 'L'; if (!hoverPt || Math.hypot(pt[0] - hoverPt[0], pt[1] - hoverPt[1]) > 40) { sides[hoverSide].lift.x -= 22; sides[hoverSide].lift.v -= 60; } hoverPt = pt; reachTo(hoverSide, pt, .92); toIdle(other); setO(hoverSide, 'reach', 1);
     },
-    grasp(fn) { follow = fn; mode = 'grasp'; pinchFn = null; ['L', 'R'].forEach(s => { setO(s, 'reach', 0); setO(s, 'grasp', 1); setO(s, 'page', 0); }); return new Promise(r => setTimeout(r, 650)); },
+    grasp(fn) { follow = fn; mode = 'grasp'; pinchFn = null; pcx = pcy = null; ['L', 'R'].forEach(sd => { sides[sd].ap.x = 120; sides[sd].ap.t = 0; sides[sd].sw.x = sides[sd].sw.t = 0; }); ['L', 'R'].forEach(s => { setO(s, 'reach', 0); setO(s, 'grasp', 1); setO(s, 'page', 0); }); return new Promise(r => setTimeout(r, 650)); },
     release(keepOut) { follow = null; mode = 'idle'; ['L', 'R'].forEach(s => { setO(s, 'grasp', 0); setO(s, 'reach', 1); toIdle(s); if (keepOut) sides[s].lift.t = sides[s].reach.img.height * .7; }); },
     retreat() { follow = pinchFn = null; mode = 'away'; ['L', 'R'].forEach(s => { sides[s].lift.t = sides[s].reach.img.height * .75; setO(s, 'grasp', 0); setO(s, 'page', 0); setO(s, 'reach', 1); sides[s].reach.x.t = 0; sides[s].reach.y.t = 0; sides[s].reach.r.t = 0; }); },
     back() { ['L', 'R'].forEach(s => { sides[s].lift.t = 0; }); mode = 'idle'; },

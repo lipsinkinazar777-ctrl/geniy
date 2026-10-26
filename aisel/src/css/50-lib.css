@@ -22,6 +22,7 @@
 .bk__edge{background:repeating-linear-gradient(90deg,#d9c8a0 0 1.2px,#f2e6c8 1.2px 3px);box-shadow:inset 0 0 12px rgba(80,50,10,.5);transform:rotateY(90deg)}
 .bk__top{background:repeating-linear-gradient(0deg,#4b3d26 0 1.2px,#7a6a48 1.2px 3px);transform:rotateX(90deg);box-shadow:inset 0 0 14px rgba(60,35,5,.7);clip-path:inset(0 7% 0 9%)}
 .bk__back{background:var(--lc);width:calc(100% - 0px)}
+.bk__tail{background:repeating-linear-gradient(0deg,#cdbb92 0 1.2px,#f0e3c4 1.2px 3px);box-shadow:inset 0 0 14px rgba(80,50,10,.55);transform:rotateX(-90deg);clip-path:inset(0 6% 0 8%)}
 .bk__block{background:linear-gradient(90deg,#c9b78c,#efe2bf 18%,#e8d9b2);box-shadow:inset 0 0 22px rgba(90,55,12,.45);overflow:hidden}
 .bk__block p{margin:0;padding:18% 12% 0;font:italic 400 17px/1.2 "Marck Script","Cormorant Garamond",serif;color:rgba(60,38,16,.55);text-align:center}
 .bk__cv{position:absolute;left:0;top:0;width:100%;height:100%;transform-style:preserve-3d;transform-origin:calc(var(--hx,5%)) 50%}
@@ -33,7 +34,6 @@
 .lb__tag.pop b{animation:tagin .55s cubic-bezier(.2,.9,.3,1)}
 #lib3d.bv .lb__tag{opacity:0;transition:opacity .5s}
 @media (orientation:landscape){.lb__tag{top:calc(var(--sat) + 14px)}.lb__tag b{font-size:clamp(20px,4.6vw,30px)}}
-#lbFx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .lb__note{position:absolute;left:30px;right:30px;top:34%;text-align:center;font:italic 400 22px/1.3 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(255,190,90,.6),0 2px 12px #000;pointer-events:none;opacity:0;transition:opacity 1.2s}.lb__note.on{opacity:.92}
 .lb__door{position:absolute;background:none;border-radius:40%;pointer-events:auto;z-index:3}
 .lb__door i{position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,140,.3),transparent);opacity:0;transition:opacity .4s}
@@ -41,10 +41,10 @@
 .lb__door span{position:absolute;left:50%;top:34%;transform:translateX(-50%);white-space:nowrap;font:italic 400 18px/1 var(--serif);color:#f6e6bd;text-shadow:0 0 14px rgba(255,190,90,.7),0 2px 10px #000;opacity:0;transition:opacity .8s;pointer-events:none}
 #lib3d.hints .lb__door span{opacity:.9}
 /* the hands */
-#hands{position:fixed;inset:0;z-index:25;pointer-events:none;visibility:hidden}
+#hands{position:fixed;left:0;top:0;width:0;height:0;z-index:25;pointer-events:none;visibility:hidden}
 #hands.on{visibility:visible}
 #hands.top{z-index:36}
-.hd{position:absolute;inset:0;pointer-events:none}
+.hd{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none}
 .hd__img,.hd__wrap{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform,opacity;-webkit-user-drag:none;user-select:none;pointer-events:none;filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
 .hd__wrap{filter:none}
 .hd__wrap .hd__img{filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
@@ -62,10 +62,8 @@
 #lib3d::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.6),transparent 13%,transparent 87%,rgba(0,0,0,.6)),linear-gradient(0deg,rgba(0,0,0,.45),transparent 30%)}
 
 .lb__pool{position:absolute;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,rgba(255,176,90,.32),rgba(255,150,60,.1) 60%,transparent);opacity:0;transition:opacity .4s}
-.lb__rays{position:absolute;pointer-events:none;opacity:0;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,226,160,.55) 0 2.4deg,transparent 2.4deg 14deg);-webkit-mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent 70%);mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.55) 30%,transparent 70%);animation:lbspin 28s linear infinite}
-@keyframes lbspin{to{transform:rotate(360deg)}}
 .bk__lf{position:absolute;display:none;transform-origin:0 50%;backface-visibility:visible;-webkit-backface-visibility:visible;box-shadow:inset 0 0 18px rgba(90,55,12,.4)}
-.lb__ink{position:absolute;right:12px;top:calc(var(--sat) + 6px);width:62px;height:88px;padding:0;pointer-events:auto;z-index:5;background:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.75));transition:transform .4s var(--spring)}
+.lb__ink{position:absolute;left:8px;top:45%;width:62px;height:88px;padding:0;pointer-events:auto;z-index:5;background:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.75));transition:transform .4s var(--spring)}
 .lb__ink img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;transform-origin:30% 90%;animation:inkbob 4.4s ease-in-out infinite}
 @keyframes inkbob{50%{transform:rotate(2.2deg) translateY(-1px)}}
 .lb__ink::after{content:"";position:absolute;left:58%;top:6%;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff6d8,rgba(255,200,110,.0) 70%);animation:inktw 3.2s ease-in-out infinite;pointer-events:none}
@@ -75,7 +73,7 @@
 .lb__ink.dip img{animation:inkdip .6s ease-in-out}
 @keyframes inkdip{0%{transform:rotate(0)}30%{transform:rotate(-9deg) translateY(4px)}60%{transform:rotate(3deg) translateY(-2px)}100%{transform:rotate(0)}}
 #lib3d.bv .lb__ink{opacity:0;pointer-events:none}
-@media (orientation:landscape){.lb__ink{width:46px;height:66px;top:calc(var(--sat) + 4px)}.lb__ink span{display:none}.lb__tag{padding:0 100px}}
+@media (orientation:landscape){.lb__ink{left:1.6%;top:57%;width:50px;height:72px}.lb__ink span{display:none}.lb__tag{padding:0 100px}}
 /* ============================================================ the potion on the table */
 #potion3d{position:fixed;inset:0;z-index:21;pointer-events:none;visibility:hidden}
 #potion3d.on{visibility:visible}
@@ -95,3 +93,47 @@
 .pvbtns{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 26px);display:flex;justify-content:center;gap:12px;padding:0 16px;opacity:0;transform:translateY(16px);transition:opacity .8s .5s,transform .9s .5s var(--ease)}
 .pvbtns.on{opacity:1;transform:none}.pvbtns .seal{pointer-events:auto;margin-top:0}
 .seal--ghost{background:rgba(10,8,6,.55)!important;border:1px solid rgba(255,226,160,.45);color:#f6e6bd!important;box-shadow:0 6px 16px rgba(0,0,0,.5)!important}
+/* ============================================================ the alchemy room (stills of the user's film, living layers on top) */
+.pz{position:fixed;inset:0;z-index:21;background:#050806;opacity:0;visibility:hidden;transition:opacity .9s var(--ease),visibility .9s;touch-action:none;overflow:hidden;-webkit-user-select:none;user-select:none}
+.pz.on{opacity:1;visibility:visible}
+.pz__sc{position:absolute;left:0;top:0;width:720px;height:1280px;transform-origin:0 0;will-change:transform,opacity;transition:opacity .9s ease,filter .9s ease,translate .9s var(--ease)}
+.pz__sc img{position:absolute;left:0;top:0;width:720px;height:1280px;opacity:0;transition:opacity 1.3s ease;pointer-events:none;-webkit-user-drag:none}
+.pz__sc.pz__out{opacity:0!important;filter:blur(12px);translate:0 -90px}.pz__sc.pz__in{translate:0 100px;filter:blur(12px)}
+.pz__fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pz__cover{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.pz__title{position:absolute;left:0;right:0;top:calc(var(--sat) + 24px);margin:0;text-align:center;font:400 11px/1 var(--f);letter-spacing:.4em;text-transform:uppercase;color:rgba(246,230,189,.55);pointer-events:none;text-shadow:0 2px 12px #000}
+.pz__hint{position:absolute;left:24px;right:24px;top:calc(var(--sat) + 82px);margin:0;text-align:center;font:italic 400 20px/1.3 var(--serif);color:#f6e6bd;text-shadow:0 0 18px rgba(120,255,160,.4),0 2px 14px #000;opacity:0;pointer-events:none;transition:opacity .8s}.pz__hint.on{opacity:.92}
+.pz__tray{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 8px);display:flex;justify-content:center;align-items:flex-end;gap:clamp(2px,1.2vw,12px);padding:14px 8px 8px;transition:transform .8s var(--ease),opacity .6s;z-index:3}
+.pz__tray::before{content:"";position:absolute;left:0;right:0;bottom:0;top:26%;background:linear-gradient(180deg,transparent,rgba(5,3,2,.82) 55%);pointer-events:none}
+.pz.brewing .pz__tray,.pz.result .pz__tray{transform:translateY(140%);opacity:0;pointer-events:none}
+.pzv{position:relative;width:calc((100vw - 20px)/6);max-width:74px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;background:none;transition:transform .5s var(--spring)}
+.pzv:active{transform:scale(.92)}
+.pzv__g{display:block;width:30px;height:102px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.65));transition:transform .5s var(--spring),filter .5s}
+.pzv__g svg{display:block;width:100%;height:100%;overflow:visible}
+.pzv.on .pzv__g{transform:translateY(-10px);filter:drop-shadow(0 0 14px rgba(var(--c),.95)) drop-shadow(0 6px 8px rgba(0,0,0,.6))}
+.pzv b{font:400 9px/1 var(--f);letter-spacing:.05em;text-transform:lowercase;color:#f1e4c0;opacity:.82;white-space:nowrap}
+.pzv.on b{color:#fff4d0;opacity:1}
+.pzv .pv__liq{transform:translateY(-210px)}
+.pz__go{position:absolute;left:50%;bottom:calc(var(--sab) + 156px);transform:translate(-50%,16px);margin:0;opacity:0;pointer-events:none;transition:opacity .5s,transform .7s var(--ease);z-index:4}.pz__go.on{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.pz.brewing .pz__go,.pz.result .pz__go{opacity:0;pointer-events:none}
+.pz__tag{position:absolute;width:160px;padding:10px 10px 9px 12px;border-radius:3px 8px 8px 3px;color:#2b1c0c;background:radial-gradient(120% 90% at 40% 30%,#f1e4bf,#dcc791);box-shadow:0 8px 16px rgba(0,0,0,.55);transform-origin:0 0;transform:rotate(6deg);animation:tagsway 5s ease-in-out infinite;text-align:center;opacity:0;pointer-events:none;transition:opacity .8s .4s;z-index:5}
+.pz__tag.on{opacity:1}
+.pz__tag i{position:absolute;left:-14px;top:9px;width:16px;height:2px;background:#6b4a1a;border-radius:1px}
+.pz__tag b{display:block;font:400 clamp(14px,calc(var(--tw,160px)*.12),19px)/1.12 "Marck Script","Caveat",cursive;text-wrap:balance}
+.pz__tag small{display:block;margin-top:4px;font:italic 500 11px/1.15 var(--serif);opacity:.7}
+.pz__tag em{display:block;margin-top:5px;font:400 9px/1.2 var(--f);letter-spacing:.16em;text-transform:uppercase;opacity:.5;font-style:normal}
+.pz__btns{position:absolute;left:0;right:0;bottom:calc(var(--sab) + 26px);display:flex;justify-content:center;gap:12px;padding:0 16px;opacity:0;transform:translateY(16px);transition:opacity .8s .6s,transform .9s .6s var(--ease);pointer-events:none;z-index:4}
+.pz__btns.on{opacity:1;transform:none}.pz__btns .seal{pointer-events:auto;margin-top:0}
+.pz .pv--table{position:absolute;left:0;top:0;will-change:transform}
+@media (orientation:landscape){.pzv__g{width:21px;height:72px}.pzv b{font-size:9px}.pz__go{bottom:calc(var(--sab) + 108px)}.pz__hint{top:calc(var(--sat) + 16px);font-size:17px}.pz__title{display:none}}
+
+/* take a book off the shelf */
+.lb__del{position:absolute;right:12px;top:calc(var(--sat) + 8px);width:42px;height:42px;border-radius:50%;display:grid;place-items:center;pointer-events:none;z-index:5;color:#f1dcb0;background:rgba(8,10,10,.5);border:1px solid rgba(255,226,160,.32);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 22px rgba(0,0,0,.5);opacity:0;transform:scale(.8);transition:opacity .45s,transform .5s var(--spring)}
+.lb__del.on{opacity:.9;transform:none;pointer-events:auto}.lb__del:active{transform:scale(.88)}.lb__del .ico{width:20px;height:20px}
+#lib3d.bv .lb__del,#lib3d.pick .lb__del,#lib3d.pick .lb__ink,#lib3d.pick .lb__tag{opacity:0!important;pointer-events:none!important;transition:opacity .4s}
+.lb__ask{position:absolute;inset:0;z-index:12;display:grid;place-items:center;background:rgba(3,2,2,.62);opacity:0;transition:opacity .35s;pointer-events:auto}.lb__ask.on{opacity:1}
+.lb__ask-in{width:min(84vw,340px);padding:24px 22px 20px;border-radius:20px;text-align:center;background:radial-gradient(120% 90% at 50% 0,#2a1a14,#120a08);border:1px solid rgba(255,214,140,.3);box-shadow:0 30px 70px rgba(0,0,0,.7);transform:translateY(14px) scale(.96);transition:transform .5s var(--spring)}.lb__ask.on .lb__ask-in{transform:none}
+.lb__ask-in p{margin:0 0 8px;font:italic 400 19px/1.25 var(--serif);color:#f6e6bd}.lb__ask-in b{display:block;font:600 21px/1.2 var(--serif);color:#ffe9b0;text-wrap:balance}
+.lb__ask-in small{display:block;margin:10px 0 16px;font:400 11px/1.3 var(--f);letter-spacing:.08em;color:rgba(246,230,189,.55)}
+.lb__ask-row{display:flex;gap:10px;justify-content:center}.lb__ask-row .seal{margin:0;padding:12px 20px;font-size:15px}
+@media (orientation:landscape){.lb__del{top:calc(var(--sat) + 6px)}}

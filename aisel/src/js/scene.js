@@ -187,7 +187,7 @@ A.scene = (() => {
     setRoom(name, z = 1) {                                  // instant swap of the plate; the caller hides the cut behind a curtain
       const r = roomPlate(name); roomName = name; RW = r.w; RH = r.h; room.dataset.room = name; room.style.width = RW + 'px'; room.style.height = RH + 'px';
       setBg(name); saved = name === 'main' ? saved : null; focusId = null; resize();
-      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lab' && ori === 'portrait' ? 110 : 0) + (name === 'lib' && ori === 'portrait' ? 95 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2 + (name === 'lib' && ori === 'landscape' ? RH * .09 : 0); cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
+      cam.z.x = cam.z.t = z; cam.z.v = 0; mode = 'room'; locked = false; cam.x.x = cam.x.t = name === 'main' ? HOME.cx : RW / 2 + (name === 'lib' && ori === 'portrait' ? 95 : 0); cam.y.x = cam.y.t = name === 'main' ? HOME.cy : RH / 2 + (name === 'lib' && ori === 'landscape' ? RH * .09 : 0); cam.x.v = cam.y.v = 0; clampT(); dirty = true; apply();
     },
     layout: () => LAY, plateToScreen: (x, y) => toScreen(x, y), plateFinal: (x, y) => [VW / 2 + (x - cam.x.t) * s0 + gx, VH / 2 + (y - cam.y.t) * s0 + gy],
     clientToRoom: (x, y) => toRoom(x, y),

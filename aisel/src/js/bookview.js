@@ -9,7 +9,7 @@ A.bookview = (() => {
   const prefs = () => Object.assign({ size: 21, font: 'serif', theme: 'parch' }, A.state.settings.reader || {});
   const wait = ms => new Promise(r => setTimeout(r, ms)), esc = A.esc;
   const TABS = [['read', 'Читать'], ['impr', 'Впечатление'], ['quotes', 'Цитаты']];
-  let posT = 0, stillT = 0, el, book, bookEl, pgL, pgR, leaf, lfF, lfB, stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
+  let posT = 0, stillT = 0, warmT = 0, el, book, bookEl, pgL, pgR, leaf, castL, castR, fsh, strips = [], stage, g, open_ = false, onClose = null, S = { tab: 'read', i: 0 }, fl = null, raf = 0, maxFrac = 0, pager = null, qpager = null, textLen = 0, hasText = false, comp = { text: '', page: '' }, drag = null, pressT = 0, selPara = null, busyW = false, freshId = null;
 
   /* ---------------------------------------------------------------- pagination (lazy: a page is measured only when it is needed) */
   function makePager(paras, measure) {
@@ -53,7 +53,7 @@ A.bookview = (() => {
       <div class="bv__stage" id="bvStage"><div class="bv__book" id="bvBook">
         <i class="bv__ribbon"></i><i class="bv__leather"></i><i class="bv__edges"></i>
         <div class="bv__pg bv__pg--l paper" id="pgL"></div><div class="bv__pg bv__pg--r paper" id="pgR"></div>
-        <div class="bv__leaf" id="bvLeaf"><div class="lf lf--f paper"><i class="lf__sh"></i></div><div class="lf lf--b paper"><i class="lf__sh"></i></div></div>
+        <i class="bv__cast bv__cast--l"></i><i class="bv__cast bv__cast--r"></i><div class="bv__leaf" id="bvLeaf"></div><i class="bv__fsh" id="bvFsh"></i>
         <i class="bv__gutter"></i>
       </div></div>
       <nav class="bv__tabs" id="bvTabs">${TABS.map(([k, n], i) => `<button class="rb rb--${i}" data-t="${k}"><span>${n}</span></button>`).join('')}</nav>
@@ -65,7 +65,7 @@ A.bookview = (() => {
         <div class="bvs__row"><span>Бумага</span><div class="bvs__seg" id="bvTh"><button data-v="parch">Пергамент</button><button data-v="night">Ночь</button></div></div>
         <div class="bvs__row"><span>Костёр</span><input type="range" min="0" max="1" step=".05" id="bvFire"></div></div>
     </div>`);
-    document.body.appendChild(el); bookEl = A.$('#bvBook', el); pgL = A.$('#pgL', el); pgR = A.$('#pgR', el); leaf = A.$('#bvLeaf', el); lfF = A.$('.lf--f', leaf); lfB = A.$('.lf--b', leaf); stage = A.$('#bvStage', el);
+    document.body.appendChild(el); bookEl = A.$('#bvBook', el); pgL = A.$('#pgL', el); pgR = A.$('#pgR', el); leaf = A.$('#bvLeaf', el); castL = A.$('.bv__cast--l', el); castR = A.$('.bv__cast--r', el); fsh = A.$('#bvFsh', el); stage = A.$('#bvStage', el);
     A.$('#bvX', el).addEventListener('click', () => close()); A.$('#bvAa', el).addEventListener('click', () => { A.snd.tap(); el.classList.toggle('setting'); });
     A.$$('#bvTabs .rb', el).forEach(b => b.addEventListener('click', () => { A.snd.tap(); switchTab(b.dataset.t); }));
     const setP = (k, v) => { A.state.settings.reader = Object.assign(prefs(), { [k]: v }); A.save(); applyPrefs(); if (k !== 'theme') repaginate(); markPrefs(); };
@@ -97,7 +97,7 @@ A.bookview = (() => {
   const pageEl = (inner, cls = '') => { const d = document.createElement('div'); d.className = 'pgc ' + cls; d.innerHTML = inner; return d; };
   const blank = n => pageEl(n ? pgn(n) : '', 'blank');
   const markPage = () => hasText && book.pos > .002 ? pager.pageOfChar(book.pos * textLen) + 1 : 0;
-  const titlePage = () => { const n = markPage(), d = pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i>${n ? `<button class="seal tapable" id="bvResume"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg>Закладка · стр. ${n}</button>` : ''}</div>`, 'title'); const r = A.$('#bvResume', d); r && r.addEventListener('click', () => { A.snd.tap(); const i = g.land ? Math.floor(n / 2) : n; if (begin(1, { tab: 'read', i })) { const f = fl; f.k = 30; f.c = 8.6; setTimeout(() => { if (fl === f) { f.t = -180; run(); } }, 340); } }); return d; };
+  const titlePage = () => { const n = markPage(), d = pageEl(`<div class="tp"><i class="orn"></i><h2>${esc(book.title)}</h2><p>${esc(book.author || '')}</p><i class="orn orn--b"></i>${n ? `<button class="seal tapable" id="bvResume"><svg viewBox="0 0 24 24" class="ico"><use href="#i-flame"/></svg>Закладка · стр. ${n}</button>` : ''}</div>`, 'title'); const r = A.$('#bvResume', d); r && r.addEventListener('click', () => { A.snd.tap(); const i = g.land ? Math.floor(n / 2) : n; if (begin(1, { tab: 'read', i })) { const f = fl; f.k = 28; f.c = 8.4; launch(f, -180, 260); } }); return d; };
   const noText = () => { const d = pageEl(`<div class="tp tp--empty"><p class="hw">У этой книги пока нет страниц для чтения.</p><p class="small">Её можно загрузить из PDF, EPUB или TXT.</p><button class="seal tapable" id="bvLoad">Загрузить текст</button></div>`, 'title'); A.$('#bvLoad', d).addEventListener('click', () => { A.snd.tap(); A.mods.books.editBook(book.id); }); return d; };
   const textFace = (html, n) => pageEl(`<div class="pgtxt">${html}</div>${pgn(n)}`);
 
@@ -164,53 +164,100 @@ A.bookview = (() => {
     A.$$('#bvTabs .rb', el).forEach(b => b.classList.toggle('on', b.dataset.t === S.tab));
   }
 
-  /* ---------------------------------------------------------------- the turning leaf */
-  function leafFaces(front, back) { [[lfF, front], [lfB, back]].forEach(([n, f]) => { const keep = A.$('.lf__sh', n); n.innerHTML = ''; if (f) n.appendChild(f); n.appendChild(keep); }); }
-  const corner = () => { const r = pgR.getBoundingClientRect(), a = fl ? fl.ang : 0; return { side: fl && fl.dir < 0 ? 'L' : 'R', x: r.left + g.pw * Math.cos(a * Math.PI / 180) - 6, y: r.bottom - Math.min(70, g.ph * .1) }; };
+  /* ---------------------------------------------------------------- the turning leaf
+     the page is a strip of thin segments hinged on each other: the free edge lags behind the finger (it "sails"), flutters a little, every segment is lit by its own angle,
+     the lifted page throws a soft shadow over the page below that grows and slides with it, and the fingertip throws its own shadow that loosens as the corner rises. */
+  const flipping = () => fl && !fl.flutter;
+  const NS = 9, LIGHT = [-.45, .85, .993];
+  function cloneFace(n) { if (!n) return null; const c = n.cloneNode(true); c.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); const o = n.querySelectorAll('textarea'); c.querySelectorAll('textarea').forEach((t, i) => { t.value = o[i] ? o[i].value : ''; t.tabIndex = -1; }); c.querySelectorAll('button,input').forEach(b => { b.tabIndex = -1; }); return c; }
+  function buildLeaf(front, back) {
+    leaf.innerHTML = ''; strips = []; const sw = g.pw / NS, ov = 1; let parent = leaf;                       // neighbouring segments overlap by a pixel on each side, so no seam can open between them
+    for (let i = 0; i < NS; i++) {
+      const st = document.createElement('div'); st.className = 'ls'; st.style.cssText = `left:${i ? sw.toFixed(3) : -ov}px;width:${(sw + 2 * ov).toFixed(3)}px;transform-origin:${ov}px 50%`;
+      st.innerHTML = '<div class="ls__f"><div class="ls__in paper"></div><i class="ls__sh"></i></div><div class="ls__b"><div class="ls__in paper"></div><i class="ls__sh"></i></div>';
+      const f = st.children[0], bk = st.children[1], fi = f.firstChild, bi = bk.firstChild;
+      fi.style.cssText = `left:${(-(i * sw - ov)).toFixed(3)}px;width:${g.pw}px`; bi.style.cssText = `left:${(-(g.pw - (i + 1) * sw - ov)).toFixed(3)}px;width:${g.pw}px`;
+      const cf = cloneFace(front), cb = cloneFace(back); cf && fi.appendChild(cf); cb && bi.appendChild(cb);
+      parent.appendChild(st); parent = st; strips.push({ el: st, sf: f.lastChild, sb: bk.lastChild, tf: -1, tb: -1 });
+    }
+  }
+  const corner = () => { const r = bookEl.getBoundingClientRect(); return { side: fl && fl.dir < 0 ? 'L' : 'R', x: r.left + (g.land ? g.pw : 0) + (fl ? fl.tx : g.pw) - 6, y: r.top + g.ph - Math.min(70, g.ph * .1) }; };
   function begin(dir, to) {
+    if (fl && fl.flutter) { cancelAnimationFrame(raf); raf = 0; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0; }
     if (fl || !open_) return false; to = to || { tab: S.tab, i: S.i + dir }; if (to.i < 0 || (to.tab === S.tab && to.i >= spreads(to.tab))) return false; const from = { tab: S.tab, i: S.i }, a = slots(from), b = slots(to); if (to.i >= spreads(to.tab)) return false;
-    if (dir > 0) { leafFaces(a.R, g.land ? b.L : null); setSlot(pgR, b.R); } else { leafFaces(b.R, g.land ? a.L : null); setSlot(pgR, a.R); if (g.land) setSlot(pgL, b.L); }
-    fl = { dir, from, to, ang: dir > 0 ? 0 : -180, v: 0, t: dir > 0 ? 0 : -180, k: 60, c: 11 }; leaf.style.display = 'block'; paintLeaf();
-    A.hands.show(true, true); A.$('#hands').classList.add('top'); A.hands.pinch(corner); A.snd.page(); return true;
+    if (dir > 0) { buildLeaf(a.R, g.land ? b.L : null); setSlot(pgR, b.R); } else { buildLeaf(b.R, g.land ? a.L : null); setSlot(pgR, a.R); if (g.land) setSlot(pgL, b.L); }
+    fl = { dir, from, to, a, b, ang: dir > 0 ? 0 : -180, v: 0, t: dir > 0 ? 0 : -180, k: 60, c: 11, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: dir > 0 ? g.pw : -g.pw, hold: true, pin: true }; leaf.style.display = 'block'; paintLeaf();
+    A.hands.show(true, true); A.$('#hands').classList.add('top'); A.hands.pinch(corner); A.snd.page(); run(); return true;
   }
   function paintLeaf() {
-    const a = fl.ang, th = Math.abs(a), k = Math.abs(Math.sin(th * Math.PI / 180)); leaf.style.transform = `rotateY(${a.toFixed(2)}deg)`; leaf.style.setProperty('--k', k.toFixed(3));
-    const wR = A.clamp((125 - th) / 70, 0, 1), wL = A.clamp((th - 55) / 70, 0, 1);              // the shadow the leaf throws glides from one page to the other, it never jumps
-    pgR.style.setProperty('--u', (k * .2 * wR).toFixed(3)); pgL.style.setProperty('--u', g.land ? (k * .2 * wL).toFixed(3) : '0');
+    const th = fl.ang, bd = fl.bd + fl.flu, N = strips.length, sw = g.pw / N; let prev = 0, x = 0, h = 0;
+    for (let i = 0; i < N; i++) {
+      const u = (i + .5) / N, phi = th + bd * Math.pow(u, 1.55) + fl.flu * .55 * Math.sin(u * 6.283), r = phi * Math.PI / 180, sn = Math.sin(r), cs = Math.cos(r), S_ = strips[i];
+      S_.el.style.transform = `rotateY(${(phi - prev).toFixed(2)}deg)`; prev = phi; x += sw * cs; h -= sw * sn;
+      const fd = (LIGHT[0] * sn + LIGHT[1] * cs) / LIGHT[2], bk = -fd, sf = A.clamp((.86 - fd) * .75, 0, .5), sb = A.clamp((.86 - bk) * .75, 0, .5);
+      if (Math.abs(sf - S_.tf) > .008) { S_.tf = sf; S_.sf.style.opacity = sf.toFixed(3); } if (Math.abs(sb - S_.tb) > .008) { S_.tb = sb; S_.sb.style.opacity = sb.toFixed(3); }
+    }
+    fl.tx = x; fl.h = A.clamp(h / g.pw, 0, 1);
+    // the shadow of the lifted page on the page below: it stretches to where the free edge is and softens as the page rises
+    const over = x >= 0 ? 'R' : 'L', ca = over === 'R' ? castR : castL, cb2 = over === 'R' ? castL : castR, wpx = Math.abs(x), soft = .5 * Math.pow(Math.sin(Math.min(1, fl.h * 1.15) * 1.5708), .8) * (1 - .35 * fl.h);
+    ca.style.cssText = `left:${(over === 'R' ? (g.land ? g.pw : 0) : (g.land ? 0 : -g.pw))}px;width:${(wpx + 26 + fl.h * 34).toFixed(1)}px;opacity:${soft.toFixed(3)};transform:${over === 'R' ? 'none' : `translateX(${(g.pw - wpx - 26 - fl.h * 34).toFixed(1)}px)`};background:linear-gradient(${over === 'R' ? 90 : 270}deg,rgba(24,10,0,.0),rgba(24,10,0,.5) ${Math.max(20, 70 - fl.h * 20).toFixed(0)}%,rgba(24,10,0,.34) ${(92 - fl.h * 6).toFixed(0)}%,rgba(24,10,0,0))`; cb2.style.opacity = 0;
+    // the shadow of the fingertip: tight and dark while the corner is low, wide and pale as it lifts
+    const bx = (g.land ? g.pw : 0) + x, by = g.ph - Math.min(70, g.ph * .1), k = fl.h, sx = 26 + k * 30, sy = 20 + k * 26, wdt = 50 + k * 56, hgt = 30 + k * 34;
+    fsh.style.cssText = `left:${(bx + sx - wdt / 2).toFixed(1)}px;top:${(by + sy - hgt / 2).toFixed(1)}px;width:${wdt.toFixed(0)}px;height:${hgt.toFixed(0)}px;opacity:${(fl.pin ? .62 - k * .34 : 0).toFixed(3)}`;
   }
-  function settle() { if (!fl) return; fl.v = fl.v || 0; run(); }
+  function launch(f, t, delay = 110) { setTimeout(() => { if (fl === f) { f.t = t; f.hold = false; run(); } }, delay); }
+  function settle() { if (!fl) return; fl.hold = false; fl.v = fl.v || 0; run(); }
   function run() {
-    if (raf) return; let last = performance.now();
-    const f = now => { const dt = Math.min(.08, (now - last) / 1000); last = now; fl.v += ((fl.t - fl.ang) * fl.k - fl.v * fl.c) * dt; fl.ang += fl.v * dt; fl.ang = A.clamp(fl.ang, -184, 4); paintLeaf();
-      if (Math.abs(fl.t - fl.ang) < .5 && Math.abs(fl.v) < 6) { raf = 0; endFlip(); return; } raf = requestAnimationFrame(f); };
+    if (raf) return; let last = performance.now(), dragging = false;
+    const f = now => {
+      if (!fl) { raf = 0; return; } const dt = Math.min(.05, (now - last) / 1000) * (A.slow || 1); last = now; dragging = !!(drag && drag.flip);
+      if (!dragging) { fl.v += ((fl.t - fl.ang) * fl.k - fl.v * fl.c) * dt; fl.ang += fl.v * dt; fl.ang = A.clamp(fl.ang, -184, 4); } else fl.vd *= Math.exp(-dt * 7);
+      const w = dragging ? fl.vd : fl.v, tb = A.clamp(-w * .085, -34, 34);                       // the free edge lags behind the motion, then springs back and rings a little
+      fl.bv += ((tb - fl.bd) * 150 - fl.bv * 8.5) * dt; fl.bd += fl.bv * dt; fl.fp += dt * (30 + Math.abs(w) * .05); fl.flu = Math.sin(fl.fp) * A.clamp(Math.abs(w) / 240, 0, 1) * 2.6;
+      paintLeaf();
+      if (!dragging && !fl.hold && Math.abs(fl.t - fl.ang) < .5 && Math.abs(fl.v) < 6 && Math.abs(fl.bd) < .8 && Math.abs(fl.bv) < 5) { raf = 0; endFlip(); return; }
+      raf = requestAnimationFrame(f);
+    };
     raf = requestAnimationFrame(f);
   }
   function endFlip() {
-    const done = fl.dir > 0 ? fl.t <= -179 : fl.t >= -1; if (done) S = { tab: fl.to.tab, i: fl.to.i }; fl = null; leaf.style.display = 'none'; pgR.style.setProperty('--u', '0'); pgL.style.setProperty('--u', '0'); renderSlots(); A.hands.unpinch(); setTimeout(() => { if (!fl) A.$('#hands').classList.remove('top'); }, 700);
+    const f = fl, done = f.flutter ? false : f.dir > 0 ? f.t <= -179 : f.t >= -1; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0;
+    if (!f.flutter) {
+      if (done) { S = { tab: f.to.tab, i: f.to.i }; if (f.dir > 0) { if (g.land) setSlot(pgL, f.b.L); } else setSlot(pgR, f.b.R); }
+      else { if (f.dir > 0) setSlot(pgR, f.a.R); else if (g.land) setSlot(pgL, f.a.L); }
+      foot();
+    }
+    if (!f.flutter) { A.hands.unpinch(); setTimeout(() => { if (!fl) A.$('#hands').classList.remove('top'); }, 700); } warm();
   }
-  function go(dir) { if (fl || busyW) return; if (begin(dir)) { const f = fl; f.k = 30; f.c = 8.6; setTimeout(() => { if (fl === f) { f.t = dir > 0 ? -180 : 0; run(); } }, 260); } else if (dir > 0 || dir < 0) { bump(dir); } }
+  function warm() { clearTimeout(warmT); warmT = setTimeout(() => { if (open_ && S.tab === 'read' && hasText && pager) pager.get(Math.max(0, (g.land ? S.i * 2 + 1 : S.i) - 1) + 3); }, 140); }
+  /* a breath of air as the book opens: the top page lifts, sails and settles again */
+  function flutter() {
+    if (fl || !open_ || busyW || !g) return; const R = slots(S).R; if (!R) return; buildLeaf(R, null);
+    fl = { dir: 1, from: S, to: S, ang: 0, v: -125, t: 0, k: 70, c: 8.6, bd: 0, bv: 0, fp: 0, flu: 0, vd: 0, tx: g.pw, hold: false, flutter: true }; leaf.style.display = 'block'; paintLeaf(); A.snd.page && A.snd.page(); run();
+  }
+  function go(dir) { if (flipping() || busyW) return; if (begin(dir)) { launch(fl, dir > 0 ? -180 : 0, 120); fl.k = 28; fl.c = 8.4; } else if (dir > 0 || dir < 0) { bump(dir); } }
   function bump(dir) { pgR.animate([{ transform: 'none' }, { transform: `translateX(${-dir * 9}px)` }, { transform: 'none' }], { duration: 260, easing: 'ease-out' }); }
   function switchTab(t) {
-    if (fl || busyW || t === S.tab) return; cancelPress(); clearSel(); const order = TABS.map(x => x[0]), dir = order.indexOf(t) > order.indexOf(S.tab) ? 1 : -1;
+    if (flipping() || busyW || t === S.tab) return; cancelPress(); clearSel(); const order = TABS.map(x => x[0]), dir = order.indexOf(t) > order.indexOf(S.tab) ? 1 : -1;
     if (t === 'quotes') qpager = quotesPager();
-    if (begin(dir, { tab: t, i: 0 })) { const f = fl; f.k = 28; f.c = 8.4; setTimeout(() => { if (fl === f) { f.t = dir > 0 ? -180 : 0; run(); } }, 260); }
+    if (begin(dir, { tab: t, i: 0 })) { const f = fl; f.k = 27; f.c = 8.3; launch(f, dir > 0 ? -180 : 0, 120); }
   }
 
   /* ---------------------------------------------------------------- touch: drag a page, tap an edge, hold a paragraph */
   const interactive = t => t.closest('textarea,input,button,label'); let dragStamp = 0; const wasDrag = () => performance.now() - dragStamp < 400;
   function onDown(e) {
-    if (fl || busyW) return; if (interactive(e.target)) { drag = { x: e.clientX, y: e.clientY, ui: true, moved: false }; return; }
+    if (flipping() || busyW) return; if (interactive(e.target)) { drag = { x: e.clientX, y: e.clientY, ui: true, moved: false }; return; }
     bookEl.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, t: performance.now(), lx: e.clientX, lt: performance.now(), v: 0, moved: false, flip: false, id: e.pointerId };
     if (S.tab === 'read') { const p = e.target.closest('.pgtxt p'); if (p) pressT = setTimeout(() => { if (drag && !drag.moved) { drag.moved = true; pickPara(p); } }, 560); }
   }
   function onMove(e) {
     if (!drag || drag.ui) return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     if (!drag.moved && Math.hypot(dx, dy) > 10) { cancelPress(); if (Math.abs(dx) > Math.abs(dy) * 1.1) { drag.moved = true; if (begin(dx < 0 ? 1 : -1)) { drag.flip = true; fl.k = 140; fl.c = 20; clearSel(); } } else { drag.moved = true; } }
-    if (drag.flip && fl) { const now = performance.now(); drag.v = drag.v * .6 + ((e.clientX - drag.lx) / Math.max(1, now - drag.lt)) * .4; drag.lx = e.clientX; drag.lt = now; const p = A.clamp(Math.abs(dx) / (g.pw * .85), 0, 1); fl.t = fl.dir > 0 ? -180 * p : -180 * (1 - p); fl.t = fl.dir > 0 ? Math.min(0, fl.t) : Math.max(-180, fl.t); fl.ang = fl.t; fl.v = 0; paintLeaf(); }
+    if (drag.flip && fl) { const now = performance.now(); drag.v = drag.v * .6 + ((e.clientX - drag.lx) / Math.max(1, now - drag.lt)) * .4; drag.lx = e.clientX; drag.lt = now; const p = A.clamp(Math.abs(dx) / (g.pw * .85), 0, 1); fl.t = fl.dir > 0 ? -180 * p : -180 * (1 - p); fl.t = fl.dir > 0 ? Math.min(0, fl.t) : Math.max(-180, fl.t); fl.ang = fl.t; fl.vd = 180 / (g.pw * .85) * drag.v * 1000; paintLeaf(); }
   }
   function onUp(e) {
     cancelPress(); if (!drag) return; const d = drag; drag = null; if (d.ui) return;
-    if (d.flip && fl) { const p = fl.dir > 0 ? -fl.ang / 180 : 1 + fl.ang / 180, vel = d.v * fl.dir * -1; const complete = p > .3 || vel > .35; fl.t = fl.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180); fl.k = 62; fl.c = 11; fl.v = d.v * 1000 * 180 / (g.pw * .85); run(); return; }
+    if (d.flip && fl) { const p = fl.dir > 0 ? -fl.ang / 180 : 1 + fl.ang / 180, vel = d.v * fl.dir * -1; const complete = p > .3 || vel > .35; fl.t = fl.dir > 0 ? (complete ? -180 : 0) : (complete ? 0 : -180); fl.k = 58; fl.c = 10.5; fl.v = d.v * 1000 * 180 / (g.pw * .85); fl.hold = false; run(); return; }
     if (d.moved) { dragStamp = performance.now(); return; }
     if (performance.now() - d.t < 450 && !e.target.closest('.qe')) { const r = bookEl.getBoundingClientRect(), x = (e.clientX - r.left) / r.width; if (selPara) { clearSel(); return; } if (g.land ? x > .5 : x > .58) go(1); else if (g.land ? x <= .5 : x < .42) go(-1); }
   }
@@ -232,7 +279,7 @@ A.bookview = (() => {
     qpager = quotesPager();
     const br = bookEl.getBoundingClientRect(), sr = slip.getBoundingClientRect(), tx = br.left + br.width * (g.land ? .75 : .5) - (sr.left + sr.width / 2), ty = br.top + br.height * .2 - (sr.top + sr.height / 2);
     const fly = slip.animate([{ transform: 'translate(-50%,-50%) rotate(-1.4deg) scale(1)', opacity: 1 }, { transform: `translate(calc(-50% + ${tx}px),calc(-50% + ${ty}px)) rotate(0deg) scale(.62)`, opacity: .0 }], { duration: 950, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards' });
-    if (!g.land) { await wait(380); const to = { tab: 'quotes', i: 1 }; if (S.i !== 1 && begin(1, to)) { const f = fl; f.k = 46; f.c = 9.5; await wait(260); f.t = -180; run(); } } else renderSlots();
+    if (!g.land) { await wait(380); const to = { tab: 'quotes', i: 1 }; if (S.i !== 1 && begin(1, to)) { const f = fl; f.k = 40; f.c = 9; await wait(160); f.t = -180; f.hold = false; run(); } } else renderSlots();
     await fly.finished; slip.remove(); busyW = false;
     await wait(g.land ? 0 : 600); if (S.tab === 'quotes') { renderSlots(); const n = A.$('.qe.fresh', el); n && n.scrollIntoView && 0; } A.fx.sparks(innerWidth / 2, innerHeight * .4, 20, '#f3d9a0'); setTimeout(() => { freshId = null; A.$$('.qe.fresh', el).forEach(x => x.classList.remove('fresh')); }, 2500);
   }
@@ -255,16 +302,17 @@ A.bookview = (() => {
     leaf.style.display = 'none'; renderSlots(); document.body.classList.add('bv-open'); A.$('#lib3d').classList.add('bv');
     A.snd.setMood('books'); A.snd.unlock && A.snd.unlock(); A.snd.setFire(1);
     if (hasText && !A.state.bvTip) { A.state.bvTip = true; A.save(); setTimeout(() => open_ && A.toast('Листай страницы пальцем. Зажми абзац — он станет цитатой.', 4600), 2000); }
-    void el.offsetWidth; el.classList.add('in'); clearTimeout(stillT); stillT = setTimeout(() => { if (open_) { document.body.classList.add('bv-still'); A.scene.freeze(true); } }, 900); if (!hasText) setTimeout(() => A.toast('В «Читать» пока пусто — загрузи текст, а впечатления и цитаты работают уже сейчас'), 900);
+    void el.offsetWidth; el.classList.add('in'); setTimeout(() => { if (open_ && !fl && S.tab === 'read') flutter(); }, 1350); clearTimeout(stillT); stillT = setTimeout(() => { if (open_) { document.body.classList.add('bv-still'); A.scene.freeze(true); } }, 900); if (!hasText) setTimeout(() => A.toast('В «Читать» пока пусто — загрузи текст, а впечатления и цитаты работают уже сейчас'), 900);
   }
   function close() {
-    if (!open_) return; if (busyW) return; open_ = false; clearSel(); cancelPress(); A.quill.hide(); const b = book;
+    if (!open_) return; if (busyW) return; open_ = false; clearSel(); cancelPress(); A.quill.hide(); const b = book; clearTimeout(warmT);
+    if (fl) { cancelAnimationFrame(raf); raf = 0; fl = null; leaf.style.display = 'none'; leaf.innerHTML = ''; strips = []; castL.style.opacity = castR.style.opacity = fsh.style.opacity = 0; }
     if (hasText && pager) { b.read = b.read || 0; const reached = Math.round(maxFrac * (b.pages || A.pagesEst('x'.repeat(b._len || 800)))), delta = Math.min(reached, b.pages || reached) - (b.read || 0); if (delta > 0 && b.status !== 'done') A.logPages(delta, b.id); }
     A.save(); el.classList.remove('in', 'setting'); clearTimeout(stillT); document.body.classList.remove('bv-open', 'bv-still'); A.scene.freeze(false); A.$('#lib3d').classList.remove('bv'); A.$('#hands').classList.remove('top'); A.hands.unpinch();
     document.querySelector('meta[name=theme-color]').setAttribute('content', '#000'); A.snd.setMood(A.tab || 'room'); A.snd.setFire(A.tab === 'books' || (A.fire && A.fire.on) ? 1 : 0);
     setTimeout(() => { el.hidden = true; }, 700); const cb = onClose; onClose = null; setTimeout(() => cb && cb(), 160); A.mods.books && A.mods.books.refresh && A.mods.books.refresh();
   }
-  return { open: openBook, close, isOpen: () => open_, _dbg: () => ({ fl, raf }) };
+  return { open: openBook, close, isOpen: () => open_, _dbg: () => ({ fl, raf, S, g, open_, busyW }), _go: go };
 })();
 A.reader = { open: (b, r) => A.bookview.open(b), close: () => A.bookview.close(), isOpen: () => A.bookview.isOpen() };
 A.pagesEst = t => Math.max(1, Math.round((t || '').length / 1800));
