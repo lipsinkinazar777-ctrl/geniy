@@ -1,0 +1,4 @@
+VOTE: GUILTY
+REASON: I follow the money and the record has no cost of goods, no stand rent, no tax or VAT status, no launch budget and no revenue, so nobody can show that this business earns a profit, and a business launched as described without those numbers is spending blind.
+DECIDING FACT: "No cost of goods (blank mugs, metal plates, ink, laser time, packaging, labour) appears anywhere; the CRM product records have empty 'price' and 'cost' fields", and the files admit the set prices must be checked against item cost plus box, "which I cannot see".
+WOULD FLIP IF: The case came with a real per-unit cost sheet (blanks, ink, laser time, box, labour) and the stand rent, showing that the core mug and the best-selling sets sell well above full cost with a break-even weekly order count the workshop can actually produce.

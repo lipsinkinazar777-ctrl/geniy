@@ -1,0 +1,4 @@
+VOTE: GUILTY
+REASON: As a lawyer I see a business that would be selling online in France and the EU with no recorded legal status, no mandatory legal notices, terms of sale or privacy policy, and a crossed-out "old price" the owner's own files call misleading, so it should not go ahead as described.
+DECIDING FACT: The site files contain zero mentions of delivery/shipping, returns/withdrawal, payment terms, legal notices (mentions legales), terms of sale, privacy/GDPR or SIRET, and tax status, VAT and insurance are also absent from the record, while the site collects customers' personal photos and the two Prestige sets show a crossed-out higher price.
+WOULD FLIP IF: The record showed a registered business (SIRET, tax and VAT status, insurance, stand permit) and a site with mentions legales, terms of sale with the withdrawal-right position for personalised goods, a GDPR notice covering customer photos, and the invented crossed-out prices removed.

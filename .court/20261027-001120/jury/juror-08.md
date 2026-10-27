@@ -1,0 +1,4 @@
+VOTE: GUILTY
+REASON: A pre-launch handmade-gift business with no sales, no cost data and 1 follower gives me nothing to put against the usually poor odds for small niche online gift sellers, and the "online, 5-language" description does not match a WhatsApp-and-weekend-stand operation.
+DECIDING FACT: The record has no sales numbers, order counts, stand takings or cost of goods (CRM price and cost fields are empty), only a logged problem "Few customers at the market" and an Instagram account with "0 posts, 1 follower", so the sample of evidence for "holds up and brings profit" is zero.
+WOULD FLIP IF: The record showed several months of real stand and WhatsApp orders with per-product costs and stand rent, proving that typical sets sell above full cost and that repeat or referral orders are growing.

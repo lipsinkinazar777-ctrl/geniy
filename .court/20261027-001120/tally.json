@@ -1,0 +1,92 @@
+{
+  "verdict": "GUILTY",
+  "guilty": 12,
+  "not_guilty": 0,
+  "no_vote": 0,
+  "jurors": [
+    {
+      "juror": "The Accountant",
+      "vote": "GUILTY",
+      "reason": "I follow the money and the record has no cost of goods, no stand rent, no tax or VAT status, no launch budget and no revenue, so nobody can show that this business earns a profit, and a business launched as described without those numbers is spending blind.",
+      "fact": "\"No cost of goods (blank mugs, metal plates, ink, laser time, packaging, labour) appears anywhere; the CRM product records have empty 'price' and 'cost' fields\", and the files admit the set prices must be checked against item cost plus box, \"which I cannot see\".",
+      "flip": "The case came with a real per-unit cost sheet (blanks, ink, laser time, box, labour) and the stand rent, showing that the core mug and the best-selling sets sell well above full cost with a break-even weekly order count the workshop can actually produce."
+    },
+    {
+      "juror": "The First-Time Customer",
+      "vote": "GUILTY",
+      "reason": "As a stranger finding this online, I couldn't pay on the site, get anything delivered, or see who the seller is, and the Instagram page has one follower and no posts, so I would not buy this week and would use a mug site that has a checkout.",
+      "fact": "The site has \"no online payment, no checkout, no delivery option, no order tracking\" and no mention of delivery, returns, legal notices or SIRET, and orders are picked up at a weekend market stand, so it is not the online business the case describes.",
+      "flip": "The case were described honestly as a weekend market stand with WhatsApp ordering and free-preview pickup in Paris, or the site gained checkout, delivery, legal pages and some real customer proof."
+    },
+    {
+      "juror": "The Competitor",
+      "vote": "GUILTY",
+      "reason": "As a competitor I would ignore it, because what is described as a 5-language online business is a weekend market stand taking orders over WhatsApp, with 0 posts and 1 follower on Instagram, nothing I would have to copy or beat, and no proof it can make money.",
+      "fact": "The site has no online payment, no checkout and no delivery option, and orders are picked up at the Porte de Clignancourt stand on Saturday and Sunday, so the \"online, 5-language\" business in the question does not exist as stated.",
+      "flip": "The case were restated as a stand-and-WhatsApp pickup business with real cost-of-goods and sales figures showing every product and set sells above its full cost, including box, labour and stand rent."
+    },
+    {
+      "juror": "The Retired Judge",
+      "vote": "GUILTY",
+      "reason": "The case asks for a verdict that the business will hold up and make a profit, but the record contains no cost, revenue, rent, tax or capacity figures, so that claim is hope, and the \"online, 5-language\" description does not match a WhatsApp-and-weekend-stand-pickup operation with no checkout, delivery or legal pages.",
+      "fact": "\"No cost of goods (blank mugs, metal plates, ink, laser time, packaging, labour) appears anywhere; the CRM product records have empty 'price' and 'cost' fields\", with no sales numbers and Instagram at 0 posts and 1 follower, and the defense itself conceded that \"nothing in the record proves profit\".",
+      "flip": "The record included real unit costs and some actual sales or stand-takings data showing the main products sell above full cost (including box, labour and stand rent), or the case were restated as a conditional, pre-launch assessment of a stand-and-WhatsApp business rather than a profitable 5-language online one."
+    },
+    {
+      "juror": "The Teenager",
+      "vote": "GUILTY",
+      "reason": "Nobody is talking about this yet, with zero posts and one follower, and \"online in 5 languages\" turns out to be a WhatsApp chat plus a weekend market stand, so the thing as described isn't what exists and I wouldn't come back next week.",
+      "fact": "Instagram shows \"0 posts, 1 follower\", the site has no checkout, payment or delivery, and the only logged problem is \"Few customers at the market\".",
+      "flip": "The record showed real traction, such as actual orders, repeat customers or an audience engaging with posts, and the case were reframed as a stand-pickup gift business rather than a 5-language online shop."
+    },
+    {
+      "juror": "The Engineer",
+      "vote": "GUILTY",
+      "reason": "As an engineer I see a WhatsApp-and-weekend-stand workshop, not the online 5-language shop the case describes, and with no cost data nothing in it can be tested or load-checked as it stands.",
+      "fact": "The site has \"no online payment, no checkout, no delivery option, no order tracking\" and zero mentions of delivery, returns, legal notices or GDPR, while every order is picked up at a weekend stand and no cost of goods appears anywhere in the record.",
+      "flip": "The case were restated as a stand-pickup, WhatsApp-order workshop with the site as a catalogue, and per-item costs (blanks, ink, laser time, box, labour, stand rent) were supplied so that margin and weekly capacity could be checked."
+    },
+    {
+      "juror": "The Small-Business Owner",
+      "vote": "GUILTY",
+      "reason": "I would not open a shop on these numbers: nobody can say what a mug costs to make, what the stand costs, or who does the work and how many hours a week, and the \"online, 5-language\" business is really a weekend stand where customers pick up their orders.",
+      "fact": "The record has no cost of goods (the CRM \"price\" and \"cost\" fields are empty), no stand rent, no tax status or VAT, no capacity, and no sales at all, with Instagram at \"0 posts, 1 follower\", so no one can say where the cash comes from or what happens in a slow month.",
+      "flip": "The record held real unit costs (blanks, ink, laser time, box, labour), the stand rent, and a few months of actual orders and stand takings showing every set sells above full cost."
+    },
+    {
+      "juror": "The Statistician",
+      "vote": "GUILTY",
+      "reason": "A pre-launch handmade-gift business with no sales, no cost data and 1 follower gives me nothing to put against the usually poor odds for small niche online gift sellers, and the \"online, 5-language\" description does not match a WhatsApp-and-weekend-stand operation.",
+      "fact": "The record has no sales numbers, order counts, stand takings or cost of goods (CRM price and cost fields are empty), only a logged problem \"Few customers at the market\" and an Instagram account with \"0 posts, 1 follower\", so the sample of evidence for \"holds up and brings profit\" is zero.",
+      "flip": "The record showed several months of real stand and WhatsApp orders with per-product costs and stand rent, proving that typical sets sell above full cost and that repeat or referral orders are growing."
+    },
+    {
+      "juror": "The Parent",
+      "vote": "GUILTY",
+      "reason": "As a parent I would not put my family's time and savings behind a business that takes customers' personal photos and IBAN deposits with no costs known, no legal notices, no privacy terms and no sales so far, and nothing in the record shows it is safe or worth the risk as described.",
+      "fact": "The record has no cost of goods, stand rent, tax status/SIRET, VAT or insurance, and the site has no mentions legales, terms of sale, returns or privacy/GDPR (zero occurrences), yet it collects customers' photos and deposits.",
+      "flip": "The owner supplied real per-item costs and stand rent showing each featured product and set sells above its full cost, and the legal pages and tax registration were in place before launch."
+    },
+    {
+      "juror": "The Investor",
+      "vote": "GUILTY",
+      "reason": "I would not put my own money into a business that cannot show one cost, one sale or one working checkout, and that calls itself a 5-language online shop when it is really a weekend stand with WhatsApp orders.",
+      "fact": "The record has no cost of goods anywhere (the CRM price and cost fields are empty), no stand rent, tax status or VAT, no sales numbers, and Instagram shows 0 posts and 1 follower, so the profit I would be paying for cannot be tested.",
+      "flip": "The case were restated as a pre-launch stand-and-WhatsApp business and came with real unit costs (blanks, ink, box, labour, stand rent) showing the main sets sell above full cost, plus a few weeks of actual stand takings."
+    },
+    {
+      "juror": "The Designer",
+      "vote": "GUILTY",
+      "reason": "A stranger told \"online business with a 5-language site\" would picture a web shop, but the record shows a weekend market stand taking WhatsApp orders, with no checkout, no delivery and no legal pages, so the case as described is not what actually exists.",
+      "fact": "The site has \"no online payment, no checkout, no delivery option, no order tracking\", with pickup only at the Porte de Clignancourt stand on weekends, which contradicts the \"online, 5 languages\" framing of the question.",
+      "flip": "The case were restated as what it is, a pre-launch, stand-pickup business ordering by WhatsApp that needs a conditional verdict and a fix list, rather than a profit verdict on an online multilingual shop."
+    },
+    {
+      "juror": "The Lawyer",
+      "vote": "GUILTY",
+      "reason": "As a lawyer I see a business that would be selling online in France and the EU with no recorded legal status, no mandatory legal notices, terms of sale or privacy policy, and a crossed-out \"old price\" the owner's own files call misleading, so it should not go ahead as described.",
+      "fact": "The site files contain zero mentions of delivery/shipping, returns/withdrawal, payment terms, legal notices (mentions legales), terms of sale, privacy/GDPR or SIRET, and tax status, VAT and insurance are also absent from the record, while the site collects customers' personal photos and the two Prestige sets show a crossed-out higher price.",
+      "flip": "The record showed a registered business (SIRET, tax and VAT status, insurance, stand permit) and a site with mentions legales, terms of sale with the withdrawal-right position for personalised goods, a GDPR notice covering customer photos, and the invented crossed-out prices removed."
+    }
+  ]
+}
