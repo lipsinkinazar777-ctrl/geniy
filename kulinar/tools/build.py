@@ -4,6 +4,7 @@
   python3 kulinar/tools/build.py                 # один самодостаточный файл: фото вшиты (data-URI)
   python3 kulinar/tools/build.py --budget 12     # лимит веса вшитых фото, МБ (по умолчанию 12; нужен Pillow для пережатия)
   python3 kulinar/tools/build.py --external      # фото не вшиваются, а лежат рядом в kulinar/img/
+  python3 kulinar/tools/build.py --artifact OUT  # ещё и вариант для публикации как Artifact (без <html>/<head>/<body>)
 
 Порядок сборки: 00-head-open.html -> style*.css -> 90-head-close.html -> js/*.js (по имени)
 -> const PHOTOS (перед js с префиксом 30) -> закрывающие теги.
@@ -84,32 +85,63 @@ def photos_js(external, budget_mb):
     return '/* ===== ФОТО (вшиты) ===== */\nconst PHOTOS={%s};\n' % ',\n'.join(items)
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--external', action='store_true')
-    ap.add_argument('--budget', type=float, default=12)
-    a = ap.parse_args()
-    out = [rd(os.path.join(SRC, '00-head-open.html'))]
+def artifact_wrap(head_open, head_close, tail):
+    """Вариант для публикации как Artifact: площадка сама добавляет <!doctype>, <head> и <body>,
+    поэтому остаётся только содержимое страницы, а название сокращается до имени приложения."""
+    def sub(text, pattern, repl, regex=True):
+        res = re.sub(pattern, lambda m: repl, text, count=1, flags=re.S) if regex else text.replace(pattern, repl, 1)
+        if res == text:
+            sys.exit('artifact: в шаблоне не найден фрагмент %r' % pattern[:60])
+        return res
+    head_open = sub(head_open, r'<!doctype html>\s*<html[^>]*>\s*<head>\s*<meta charset[^>]*>\s*<meta name="viewport"[^>]*>\s*', '')
+    head_open = sub(head_open, r'<title>.*?</title>', '<title>Гений кухни</title>\n<script>document.documentElement.lang="ru"</script>')
+    head_open = sub(head_open, r'<meta name="theme-color"[^>]*>\s*', '')
+    head_close = sub(head_close, '</style>\n</head>\n<body>\n', '</style>\n', regex=False)
+    tail = sub(tail, '</body></html>', '', regex=False)
+    return head_open, head_close, tail
+
+
+def build(external, budget, artifact):
+    head_open = rd(os.path.join(SRC, '00-head-open.html'))
+    head_close = rd(os.path.join(SRC, '90-head-close.html'))
+    tail = '</script></body></html>\n'
+    if artifact:
+        head_open, head_close, tail = artifact_wrap(head_open, head_close, tail)
+    out = [head_open]
     for css in sorted(glob.glob(os.path.join(SRC, 'style*.css'))):
         out.append(rd(css))
         out.append('\n')
-    out.append(rd(os.path.join(SRC, '90-head-close.html')))
+    out.append(head_close)
     js_files = sorted(glob.glob(os.path.join(SRC, 'js', '*.js')))
     first_app = next((i for i, p in enumerate(js_files) if os.path.basename(p) >= '30'), len(js_files))
     for i, p in enumerate(js_files):
         if i == first_app:
-            out.append(photos_js(a.external, a.budget))
+            out.append(photos_js(external, budget))
         code = rd(p)
         # защита: ни один встроенный скрипт не должен закрывать тег <script> раньше времени
         code = re.sub(r'</(script)', r'<\\/\1', code, flags=re.I)
         out.append(code)
         out.append('\n')
-    out.append('</script></body></html>\n')
-    html = ''.join(out)
+    out.append(tail)
+    return ''.join(out)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--external', action='store_true')
+    ap.add_argument('--budget', type=float, default=12)
+    ap.add_argument('--artifact', metavar='OUT', help='дополнительно записать вариант для публикации как Artifact в файл OUT')
+    a = ap.parse_args()
+    html = build(a.external, a.budget, False)
     dst = os.path.join(ROOT, 'index.html')
     with open(dst, 'w', encoding='utf-8') as f:
         f.write(html)
     print('index.html: %.1f КБ' % (len(html.encode('utf-8')) / 1024), file=sys.stderr)
+    if a.artifact:
+        art = build(False, a.budget, True)  # фото всегда вшиты: отдельных файлов у Artifact нет
+        with open(a.artifact, 'w', encoding='utf-8') as f:
+            f.write(art)
+        print('artifact: %.1f КБ -> %s' % (len(art.encode('utf-8')) / 1024, a.artifact), file=sys.stderr)
 
 
 if __name__ == '__main__':

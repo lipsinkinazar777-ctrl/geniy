@@ -79,7 +79,7 @@ function vRecipe(el){
    <button class="btn" onclick="planModal('${r.id}')">В планер</button>
    <button class="btn" onclick="diaryAddRecipe('${r.id}')">В дневник калорий</button>
    <a class="btn" href="#/school/stove">Плита 0–9</a>
-   <button class="btn" onclick="window.print()">Печать</button></div>
+   ${EMBED?'':'<button class="btn" onclick="window.print()">Печать</button>'}</div>
   <div class="rp"><div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="font-size:36px">Ингредиенты</h2>
     <div class="stepper noprint"><button onclick="setServ(-1)">−</button><span>${curServ}</span><button onclick="setServ(1)">+</button></div></div>
    <div class="muted" style="font-size:13px;margin-bottom:8px">на ${curServ} ${curServ===1?'порцию':curServ<5?'порции':'порций'} · отмечайте нужное</div>

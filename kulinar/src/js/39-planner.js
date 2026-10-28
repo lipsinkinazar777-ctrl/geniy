@@ -5,7 +5,7 @@ function vPlanner(el){
   const days=[...Array(7)].map((_,i)=>addDays(weekStart,i));const a=days[0],b=days[6];
   const title=`${a.getDate()} ${MONTHS[a.getMonth()]} — ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
   el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Планер</div><h1>Меню на неделю</h1><p>Планируйте завтраки, обеды и ужины, смотрите калории по дням и получайте готовый список покупок.</p></div></div>
-  <div class="pl-h"><div style="display:flex;gap:8px;align-items:center"><button class="ibtn" onclick="weekNav(-1)">‹</button><b style="font-family:var(--serif);font-size:20px;min-width:230px;text-align:center">${title}</b><button class="ibtn" onclick="weekNav(1)">›</button><button class="btn sm" onclick="weekStart=monday(new Date());render()">Сегодня</button></div>
+  <div class="pl-h"><div class="wknav"><button class="ibtn" onclick="weekNav(-1)">‹</button><b class="wkt">${title}</b><button class="ibtn" onclick="weekNav(1)">›</button><button class="btn sm" onclick="weekStart=monday(new Date());render()">Сегодня</button></div>
    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px">Едоков:</span><div class="stepper"><button onclick="setPeople(-1)">−</button><span>${S.people}</span><button onclick="setPeople(1)">+</button></div><button class="btn sm gold" onclick="autoFill()">✨ Заполнить неделю</button><button class="btn sm" onclick="clearWeek()">Очистить</button></div></div>
   <div class="week">${days.map((d,i)=>{const k=ymd(d);const pl=S.plan[k]||{};let kc=0;
     const slots=MEALS.map(([m,n,e])=>{const arr=pl[m]||[];arr.forEach(x=>{if(x.id){const r=byId(x.id);if(r)kc+=r.kcal}else kc+=x.k||0});
@@ -28,7 +28,7 @@ function planModal(rid,date,meal){
 function planConfirm(id){planAdd($('#pd').value,$('#pm').value,{id});closeModal();toast('Добавлено в планер 📅')}
 function planPick(d,m,id){planAdd(d,m,{id});closeModal();render()}
 function planNote(d,m){const n=$('#pn').value.trim();if(!n)return;planAdd(d,m,{note:n});closeModal();render()}
-function clearWeek(){if(!confirm('Очистить всю неделю?'))return;for(let i=0;i<7;i++)delete S.plan[ymd(addDays(weekStart,i))];save('plan');render()}
+function clearWeek(){askConfirm('Очистить всю неделю?',()=>{for(let i=0;i<7;i++)delete S.plan[ymd(addDays(weekStart,i))];save('plan');render()})}
 function autoFill(){
   const pick=(cats,used)=>{const l=RECIPES.filter(r=>cats.includes(r.cat)&&!used.has(r.id));const pool=l.length?l:RECIPES.filter(r=>cats.includes(r.cat));return pool[Math.floor(Math.random()*pool.length)]};
   const used=new Set();
@@ -48,7 +48,7 @@ function drawShop(){
   $('#shop').innerHTML=l.length?`<ul class="shop">${l.map(i=>{const key=norm(i.n)+'|'+i.u;const d=ch.includes(key);return `<li class="${d?'done':''}" onclick="shopTick('${wk}',this.dataset.k)" data-k="${esc(key)}"><input type="checkbox" ${d?'checked':''}><span>${esc(i.n)}</span><b>${i.q?fq(i.q)+' '+i.u:'по вкусу'}</b></li>`}).join('')}</ul>`:'<div class="empty"><div class="e">🧺</div><p>Добавьте блюда в планер — список покупок соберётся автоматически.</p></div>';
 }
 function shopTick(wk,key){const a=S.shop[wk]=S.shop[wk]||[];const i=a.indexOf(key);if(i>=0)a.splice(i,1);else a.push(key);save('shop');drawShop()}
-function copyShop(){const t=shopList().map(i=>'• '+i.n+(i.q?' — '+fq(i.q)+' '+i.u:'')).join('\n');if(!t){toast('Список пуст');return}navigator.clipboard?.writeText(t).then(()=>toast('Список скопирован 📋'),()=>toast('Не удалось скопировать'))}
+function copyShop(){const t=shopList().map(i=>'• '+i.n+(i.q?' — '+fq(i.q)+' '+i.u:'')).join('\n');if(!t){toast('Список пуст');return}copyText(t,'Список скопирован 📋')}
 
 
 VIEWS.planner=vPlanner;

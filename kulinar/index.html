@@ -383,7 +383,7 @@ button.pill.on{background:rgba(201,164,92,.14)}
 .tbl-w table.t{min-width:640px}
 .tbl-w td b{color:var(--gold2)}
 .bnav a span{font-size:18px}
-@media(max-width:1100px){.hero{min-height:440px}.hero .hi{padding:40px 26px}.dial{grid-template-columns:repeat(5,1fr)}.tl-row{grid-template-columns:1fr}.sec-h h2{font-size:30px}}
+@media(max-width:1100px){.hero{min-height:440px}.hero .hi{padding:40px 26px}.dial{grid-template-columns:repeat(5,minmax(0,1fr))}.tl-row{grid-template-columns:1fr}.sec-h h2{font-size:30px}}
 @media(max-width:560px){.rc .ph{height:140px}.rc h3{font-size:19px}.hero .hi{padding:32px 20px}.rhero{padding:26px 20px}.rhero h1{max-width:100%}.rhero .em{display:none}.bars .b{grid-template-columns:100px 1fr 44px}}
 .hero:not(:has(.hi)){padding:52px 56px;flex-direction:column;align-items:flex-start;justify-content:center;min-height:300px}
 .hero:not(:has(.hi))>*:not(.big){position:relative;z-index:2}
@@ -624,6 +624,27 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .slot .sh>span:first-child{font-size:10.5px;letter-spacing:.05em}
 .slot .sh button{width:20px;height:20px}
 @media(max-width:760px){.week{grid-template-columns:1fr;overflow:visible}.day{min-width:0}.slot .sh>span:first-child{font-size:12px}}
+
+/* переключатель недель в планере: на телефоне заголовок сжимается, а не выталкивает кнопки за экран */
+.wknav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wkt{font-family:var(--serif);font-size:20px;min-width:230px;text-align:center}
+@media(max-width:760px){.wknav{width:100%}.wkt{min-width:0;flex:1 1 140px;font-size:18px}}
+/* плита 0–9 на узком экране: подписи мельче, колонки не раздвигают страницу; таблицы без обёртки получают свою прокрутку */
+.dial button{min-width:0}
+@media(max-width:420px){.dial button small{font-size:8px;letter-spacing:.02em}}
+.two>*,.rp>*{min-width:0}
+.mcgrid{grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}
+.chips:not(.sc) .pill{white-space:normal;max-width:100%}
+.tbl-w.fit{border:0;background:none;border-radius:0}
+.tbl-w.fit table.t{min-width:0}
+/* шкала Сковилла: длинные значения («1 400 000–2 200 000») на телефоне уходят в одну строку с названием, полоска — под ними */
+@media(max-width:560px){.bars.scv .b{grid-template-columns:1fr auto;row-gap:5px}.bars.scv .tr{grid-column:1/-1;grid-row:2}}
+
+/* системные элементы (списки, полосы прокрутки) в цвет темы; безопасная зона телефона сверху */
+:root{color-scheme:dark}
+:root[data-theme=light]{color-scheme:light}
+header.top{top:env(safe-area-inset-top,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:55;background:var(--bg);pointer-events:none}
 
 </style>
 </head>
@@ -3138,6 +3159,17 @@ const DOW=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
 const MEALS=[['b','Завтрак','🌅'],['l','Обед','☀️'],['d','Ужин','🌙'],['s','Перекус','🍎']];
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2400)}
+/* подтверждение внутри страницы: системный confirm() во встроенных страницах всегда отвечает «нет» */
+function askConfirm(msg,yes){
+  openModal('Подтвердите',`<p style="margin-bottom:18px">${esc(msg)}</p><div class="row"><button class="btn gold" id="askYes">Да</button><button class="btn" onclick="closeModal()">Отмена</button></div>`);
+  $('#askYes').onclick=()=>{closeModal();yes()};
+}
+/* копирование: Clipboard API → execCommand → окно с текстом, который можно выделить вручную */
+function copyText(t,okMsg){
+  const manual=()=>{openModal('Скопируйте текст',`<textarea id="cpTa" readonly style="width:100%;min-height:240px;padding:12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--tx)">${esc(t)}</textarea>`);const ta=$('#cpTa');ta.focus();ta.select()};
+  const legacy=()=>{let done=false;try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();done=document.execCommand('copy');ta.remove()}catch(e){}done?toast(okMsg):manual()};
+  if(navigator.clipboard&&navigator.clipboard.writeText){try{navigator.clipboard.writeText(t).then(()=>toast(okMsg),legacy)}catch(e){legacy()}}else legacy();
+}
 function fq(q){if(!q)return'';q=+q;if(q>=100)q=Math.round(q/5)*5;else if(q>=10)q=Math.round(q);else q=Math.round(q*10)/10;return String(q).replace('.',',')}
 function ingStr(i,k){return i.q?fq(i.q*k)+' '+i.u:(i.u||'по вкусу')}
 const cuBg=cu=>`style="--c1:color-mix(in srgb,${(CUISINES[cu]||CUISINES.wd).c} 55%,#0b0806);--c2:#140e09"`;
@@ -3145,6 +3177,7 @@ const lvlDots=l=>`<span class="lvl">${[1,2,3].map(i=>`<i class="${i<=l?'on':''}"
 const LVL=['','Просто','Средне','Мастер'];
 const fmtT=t=>t>=60?Math.floor(t/60)+' ч'+(t%60?' '+t%60+' м':''):t+' мин';
 const REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EMBED=(()=>{try{return window.top!==window.self}catch(e){return true}})();   /* страница внутри чужой (iframe): печать и системные диалоги недоступны */
 
 /* ---------- ИКОНКИ ---------- */
 const IC={
@@ -3197,7 +3230,9 @@ function render(){
   const t=$('h1',app);document.title=(t?t.textContent.trim().slice(0,60)+' — ':'')+'Гений кухни';
   afterRender();
 }
-function afterRender(){photoScan();revealScan();countScan();parallaxInit()}
+/* таблица без обёртки на узком экране растянула бы страницу: даём ей собственную горизонтальную прокрутку */
+function wrapTables(root){$$('table',root).forEach(t=>{if(t.closest('.tbl-w'))return;const w=document.createElement('div');w.className='tbl-w fit';t.replaceWith(w);w.appendChild(t)})}
+function afterRender(){wrapTables($('#app'));photoScan();revealScan();countScan();parallaxInit()}
 document.addEventListener('click',e=>{
   const a=e.target.closest&&e.target.closest('a[href^="#"]');
   if(a&&a.getAttribute('href').length>1&&!e.defaultPrevented&&!(e.ctrlKey||e.metaKey||e.shiftKey)&&!a.hasAttribute('data-native')){e.preventDefault();go(a.getAttribute('href'))}
@@ -3237,22 +3272,24 @@ const THUMB_STEPS=[250,330,500,960,1280,1920];
 const thumbSize=(u,w)=>{const st=THUMB_STEPS.find(x=>x>=w)||1920;return u.replace(/\/(\d+)px-/,'/'+st+'px-')};
 function photoGet(id){return(typeof PHOTOS!=='undefined'&&PHOTOS[id])||S.ph[id]||null}
 const photoFail=new Set();
+let photoNetFails=0;                                     /* запросов подряд без ответа: сеть закрыта или оффлайн — тогда не долбимся */
 const PQ_STOP=new Set(['the','and','with','alla','al','di','de','la','style','homemade','classic','recipe']);
 const pqTok=t=>String(t).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!PQ_STOP.has(w));
 function photoFetch(id){
   return new Promise(res=>{
+    if(photoNetFails>=8){photoFail.add(id);res(null);return}
     const t=(typeof WP!=='undefined'&&WP[id])||null;
     const finish=u=>{S.ph[id]=u||0;save('ph');res(u||null)};          /* ответ получен: запоминаем (в т.ч. «фото нет») */
-    const fail=()=>{photoFail.add(id);res(null)};                      /* сеть недоступна: не запоминаем, попробуем позже */
+    const fail=()=>{photoNetFails++;photoFail.add(id);res(null)};                      /* сеть недоступна: не запоминаем, попробуем позже */
     /* запасной источник: TheMealDB, принимаем только близкое совпадение названия */
     const mealdb=()=>{
       const q=(typeof PQ!=='undefined'&&PQ[id])||null;if(!q){finish(null);return}
-      fetch('https://www.themealdb.com/api/json/v1/1/search.php?s='+encodeURIComponent(q)).then(r=>r.json()).then(j=>{
+      fetch('https://www.themealdb.com/api/json/v1/1/search.php?s='+encodeURIComponent(q)).then(r=>{photoNetFails=0;return r.json()}).then(j=>{
         const qt=pqTok(q);const m=(j&&j.meals||[]).find(x=>{const mt=new Set(pqTok(x.strMeal));return qt.length&&qt.filter(w=>mt.has(w)).length/qt.length>=.75});
         finish(m&&m.strMealThumb)}).catch(fail);
     };
     if(!t){mealdb();return}
-    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+t).then(r=>r.status===404?{notfound:1}:(r.ok?r.json():null)).then(j=>{
+    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+t).then(r=>{photoNetFails=0;return r.status===404?{notfound:1}:(r.ok?r.json():null)}).then(j=>{
       if(!j){fail();return}const u=j.thumbnail&&j.thumbnail.source;if(u&&j.type!=='disambiguation')finish(u);else mealdb()}).catch(fail);
   });
 }
@@ -3279,6 +3316,7 @@ function photoPump(){
   }
 }
 let photoIO=null;
+window.addEventListener('online',()=>{photoNetFails=0;photoFail.clear();photoScan()});
 function photoScan(root=document){
   /* фото из кэша/вшитые применяем сразу; за остальными идём в сеть только когда карточка близко к экрану */
   const bgs=new Set();
@@ -3361,7 +3399,7 @@ function toggleFav(id,btn){
   toast(S.fav.includes(id)?'Добавлено в избранное ❤️':'Убрано из избранного');
   if(route.p==='my'&&route.a[0]==='fav')render();
 }
-function openModal(t,h,cls){$('#mt').textContent=t;$('#mb').innerHTML=h;const m=$('#modal');m.className='modal on'+(cls?' '+cls:'');revealScan()}
+function openModal(t,h,cls){$('#mt').textContent=t;$('#mb').innerHTML=h;wrapTables($('#mb'));const m=$('#modal');m.className='modal on'+(cls?' '+cls:'');revealScan()}
 function closeModal(){$('#modal').classList.remove('on')}
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 /* плавное раскрытие аккордеона */
@@ -3502,7 +3540,7 @@ function vRecipe(el){
    <button class="btn" onclick="planModal('${r.id}')">В планер</button>
    <button class="btn" onclick="diaryAddRecipe('${r.id}')">В дневник калорий</button>
    <a class="btn" href="#/school/stove">Плита 0–9</a>
-   <button class="btn" onclick="window.print()">Печать</button></div>
+   ${EMBED?'':'<button class="btn" onclick="window.print()">Печать</button>'}</div>
   <div class="rp"><div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="font-size:36px">Ингредиенты</h2>
     <div class="stepper noprint"><button onclick="setServ(-1)">−</button><span>${curServ}</span><button onclick="setServ(1)">+</button></div></div>
    <div class="muted" style="font-size:13px;margin-bottom:8px">на ${curServ} ${curServ===1?'порцию':curServ<5?'порции':'порций'} · отмечайте нужное</div>
@@ -3781,7 +3819,7 @@ function vPlanner(el){
   const days=[...Array(7)].map((_,i)=>addDays(weekStart,i));const a=days[0],b=days[6];
   const title=`${a.getDate()} ${MONTHS[a.getMonth()]} — ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
   el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Планер</div><h1>Меню на неделю</h1><p>Планируйте завтраки, обеды и ужины, смотрите калории по дням и получайте готовый список покупок.</p></div></div>
-  <div class="pl-h"><div style="display:flex;gap:8px;align-items:center"><button class="ibtn" onclick="weekNav(-1)">‹</button><b style="font-family:var(--serif);font-size:20px;min-width:230px;text-align:center">${title}</b><button class="ibtn" onclick="weekNav(1)">›</button><button class="btn sm" onclick="weekStart=monday(new Date());render()">Сегодня</button></div>
+  <div class="pl-h"><div class="wknav"><button class="ibtn" onclick="weekNav(-1)">‹</button><b class="wkt">${title}</b><button class="ibtn" onclick="weekNav(1)">›</button><button class="btn sm" onclick="weekStart=monday(new Date());render()">Сегодня</button></div>
    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px">Едоков:</span><div class="stepper"><button onclick="setPeople(-1)">−</button><span>${S.people}</span><button onclick="setPeople(1)">+</button></div><button class="btn sm gold" onclick="autoFill()">✨ Заполнить неделю</button><button class="btn sm" onclick="clearWeek()">Очистить</button></div></div>
   <div class="week">${days.map((d,i)=>{const k=ymd(d);const pl=S.plan[k]||{};let kc=0;
     const slots=MEALS.map(([m,n,e])=>{const arr=pl[m]||[];arr.forEach(x=>{if(x.id){const r=byId(x.id);if(r)kc+=r.kcal}else kc+=x.k||0});
@@ -3804,7 +3842,7 @@ function planModal(rid,date,meal){
 function planConfirm(id){planAdd($('#pd').value,$('#pm').value,{id});closeModal();toast('Добавлено в планер 📅')}
 function planPick(d,m,id){planAdd(d,m,{id});closeModal();render()}
 function planNote(d,m){const n=$('#pn').value.trim();if(!n)return;planAdd(d,m,{note:n});closeModal();render()}
-function clearWeek(){if(!confirm('Очистить всю неделю?'))return;for(let i=0;i<7;i++)delete S.plan[ymd(addDays(weekStart,i))];save('plan');render()}
+function clearWeek(){askConfirm('Очистить всю неделю?',()=>{for(let i=0;i<7;i++)delete S.plan[ymd(addDays(weekStart,i))];save('plan');render()})}
 function autoFill(){
   const pick=(cats,used)=>{const l=RECIPES.filter(r=>cats.includes(r.cat)&&!used.has(r.id));const pool=l.length?l:RECIPES.filter(r=>cats.includes(r.cat));return pool[Math.floor(Math.random()*pool.length)]};
   const used=new Set();
@@ -3824,7 +3862,7 @@ function drawShop(){
   $('#shop').innerHTML=l.length?`<ul class="shop">${l.map(i=>{const key=norm(i.n)+'|'+i.u;const d=ch.includes(key);return `<li class="${d?'done':''}" onclick="shopTick('${wk}',this.dataset.k)" data-k="${esc(key)}"><input type="checkbox" ${d?'checked':''}><span>${esc(i.n)}</span><b>${i.q?fq(i.q)+' '+i.u:'по вкусу'}</b></li>`}).join('')}</ul>`:'<div class="empty"><div class="e">🧺</div><p>Добавьте блюда в планер — список покупок соберётся автоматически.</p></div>';
 }
 function shopTick(wk,key){const a=S.shop[wk]=S.shop[wk]||[];const i=a.indexOf(key);if(i>=0)a.splice(i,1);else a.push(key);save('shop');drawShop()}
-function copyShop(){const t=shopList().map(i=>'• '+i.n+(i.q?' — '+fq(i.q)+' '+i.u:'')).join('\n');if(!t){toast('Список пуст');return}navigator.clipboard?.writeText(t).then(()=>toast('Список скопирован 📋'),()=>toast('Не удалось скопировать'))}
+function copyShop(){const t=shopList().map(i=>'• '+i.n+(i.q?' — '+fq(i.q)+' '+i.u:'')).join('\n');if(!t){toast('Список пуст');return}copyText(t,'Список скопирован 📋')}
 
 
 VIEWS.planner=vPlanner;
@@ -4506,7 +4544,7 @@ function tabSpices(w){
   <div class="chips sc" id="spg" style="margin-bottom:14px"><button class="pill on" data-g="">Все</button>${Object.entries(G).map(([k,n])=>`<button class="pill" data-g="${k}">${n}</button>`).join('')}</div>
   <div class="spgrid" id="splist"></div>
   <div class="sec-h"><h2>Острота перцев по шкале Сковилла</h2></div>
-  <div class="panel"><p class="muted">Шкала Сковилла (SHU) показывает содержание капсаицина. Шкала логарифмическая: хабанеро острее халапеньо в десятки раз, а «жнец» — в сотни.</p><div class="bars" style="margin-top:12px">${SCOVILLE.map(r=>{const mx=Math.log10(2200000);const pc=r[2]?Math.log10(r[2])/mx*100:2;return `<div class="b"><span>${r[0]}</span><div class="tr"><i style="width:${pc}%"></i></div><b style="white-space:nowrap">${r[2]?(r[1]?r[1].toLocaleString('ru-RU')+'–':'')+r[2].toLocaleString('ru-RU'):'0'}</b></div>`}).join('')}</div><p class="mini" style="margin-top:8px">Чёрный перец (пиперин) на шкале Сковилла обычно не измеряется: его «острота» другого типа.</p></div>
+  <div class="panel"><p class="muted">Шкала Сковилла (SHU) показывает содержание капсаицина. Шкала логарифмическая: хабанеро острее халапеньо в десятки раз, а «жнец» — в сотни.</p><div class="bars scv" style="margin-top:12px">${SCOVILLE.map(r=>{const mx=Math.log10(2200000);const pc=r[2]?Math.log10(r[2])/mx*100:2;return `<div class="b"><span>${r[0]}</span><div class="tr"><i style="width:${pc}%"></i></div><b style="white-space:nowrap">${r[2]?(r[1]?r[1].toLocaleString('ru-RU')+'–':'')+r[2].toLocaleString('ru-RU'):'0'}</b></div>`}).join('')}</div><p class="mini" style="margin-top:8px">Чёрный перец (пиперин) на шкале Сковилла обычно не измеряется: его «острота» другого типа.</p></div>
   <div class="sec-h"><h2>Соль: шесть функций</h2></div>
   <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${SALT_FUNCS.map(x=>`<div class="panel"><h3>${x[0]}</h3><p class="muted">${x[1]}</p></div>`).join('')}</div>
   <div class="sec-h"><h2>Что делать, если пересолили</h2></div>
@@ -4800,7 +4838,7 @@ function tabGrocery(w){
   ['gcp','gcd','gct','gcm'].forEach(i=>$('#'+i).oninput=calc);calc();
   window.wbTick=(b,j)=>{const k='wb:'+b+'_'+j;if(S.groc[k])delete S.groc[k];else S.groc[k]=1;save('groc');const y=window.scrollY;drawHub('shop','grocery');window.scrollTo(0,y)};
   window.wbReset=()=>{Object.keys(S.groc).filter(k=>k.startsWith('wb:')).forEach(k=>delete S.groc[k]);save('groc');drawHub('shop','grocery')};
-  window.wbCopy=()=>{const t=WEEK_BASKET.map((b,bi)=>b.g+':\n'+b.i.filter((x,j)=>!S.groc['wb:'+bi+'_'+j]).map(x=>'• '+x).join('\n')).join('\n\n');navigator.clipboard?.writeText(t).then(()=>toast('Список скопирован 📋'),()=>toast('Не удалось скопировать'))};
+  window.wbCopy=()=>{const t=WEEK_BASKET.map((b,bi)=>b.g+':\n'+b.i.filter((x,j)=>!S.groc['wb:'+bi+'_'+j]).map(x=>'• '+x).join('\n')).join('\n\n');copyText(t,'Список скопирован 📋')};
 }
 
 /* ===== КУРС ПОВАРА: 5 УРОВНЕЙ — Новичок → Мишлен ===== */

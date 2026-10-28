@@ -93,5 +93,5 @@ function tabGrocery(w){
   ['gcp','gcd','gct','gcm'].forEach(i=>$('#'+i).oninput=calc);calc();
   window.wbTick=(b,j)=>{const k='wb:'+b+'_'+j;if(S.groc[k])delete S.groc[k];else S.groc[k]=1;save('groc');const y=window.scrollY;drawHub('shop','grocery');window.scrollTo(0,y)};
   window.wbReset=()=>{Object.keys(S.groc).filter(k=>k.startsWith('wb:')).forEach(k=>delete S.groc[k]);save('groc');drawHub('shop','grocery')};
-  window.wbCopy=()=>{const t=WEEK_BASKET.map((b,bi)=>b.g+':\n'+b.i.filter((x,j)=>!S.groc['wb:'+bi+'_'+j]).map(x=>'• '+x).join('\n')).join('\n\n');navigator.clipboard?.writeText(t).then(()=>toast('Список скопирован 📋'),()=>toast('Не удалось скопировать'))};
+  window.wbCopy=()=>{const t=WEEK_BASKET.map((b,bi)=>b.g+':\n'+b.i.filter((x,j)=>!S.groc['wb:'+bi+'_'+j]).map(x=>'• '+x).join('\n')).join('\n\n');copyText(t,'Список скопирован 📋')};
 }

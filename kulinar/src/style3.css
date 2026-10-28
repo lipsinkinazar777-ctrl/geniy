@@ -224,3 +224,24 @@ select.field{appearance:none;background-image:linear-gradient(45deg,transparent 
 .slot .sh>span:first-child{font-size:10.5px;letter-spacing:.05em}
 .slot .sh button{width:20px;height:20px}
 @media(max-width:760px){.week{grid-template-columns:1fr;overflow:visible}.day{min-width:0}.slot .sh>span:first-child{font-size:12px}}
+
+/* переключатель недель в планере: на телефоне заголовок сжимается, а не выталкивает кнопки за экран */
+.wknav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.wkt{font-family:var(--serif);font-size:20px;min-width:230px;text-align:center}
+@media(max-width:760px){.wknav{width:100%}.wkt{min-width:0;flex:1 1 140px;font-size:18px}}
+/* плита 0–9 на узком экране: подписи мельче, колонки не раздвигают страницу; таблицы без обёртки получают свою прокрутку */
+.dial button{min-width:0}
+@media(max-width:420px){.dial button small{font-size:8px;letter-spacing:.02em}}
+.two>*,.rp>*{min-width:0}
+.mcgrid{grid-template-columns:repeat(auto-fill,minmax(min(330px,100%),1fr))}
+.chips:not(.sc) .pill{white-space:normal;max-width:100%}
+.tbl-w.fit{border:0;background:none;border-radius:0}
+.tbl-w.fit table.t{min-width:0}
+/* шкала Сковилла: длинные значения («1 400 000–2 200 000») на телефоне уходят в одну строку с названием, полоска — под ними */
+@media(max-width:560px){.bars.scv .b{grid-template-columns:1fr auto;row-gap:5px}.bars.scv .tr{grid-column:1/-1;grid-row:2}}
+
+/* системные элементы (списки, полосы прокрутки) в цвет темы; безопасная зона телефона сверху */
+:root{color-scheme:dark}
+:root[data-theme=light]{color-scheme:light}
+header.top{top:env(safe-area-inset-top,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:55;background:var(--bg);pointer-events:none}

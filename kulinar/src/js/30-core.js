@@ -24,6 +24,17 @@ const DOW=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
 const MEALS=[['b','Завтрак','🌅'],['l','Обед','☀️'],['d','Ужин','🌙'],['s','Перекус','🍎']];
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2400)}
+/* подтверждение внутри страницы: системный confirm() во встроенных страницах всегда отвечает «нет» */
+function askConfirm(msg,yes){
+  openModal('Подтвердите',`<p style="margin-bottom:18px">${esc(msg)}</p><div class="row"><button class="btn gold" id="askYes">Да</button><button class="btn" onclick="closeModal()">Отмена</button></div>`);
+  $('#askYes').onclick=()=>{closeModal();yes()};
+}
+/* копирование: Clipboard API → execCommand → окно с текстом, который можно выделить вручную */
+function copyText(t,okMsg){
+  const manual=()=>{openModal('Скопируйте текст',`<textarea id="cpTa" readonly style="width:100%;min-height:240px;padding:12px;border-radius:12px;background:var(--card2);border:1px solid var(--line);color:var(--tx)">${esc(t)}</textarea>`);const ta=$('#cpTa');ta.focus();ta.select()};
+  const legacy=()=>{let done=false;try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.select();done=document.execCommand('copy');ta.remove()}catch(e){}done?toast(okMsg):manual()};
+  if(navigator.clipboard&&navigator.clipboard.writeText){try{navigator.clipboard.writeText(t).then(()=>toast(okMsg),legacy)}catch(e){legacy()}}else legacy();
+}
 function fq(q){if(!q)return'';q=+q;if(q>=100)q=Math.round(q/5)*5;else if(q>=10)q=Math.round(q);else q=Math.round(q*10)/10;return String(q).replace('.',',')}
 function ingStr(i,k){return i.q?fq(i.q*k)+' '+i.u:(i.u||'по вкусу')}
 const cuBg=cu=>`style="--c1:color-mix(in srgb,${(CUISINES[cu]||CUISINES.wd).c} 55%,#0b0806);--c2:#140e09"`;
@@ -31,6 +42,7 @@ const lvlDots=l=>`<span class="lvl">${[1,2,3].map(i=>`<i class="${i<=l?'on':''}"
 const LVL=['','Просто','Средне','Мастер'];
 const fmtT=t=>t>=60?Math.floor(t/60)+' ч'+(t%60?' '+t%60+' м':''):t+' мин';
 const REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EMBED=(()=>{try{return window.top!==window.self}catch(e){return true}})();   /* страница внутри чужой (iframe): печать и системные диалоги недоступны */
 
 /* ---------- ИКОНКИ ---------- */
 const IC={
@@ -83,7 +95,9 @@ function render(){
   const t=$('h1',app);document.title=(t?t.textContent.trim().slice(0,60)+' — ':'')+'Гений кухни';
   afterRender();
 }
-function afterRender(){photoScan();revealScan();countScan();parallaxInit()}
+/* таблица без обёртки на узком экране растянула бы страницу: даём ей собственную горизонтальную прокрутку */
+function wrapTables(root){$$('table',root).forEach(t=>{if(t.closest('.tbl-w'))return;const w=document.createElement('div');w.className='tbl-w fit';t.replaceWith(w);w.appendChild(t)})}
+function afterRender(){wrapTables($('#app'));photoScan();revealScan();countScan();parallaxInit()}
 document.addEventListener('click',e=>{
   const a=e.target.closest&&e.target.closest('a[href^="#"]');
   if(a&&a.getAttribute('href').length>1&&!e.defaultPrevented&&!(e.ctrlKey||e.metaKey||e.shiftKey)&&!a.hasAttribute('data-native')){e.preventDefault();go(a.getAttribute('href'))}
@@ -123,22 +137,24 @@ const THUMB_STEPS=[250,330,500,960,1280,1920];
 const thumbSize=(u,w)=>{const st=THUMB_STEPS.find(x=>x>=w)||1920;return u.replace(/\/(\d+)px-/,'/'+st+'px-')};
 function photoGet(id){return(typeof PHOTOS!=='undefined'&&PHOTOS[id])||S.ph[id]||null}
 const photoFail=new Set();
+let photoNetFails=0;                                     /* запросов подряд без ответа: сеть закрыта или оффлайн — тогда не долбимся */
 const PQ_STOP=new Set(['the','and','with','alla','al','di','de','la','style','homemade','classic','recipe']);
 const pqTok=t=>String(t).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(w=>w.length>2&&!PQ_STOP.has(w));
 function photoFetch(id){
   return new Promise(res=>{
+    if(photoNetFails>=8){photoFail.add(id);res(null);return}
     const t=(typeof WP!=='undefined'&&WP[id])||null;
     const finish=u=>{S.ph[id]=u||0;save('ph');res(u||null)};          /* ответ получен: запоминаем (в т.ч. «фото нет») */
-    const fail=()=>{photoFail.add(id);res(null)};                      /* сеть недоступна: не запоминаем, попробуем позже */
+    const fail=()=>{photoNetFails++;photoFail.add(id);res(null)};                      /* сеть недоступна: не запоминаем, попробуем позже */
     /* запасной источник: TheMealDB, принимаем только близкое совпадение названия */
     const mealdb=()=>{
       const q=(typeof PQ!=='undefined'&&PQ[id])||null;if(!q){finish(null);return}
-      fetch('https://www.themealdb.com/api/json/v1/1/search.php?s='+encodeURIComponent(q)).then(r=>r.json()).then(j=>{
+      fetch('https://www.themealdb.com/api/json/v1/1/search.php?s='+encodeURIComponent(q)).then(r=>{photoNetFails=0;return r.json()}).then(j=>{
         const qt=pqTok(q);const m=(j&&j.meals||[]).find(x=>{const mt=new Set(pqTok(x.strMeal));return qt.length&&qt.filter(w=>mt.has(w)).length/qt.length>=.75});
         finish(m&&m.strMealThumb)}).catch(fail);
     };
     if(!t){mealdb();return}
-    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+t).then(r=>r.status===404?{notfound:1}:(r.ok?r.json():null)).then(j=>{
+    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+t).then(r=>{photoNetFails=0;return r.status===404?{notfound:1}:(r.ok?r.json():null)}).then(j=>{
       if(!j){fail();return}const u=j.thumbnail&&j.thumbnail.source;if(u&&j.type!=='disambiguation')finish(u);else mealdb()}).catch(fail);
   });
 }
@@ -165,6 +181,7 @@ function photoPump(){
   }
 }
 let photoIO=null;
+window.addEventListener('online',()=>{photoNetFails=0;photoFail.clear();photoScan()});
 function photoScan(root=document){
   /* фото из кэша/вшитые применяем сразу; за остальными идём в сеть только когда карточка близко к экрану */
   const bgs=new Set();
@@ -247,7 +264,7 @@ function toggleFav(id,btn){
   toast(S.fav.includes(id)?'Добавлено в избранное ❤️':'Убрано из избранного');
   if(route.p==='my'&&route.a[0]==='fav')render();
 }
-function openModal(t,h,cls){$('#mt').textContent=t;$('#mb').innerHTML=h;const m=$('#modal');m.className='modal on'+(cls?' '+cls:'');revealScan()}
+function openModal(t,h,cls){$('#mt').textContent=t;$('#mb').innerHTML=h;wrapTables($('#mb'));const m=$('#modal');m.className='modal on'+(cls?' '+cls:'');revealScan()}
 function closeModal(){$('#modal').classList.remove('on')}
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 /* плавное раскрытие аккордеона */

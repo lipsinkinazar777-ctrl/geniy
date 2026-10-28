@@ -39,6 +39,8 @@ const filled=await p.evaluate(()=>Object.values(S.plan).flatMap(d=>Object.values
 await p.locator('.dayrnd').nth(3).click();await p.waitForTimeout(500);
 const filled2=await p.evaluate(()=>Object.values(S.plan).flatMap(d=>Object.values(d).flat()).length);ok(filled2>=3,'day random fill → '+filled2);
 await p.screenshot({path:require('os').tmpdir()+'/planner.png',fullPage:true});
+await p.click('[onclick="clearWeek()"]');await p.waitForTimeout(200);ok(await p.locator('#modal.on #askYes').count()===1,'clear week: confirm inside the page');
+await p.click('#askYes');await p.waitForTimeout(300);ok(await p.evaluate(()=>Object.values(S.plan).flatMap(d=>Object.values(d).flat()).length)===0,'clear week → plan empty');
 // 6. gear toggles
 await p.goto(URL+'#/shop/gear');await p.reload();await p.waitForTimeout(300);
 await p.locator('.gear .gchk').first().click();await p.waitForTimeout(200);
