@@ -350,4 +350,15 @@ grilled-veg=Grilled vegetables
 garlic-asparagus=Garlic asparagus
 garlic-bread=Garlic bread
 creamed-spinach=Creamed spinach
+air-chicken-thighs=Air fryer chicken thighs
+air-salmon=Air fryer salmon
+air-cauliflower=Air fryer cauliflower
+air-shrimp=Air fryer garlic shrimp
+air-steak=Air fryer steak
+multi-pilaf=Pilaf multicooker
+multi-milk-porridge=Milk porridge
+multi-beef-stew=Beef stew
+multi-yogurt=Homemade yogurt
+multi-borscht=Borscht
+multi-ragu=Meat and bean stew
 `.trim().split('\n').map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1)]}));

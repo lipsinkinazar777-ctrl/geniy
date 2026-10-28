@@ -16,5 +16,10 @@ COLLECTIONS.push(
  {id:'steaks-all',n:'Стейки, соусы и гарниры',e:'🥩',d:'12+ стейков, соусы к ним и гарниры: чесночное масло, спаржа, картофель, сливочный шпинат.',ids:['ribeye-pan','striploin','filet-mignon','tomahawk-reverse','bistecca','chimichurri-flank','tagliata','steak-au-poivre','sous-vide-steak','steak-garlic-butter','steak-diane','steak-blue-cheese','garlic-butter','peppercorn-sauce','red-wine-sauce','bearnaise','garlic-asparagus','creamed-spinach','potato-roast-rosemary','potato-mash']}
 );
 
-const COLL_ORDER=['resto-cream','pasta-all','salads','su','potato','fast','pizza','steaks-all','meat-grand','ua','ge','jp','sauces-dips','tenders','soups','rome','tomato','cream','seafood','baked','asia-noodles','rice','breakfast','dessert','quick','stove','beginner','michelin'];
+COLLECTIONS.push({id:'wow',n:'Блюда, которые удивят гостей',e:'✨',d:'Эффектные блюда с «вау»: Веллингтон, томагавк, бургиньон, оссобуко, конфи, крем-брюле, профитроли.',ids:['beef-wellington','tomahawk-reverse','bistecca','steak-diane','beef-bourguignon','ossobuco','confit-canard','coq-au-vin','lamb-shank','bouillabaisse','khinkali','ravioli-ricotta','pasta-genovese','arancini','creme-brulee','profiteroles','tarte-tatin','lemon-tart','tiramisu','kyiv-cutlet']});
+COLLECTIONS.push(
+ {id:'airfryer',n:'Для аэрогриля',e:'♨️',d:'Хруст без фритюра: картошка, тендерс, крылья, бёдра, лосось, креветки, стейк.',ids:['potato-airfryer-fries','chicken-tenders','buffalo-wings','potato-wedges','air-chicken-thighs','air-salmon','air-cauliflower','air-shrimp','air-steak','chicken-nuggets']},
+ {id:'multicooker',n:'Для мультиварки',e:'🍲',d:'Плов, каша, борщ, рагу, тушёное мясо, йогурт — «поставил и забыл».',ids:['multi-pilaf','multi-milk-porridge','multi-beef-stew','multi-yogurt','multi-borscht','multi-ragu','plov','kapusniak','pea-soup','kholodets']}
+);
+const COLL_ORDER=['wow','resto-cream','pasta-all','salads','su','potato','fast','pizza','steaks-all','airfryer','multicooker','meat-grand','ua','ge','jp','sauces-dips','tenders','soups','rome','tomato','cream','seafood','baked','asia-noodles','rice','breakfast','dessert','quick','stove','beginner','michelin'];
 COLLECTIONS.sort((a,b)=>{const x=COLL_ORDER.indexOf(a.id),y=COLL_ORDER.indexOf(b.id);return(x<0?99:x)-(y<0?99:y)});

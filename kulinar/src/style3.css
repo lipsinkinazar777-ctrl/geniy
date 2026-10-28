@@ -202,3 +202,18 @@ html{scroll-behavior:auto}
 .hubtabs{position:sticky}
 .hubtabs:after{content:'';position:absolute;right:0;top:0;bottom:1px;width:46px;pointer-events:none;background:linear-gradient(90deg,transparent,var(--bg))}
 .collmore{margin-top:14px}
+
+/* рецепт: фото справа */
+.rhero .rimg{background-size:cover;background-position:center 40%;opacity:0;transition:opacity 1s;min-height:320px;position:relative;z-index:2}
+.rhero .rimg.on{opacity:1}
+.rhero.has{display:grid;grid-template-columns:1.15fr .85fr;gap:0;padding:0;min-height:380px;background:linear-gradient(135deg,var(--c1,#3a2a1a),var(--c2,#1b140e))}
+.rhero.has:before{display:none}
+.rhero.has .rtext{padding:46px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;z-index:2}
+.rhero.has .em{display:none}
+.rhero.has h1{max-width:100%}
+@media(max-width:800px){.rhero.has{grid-template-columns:1fr}.rhero.has .rimg{order:-1;min-height:240px}.rhero.has .rtext{padding:26px 22px}}
+.toolbar{align-items:stretch}
+.toolbar .field{width:auto;flex:1 1 170px;min-width:0}
+.toolbar input.field{flex:2 1 260px}
+.toolbar select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px;cursor:pointer}
+select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px;cursor:pointer}

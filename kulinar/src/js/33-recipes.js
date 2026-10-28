@@ -69,9 +69,9 @@ function vRecipe(el){
   const cu=CUISINES[r.cu]||{};const fv=S.fav.includes(r.id);const k=curServ/r.serv;const ln=!!S.learned[r.id];
   const related=RECIPES.filter(x=>x.id!==r.id&&(x.cu===r.cu||x.cat===r.cat)).sort(()=>.5-Math.random()).slice(0,4);
   el.innerHTML=`<a class="back" href="#/recipes" onclick="event.preventDefault();goBack()">← Назад</a>
-  <div class="rhero" ${cuBg(r.cu)}>${hasPhoto(r.id)?`<div class="rb" data-bg="${r.id}" data-w="1280"></div>`:''}<div class="em">${r.em}</div>
+  <div class="rhero ${hasPhoto(r.id)?'has':''}" ${cuBg(r.cu)}><div class="rtext"><div class="em">${r.em}</div>
    <div class="eyebrow">${cu.n||''} · ${CATS[r.cat]}</div><h1 style="margin:14px 0">${esc(r.name)}</h1><p>${esc(r.desc)}</p>
-   <div class="chips"><span class="pill">⏱ ${r.t>=60?Math.floor(r.t/60)+' ч '+(r.t%60?r.t%60+' мин':''):r.t+' мин'}</span><span class="pill">🔥 ${r.kcal} ккал / порция</span><span class="pill">${LVL[r.lvl]}</span></div></div>
+   <div class="chips"><span class="pill">⏱ ${fmtT(r.t)}</span><span class="pill">🔥 ${r.kcal} ккал / порция</span><span class="pill">${LVL[r.lvl]}</span></div></div>${hasPhoto(r.id)?`<div class="rimg" data-bg="${r.id}" data-w="960"></div>`:''}</div>
   <div class="chips noprint" style="margin-bottom:28px">
    <button class="btn gold" onclick="startCook('${r.id}')">▶ Режим готовки</button>
    <button class="btn learn-btn ${ln?'on':''}" id="lnb" onclick="toggleLearn('${r.id}')">${ln?'✓ Я научился':'☐ Я научился готовить'}</button>
