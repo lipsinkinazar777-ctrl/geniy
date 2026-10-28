@@ -38,7 +38,7 @@ await p.click('text=Выбрать это блюдо');await p.waitForTimeout(50
 const filled=await p.evaluate(()=>Object.values(S.plan).flatMap(d=>Object.values(d).flat()).length);ok(filled===1,'planner slot filled '+filled);
 await p.locator('.dayrnd').nth(3).click();await p.waitForTimeout(500);
 const filled2=await p.evaluate(()=>Object.values(S.plan).flatMap(d=>Object.values(d).flat()).length);ok(filled2>=3,'day random fill → '+filled2);
-await p.screenshot({path:'planner.png',fullPage:true});
+await p.screenshot({path:require('os').tmpdir()+'/planner.png',fullPage:true});
 // 6. gear toggles
 await p.goto(URL+'#/shop/gear');await p.reload();await p.waitForTimeout(300);
 await p.locator('.gear .gchk').first().click();await p.waitForTimeout(200);
@@ -54,7 +54,7 @@ await p.locator('.lesson > button').nth(2).click();await p.waitForTimeout(500);o
 await p.locator('#qz-lvl1 .btn.gold').click();await p.waitForTimeout(200);
 for(let i=0;i<10;i++){await p.locator('.qopt').first().click();await p.waitForTimeout(80);await p.locator('#qz-lvl1 .btn.gold.sm').click();await p.waitForTimeout(80)}
 ok(/\/ 10/.test(await p.locator('#qz-lvl1').innerText()),'quiz finished: '+(await p.locator('#qz-lvl1').innerText()).replace(/\s+/g,' ').slice(0,90));
-await p.screenshot({path:'level1.png',fullPage:false});
+await p.screenshot({path:require('os').tmpdir()+'/level1.png',fullPage:false});
 // 8. learned toggle + my path rank click
 await p.goto(URL+'#/r/carbonara');await p.reload();await p.waitForTimeout(300);await p.click('#lnb');await p.waitForTimeout(200);ok(await p.evaluate(()=>S.learned.carbonara>0),'learned toggled');
 await p.goto(URL+'#/my');await p.reload();await p.waitForTimeout(300);await p.click('.rank-main');await p.waitForTimeout(300);ok((await p.evaluate(()=>location.hash)).startsWith('#/level/'),'rank click → '+await p.evaluate(()=>location.hash));
@@ -72,8 +72,8 @@ const m=await mk(390,844);
 const bn=await m.locator('#bnav a').count();ok(bn===8,'bottom nav '+bn);
 for(let i=0;i<bn;i++){await m.locator('#bnav a').nth(i).click();await m.waitForTimeout(220)}
 ok(true,'mobile bottom nav clicked all, last hash '+await m.evaluate(()=>location.hash));
-await m.goto(URL+'#/');await m.reload();await m.waitForTimeout(500);await m.screenshot({path:'m_home.png'});
-await m.goto(URL+'#/shop/gear');await m.reload();await m.waitForTimeout(500);await m.screenshot({path:'m_gear.png'});
+await m.goto(URL+'#/');await m.reload();await m.waitForTimeout(500);await m.screenshot({path:require('os').tmpdir()+'/m_home.png'});
+await m.goto(URL+'#/shop/gear');await m.reload();await m.waitForTimeout(500);await m.screenshot({path:require('os').tmpdir()+'/m_gear.png'});
 const ov=await m.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+2);ok(!ov,'no horizontal overflow on mobile gear');
 console.log('ERRS',errs.length?errs.join('\n'):'none');
 await b.close();
