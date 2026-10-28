@@ -1,0 +1,1368 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Гений кухни — премиальная кулинарная книга</title>
+<meta name="theme-color" content="#0f0c09">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0c09;--bg2:#161210;--card:#1c1713;--card2:#241d17;--line:#33291f;--tx:#f4ebdc;--mut:#a99a84;--gold:#d9ae5f;--gold2:#f0cf8e;--ember:#d1553a;--green:#5fae7e;--blue:#6f9bd6;--shadow:0 20px 50px rgba(0,0,0,.45);--r:20px;
+--serif:'Playfair Display',Georgia,'Times New Roman',serif;--sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+:root[data-theme=light]{--bg:#f7f1e6;--bg2:#efe6d5;--card:#fffaf0;--card2:#f3e9d6;--line:#e0d2b8;--tx:#2a2016;--mut:#7d6c55;--gold:#a97a1f;--gold2:#8a6112;--ember:#c04327;--shadow:0 16px 40px rgba(90,65,20,.15)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.55 var(--sans);min-height:100vh;
+background-image:radial-gradient(900px 500px at 85% -10%,rgba(217,174,95,.10),transparent 60%),radial-gradient(700px 400px at -10% 20%,rgba(209,85,58,.07),transparent 60%);background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--tx)}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;line-height:1.15;letter-spacing:.2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+/* header */
+header.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:18px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:800;font-size:22px;white-space:nowrap}
+.logo i{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold2),var(--ember));font-style:normal;font-size:19px;box-shadow:0 6px 18px rgba(209,85,58,.4)}
+.logo b{background:linear-gradient(90deg,var(--gold2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav.main{display:flex;gap:4px;margin-left:10px;overflow-x:auto;scrollbar-width:none}
+nav.main a{padding:8px 14px;border-radius:999px;color:var(--mut);font-weight:500;white-space:nowrap;transition:.2s}
+nav.main a:hover{color:var(--tx);background:var(--card)}
+nav.main a.on{color:#1a1208;background:linear-gradient(135deg,var(--gold2),var(--gold));font-weight:600}
+.top-r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.sbox{position:relative}
+.sbox input{width:260px;padding:10px 14px 10px 38px;background:var(--card);border:1px solid var(--line);border-radius:999px;outline:none;transition:.2s}
+.sbox input:focus{border-color:var(--gold);width:320px;box-shadow:0 0 0 4px rgba(217,174,95,.12)}
+.sbox:before{content:'⌕';position:absolute;left:14px;top:50%;transform:translateY(-52%);font-size:19px;color:var(--mut)}
+.ibtn{width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;font-size:17px;transition:.2s}
+.ibtn:hover{border-color:var(--gold)}
+#sres{position:absolute;right:0;top:48px;width:420px;max-width:92vw;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;display:none;max-height:70vh;overflow-y:auto}
+#sres a{display:flex;gap:12px;padding:11px 14px;align-items:center;border-bottom:1px solid var(--line)}
+#sres a:hover{background:var(--card2)}
+#sres small{color:var(--mut)}
+/* common */
+main{padding:28px 0 90px;min-height:70vh}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13px;color:var(--mut);white-space:nowrap}
+.pill.on,button.pill:hover{border-color:var(--gold);color:var(--gold2)}
+button.pill.on{background:rgba(217,174,95,.12)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:14px;font-weight:600;transition:.2s;border:1px solid var(--line);background:var(--card)}
+.btn:hover{border-color:var(--gold)}
+.btn.gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1208;border-color:transparent}
+.btn.gold:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:600}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;margin:46px 0 18px;gap:16px;flex-wrap:wrap}
+.sec-h h2{font-size:32px}
+.sec-h a{color:var(--gold);font-weight:600}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.muted{color:var(--mut)}
+/* hero */
+.hero{position:relative;border-radius:32px;overflow:hidden;padding:64px 56px;background:linear-gradient(120deg,rgba(15,12,9,.2),rgba(15,12,9,.0)),radial-gradient(600px 400px at 85% 30%,rgba(217,174,95,.28),transparent 60%),linear-gradient(135deg,#2a1d12,#150f0a 70%);border:1px solid var(--line);box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(36px,5.5vw,68px);max-width:760px;margin:14px 0 18px}
+.hero h1 em{font-style:italic;color:var(--gold2)}
+.hero p{max-width:560px;color:#cdbfa8;font-size:17px;margin-bottom:28px}
+.hero .big{position:absolute;right:40px;top:50%;transform:translateY(-50%);font-size:230px;opacity:.9;filter:drop-shadow(0 30px 40px rgba(0,0,0,.6));pointer-events:none}
+:root[data-theme=light] .hero{background:linear-gradient(135deg,#fff3da,#f0dcb2)}
+:root[data-theme=light] .hero p{color:#6a563a}
+.hero .row{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:34px;margin-top:38px;flex-wrap:wrap}
+.stats b{display:block;font-family:var(--serif);font-size:34px;color:var(--gold2)}
+.stats span{color:var(--mut);font-size:13px}
+/* tiles */
+.tiles{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.tile{position:relative;padding:22px;border-radius:22px;background:var(--card);border:1px solid var(--line);transition:.25s;overflow:hidden;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end}
+.tile:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:var(--shadow)}
+.tile .e{position:absolute;right:14px;top:8px;font-size:60px;opacity:.95}
+.tile h3{font-size:21px}
+.tile p{color:var(--mut);font-size:13px;margin-top:4px}
+.tile:before{content:'';position:absolute;inset:0;background:radial-gradient(180px 120px at 100% 0,var(--c,rgba(217,174,95,.2)),transparent 70%);opacity:.35}
+/* recipe card */
+.rc{cursor:pointer;transition:.25s;display:flex;flex-direction:column;position:relative}
+.rc:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--gold)}
+.rc .ph{height:140px;display:grid;place-items:center;font-size:68px;position:relative;background:linear-gradient(135deg,var(--c1,#3a2a1a),var(--c2,#1b140e))}
+.rc .ph:after{content:'';position:absolute;inset:0;background:radial-gradient(120px 80px at 70% 20%,rgba(255,255,255,.14),transparent)}
+.rc .ph span{filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));position:relative;z-index:1}
+.rc .fv{position:absolute;right:10px;top:10px;z-index:2;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;backdrop-filter:blur(6px);font-size:16px;color:#fff}
+.rc .fv.on{color:#ff6b6b;background:rgba(0,0,0,.65)}
+.rc .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
+.rc h3{font-size:19px}
+.rc .cu{font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.rc p{color:var(--mut);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta{display:flex;gap:10px;color:var(--mut);font-size:12.5px;margin-top:auto;flex-wrap:wrap}
+.meta b{color:var(--tx);font-weight:600}
+.lvl i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--line);margin-right:2px}
+.lvl i.on{background:var(--gold)}
+/* filters */
+.filters{display:flex;flex-direction:column;gap:12px;margin:18px 0 26px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips.sc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select,.field,select.field{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;outline:none}
+.toolbar input:focus,.field:focus{border-color:var(--gold)}
+.page-h{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.page-h h1{font-size:clamp(30px,4vw,46px)}
+.page-h p{color:var(--mut);max-width:640px;margin-top:8px}
+/* tabs */
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:22px 0;overflow-x:auto;scrollbar-width:none}
+.tabs button{padding:12px 18px;color:var(--mut);font-weight:600;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--gold2);border-color:var(--gold)}
+/* recipe page */
+.rp{display:grid;gap:30px;grid-template-columns:1fr 1.25fr}
+.rhero{border-radius:28px;padding:34px;background:linear-gradient(135deg,var(--c1,#3a2a1a),var(--c2,#1b140e));position:relative;overflow:hidden;border:1px solid var(--line);margin-bottom:26px}
+.rhero .em{position:absolute;right:30px;top:20px;font-size:130px;opacity:.95;filter:drop-shadow(0 20px 30px rgba(0,0,0,.5))}
+.rhero h1{font-size:clamp(30px,4.5vw,52px);max-width:80%;color:#fff}
+.rhero p{color:#e8dcc5;max-width:560px;margin:10px 0 18px}
+.rhero .pill{background:rgba(0,0,0,.35);border-color:rgba(255,255,255,.18);color:#f0e4cd}
+.back{color:var(--mut);margin-bottom:14px;display:inline-block}
+.back:hover{color:var(--gold)}
+.ing li{list-style:none;display:flex;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);align-items:center;cursor:pointer}
+.ing li input{accent-color:var(--gold);width:18px;height:18px}
+.ing li.done span{text-decoration:line-through;color:var(--mut)}
+.ing li b{margin-left:auto;color:var(--gold2);white-space:nowrap}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.stepper button{width:36px;height:36px;font-size:18px}
+.stepper button:hover{background:var(--card2)}
+.stepper span{min-width:36px;text-align:center;font-weight:600}
+.steps li{list-style:none;display:flex;gap:16px;padding:16px;border-radius:16px;background:var(--card);border:1px solid var(--line);margin-bottom:12px;counter-increment:s}
+.steps li:before{content:counter(s);flex:none;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1208;font-weight:700;display:grid;place-items:center;font-family:var(--serif)}
+.steps{counter-reset:s}
+.tip{padding:16px 18px;border-radius:16px;background:rgba(217,174,95,.1);border:1px solid rgba(217,174,95,.35);margin-top:14px}
+.tip b{color:var(--gold2)}
+.nut{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+.nut div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.nut b{display:block;font-family:var(--serif);font-size:22px;color:var(--gold2)}
+.nut span{font-size:12px;color:var(--mut)}
+/* cook mode */
+#cook{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;flex-direction:column;padding:20px}
+#cook.on{display:flex}
+#cook .cb{flex:1;display:grid;place-items:center;text-align:center;padding:20px}
+#cook .cb p{font-family:var(--serif);font-size:clamp(24px,4vw,44px);line-height:1.35;max-width:900px}
+#cook .cb small{color:var(--gold);letter-spacing:.2em;text-transform:uppercase;display:block;margin-bottom:20px}
+#cook .bar{height:5px;background:var(--line);border-radius:5px}
+#cook .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--ember));border-radius:5px;transition:.3s}
+#cook .ctl{display:flex;justify-content:space-between;gap:10px;align-items:center;padding-top:14px;flex-wrap:wrap}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:90;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal.on{display:flex}
+.mbox{background:var(--bg2);border:1px solid var(--line);border-radius:24px;width:min(640px,100%);max-height:88vh;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+.mbox .mh{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.mbox .mb{padding:18px 22px;overflow-y:auto}
+.mlist button{display:flex;width:100%;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;text-align:left}
+.mlist button:hover{background:var(--card2)}
+/* wiki */
+.acc{border:1px solid var(--line);border-radius:18px;background:var(--card);margin-bottom:12px;overflow:hidden}
+.acc>button{display:flex;gap:14px;align-items:center;width:100%;padding:16px 20px;text-align:left}
+.acc>button .e{font-size:30px}
+.acc>button h3{font-size:20px}
+.acc>button small{color:var(--mut);display:block;font-family:var(--sans);font-size:13px;font-weight:400}
+.acc>button:after{content:'＋';margin-left:auto;font-size:20px;color:var(--gold)}
+.acc.open>button:after{content:'－'}
+.acc .ab{display:none;padding:4px 20px 20px;color:#d7cab3}
+:root[data-theme=light] .acc .ab{color:#4a3b27}
+.acc.open .ab{display:block}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:6px 14px;margin:12px 0}
+.kv b{color:var(--gold)}
+.cutlist{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));margin-top:12px}
+.cut{padding:14px;border-radius:14px;background:var(--bg2);border:1px solid var(--line)}
+.cut h4{font-size:16px;margin-bottom:4px;color:var(--gold2)}
+.cut p{font-size:13px;color:var(--mut)}
+.cut em{display:block;margin-top:6px;font-style:normal;font-size:12px;color:var(--green)}
+.timeline{border-left:2px solid var(--line);margin:14px 0 14px 8px;padding-left:20px}
+.timeline li{list-style:none;position:relative;padding:5px 0 12px;color:#d7cab3}
+:root[data-theme=light] .timeline li{color:#4a3b27}
+.timeline li:before{content:'';position:absolute;left:-27px;top:11px;width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--bg)}
+/* doneness */
+.done-wrap{padding:26px;border-radius:24px;background:var(--card);border:1px solid var(--line)}
+.steakviz{height:150px;border-radius:70px 70px 70px 70px/60px;margin:18px 0;position:relative;overflow:hidden;box-shadow:inset 0 0 0 10px #4a2b17,0 10px 30px rgba(0,0,0,.5);transition:.4s}
+.steakviz:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 22px,rgba(0,0,0,.18) 22px 26px);}
+.dn{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}
+table.t th{color:var(--gold);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+/* calculator */
+.two{display:grid;gap:22px;grid-template-columns:1fr 1fr}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px}
+.panel h3{margin-bottom:14px;font-size:22px}
+.frm{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.frm label{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em}
+.frm .full{grid-column:1/-1}
+.field{width:100%}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:3px}
+.seg button{flex:1;padding:8px;border-radius:9px;font-weight:600;color:var(--mut)}
+.seg button.on{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#1a1208}
+.ring{position:relative;width:200px;height:200px;margin:0 auto}
+.ring svg{transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .c b{font-family:var(--serif);font-size:38px;display:block;line-height:1}
+.ring .c span{font-size:12px;color:var(--mut)}
+.mbar{margin:12px 0}
+.mbar .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.mbar .tr{height:9px;border-radius:9px;background:var(--bg2);overflow:hidden}
+.mbar .tr i{display:block;height:100%;border-radius:9px;transition:.4s}
+.big-n{font-family:var(--serif);font-size:46px;color:var(--gold2);line-height:1}
+.res3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.res3 div{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
+.res3 b{display:block;font-family:var(--serif);font-size:22px}
+.res3 span{font-size:12px;color:var(--mut)}
+.dl li{list-style:none;display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
+.dl li span{flex:1}
+.dl li small{color:var(--mut);display:block}
+.x{color:var(--mut);width:28px;height:28px;border-radius:50%}
+.x:hover{background:var(--card2);color:var(--ember)}
+.sugg{position:relative}
+.sugg .list{position:absolute;left:0;right:0;top:100%;z-index:10;background:var(--bg2);border:1px solid var(--line);border-radius:12px;max-height:260px;overflow:auto;box-shadow:var(--shadow);margin-top:4px}
+.sugg .list button{display:flex;justify-content:space-between;width:100%;padding:9px 12px;text-align:left;gap:10px;font-size:14px}
+.sugg .list button:hover{background:var(--card2)}
+/* planner */
+.pl-h{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:18px 0}
+.week{display:grid;grid-template-columns:repeat(7,minmax(160px,1fr));gap:12px;overflow-x:auto;padding-bottom:10px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:160px}
+.day.today{border-color:var(--gold);box-shadow:0 0 0 3px rgba(217,174,95,.14)}
+.day h4{font-size:17px;display:flex;justify-content:space-between;align-items:baseline}
+.day h4 small{color:var(--mut);font-family:var(--sans);font-weight:500;font-size:12px}
+.slot{background:var(--bg2);border-radius:12px;padding:8px 10px;min-height:56px}
+.slot .sh{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.slot .sh button{color:var(--gold);font-size:18px;line-height:1}
+.pm{display:flex;gap:6px;align-items:center;font-size:13px;padding:3px 0}
+.pm a{flex:1;line-height:1.25;cursor:pointer}
+.pm a:hover{color:var(--gold2)}
+.pm small{color:var(--mut);display:block}
+.pm button{color:var(--mut);font-size:14px}
+.dsum{font-size:12px;color:var(--mut);text-align:center;padding-top:4px;border-top:1px solid var(--line)}
+.dsum b{color:var(--gold2)}
+.shop li{list-style:none;display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.shop li.done span{text-decoration:line-through;color:var(--mut)}
+.shop input{accent-color:var(--gold);width:17px;height:17px}
+.shop b{margin-left:auto;color:var(--gold2)}
+.empty{padding:50px 20px;text-align:center;color:var(--mut);border:1px dashed var(--line);border-radius:20px}
+.empty .e{font-size:54px}
+/* toast */
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--gold);color:#1a1208;padding:11px 20px;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:200;box-shadow:var(--shadow)}
+#toast.on{opacity:1;transform:translateX(-50%)}
+/* bottom nav (mobile) */
+.bnav{display:none}
+footer{border-top:1px solid var(--line);padding:30px 0;color:var(--mut);text-align:center;font-size:13px}
+@media(max-width:1020px){.sbox input{width:150px}.sbox input:focus{width:200px}.rp,.two{grid-template-columns:1fr}.hero{padding:40px 28px}.hero .big{font-size:120px;opacity:.5;right:10px}nav.main{display:none}
+.bnav{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:60;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));overflow-x:auto;scrollbar-width:none;justify-content:space-between}
+.bnav a{flex:1;min-width:62px;text-align:center;font-size:10.5px;color:var(--mut);padding:5px 4px;border-radius:12px}
+.bnav a span{display:block;font-size:20px}
+.bnav a.on{color:var(--gold2);background:var(--card)}}
+@media(max-width:560px){.wrap{padding:0 14px}.logo span{display:none}.sbox input{width:130px}.nut{grid-template-columns:repeat(2,1fr)}.frm{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr;gap:12px}.rc .ph{height:110px;font-size:52px}.rc .bd{padding:12px}.rc h3{font-size:16px}.rc p{display:none}.hero .big{display:none}.kv{grid-template-columns:1fr}}
+@media print{header,.bnav,.btn,#toast,footer,.noprint{display:none!important}body{background:#fff;color:#000}.ing li b{color:#000}.rp{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <a href="#/" class="logo"><i>🍽️</i><span>Гений <b>кухни</b></span></a>
+  <nav class="main" id="nav"></nav>
+  <div class="top-r">
+    <div class="sbox"><input id="gs" placeholder="Поиск блюд, ингредиентов…" autocomplete="off"><div id="sres"></div></div>
+    <button class="ibtn" id="themeBtn" title="Тема">🌙</button>
+  </div>
+</div></header>
+<main><div class="wrap" id="app"></div></main>
+<footer><div class="wrap">Гений кухни · готовьте с удовольствием · Данные о калорийности ориентировочные и не заменяют консультацию врача.</div></footer>
+<nav class="bnav" id="bnav"></nav>
+<div class="modal" id="modal"><div class="mbox"><div class="mh"><h3 id="mt"></h3><button class="ibtn" onclick="closeModal()">✕</button></div><div class="mb" id="mb"></div></div></div>
+<div id="cook"></div>
+<div id="toast"></div>
+<script>
+/* ===== РЕЦЕПТЫ ===== R(id,название,кухня,категория,мин,ккал/порция,сложность 1-3,эмодзи,описание,порций,"ингредиент:кол-во:ед;...","шаг|шаг",совет) */
+const RECIPES=[];
+function R(id,name,cu,cat,t,kcal,lvl,em,desc,serv,ing,steps,tip){
+  RECIPES.push({id,name,cu,cat,t,kcal,lvl,em,desc,serv,
+    ing:ing.split(';').map(s=>{const p=s.split(':');return{n:p[0].trim(),q:parseFloat(p[1])||0,u:(p[2]||'').trim()}}),
+    steps:steps.split('|'),tip:tip||''});
+}
+/* ---------- ИТАЛИЯ ---------- */
+R('carbonara','Спагетти карбонара','it','pasta',25,640,2,'🍝','Римская классика: хрустящий гуанчале, желтки, пекорино и перец. Без сливок.',2,
+'спагетти:200:г;гуанчале (или панчетта):100:г;желтки:3:шт;яйцо:1:шт;пекорино романо:50:г;чёрный перец свежемолотый:1:ч.л.;соль для воды:1:ст.л.',
+'Гуанчале нарежьте брусочками и вытопите на сухой сковороде на среднем огне 7 минут до золотистых хрустящих краёв.|Смешайте желтки, яйцо, тёртый пекорино и много свежемолотого перца в густую пасту.|Отварите спагетти в хорошо подсоленной воде 9 минут (на минуту меньше, чем на упаковке). Оставьте стакан воды от варки.|Снимите сковороду с гуанчале с огня, добавьте спагетти и 3–4 ст. л. воды от варки, быстро перемешайте.|Влейте яичную смесь и интенсивно мешайте 30 секунд — остаточного тепла хватит, чтобы получился шёлковый крем, а не омлет.|Подавайте сразу, посыпав пекорино и перцем.',
+'Никаких сливок! Кремовость даёт эмульсия из желтков, сыра и крахмальной воды. Сковорода должна быть тёплой, но не раскалённой.');
+R('bolognese','Тальятелле с рагу болоньезе','it','pasta',180,780,2,'🍝','Медленно томлёное мясное рагу с мягким вкусом — не «спагетти с фаршем».',4,
+'говяжий фарш:300:г;свиной фарш:200:г;панчетта:80:г;лук:1:шт;морковь:1:шт;сельдерей (стебель):1:шт;томатная паста:2:ст.л.;белое сухое вино:150:мл;молоко:150:мл;бульон:300:мл;тальятелле:320:г;пармезан:50:г',
+'Мелко нарежьте лук, морковь и сельдерей (софрито) и обжарьте с панчеттой на оливковом масле 10 минут.|Добавьте фарш, разбивая комочки, и жарьте до румяной корочки — не торопитесь, это основа вкуса.|Добавьте томатную пасту, прогрейте 2 минуты, влейте вино и выпарьте почти полностью.|Влейте молоко, дайте впитаться, затем добавьте бульон. Тушите под приоткрытой крышкой на минимальном огне 2,5 часа, помешивая.|Отварите тальятелле al dente, соедините с рагу в сковороде с половником воды от варки.|Подавайте с пармезаном. Рагу вкуснее на следующий день.',
+'Молоко смягчает кислотность томата и делает мясо нежнее. Классическая подача — с тальятелле, а не со спагетти: плоская паста лучше держит густой соус.');
+R('cacioepepe','Качо э пепе','it','pasta',20,610,3,'🧀','Три ингредиента — сыр, перец и паста. Самое сложное блюдо римской кухни по технике.',2,
+'спагетти или тонаррелли:200:г;пекорино романо:100:г;чёрный перец горошком:2:ч.л.;соль:1:щепотка',
+'Раскрошите перец в ступке, прогрейте на сухой сковороде 1 минуту до аромата.|Мелко натрите пекорино. Сделайте из половины сыра пасту с 3 ст. л. тёплой воды.|Отварите пасту в малом объёме воды (1,5 л) — вода должна получиться очень крахмальной.|Переложите пасту в сковороду с перцем и 100 мл воды от варки, снимите с огня.|Добавьте сырную пасту и остальной сыр, энергично перемешивайте/встряхивайте до глянцевого крема.',
+'Главный враг — комки. Сыр натирайте максимально мелко и добавляйте при неярком нагреве, вода — не кипяток.');
+R('amatriciana','Букатини аматричана','it','pasta',30,690,2,'🍅','Острый томатный соус с гуанчале — родом из городка Аматриче.',2,
+'букатини:200:г;гуанчале:100:г;помидоры в собственном соку:300:г;пекорино:40:г;сухой чили:1:шт;белое вино:50:мл',
+'Нарежьте гуанчале соломкой и вытопите на сухой сковороде до хруста. Достаньте половину для подачи.|Добавьте чили и вино, выпарьте.|Добавьте протёртые томаты, тушите 15 минут до загустения.|Отварите букатини на 1 минуту меньше, доварите в соусе с водой от варки.|Подавайте с пекорино и хрустящим гуанчале.',
+'Лук в оригинальный рецепт не кладут — спор лазио-фанатов вечен, но Аматриче его не использует.');
+R('lasagna','Лазанья болоньезе','it','pasta',150,720,2,'🥘','Слои пасты, рагу, бешамеля и сыра с золотой корочкой.',6,
+'листы лазаньи:250:г;рагу болоньезе:600:г;бешамель:700:мл;пармезан:100:г;сливочное масло:20:г',
+'Приготовьте рагу болоньезе и бешамель (рецепты в этом приложении).|Разогрейте духовку до 190 °C. Форму смажьте маслом и тонким слоем бешамеля.|Выкладывайте слоями: лист пасты — рагу — бешамель — пармезан. Повторите 4–5 раз, верхний слой — бешамель и сыр.|Накройте фольгой и запекайте 30 минут, затем без фольги ещё 15–20 минут до румяной корочки.|Дайте постоять 15 минут перед нарезкой, иначе развалится.',
+'Чем тоньше слои — тем лучше. Отдых после духовки обязателен.');
+R('risotto-funghi','Ризотто с грибами','it','pasta',40,560,2,'🍄','Кремовый рис из Ломбардии с лесными грибами и пармезаном.',2,
+'рис арборио или карнароли:180:г;белые или шампиньоны:250:г;лук шалот:1:шт;белое вино:100:мл;горячий бульон:900:мл;сливочное масло:40:г;пармезан:50:г;чеснок:1:зубч.',
+'Обжарьте грибы отдельно на сильном огне до золотистой корочки, посолите в конце, отложите.|В кастрюле растопите половину масла, обжарьте шалот 3 минуты. Добавьте рис и поджаривайте 2 минуты до прозрачных краёв (tostatura).|Влейте вино, дождитесь испарения.|Добавляйте горячий бульон по половнику, постоянно помешивая, каждый раз ждите впитывания. Время — около 16–18 минут.|Снимите с огня, добавьте грибы, холодное масло и пармезан, энергично взбейте (mantecatura). Оставьте под крышкой на 2 минуты.',
+'Рис должен быть al onda — «волной»: текучим, как густая каша. Бульон всегда горячий, иначе рис «сварится» неравномерно.');
+R('ossobuco','Оссобуко по-милански','it','meat',170,620,2,'🍖','Тушёная телячья голяшка с косточкой и костным мозгом, гремолата.',4,
+'телячья голяшка кружками:4:шт;мука:3:ст.л.;лук:1:шт;морковь:1:шт;сельдерей:1:шт;белое вино:200:мл;бульон:400:мл;томаты:200:г;лимонная цедра:1:шт;чеснок:2:зубч.;петрушка:1:пучок',
+'Надрежьте плёнку по краю кружков, обваляйте в муке. Обжарьте в масле до золотистой корочки с обеих сторон.|Отдельно обжарьте нарезанный софрито (лук, морковь, сельдерей). Верните мясо, залейте вином и выпарьте.|Добавьте томаты и бульон до половины высоты мяса. Тушите под крышкой при 160 °C в духовке 2–2,5 часа, переворачивая раз в 40 минут.|Гремолата: мелко порубите петрушку, чеснок и цедру лимона.|Подавайте с ризотто по-милански и посыпьте гремолатой.',
+'Мякоть с косточкой — главный деликатес: костный мозг намазывают на хлеб.');
+R('tiramisu','Тирамису','it','dessert',40,480,2,'🍰','Мягкий десерт из маскарпоне и пропитанного кофе савоярди.',6,
+'маскарпоне:500:г;желтки:4:шт;сахар:80:г;эспрессо крепкий:250:мл;печенье савоярди:24:шт;какао:3:ст.л.;марсала или амаретто:2:ст.л.',
+'Взбейте желтки с сахаром над водяной баней до густоты и светлого цвета (5–7 минут), остудите.|Добавьте маскарпоне и аккуратно перемешайте до гладкости.|Остывший эспрессо смешайте с ликёром. Быстро окуните савоярди с двух сторон (2 секунды) и выложите слоем.|Покройте половиной крема, повторите слой.|Уберите в холодильник минимум на 6 часов (лучше на ночь). Перед подачей посыпьте какао.',
+'Печенье не вымачивайте — иначе получится каша. Желтки взбивайте нагревая до 70 °C, если не хотите сырых.');
+R('margherita','Пицца Маргарита','it','side',120,820,2,'🍕','Неаполитанская основа: тонкая середина, пышный бортик, моцарелла и базилик.',2,
+'мука 00 или хлебная:300:г;вода:190:мл;сухие дрожжи:2:г;соль:8:г;помидоры в собственном соку:200:г;моцарелла:200:г;базилик:1:пучок;оливковое масло:2:ст.л.',
+'Замесите тесто из муки, воды, дрожжей и соли 10 минут. Накройте и оставьте на 2 часа (или на ночь в холодильнике).|Разделите на 2 шара, дайте отдохнуть 30 минут.|Разомните помидоры руками с солью — без варки.|Растяните тесто руками от центра, оставляя бортик. Нанесите томат, разорванную моцареллу.|Выпекайте на максимально разогретой (250–275 °C) пиццастоуне или перевёрнутом противне 6–8 минут.|Украсьте базиликом и маслом.',
+'Секрет — жар и камень. Чем выше температура, тем нежнее тесто и с пузырьками бортик.');
+R('bruschetta','Брускетта с томатами','it','salad',15,210,1,'🍅','Хрустящий хлеб с чесноком, сочными томатами и базиликом.',4,
+'чиабатта:8:ломтиков;спелые помидоры:4:шт;чеснок:2:зубч.;базилик:1:пучок;оливковое масло extra virgin:4:ст.л.;бальзамический крем:1:ст.л.',
+'Подсушите ломтики хлеба на сухой сковороде или гриле до золотистых полос.|Натрите ещё горячий хлеб чесноком.|Нарежьте помидоры кубиком, добавьте масло, соль, рваный базилик.|Выложите смесь на хлеб, сбрызните бальзамическим кремом.',
+'Томаты должны быть спелыми, а масло — хорошим. В этом блюде нечем «прикрыть» плохие продукты.');
+R('pannacotta','Панна котта с ягодным соусом','it','dessert',25,380,1,'🍮','«Варёные сливки» из Пьемонта — шёлк на ложке.',4,
+'сливки 33%:400:мл;молоко:100:мл;сахар:60:г;желатин:6:г;ваниль:1:стручок;клубника или малина:200:г',
+'Замочите желатин в холодной воде на 10 минут.|Нагрейте сливки, молоко, сахар и семена ванили почти до кипения.|Снимите с огня, растворите в смеси отжатый желатин.|Разлейте по формам, остудите и уберите в холодильник на 5 часов.|Из ягод и ложки сахара приготовьте соус, подайте сверху.',
+'Должна «дрожать» при покачивании. Меньше желатина — нежнее.');
+R('gnocchi-gorg','Ньокки с горгонзолой и грушей','it','pasta',60,720,2,'🧀','Воздушные картофельные ньокки в сырном соусе.',3,
+'картофель мучнистый:600:г;мука:150:г;яйцо:1:шт;горгонзола:100:г;сливки:100:мл;груша:1:шт;грецкий орех:30:г',
+'Запеките картофель в кожуре 50 минут при 200 °C, очистите и сразу пропустите через пресс.|Добавьте яйцо, соль и муку; замесите мягкое тесто, не вымешивая долго.|Раскатайте жгуты, нарежьте кусочки по 2 см, накатайте вилкой.|Для соуса прогрейте сливки с горгонзолой.|Варите ньокки до всплытия +30 секунд. Смешайте с соусом, добавьте груши и орехи.',
+'Запекайте, а не варите картофель — меньше воды, меньше муки, легче ньокки.');
+R('saltimbocca','Сальтимбокка по-римски','it','meat',25,420,2,'🥩','«Прыгни в рот»: телятина с прошутто и шалфеем.',2,
+'телячьи эскалопы:4:шт;прошутто:4:ломтика;шалфей:8:листьев;мука:2:ст.л.;белое вино:80:мл;сливочное масло:20:г',
+'Отбейте эскалопы тонко. На каждый положите лист шалфея и ломтик прошутто, зафиксируйте зубочисткой.|Слегка обваляйте в муке со стороны мяса.|Обжарьте в масле 2 минуты со стороны прошутто и 1 минуту с другой.|Влейте вино, выпарьте, добавьте кусочек холодного масла и взбейте соус.',
+'Соль почти не нужна — прошутто и так солёное.');
+R('minestrone','Минестроне','it','soup',60,230,1,'🥣','Густой овощной суп с фасолью и пастой — рецепт «что в огороде».',4,
+'морковь:2:шт;сельдерей:2:стебля;кабачок:1:шт;картофель:2:шт;белая фасоль консервированная:200:г;томаты:200:г;мелкая паста:80:г;пармезан (корка):1:шт;бульон или вода:1.5:л;песто:2:ст.л.',
+'Обжарьте нарезанные лук, морковь и сельдерей в масле 8 минут.|Добавьте картофель, кабачок, томаты, корку пармезана и залейте бульоном. Варите 30 минут.|Добавьте фасоль и пасту, варите ещё 10 минут.|Достаньте корку, подавайте с ложкой песто и тёртым пармезаном.',
+'Корка пармезана придаёт бульону умами — не выбрасывайте её.');
+R('vitello','Витело тоннато','it','meat',90,360,2,'🥗','Холодная телятина в соусе из тунца и каперсов — летняя классика Пьемонта.',4,
+'телячья мякоть (задняя часть):500:г;тунец в масле:160:г;майонез:100:г;каперсы:2:ст.л.;анчоусы:3:шт;лимонный сок:1:ст.л.',
+'Отварите телятину с овощами и лавром при слабом кипении 60 минут, остудите в бульоне.|Измельчите блендером тунец, анчоусы, майонез, каперсы и лимон до гладкости, разведите бульоном.|Нарежьте мясо очень тонко, выложите, залейте соусом, украсьте каперсами.',
+'Блюдо лучше после ночи в холодильнике — вкус сливается.');
+R('vongole','Спагетти алле вонголе','it','pasta',25,520,2,'🐚','Паста с моллюсками в белом вине — вкус неаполитанского моря.',2,
+'спагетти:200:г;вонголе (венерки):600:г;чеснок:3:зубч.;белое вино:100:мл;петрушка:1:пучок;чили:1:шт',
+'Выдержите моллюсков в солёной воде 30 минут. Выбросьте открытые.|Обжарьте чеснок и чили в масле, добавьте моллюсков и вино. Накройте крышкой на 3–4 минуты, пока не откроются.|Спагетти варите на 2 минуты меньше, доведите в сковороде с моллюсками и водой от варки.|Посыпьте петрушкой. Закрытые моллюски выбросьте.',
+'Сыр с морепродуктами в Италии не подают — только масло и зелень.');
+R('parmigiana','Пармиджана из баклажанов','it','veg',75,420,2,'🍆','Слои баклажана, томатного соуса и сыра из Южной Италии.',4,
+'баклажаны:3:шт;томатный соус:500:мл;моцарелла:250:г;пармезан:60:г;базилик:1:пучок',
+'Нарежьте баклажаны кружками, посолите на 20 минут, промокните. Обжарьте или запеките с маслом до золотистости.|Выкладывайте слоями: соус — баклажан — моцарелла — базилик — пармезан.|Запекайте при 190 °C 30 минут до румяной корочки.|Дайте постоять 10 минут.',
+'Запечённые, а не пережаренные баклажаны впитывают меньше масла.');
+R('carpaccio','Карпаччо из говядины','it','meat',20,280,1,'🥩','Полупрозрачные ломтики сырой вырезки с рукколой и пармезаном.',2,
+'говяжья вырезка:200:г;руккола:40:г;пармезан (стружка):40:г;лимонный сок:1:ст.л.;оливковое масло:2:ст.л.;каперсы:1:ст.л.',
+'Заморозьте мясо на 1,5–2 часа до плотности — так проще нарезать тонко.|Нарежьте ломтиками и выложите на тарелку, аккуратно прикрыв плёнкой, отбейте до прозрачности.|Сбрызните лимоном и маслом, посыпьте солью, перцем, добавьте рукколу, пармезан и каперсы.',
+'Используйте только свежую мякоть высокого качества от проверенного поставщика.');
+
+/* ---------- ФРАНЦИЯ ---------- */
+R('onion-soup','Французский луковый суп','fr','soup',90,430,1,'🧅','Карамелизированный лук, говяжий бульон и тост с расплавленным грюйером.',4,
+'лук репчатый:1:кг;сливочное масло:40:г;белое вино:150:мл;говяжий бульон:1.2:л;тимьян:3:веточки;багет:4:ломтика;грюйер:150:г',
+'Нарежьте лук тонкими полукольцами и томите в масле на среднем огне 40–50 минут, пока он не станет тёмно-янтарным.|Влейте вино, выпарьте, добавьте бульон и тимьян, варите 20 минут.|Разлейте по порционным горшочкам, положите ломтики багета и обильно посыпьте грюйером.|Запекайте под грилем 5–7 минут до золотистой пузырящейся корочки.',
+'Терпение — главный ингредиент. Слабый огонь и 45 минут превращают лук в сладкий джем.');
+R('bouillabaisse','Буйабес по-марсельски','fr','fish',70,380,3,'🐟','Рыбный суп с шафраном и фенхелем и соусом руй.',4,
+'рыба разных видов (морской окунь, скорпена, угорь):800:г;мидии:300:г;лук-порей:1:шт;фенхель:1:шт;томаты:3:шт;шафран:1:щепотка;чеснок:3:зубч.;апельсиновая цедра:1:полоска;картофель:2:шт;багет:1:шт',
+'Обжарьте в оливковом масле порей, фенхель и чеснок 8 минут.|Добавьте томаты, цедру, шафран и воду — варите 20 минут.|Положите картофель, через 10 минут рыбу плотной мякотью и мидии, варите 8–10 минут.|Соус руй: разотрите чеснок, шафран, кусочек бульона и оливковое масло в эмульсию.|Подавайте с гренками и руй — рыбу отдельно от бульона.',
+'Классический буйабес требует минимум 4 вида рыбы, ведь вкус — в разнообразии.');
+R('beef-bourguignon','Бёф бургиньон','fr','meat',210,620,2,'🍷','Говядина, томлёная в бургундском вине с беконом, луком и грибами.',4,
+'говяжья лопатка или щека:900:г;бекон:100:г;красное вино (пино нуар):500:мл;морковь:2:шт;лук:1:шт;жемчужный лук:12:шт;шампиньоны:200:г;бульон:300:мл;мука:2:ст.л.;томатная паста:1:ст.л.;тимьян, лавр:1:пучок',
+'Нарежьте мясо кубиками 4 см, обсушите. Обжарьте порциями до тёмной корочки.|Обжарьте бекон, морковь и лук. Посыпьте мукой, добавьте томатную пасту.|Верните мясо, влейте вино и бульон, добавьте травы. Тушите в духовке при 160 °C 2,5–3 часа.|Отдельно обжарьте жемчужный лук и грибы в масле до золота, добавьте за 20 минут до готовности.|Подавайте с картофельным пюре или тальятелле.',
+'Лучше на следующий день: соус гуще и вкуснее.');
+R('ratatouille','Рататуй','fr','veg',70,210,1,'🍆','Прованский овощной «букет» с томатной основой.',4,
+'баклажан:1:шт;кабачок:1:шт;перец болгарский:1:шт;томаты:4:шт;лук:1:шт;чеснок:3:зубч.;тимьян:3:веточки;оливковое масло:4:ст.л.',
+'Приготовьте пиперад: обжарьте лук, перец и чеснок, добавьте протёртые томаты, тушите 15 минут.|Выложите соус на дно формы.|Тонко нарежьте баклажан, кабачок и томат, уложите кругами «чешуёй».|Сбрызните маслом, добавьте тимьян, накройте пергаментом и запекайте при 180 °C 45 минут.|Откройте и подрумяньте 10 минут.',
+'Нарезка одинаковой толщины делает блюдо красивым и равномерно готовым.');
+R('confit-canard','Конфи из утиной ножки','fr','meat',210,760,2,'🦆','Ножка, томлёная в собственном жире — нежнейшее мясо с хрустящей кожей.',2,
+'утиные ножки:2:шт;крупная соль:2:ст.л.;чеснок:4:зубч.;тимьян:4:веточки;утиный жир:400:г;картофель:400:г',
+'Натрите ножки солью с тимьяном и чесноком, оставьте на 12–24 часа в холодильнике.|Стряхните соль, уложите в форму, залейте растопленным жиром.|Томите при 120 °C 2,5–3 часа до мягкости.|Для хруста — обжарьте кожей вниз на сковороде 5 минут.|Подавайте с картофелем, жаренным на утином жире.',
+'Жир можно хранить в холодильнике и использовать повторно.');
+R('creme-brulee','Крем-брюле','fr','dessert',70,420,2,'🍮','Нежный ванильный крем под хрустящей карамельной корочкой.',4,
+'сливки 33%:500:мл;желтки:5:шт;сахар:80:г;ваниль:1:стручок;тростниковый сахар для карамели:4:ст.л.',
+'Нагрейте сливки с ванилью до лёгкого пара, оставьте на 15 минут.|Разотрите желтки с сахаром, влейте сливки тонкой струйкой.|Разлейте по формочкам, поставьте в глубокий противень с горячей водой до половины высоты.|Выпекайте при 150 °C 35–40 минут — центр должен подрагивать. Остудите, затем в холодильник на 4 часа.|Посыпайте тонким слоем сахара и карамелизуйте горелкой.',
+'Тонкий слой сахара даёт хруст «как стекло», толстый — липкую корку.');
+R('quiche','Киш лорен','fr','side',80,540,2,'🥧','Открытый пирог из Лотарингии с беконом, яйцом и сливками.',6,
+'мука:220:г;холодное масло:110:г;яйцо (для теста):1:шт;бекон:200:г;яйца:3:шт;сливки 20%:250:мл;грюйер:100:г;мускатный орех:1:щепотка',
+'Замесите песочное тесто из муки, масла, яйца и щепотки соли; охладите 30 минут.|Раскатайте, выложите в форму, наколите вилкой, запекайте вслепую (с фасолью) 15 минут при 190 °C.|Обжарьте бекон. Взбейте яйца со сливками, солью, перцем и мускатом.|Выложите бекон и сыр, залейте смесью. Выпекайте 30 минут при 180 °C до золотистого цвета и «дрожащей» середины.',
+'Подпекание основы без начинки избавит от «сырого» дна.');
+R('chocolate-mousse','Шоколадный мусс','fr','dessert',30,390,2,'🍫','Воздушный мусс из горького шоколада, яиц и немного соли.',4,
+'горький шоколад 70%:200:г;яйца:4:шт;сахар:40:г;сливочное масло:20:г;щепотка соли:1:щепотка',
+'Растопите шоколад с маслом на водяной бане, слегка остудите.|Отделите желтки, вмешайте их в шоколад по одному.|Белки взбейте с солью до мягких пиков, добавляя сахар.|Аккуратно соедините массы в три приёма движением снизу вверх.|Разложите по бокалам, охладите 4 часа.',
+'Использование сырых яиц — только от проверенных поставщиков.');
+R('julienne','Жюльен с грибами','fr','side',30,340,1,'🍄','Грибы, запечённые в сливочном соусе под сырной шапкой.',4,
+'шампиньоны:400:г;лук:1:шт;сливки:200:мл;мука:1:ст.л.;сыр твёрдый:100:г;мускатный орех:1:щепотка',
+'Обжарьте лук, добавьте грибы и жарьте до испарения влаги.|Посыпьте мукой, влейте сливки, прогрейте до загустения, добавьте мускат.|Разложите по кокотницам, посыпьте сыром.|Запекайте при 200 °C 10 минут до румяной корочки.',
+'Не солите грибы в начале — они выпускают воду.');
+R('gratin-dauphinois','Картофельный гратен дофинуа','fr','side',90,380,1,'🥔','Тонкие ломтики картофеля, запечённые в сливках с чесноком.',4,
+'картофель:800:г;сливки 20%:300:мл;молоко:200:мл;чеснок:2:зубч.;мускатный орех:1:щепотка;сливочное масло:20:г',
+'Нарежьте картофель очень тонкими ломтиками (2 мм), не промывайте — крахмал загустит соус.|Натрите форму чесноком и маслом.|Доведите молоко и сливки до тёплого, добавьте соль, перец, мускат.|Уложите картофель слоями, залейте смесью.|Запекайте при 170 °C 60–70 минут до золотистой корочки.',
+'Не нужен сыр: крахмал и сливки сами дают кремовую текстуру.');
+R('moules','Мидии в белом вине','fr','fish',20,320,1,'🦪','Moules marinières: чеснок, шалот, вино и свежая петрушка.',2,
+'мидии:1:кг;шалот:2:шт;чеснок:2:зубч.;белое сухое вино:150:мл;сливочное масло:30:г;петрушка:1:пучок;багет:1:шт',
+'Промойте мидии, удалите бородки, выбросьте открытые, не закрывающиеся.|Обжарьте шалот и чеснок в масле 3 минуты.|Добавьте вино и мидии, накройте крышкой на 4–5 минут, встряхивая.|Закрытые после варки — выбросьте. Посыпьте петрушкой.|Подавайте с багетом, чтобы макать в бульон.',
+'Мидии можно готовить на пару — они откроются сами, когда будут готовы.');
+R('tartare','Тартар из говядины','fr','meat',25,380,2,'🥩','Рубленая сырая вырезка с каперсами, корнишонами и желтком.',2,
+'говяжья вырезка:250:г;желток:2:шт;корнишоны:2:шт;каперсы:1:ст.л.;шалот:1:шт;дижонская горчица:1:ч.л.;соус ворчестер:1:ч.л.;табаско:3:капли',
+'Мясо охладите, нарежьте ножом мелким кубиком (не фаршем).|Смешайте с рублеными шалотом, корнишонами и каперсами.|Заправьте горчицей, ворчестером, табаско, солью и перцем.|Сформируйте кольцом, сверху сырой желток. Подавайте с картофелем фри.',
+'Только свежее мясо высшего качества. Нож, а не мясорубка, сохраняет текстуру.');
+R('crepes','Блинчики-крепы Сюзет','fr','dessert',40,360,2,'🥞','Тонкие блинчики в апельсиново-масляном соусе.',4,
+'мука:150:г;молоко:300:мл;яйца:2:шт;сливочное масло:60:г;апельсины:2:шт;сахар:50:г;гран-марнье:2:ст.л.',
+'Взбейте яйца, молоко, муку и растопленное масло в жидкое тесто, оставьте на 30 минут.|Выпеките тонкие крепы на хорошо разогретой сковороде.|Карамелизуйте сахар, добавьте масло, цедру и сок апельсинов; уваривайте 5 минут.|Прогрейте блинчики в соусе, сложите в четверть, добавьте ликёр.',
+'Первый блин не комом, если сковорода правильно прогрета.');
+
+/* ---------- УКРАИНА ---------- */
+R('borscht','Украинский борщ','ua','soup',150,290,2,'🍲','Густой красный борщ на мясном бульоне со сметаной и пампушками.',6,
+'говядина на кости:600:г;свёкла:2:шт;капуста:300:г;картофель:3:шт;морковь:1:шт;лук:1:шт;томатная паста:2:ст.л.;фасоль (по желанию):100:г;уксус или лимонный сок:1:ст.л.;чеснок:3:зубч.;сало:30:г;сметана:100:г;укроп:1:пучок',
+'Варите бульон из говядины 1,5–2 часа, снимая пену. Посолите в конце.|Свёклу натрите на тёрке, потушите с уксусом и томатной пастой 15 минут — уксус сохраняет цвет.|Морковь и лук обжарьте на масле или сале.|В бульон положите нарезанный картофель, через 10 минут — капусту, через 10 — зажарку и свёклу.|Варите 10 минут, добавьте раздавленный с салом чеснок и зелень. Дайте настояться 30 минут.|Подавайте со сметаной и пампушками.',
+'Борщ становится вкуснее на второй день. Свёкла — мало варки, чтобы сохранить цвет.');
+R('vareniki','Вареники с картошкой и шкварками','ua','side',80,430,2,'🥟','Мягкие вареники с картофельной начинкой и золотистым луком.',4,
+'мука:500:г;вода тёплая:250:мл;яйцо:1:шт;картофель:600:г;лук:2:шт;сало или бекон:80:г;сметана:100:г',
+'Замесите тесто из муки, воды, яйца и соли; оставьте на 30 минут под полотенцем.|Сварите картофель, разомните в пюре с обжаренным луком.|Раскатайте тесто на 2 мм, вырежьте кружки, положите начинку, защипните.|Варите в кипящей воде 3–4 минуты после всплытия.|Подавайте с обжаренными шкварками и сметаной.',
+'Вареники не слипнутся, если помешать воду в начале и сразу смазать маслом.');
+R('holubtsi','Голубцы','ua','meat',100,360,2,'🥬','Капустные листья с мясом и рисом, тушёные в томатной подливе.',6,
+'капуста:1:кочан;фарш свино-говяжий:500:г;рис:100:г;лук:1:шт;морковь:2:шт;томатная паста:3:ст.л.;сметана:100:г',
+'Опустите кочан в кипяток, снимайте листья по мере размягчения, срежьте жёсткую часть.|Смешайте фарш, полуотваренный рис, обжаренный лук, соль и перец.|Заверните начинку в листья.|Выложите в казан, залейте подливой из томата, моркови и воды.|Тушите под крышкой 50 минут. Подайте со сметаной.',
+'Заморозьте кочан на ночь и разморозьте — листья станут мягкими без варки.');
+R('deruny','Деруны со сметаной','ua','side',30,320,1,'🥔','Хрустящие картофельные оладьи.',4,
+'картофель:700:г;лук:1:шт;яйцо:1:шт;мука:2:ст.л.;масло для жарки:100:мл;сметана:100:г',
+'Натрите картофель и лук, отожмите лишнюю жидкость.|Добавьте яйцо, муку, соль и перец.|Жарьте ложками на разогретом масле по 3–4 минуты с каждой стороны.|Подавайте со сметаной.',
+'Лук сохраняет цвет и не даёт картофелю потемнеть.');
+R('halushky','Полтавские галушки','ua','soup',60,410,2,'🥣','Пышные галушки в наваристом бульоне с салом и луком.',4,
+'курица:500:г;мука:200:г;яйцо:2:шт;картофель:2:шт;лук:1:шт;морковь:1:шт;сало:50:г',
+'Сварите бульон из курицы. Достаньте мясо.|Замесите густое тесто из муки, яиц и воды, как для оладий.|Положите в бульон картофель и зажарку, через 10 минут ложкой опускайте галушки.|Когда они всплывут — варите ещё 3–4 минуты.|Подавайте со шкварками и зеленью.',
+'Тесто должно с ложки сходить густой лентой.');
+R('kyiv-cutlet','Котлета по-киевски','ua','meat',50,560,3,'🍗','Куриное филе с маслом внутри — при разрезе вытекает ароматное масло.',2,
+'куриное филе (грудка):2:шт;сливочное масло:80:г;зелень укропа:1:пучок;чеснок:1:зубч.;мука:3:ст.л.;яйцо:2:шт;панировочные сухари:100:г;масло для фритюра:500:мл',
+'Смешайте мягкое масло с укропом и чесноком, заморозьте столбиками.|Отбейте филе, на каждое положите столбик масла, плотно заверните.|Обваляйте в муке, яйце, сухарях, повторите в яйце и сухарях для двойной корочки; охладите 30 минут.|Жарьте во фритюре при 170 °C 6–7 минут до золотистого цвета.|Доведите в духовке при 180 °C 5 минут.',
+'Масло должно быть замороженным, края плотно закрыты — иначе вытечет при жарке.');
+R('banosh','Банош','ua','side',40,520,1,'🌽','Гуцульское блюдо из кукурузной крупы на сметане с брынзой и шкварками.',2,
+'кукурузная крупа:100:г;сметана 20–25%:300:мл;брынза:80:г;бекон или сало:60:г;грибы:100:г',
+'Доведите сметану до тихого кипения, постепенно всыпьте крупу, помешивая.|Томите на слабом огне 20–25 минут, периодически сливая выделяющийся жир.|Отдельно обжарьте шкварки и грибы.|Подавайте банош с брынзой, шкварками и грибами.',
+'Традиционно готовят на открытом огне в чугуне.');
+R('pampushky','Пампушки с чесноком','ua','side',120,260,2,'🥖','Мягкие дрожжевые булочки с чесночным маслом к борщу.',8,
+'мука:400:г;молоко тёплое:200:мл;дрожжи сухие:7:г;сахар:1:ст.л.;яйцо:1:шт;масло:30:мл;чеснок:4:зубч.;укроп:1:пучок',
+'Замесите тесто, оставьте на час до удвоения.|Сформируйте шарики, положите на противень, подождите 30 минут.|Выпекайте 20 минут при 190 °C.|Приготовьте чесночную заливку: чеснок, масло, вода, укроп, соль. Смажьте горячие пампушки.',
+'Подавайте сразу после смазывания.');
+R('syrnyky','Сырники','ua','breakfast',25,320,1,'🥞','Золотистые творожные «оладьи» с мягкой серединой.',3,
+'творог 5–9%:500:г;яйцо:1:шт;мука:4:ст.л.;сахар:2:ст.л.;ваниль:1:щепотка;масло для жарки:30:мл;сметана:100:г',
+'Разомните творог, соедините с яйцом, сахаром, ванилью и мукой. Тесто должно держать форму.|Сформируйте небольшие шайбы, обваляйте в муке.|Обжарьте на среднем огне по 3 минуты с каждой стороны.|Подавайте со сметаной, вареньем или ягодами.',
+'Для самой нежной текстуры протрите творог через сито.');
+R('kapusniak','Капусняк','ua','soup',90,260,1,'🥣','Наваристый кислый суп из квашеной капусты и копчёных рёбрышек.',6,
+'копчёные рёбрышки:400:г;квашеная капуста:400:г;картофель:3:шт;морковь:1:шт;лук:1:шт;пшено:3:ст.л.;томат:1:ст.л.',
+'Сварите бульон из рёбрышек 30 минут.|Добавьте промытую квашеную капусту, варите 20 минут.|Положите картофель и пшено.|Зажарьте лук, морковь, томат, добавьте в суп. Варите 10 минут.',
+'Квашеную капусту, если она слишком кислая, промойте или отожмите.');
+R('medovyk','Медовик','ua','dessert',120,450,2,'🍯','Многослойный медовый торт со сметанным кремом.',10,
+'мука:500:г;мёд:3:ст.л.;сахар:150:г;яйцо:3:шт;масло:100:г;сода:1:ч.л.;сметана 25%:700:г;сахарная пудра:100:г',
+'Растопите масло, мёд и сахар на водяной бане, добавьте соду.|Добавьте яйца, замесите тесто, добавляя муку.|Разделите на 8 частей, тонко раскатайте и выпеките при 180 °C по 4–5 минут.|Взбейте сметану с пудрой, прослоите коржи. Крошки от обрезков — на верх.|Пропитывайте в холодильнике минимум 8 часов.',
+'Чем дольше стоит, тем мягче и вкуснее.');
+/* ---------- ГРУЗИЯ ---------- */
+R('khachapuri-adjar','Хачапури по-аджарски','ge','side',120,780,2,'🛶','Лодочка из теста с расплавленным сыром, яйцом и маслом.',2,
+'мука:300:г;тёплое молоко:150:мл;дрожжи сухие:5:г;сахар:1:ч.л.;имеретинский сыр:150:г;моцарелла:150:г;яйца:2:шт;сливочное масло:30:г',
+'Замесите тесто из муки, молока, дрожжей, сахара, соли и масла. Подходит 1 час.|Смешайте тёртые сыры.|Раскатайте две овальные лепёшки, закрутите края внутрь в виде «лодочки», наполните сыром.|Выпекайте при 230 °C 12–15 минут.|Выньте, в центр сыра положите желток и кусочек масла, верните в духовку на 1–2 минуты.|Подавайте горячим, смешивая яйцо с сыром и макая корочку.',
+'Желток добавляйте в самом конце, чтобы остался жидким.');
+R('khinkali','Хинкали','ge','meat',90,520,3,'🥟','Сочные грузинские пельмени с бульоном внутри и «хвостиком».',4,
+'мука:500:г;вода:230:мл;говяжий фарш:300:г;свиной фарш:300:г;лук:2:шт;кинза:1:пучок;холодная вода или бульон для фарша:200:мл;чёрный перец:1:ч.л.',
+'Замесите крутое тесто из муки, воды и соли, отдохнёт 30 минут.|Фарш смешайте с мелко нарубленным луком, кинзой, перцем и холодной водой — вымешивайте, пока не впитает.|Раскатайте круги по 12 см, в центр — 2 ст. л. фарша.|Собирайте складками (минимум 12–16) и закрутите в «хвостик».|Варите в кипящей подсоленной воде 10–12 минут.|Едят руками: беритесь за хвостик, надкусите, выпейте бульон, потом съешьте остальное.',
+'Бульон образуется из воды, добавленной в фарш — не жалейте её. Хвостик традиционно не едят.');
+R('kharcho','Харчо','ge','soup',100,360,2,'🍲','Густой острый суп с говядиной, рисом, ореховой пастой и ткемали.',6,
+'говядина (грудинка):600:г;лук:3:шт;рис:80:г;грецкие орехи:100:г;ткемали:3:ст.л.;томатная паста:2:ст.л.;чеснок:4:зубч.;хмели-сунели:1:ст.л.;кинза:1:пучок',
+'Сварите бульон из мяса 1,5 часа.|Обжарьте лук, добавьте томат и растёртые орехи.|Добавьте зажарку в бульон, положите рис и варите 15 минут.|Добавьте ткемали, чеснок, хмели-сунели. Дайте настояться 15 минут.|Подайте со свежей кинзой.',
+'Орехи дают суп густоту и особую грузинскую нотку.');
+R('chakhokhbili','Чахохбили','ge','meat',60,430,1,'🍗','Курица, тушёная в томатах и зелени — без воды, в собственном соку.',4,
+'курица разрубленная:1.2:кг;лук:3:шт;томаты:600:г;чеснок:4:зубч.;кинза, базилик:1:пучок;хмели-сунели:1:ч.л.;острый перец:1:шт;сливочное масло:30:г',
+'Обжарьте курицу в масле на сухой сковороде до золотистой корочки.|Добавьте нарезанный лук, тушите 10 минут.|Положите томаты, специи, перец. Тушите под крышкой 30–35 минут.|Добавьте чеснок и зелень за 5 минут до конца.',
+'Название — от «хохоби» (фазан): первоначально блюдо готовили именно из него.');
+R('satsivi','Сациви из индейки','ge','meat',90,520,2,'🥣','Холодная закуска в ореховом соусе с шафраном и специями.',6,
+'индейка (филе):800:г;грецкие орехи:300:г;лук:2:шт;чеснок:5:зубч.;хмели-сунели:1:ст.л.;кориандр:1:ч.л.;уксус винный:2:ст.л.;бульон:500:мл;шафран:1:щепотка',
+'Сварите индейку, обжарьте лук, остудите.|Измельчите орехи с чесноком, солью и специями до пасты.|Разведите пасту бульоном, добавьте лук, уксус; прогрейте, но не кипятите.|Нарежьте мясо, залейте соусом, охладите.',
+'Классически подают на Рождество и Новый год.');
+R('lobio','Лобио','ge','veg',90,320,1,'🫘','Красная фасоль с орехами, луком и пряностями.',4,
+'красная фасоль:300:г;лук:2:шт;грецкие орехи:50:г;чеснок:3:зубч.;кинза:1:пучок;хмели-сунели:1:ч.л.;кориандр:1:ч.л.',
+'Замочите фасоль на ночь, сварите до мягкости 60 минут.|Обжарьте лук до золота, добавьте толчёные орехи с чесноком и специями.|Добавьте к фасоли, слегка разомните ложкой, тушите 10 минут.|Посыпьте кинзой.',
+'Подавайте с мчади (кукурузной лепёшкой) и маринованными овощами.');
+R('pkhali','Пхали из шпината','ge','salad',30,180,1,'🥬','Холодная закуска из шпината с ореховой пастой.',4,
+'шпинат:500:г;грецкие орехи:100:г;чеснок:2:зубч.;лук красный:1:шт;кинза:1:пучок;уксус винный:1:ст.л.;зёрна граната:2:ст.л.',
+'Бланшируйте шпинат 2 минуты, остудите, хорошо отожмите.|Измельчите шпинат, добавьте орехи с чесноком, кинзу, лук, уксус.|Сформируйте шарики, украсьте гранатом.|Охладите 30 минут.',
+'Отжимайте шпинат тщательно — иначе пхали «поплывёт».');
+R('mtsvadi','Шашлык мцвади','ge','meat',45,450,1,'🍢','Свинина на мангале с луком и без маринада — только соль и жар.',4,
+'свиная шея:1:кг;лук:3:шт;соль:1:ст.л.;гранат:1:шт;кинза:1:пучок;ткемали:4:ст.л.',
+'Нарежьте мясо кусками 4–5 см, обваляйте в соли и луке (на 30 минут, не дольше).|Нанижите на шампуры, не туго.|Жарьте над углями 12–15 минут, периодически поворачивая и сбрызгивая гранатовым соком.|Подавайте с ткемали и зеленью.',
+'Классика — вкус мяса, без кислоты уксуса: ставка на хорошую свинину.');
+R('chkmeruli','Цыплёнок чкмерули','ge','meat',60,610,1,'🍗','Цыплёнок-табака в чесночно-сливочном соусе.',2,
+'цыплёнок:1:шт;чеснок:8:зубч.;молоко или сливки:300:мл;сливочное масло:40:г;кинза:1:пучок',
+'Разрежьте цыплёнка по грудке, раскройте, слегка отбейте.|Обжарьте под гнётом на сковороде 12–15 минут с каждой стороны.|Влейте молоко с раздавленным чесноком, тушите 10–15 минут до загустения.|Посыпьте зеленью.',
+'Чеснок кладите в самом конце — он должен остаться ярким.');
+R('ajapsandali','Аджапсандали','ge','veg',60,230,1,'🍆','Грузинский рататуй: баклажаны, перец и томаты с травами.',4,
+'баклажаны:2:шт;перец болгарский:2:шт;томаты:3:шт;картофель:2:шт;лук:2:шт;чеснок:3:зубч.;кинза и базилик:1:пучок',
+'Нарежьте баклажаны, обжарьте до золота.|Обжарьте лук, добавьте картофель, перец и томаты.|Влейте полстакана воды, тушите 20 минут.|Добавьте баклажаны, чеснок и зелень, тушите ещё 10 минут.',
+'Подают горячим и холодным; на следующий день ещё вкуснее.');
+
+/* ---------- ЯПОНИЯ ---------- */
+R('sushi-rice','Рис для суши (шари)','jp','sushi',50,230,1,'🍚','Идеальная основа для суши: правильный рис и заправка.',4,
+'рис для суши:300:г;вода:360:мл;рисовый уксус:60:мл;сахар:2:ст.л.;соль:1:ч.л.',
+'Промывайте рис в холодной воде 5–7 раз, пока вода не станет почти прозрачной; оставьте на 30 минут.|Варите по инструкции: 10 минут на слабом огне под крышкой, затем 15 минут отдыха.|Подогрейте уксус с сахаром и солью до растворения.|Переложите рис в широкую миску (идеально — деревянную), полейте заправкой, перемешивайте «режущими» движениями, обмахивая веером.|Накройте влажным полотенцем и используйте при комнатной температуре.',
+'Рис для суши не должен быть холодным и не должен быть горячим: оптимум — температура тела.');
+R('nigiri','Нигири с лососем','jp','sushi',30,60,2,'🍣','Классический вариант: брусочек риса с кусочком рыбы.',4,
+'рис для суши готовый:200:г;филе лосося для сашими:200:г;васаби:1:ч.л.;соевый соус:2:ст.л.;маринованный имбирь:1:ст.л.',
+'Нарежьте рыбу по диагонали, срезом под углом 45°, одним движением ножа — ломтики 5×2 см толщиной 5 мм.|Смочите руки уксусной водой, возьмите 15–20 г риса и сформируйте овальный брусочек.|Нанесите каплю васаби на рыбу, положите на неё рис и аккуратно прижмите.|Переверните, подправьте форму.|Подавайте с имбирём и соевым соусом (рис макайте не в соус, а рыбой).',
+'Используйте только рыбу замороженную (-20 °C минимум 24 часа) или специально предназначенную для сырого употребления.');
+R('maki','Маки с огурцом и лососем','jp','sushi',40,190,2,'🍣','Тонкие роллы в нори, как в Японии.',4,
+'нори:3:листа;рис для суши готовый:300:г;лосось:150:г;огурец:1:шт;васаби:1:ч.л.',
+'Положите лист нори на бамбуковый коврик (шершавой стороной вверх).|Распределите тонкий слой риса, оставив 1 см сверху.|Положите полоску лосося и огурца в центр, добавьте точку васаби.|Сверните плотным движением, слегка надавливая.|Нарежьте влажным острым ножом на 6 частей.',
+'Нож должен быть мокрым, чтобы рис не прилипал.');
+R('philadelphia','Ролл Филадельфия','jp','sushi',45,240,2,'🍣','Лосось, сливочный сыр и огурец с рисом снаружи.',4,
+'нори:2:листа;рис для суши готовый:300:г;лосось:150:г;сливочный сыр:100:г;огурец:1:шт',
+'Накройте коврик плёнкой. Выложите рис на нори, переверните рисом вниз.|Выложите огурец, сыр, лосось.|Сверните и плотно сожмите.|Сверху — тонкие ломтики лосося. Нарежьте на 8 частей.',
+'Для влажных рук используйте воду с каплей рисового уксуса.');
+R('california','Ролл Калифорния','jp','sushi',45,260,2,'🥑','Авокадо, краб и огурец, снаружи — рис с икрой тобико.',4,
+'нори:2:листа;рис для суши готовый:300:г;крабовое мясо или сурими:120:г;авокадо:1:шт;огурец:1:шт;майонез японский:2:ст.л.;тобико:2:ст.л.',
+'Смешайте краб с майонезом.|Выложите рис на нори, переверните.|Положите краб, авокадо и огурец.|Сверните, обваляйте в тобико, нарежьте.',
+'Изобретена в Лос-Анджелесе — «нори внутри» стала решением для американцев, которые не любили водоросли.');
+R('ramen','Рамен с шойю','jp','soup',180,620,3,'🍜','Насыщенный бульон с лапшой, чашу, яйцом и мясом.',2,
+'куриные крылья:600:г;имбирь:20:г;чеснок:3:зубч.;лук-порей:1:шт;соевый соус:4:ст.л.;мирин:2:ст.л.;лапша рамен:200:г;свиная грудинка (чашу):150:г;яйца:2:шт;зелёный лук:2:пера;нори:1:лист',
+'Сварите бульон: крылья, имбирь, чеснок, порей — 2 часа при слабом кипении, процедите.|Приготовьте тарэ: соевый соус, мирин, чуть сахара и немного бульона.|Яйца варите 6,5 минут, остудите, очистите и маринуйте в тарэ 4 часа.|Лапшу варите по инструкции, 1–2 минуты.|В миску — 2 ложки тарэ, 350 мл горячего бульона, лапша.|Добавьте мясо, яйцо пополам, лук, нори.',
+'Яйцо «аджитама» должно иметь жидкий желток и пропитанный соевым белок.');
+R('miso','Мисо-суп','jp','soup',15,60,1,'🥣','Лёгкий бульон даси с пастой мисо, тофу и вакамэ.',2,
+'вода:500:мл;хондаши (порошок даси):1:ч.л.;мисо паста:2:ст.л.;тофу:100:г;вакамэ сухая:1:ст.л.;зелёный лук:1:перо',
+'Замочите вакамэ на 5 минут.|Доведите воду с хондаши до кипения.|Добавьте тофу и вакамэ на 2 минуты.|Растворите мисо в ложке бульона и вмешайте, не кипятите.|Посыпьте луком.',
+'Мисо нельзя кипятить — теряется аромат и полезные ферменты.');
+R('tonkatsu','Тонкацу','jp','meat',40,620,2,'🍖','Хрустящая свиная котлета в панировке панко.',2,
+'свиная корейка с жиром:2:шт;мука:3:ст.л.;яйцо:1:шт;панко:80:г;масло для фритюра:500:мл;капуста:150:г;соус тонкацу:4:ст.л.',
+'Надрежьте жировую кромку, слегка отбейте мясо, посолите.|Обваляйте в муке, яйце, панко.|Жарьте во фритюре 170 °C по 4–5 минут с каждой стороны.|Дайте отдохнуть 3 минуты на решётке, нарежьте полосками.|Подавайте с тонко нашинкованной капустой и соусом.',
+'Панко надо «приминать» к мясу, не втирать.');
+R('teriyaki-salmon','Лосось терияки','jp','fish',20,430,1,'🐟','Глянцевая карамельная глазурь на нежном лососе.',2,
+'филе лосося с кожей:2:шт;соевый соус:3:ст.л.;мирин:3:ст.л.;сахар:1:ст.л.;имбирь:1:ч.л.;кунжут:1:ч.л.',
+'Обжарьте лосось кожей вниз 4 минуты до хрустящей корочки.|Переверните на 2 минуты.|Влейте смесь соуса, мирина, сахара и имбиря; облейте рыбу несколько раз до загустения.|Посыпьте кунжутом, подавайте с рисом.',
+'Не переваривайте — лосось готов, когда внутри ещё чуть розовый.');
+R('gyoza','Гёдза','jp','meat',60,350,2,'🥟','Жареные японские пельмени с хрустящим дном.',4,
+'пельменное тесто (вонтоны):24:шт;свиной фарш:250:г;пекинская капуста:150:г;зелёный лук:2:пера;имбирь:1:ч.л.;чеснок:2:зубч.;соевый соус:1:ст.л.;кунжутное масло:1:ч.л.',
+'Капусту мелко нарубите, посолите, отожмите.|Смешайте фарш с капустой, имбирём, чесноком, соусом и маслом.|Положите начинку на тесто, защипните складками.|Обжарьте на масле до золотого дна, влейте 50 мл воды, закройте крышкой на 5 минут.|Подавайте с уксусно-соевым соусом.',
+'Эффект «пар + хруст» — особенность гёдза.');
+R('onigiri','Онигири с тунцом','jp','sushi',20,180,1,'🍙','Рисовые треугольники с начинкой — самая удобная еда в дорогу.',4,
+'рис для суши готовый:300:г;тунец в масле:100:г;майонез:1:ст.л.;нори:2:листа;соль:1:щепотка',
+'Смешайте тунец с майонезом.|Смочите руки водой, посолите ладони. Возьмите горсть риса, сделайте углубление.|Положите начинку, накройте рисом, сформируйте треугольник.|Оберните полоской нори.',
+'Рис должен быть тёплым — холодный не слипается.');
+R('tempura','Темпура из креветок','jp','fish',30,320,2,'🍤','Лёгкое воздушное кляр-тесто.',2,
+'креветки тигровые:8:шт;мука:100:г;ледяная вода:150:мл;яйцо:1:шт;масло для фритюра:500:мл;соус цую:4:ст.л.',
+'Очистите креветки, оставив хвост, сделайте надрезы на брюшке и выпрямите.|Слегка смешайте ледяную воду, яйцо и муку — тесто должно остаться комковатым.|Обмакните креветки в кляр.|Жарьте при 180 °C 1–2 минуты до светлого золота.|Подавайте с соусом.',
+'Холодное тесто и горячее масло — две опоры хруста.');
+
+/* ---------- СТЕЙКИ ---------- */
+R('ribeye-pan','Рибай на сковороде','us','steak',25,780,2,'🥩','Король стейков: мраморная говядина с хрустящей корочкой и маслом с тимьяном.',2,
+'стейк рибай 3–4 см:2:шт (по 350 г);соль крупная:1:ч.л.;чёрный перец:1:ч.л.;растительное масло с высокой температурой дымления:1:ст.л.;сливочное масло:40:г;чеснок:3:зубч.;тимьян или розмарин:3:веточки',
+'Достаньте стейки за 45–60 минут до готовки, обсушите бумажным полотенцем — сухая поверхность = корочка.|Посолите крупной солью и поперчите прямо перед готовкой.|Раскалите чугунную сковороду на сильном огне до лёгкого дыма. Налейте масло.|Обжаривайте по 2–3 минуты с каждой стороны, также прижмите торцом жировую кромку.|Уменьшите огонь, добавьте масло, чеснок и травы. Поливайте стейк пенящимся маслом 1 минуту.|Доведите до внутренней температуры 52–54 °C (medium rare) — она вырастет до 56–57 °C во время отдыха.|Отдохните на решётке 5–8 минут и режьте поперёк волокон.',
+'Не протыкайте мясо вилкой. Отдых — обязательный шаг: сок перераспределяется, а не вытекает на доску.');
+R('striploin','Стриплойн с чесночным маслом','us','steak',25,640,2,'🥩','Плотный, насыщенный вкусом стейк с кромкой жира.',2,
+'стейк стриплойн (Нью-Йорк):2:шт (по 300 г);соль:1:ч.л.;перец:1:ч.л.;масло для жарки:1:ст.л.;сливочное масло:30:г;чеснок:2:зубч.;петрушка:1:пучок',
+'Доведите мясо до комнатной температуры и обсушите.|Нарежьте жировую кромку насечками, чтобы стейк не выгнулся.|Обжаривайте на раскалённой сковороде по 3 минуты с каждой стороны.|В конце добавьте масло и чеснок, поливайте 1 минуту.|Отдохните 5 минут. Подавайте с маслом, смешанным с петрушкой.',
+'Стриплойн менее мраморный, чем рибай, поэтому важно не пересушить.');
+R('filet-mignon','Филе-миньон в беконе','us','steak',30,520,3,'🥓','Нежнейшая вырезка с хрустящим беконом и красновинным соусом.',2,
+'вырезка (стейк толщиной 4 см):2:шт (по 200 г);бекон:4:ломтика;соль:1:ч.л.;перец:1:ч.л.;масло:1:ст.л.;сливочное масло:30:г;тимьян:2:веточки',
+'Обмотайте стейки беконом, закрепите шпагатом.|Посолите, обжарьте на сильном огне по 3 минуты с каждой стороны, также прижмите боковую часть.|Добавьте масло с тимьяном, поливайте 1 минуту.|Доведите в духовке при 200 °C 5–6 минут до 52–54 °C.|Отдохните 5 минут. Подавайте с красновинным соусом.',
+'У вырезки мало жира, поэтому бекон добавляет вкус и защищает от пересушивания.');
+R('tomahawk-reverse','Томагавк: метод reverse sear','us','steak',90,950,3,'🪓','Стейк на длинной кости: сначала в духовке, затем — обжарка. Равномерная прожарка от края до края.',3,
+'стейк томагавк (1,2 кг):1:шт;крупная соль:2:ч.л.;перец:1:ч.л.;масло для жарки:2:ст.л.;сливочное масло:50:г;розмарин:3:веточки;чеснок:4:зубч.',
+'Посолите томагавк за 1–24 часа, оставьте на решётке в холодильнике без крышки — поверхность подсохнет.|Разогрейте духовку до 110 °C. Запекайте стейк на решётке с термощупом до 48 °C в центре (около 60–75 минут).|Выньте, дайте отдохнуть 10 минут.|Раскалите сковороду или гриль и обжарьте по 1–1,5 минуты с каждой стороны, добавьте масло, травы, чеснок.|Подавайте, нарезав вдоль кости и поперёк волокон.',
+'Reverse sear идеален для толстых стейков (> 4 см): нет серой «каймы» под корочкой.');
+R('bistecca','Бистекка алла фиорентина','it','steak',40,980,3,'🔥','Тосканская T-bone толщиной 5 см, жарится на углях и подаётся с кровью.',3,
+'T-bone стейк 1,2–1,5 кг:1:шт;крупная соль:2:ч.л.;чёрный перец:1:ч.л.;оливковое масло extra virgin:3:ст.л.;розмарин:2:веточки;лимон:1:шт',
+'Достаньте стейк из холодильника за 1,5 часа.|Раскалите уголь до белого пепла.|Жарьте на сильном жаре по 5–6 минут с каждой стороны, затем стоя на кости 3–4 минуты.|Посолите после жарки, дайте отдохнуть 10 минут.|Нарежьте мясо с кости, сбрызните маслом и лимоном.',
+'Традиционно — порода Кьянина и степень «al sangue» (rare). Это блюдо едят без соусов.');
+R('chimichurri-flank','Фланк-стейк с чимичурри','us','steak',30,480,1,'🌿','Недорогой отруб, который превращается в сочный стейк при правильной нарезке.',3,
+'фланк-стейк:700:г;соль:1:ч.л.;перец:1:ч.л.;оливковое масло:2:ст.л.;чимичурри:100:г',
+'Посолите стейк за 45 минут, обсушите.|Обжарьте на раскалённой сковороде по 3–4 минуты с каждой стороны до 52 °C.|Отдохните 10 минут.|Нарежьте тонко поперёк волокон под углом — это важно!|Полейте чимичурри.',
+'Волокна фланка длинные — резать только поперёк, иначе мясо жёсткое.');
+R('tagliata','Тальята с рукколой и пармезаном','it','steak',25,560,1,'🥗','Нарезанный ломтями стейк на подушке из рукколы.',2,
+'стейк стриплойн или рибай:400:г;руккола:60:г;пармезан (стружка):40:г;томаты черри:10:шт;оливковое масло:2:ст.л.;бальзамик:1:ст.л.;розмарин:1:веточка',
+'Обсушите, посолите, обжарьте мясо на сильном огне по 3 минуты с каждой стороны с розмарином.|Отдохните 5 минут.|Нарежьте под углом на ломтики 1 см.|Выложите на рукколу, добавьте томаты, пармезан, масло и бальзамик.',
+'Перед подачей посыпьте крупной солью — вкус будет контрастнее.');
+R('steak-au-poivre','Стейк-о-пуавр (перцовый)','fr','steak',30,680,2,'🌶️','Французская классика: стейк, обваленный в дроблёном перце, и коньячный соус.',2,
+'вырезка или стриплойн:2:шт (по 220 г);чёрный перец горошком:2:ст.л.;сливочное масло:30:г;коньяк:40:мл;сливки 33%:100:мл;шалот:1:шт;бульон:100:мл',
+'Раздавите перец в ступке (грубо).|Посолите стейки, обваляйте в перце с одной-двух сторон, прижмите.|Обжарьте на масле по 3 минуты с каждой стороны, достаньте и накройте фольгой.|В той же сковороде обжарьте шалот, влейте коньяк (осторожно — пламя!), выпарьте.|Добавьте бульон и сливки, уварите до густоты.|Полейте соусом стейки.',
+'Не используйте перец, который «слишком мелко» молот: нужен хруст и аромат.');
+R('sous-vide-steak','Стейк су-вид','us','steak',120,620,2,'🌡️','Идеальная прожарка по всей площади: готовка в вакууме при точной температуре.',2,
+'стейк рибай или стриплойн 3 см:2:шт;соль:1:ч.л.;перец:1:ч.л.;сливочное масло:30:г;тимьян:2:веточки;чеснок:2:зубч.',
+'Нагрейте воду в су-вид до 54 °C (medium rare) или 57 °C (medium).|Посолите стейки, положите в пакет с чесноком и тимьяном, удалите воздух.|Готовьте 1,5–2 часа.|Выньте, обсушите очень тщательно.|Обжарьте на раскалённой сковороде с маслом по 45 секунд с каждой стороны.',
+'После су-вида мясо отдыхать не надо: волокна уже расслаблены.');
+R('pork-neck-steak','Стейк из свиной шеи','us','steak',30,590,1,'🥓','Сочный и недорогой — свиная шея прощает ошибки.',2,
+'свиная шея (стейк 3 см):2:шт;соль:1:ч.л.;паприка копчёная:1:ч.л.;перец:1:ч.л.;масло:1:ст.л.;чеснок:3:зубч.;розмарин:2:веточки',
+'Посолите, натрите специями за 30 минут.|Обжарьте на среднем огне по 5–6 минут с каждой стороны до румяной корочки.|Добавьте чеснок и розмарин, доведите до 63–65 °C.|Отдохните 5 минут.',
+'Свинину не нужно жарить до серой: 63 °C — безопасно и сочно.');
+R('lamb-chops','Бараньи рёбрышки с розмарином','us','steak',30,540,2,'🐑','Каре ягнёнка на косточках с хрустящей корочкой и мятным маслом.',2,
+'каре ягнёнка (4 рёбрышка):500:г;розмарин:3:веточки;чеснок:4:зубч.;оливковое масло:2:ст.л.;сливочное масло:30:г;мята:1:пучок;лимон:0.5:шт',
+'Натрите мясо маслом, солью и розмарином, оставьте на 30 минут.|Обжарьте на раскалённой сковороде по 2–3 минуты с каждой стороны.|Добавьте масло, чеснок, розмарин и поливайте 1 минуту.|Доведите в духовке 180 °C 5 минут до 55 °C.|Отдохните 5 минут, подавайте с мятой и лимоном.',
+'Баранина любит яркие кислые акценты — лимон, йогурт, мяту.');
+R('salmon-steak','Стейк из лосося с лимоном','us','steak',20,450,1,'🐟','Рыбный «стейк» с хрустящей кожей.',2,
+'стейки лосося с кожей:2:шт;масло:1:ст.л.;сливочное масло:20:г;лимон:1:шт;чеснок:1:зубч.;укроп:1:пучок',
+'Обсушите, посолите лосось.|Раскалите сковороду, положите кожей вниз, прижмите на 20 секунд. Жарьте 5 минут.|Переверните, добавьте масло, чеснок, поливайте 2 минуты.|Подавайте с лимоном и укропом.',
+'Лосось готов при 50–52 °C внутри — слегка полупрозрачный в центре.');
+
+/* ---------- СОУСЫ ---------- */
+R('bechamel','Бешамель','fr','sauce',15,120,1,'🥛','Белый мать-соус: основа лазаньи, гратена и многих блюд.',6,
+'сливочное масло:50:г;мука:50:г;молоко тёплое:600:мл;мускатный орех:1:щепотка',
+'Растопите масло, всыпьте муку и прогрейте 2 минуты, не давая зарумяниться.|Вливайте молоко небольшими порциями, энергично взбивая венчиком.|Варите 5–8 минут до густоты сметаны.|Добавьте соль, мускат.',
+'Холодную масляно-мучную основу всегда соединяйте с тёплым молоком, чтобы не было комков.');
+R('hollandaise','Соус голландез','fr','sauce',20,240,3,'🍋','Тёплая эмульсия из желтков и масла для яиц Бенедикт и спаржи.',4,
+'желтки:3:шт;сливочное масло растопленное:150:г;лимонный сок:1:ст.л.;вода:1:ст.л.;кайенский перец:1:щепотка',
+'Взбивайте желтки с водой в миске над водяной баней до густоты («лента» на венчике).|Снимите с огня, тонкой струйкой вливайте тёплое (не горячее!) масло, постоянно взбивая.|Приправьте лимоном, солью, перцем.',
+'Если сворачивается — добавьте ложку холодной воды и взбейте, чтобы вернуть эмульсию.');
+R('bearnaise','Соус беарнез','fr','sauce',30,250,3,'🌿','«Сын голландеза» с эстрагоном и шалотом — идеальный к стейкам.',4,
+'шалот:2:шт;эстрагон:1:пучок;белый винный уксус:60:мл;белое вино:60:мл;желтки:3:шт;сливочное масло:150:г',
+'Уварите уксус, вино, шалот и половину эстрагона до 2 ст. л., процедите.|Взбейте желтки с редукцией над паровой баней.|Влейте топлёное масло тонкой струйкой.|Добавьте рубленый эстрагон, соль.',
+'Подавайте сразу — соус не любит долго стоять.');
+R('tomato-sauce','Базовый томатный соус','it','sauce',40,90,1,'🍅','Универсальная основа для пасты, пиццы и пармиджаны.',4,
+'помидоры в собственном соку:800:г;чеснок:3:зубч.;оливковое масло:4:ст.л.;базилик:1:пучок;сахар:1:щепотка',
+'Прогрейте чеснок в масле 1 минуту, не жаря до коричневого.|Добавьте раздавленные помидоры и щепотку соли.|Тушите на слабом огне 30–35 минут.|В конце — базилик, щепотка сахара при необходимости.',
+'Хорошие консервированные томаты (Сан-Марцано) нередко лучше городских в несезон.');
+R('pesto','Песто алла дженовезе','it','sauce',10,240,1,'🌿','Зелёный соус из базилика, пекорино и кедровых орехов.',4,
+'базилик:60:г;кедровые орехи:30:г;чеснок:1:зубч.;пармезан:40:г;пекорино:20:г;оливковое масло:100:мл',
+'Разотрите чеснок с солью в ступке.|Добавьте базилик, постепенно растирая.|Добавьте орехи, сыр и постепенно масло.|Смешайте с пастой, добавив ложку воды от варки.',
+'Не нагревайте песто — в тёплой пасте он раскрывается, но кипящий темнеет и горчит.');
+R('chimichurri','Чимичурри','us','sauce',10,110,1,'🌿','Аргентинский соус для гриля: петрушка, чеснок, уксус и масло.',6,
+'петрушка:1:пучок;орегано:1:ст.л.;чеснок:4:зубч.;красный винный уксус:3:ст.л.;оливковое масло:120:мл;чили:1:шт',
+'Мелко порубите петрушку, чеснок, чили.|Смешайте с орегано, уксусом, солью и маслом.|Дайте настояться 30 минут.',
+'Не измельчайте блендером в пюре — важна текстура.');
+R('red-wine-sauce','Красновинный соус к стейку','fr','sauce',35,150,2,'🍷','Глянцевая редукция с шалотом и сливочным маслом.',4,
+'шалот:2:шт;красное вино:250:мл;бульон говяжий:250:мл;сливочное масло холодное:30:г;тимьян:2:веточки',
+'Обжарьте шалот в масле 3 минуты.|Влейте вино и выпарьте до 1/4.|Добавьте бульон и тимьян, уварите вдвое.|Процедите, вмешайте холодное масло по кусочку (монте о бёр).',
+'Соль в конце — редукция сильно концентрируется.');
+R('mushroom-cream','Грибной сливочный соус','it','sauce',20,180,1,'🍄','Для стейков, пасты и птицы.',4,
+'шампиньоны:250:г;шалот:1:шт;чеснок:1:зубч.;белое вино:50:мл;сливки 20%:200:мл;тимьян:2:веточки;сливочное масло:20:г',
+'Обжарьте грибы на сильном огне до золота, добавьте шалот и чеснок.|Влейте вино, выпарьте.|Добавьте сливки и тимьян, уварите до густоты.',
+'Грибы нельзя солить сразу — только после румяной корочки.');
+R('aioli','Айоли','es','sauce',10,160,1,'🧄','Чесночная эмульсия из Прованса и Каталонии.',6,
+'желток:1:шт;чеснок:2:зубч.;оливковое масло:150:мл;лимонный сок:1:ст.л.;дижонская горчица:1:ч.л.',
+'Разотрите чеснок с солью в пасту.|Добавьте желток, горчицу, лимон.|Тонкой струйкой вливайте масло, постоянно взбивая.',
+'Все ингредиенты должны быть комнатной температуры.');
+R('tkemali','Ткемали','ge','sauce',45,50,1,'🍑','Кисло-острый соус из алычи — идеален к мясу.',10,
+'красная алыча:1:кг;чеснок:6:зубч.;кинза:1:пучок;мята:1:пучок;острый перец:1:шт;кориандр сушёный:1:ч.л.;сахар:1:ст.л.',
+'Варите алычу с небольшим количеством воды до мягкости, протрите через сито.|Добавьте измельчённые чеснок, зелень, перец и специи.|Прокипятите 10 минут. Разлейте по банкам.',
+'Подходит к мясу, птице и даже картофелю фри.');
+R('satsebeli','Сацебели','ge','sauce',25,70,1,'🍅','Густой томатный соус со специями и зеленью.',8,
+'томаты:800:г;чеснок:4:зубч.;кинза:1:пучок;хмели-сунели:1:ч.л.;уцхо-сунели:1:ч.л.;острый перец:1:шт;винный уксус:1:ст.л.',
+'Варите измельчённые томаты 20 минут, протрите.|Добавьте специи, чеснок, зелень, перец и уксус.|Прокипятите 5 минут.',
+'Классика к шашлыку и птице.');
+R('teriyaki','Соус терияки','jp','sauce',15,60,1,'🍶','Блестящая сладко-солёная глазурь.',6,
+'соевый соус:100:мл;мирин:100:мл;сахар:2:ст.л.;имбирь:1:ч.л.;чеснок:1:зубч.;кукурузный крахмал:1:ч.л.',
+'Смешайте всё, кроме крахмала, и доведите до кипения.|Растворите крахмал в воде и влейте в соус.|Варите 2 минуты до густоты.',
+'Хранится в холодильнике до 2 недель.');
+R('caesar-dressing','Соус цезарь','us','sauce',10,150,1,'🥗','Анчоусы, чеснок, пармезан и лимон.',6,
+'желток:1:шт;анчоусы:3:шт;чеснок:1:зубч.;пармезан:40:г;лимонный сок:1:ст.л.;дижонская горчица:1:ч.л.;оливковое масло:100:мл;вустерский соус:1:ч.л.',
+'Разотрите анчоусы с чесноком.|Добавьте желток, горчицу, лимон, вустерский соус.|Влейте масло тонкой струйкой, взбивая.|Добавьте пармезан.',
+'Оригинал 1924 года из Тихуаны (Цезарь Кардини) не содержал анчоусов — их добавили позже.');
+R('tartar','Соус тартар','fr','sauce',10,120,1,'🥒','Майонез с каперсами и корнишонами — к рыбе и жареному.',6,
+'майонез:150:г;корнишоны:3:шт;каперсы:1:ст.л.;шалот:1:шт;укроп:1:ст.л.;лимонный сок:1:ч.л.',
+'Мелко порубите корнишоны, каперсы и шалот.|Смешайте с майонезом, укропом и лимоном.|Охладите 15 минут.',
+'Лучше выдержать в холодильнике хотя бы час.');
+R('bbq','Соус барбекю','us','sauce',30,70,1,'🔥','Копчёный, сладкий, густой — для рёбрышек и бургеров.',10,
+'кетчуп:200:г;яблочный уксус:3:ст.л.;коричневый сахар:3:ст.л.;паприка копчёная:2:ч.л.;горчица:1:ч.л.;вустерский соус:1:ст.л.;чесночный порошок:1:ч.л.',
+'Смешайте всё в кастрюле.|Варите 15–20 минут на слабом огне, помешивая.|Охладите.',
+'В духовке: нанесите за 10 минут до готовности, чтобы не подгорел сахар.');
+R('salsa-verde','Сальса верде','it','sauce',10,100,1,'🥬','Итальянский зелёный соус с каперсами и анчоусами к варёному мясу.',6,
+'петрушка:1:пучок;каперсы:2:ст.л.;анчоусы:3:шт;чеснок:1:зубч.;красный уксус:1:ст.л.;оливковое масло:100:мл;дижонская горчица:1:ч.л.',
+'Всё мелко порубите и смешайте с маслом, уксусом и горчицей.|Дайте постоять 20 минут.',
+'Подходит и к рыбе, и к стейку.');
+
+/* ---------- ДРУГИЕ КУХНИ И ПРИЁМЫ ---------- */
+R('greek-salad','Греческий салат хориатики','gr','salad',10,280,1,'🥗','Спелые томаты, огурец, маслины и фета.',2,
+'помидоры:3:шт;огурец:1:шт;красный лук:0.5:шт;маслины каламата:10:шт;фета:100:г;оливковое масло extra virgin:3:ст.л.;орегано:1:ч.л.;красный уксус:1:ст.л.',
+'Крупно нарежьте овощи.|Добавьте маслины и лук.|Заправьте маслом, уксусом, солью и орегано.|Сверху положите кусок феты и посыпьте орегано.',
+'Настоящий хориатики не содержит салатных листьев и перемешивается минимально.');
+R('caesar-salad','Салат цезарь с курицей','us','salad',30,520,1,'🥗','Хрустящие листья ромэна, сухарики, пармезан и курица.',2,
+'листья ромэна:200:г;куриная грудка:200:г;сухарики:60:г;пармезан:30:г;соус цезарь:60:мл',
+'Обжарьте куриную грудку до готовности, нарежьте.|Порвите листья руками, смешайте с соусом.|Добавьте курицу, сухарики, пармезан.',
+'Сухарики сделайте сами: хлеб, масло, чеснок — 10 минут при 200 °C.');
+R('shakshuka','Шакшука','mx','breakfast',25,320,1,'🍳','Яйца в пряном томатном соусе — завтрак с Ближнего Востока.',2,
+'яйца:4:шт;томаты:400:г;болгарский перец:1:шт;лук:1:шт;чеснок:2:зубч.;зира:1:ч.л.;паприка:1:ч.л.;кинза:1:пучок;фета:50:г',
+'Обжарьте лук и перец, добавьте чеснок и специи.|Добавьте томаты и тушите 10–12 минут.|Сделайте углубления, разбейте яйца.|Накройте крышкой на 5–7 минут, пока белок схватится, а желток останется жидким.|Посыпьте зеленью и фетой.',
+'Подавайте прямо в сковороде с тёплым хлебом.');
+R('paella','Паэлья с морепродуктами','es','fish',60,610,2,'🥘','Испанский рис с шафраном, креветками и мидиями.',4,
+'рис для паэльи (бомба):300:г;креветки:300:г;мидии:300:г;кальмар:200:г;шафран:1:щепотка;томаты:2:шт;чеснок:3:зубч.;паприка:1:ч.л.;бульон рыбный:800:мл;горошек:100:г',
+'Обжарьте морепродукты и отложите.|Обжарьте чеснок, томат и паприку (софрито).|Добавьте рис, перемешайте, влейте горячий бульон с шафраном.|Не перемешивайте 18–20 минут. Выложите морепродукты сверху.|Накройте на 5 минут. Идеально, если внизу образуется хрустящая корочка соккарат.',
+'Рис не перемешивают — иначе станет похож на ризотто.');
+R('tortilla','Испанская тортилья','es','breakfast',35,380,1,'🥔','Картофельный омлет, мягкий внутри.',4,
+'картофель:600:г;лук:1:шт;яйца:6:шт;оливковое масло:150:мл',
+'Нарежьте картофель и лук, томите в масле на слабом огне 20 минут до мягкости.|Слейте масло, смешайте картофель с яйцами и солью.|Жарьте на сковороде 5 минут, переверните с помощью тарелки, жарьте ещё 3 минуты.',
+'Центр должен остаться чуть сыроватым — так нежнее.');
+R('gazpacho','Гаспачо','es','soup',15,150,1,'🥣','Холодный томатный суп из Андалусии.',4,
+'спелые помидоры:1:кг;огурец:1:шт;перец сладкий:1:шт;чеснок:1:зубч.;хлеб:1:ломтик;оливковое масло:50:мл;хересный уксус:2:ст.л.',
+'Измельчите всё в блендере до гладкости.|Добавьте масло и уксус, посолите.|Охладите 2 часа, подавайте со льдом и гренками.',
+'Спелые летние помидоры — основа вкуса.');
+R('tacos','Тако с говядиной и гуакамоле','mx','meat',40,510,1,'🌮','Тёплые тортильи, сочная говядина, кинза, лайм.',4,
+'говяжья вырезка или рибай:400:г;тортильи:8:шт;авокадо:2:шт;красный лук:0.5:шт;кинза:1:пучок;лайм:2:шт;халапеньо:1:шт;паприка:1:ч.л.;зира:1:ч.л.',
+'Натрите стейк солью и специями, обжарьте по 2 минуты с каждой стороны, нарежьте.|Гуакамоле: разомните авокадо с луком, кинзой, лаймом, халапеньо.|Прогрейте тортильи, выложите мясо, соус и кинзу.',
+'Лайм обязателен — кислота уравновешивает мясо.');
+R('tom-yum','Том ям с креветками','th','soup',30,260,2,'🍤','Острый и кислый тайский суп с лемонграссом и галангалом.',2,
+'креветки:200:г;лемонграсс:2:стебля;галангал:20:г;листья каффир-лайма:4:шт;шампиньоны:100:г;паста том ям:2:ст.л.;рыбный соус:2:ст.л.;лайм:1:шт;кокосовое молоко:100:мл;бульон:600:мл;чили:2:шт',
+'Доведите бульон до кипения с лемонграссом, галангалом и листьями каффир-лайма.|Добавьте пасту, грибы, чили.|Положите креветки на 3 минуты.|Влейте кокосовое молоко, рыбный соус и лайм.',
+'Баланс: кислое, острое, солёное, сладкое — подгоните под вкус.');
+R('pad-thai','Пад тай','th','pasta',30,640,2,'🍜','Жареная рисовая лапша с креветками и арахисом.',2,
+'рисовая лапша:150:г;креветки:150:г;яйца:2:шт;тофу:80:г;ростки фасоли:80:г;арахис:30:г;тамариндовая паста:2:ст.л.;рыбный соус:1:ст.л.;сахар:1:ст.л.;зелёный лук:2:пера;лайм:1:шт',
+'Замочите лапшу в тёплой воде на 20 минут.|Обжарьте креветки и тофу, добавьте лапшу и соус (тамаринд, рыбный соус, сахар).|Оттяните в сторону, разбейте яйца, перемешайте.|Добавьте ростки и лук. Подавайте с арахисом и лаймом.',
+'Жарьте на сильном огне небольшими порциями.');
+R('moussaka','Мусака','gr','meat',110,560,2,'🍆','Слои баклажана, мясного соуса и бешамеля — запеканка греческой кухни.',6,
+'баклажаны:3:шт;картофель:2:шт;говяжий фарш:500:г;лук:1:шт;томаты:300:г;корица:1:щепотка;бешамель:500:мл;пармезан:50:г',
+'Запеките ломтики баклажана и картофеля.|Приготовьте мясной соус с луком, томатами, корицей.|В форму — слоями: картофель, баклажаны, соус, снова слои.|Залейте бешамелем, посыпьте сыром.|Запекайте при 180 °C 45 минут.',
+'Корица и мускат — фирменные ноты мусаки.');
+R('oatmeal-pro','Овсянка с ягодами и орехами','wd','breakfast',10,350,1,'🥣','Правильный завтрак: сложные углеводы, клетчатка, жиры.',1,
+'овсяные хлопья:50:г;молоко или вода:250:мл;ягоды:80:г;грецкие орехи:15:г;мёд:1:ч.л.;корица:1:щепотка',
+'Варите хлопья в молоке 5–7 минут.|Добавьте ягоды, орехи, мёд, корицу.',
+'Выбирайте крупные хлопья «длительной варки» — у них ниже гликемический индекс.');
+R('chicken-bowl','Боул с курицей и киноа','wd','salad',35,520,1,'🥗','Сбалансированный обед: белок, сложные углеводы, овощи, жиры.',2,
+'куриная грудка:300:г;киноа:100:г;авокадо:1:шт;огурец:1:шт;помидоры черри:8:шт;шпинат:50:г;оливковое масло:1:ст.л.;лимон:1:шт',
+'Сварите киноа 12–15 минут.|Курицу посолите, обжарьте по 5–6 минут с каждой стороны.|Выложите киноа, овощи, курицу и авокадо в миску.|Заправьте маслом и лимоном.',
+'Классическая «тарелка»: 1/2 овощи, 1/4 белок, 1/4 крупа.');
+R('salmon-veg','Запечённый лосось с овощами','wd','fish',30,470,1,'🐟','Омега-3, овощи и минимум забот — всё на одном противне.',2,
+'филе лосося:300:г;брокколи:200:г;морковь:1:шт;оливковое масло:2:ст.л.;лимон:1:шт;чеснок:2:зубч.;укроп:1:пучок',
+'Нарежьте овощи, смешайте с маслом, солью и чесноком.|Выложите овощи на противень, сверху лосось с лимоном.|Запекайте 18–20 минут при 200 °C.',
+'Лосось готов, когда легко распадается на хлопья.');
+/* ===== ЭНЦИКЛОПЕДИЯ ===== */
+const CUISINES={
+ it:{n:'Итальянская',f:'🇮🇹',c:'#2e7d4f'},fr:{n:'Французская',f:'🇫🇷',c:'#3b5bdb'},ua:{n:'Украинская',f:'🇺🇦',c:'#d9a400'},
+ ge:{n:'Грузинская',f:'🇬🇪',c:'#b3262e'},jp:{n:'Японская',f:'🇯🇵',c:'#c2185b'},us:{n:'Стейкхаус / Гриль',f:'🔥',c:'#a0451f'},
+ gr:{n:'Греческая',f:'🇬🇷',c:'#0b7bbf'},es:{n:'Испанская',f:'🇪🇸',c:'#d84315'},mx:{n:'Мексика / Ближний Восток',f:'🌮',c:'#e65100'},
+ th:{n:'Тайская',f:'🇹🇭',c:'#7b1fa2'},wd:{n:'Здоровое питание',f:'🥗',c:'#2e9a6f'}};
+const CATS={pasta:'Паста и рис',meat:'Мясо и птица',steak:'Стейки',sauce:'Соусы',soup:'Супы',fish:'Рыба и морепродукты',sushi:'Суши и роллы',salad:'Салаты и закуски',dessert:'Десерты',side:'Выпечка и гарниры',breakfast:'Завтраки',veg:'Овощи'};
+
+const WIKI_PASTA=[
+{n:'Спагетти',e:'🍝',reg:'Весь юг Италии',form:'Длинные тонкие «верёвочки» (диаметр 1,5–2 мм)',h:'Название от spago — «верёвочка». Сухая паста родилась в Южной Италии: уже в 1154 г. арабский географ аль-Идриси описал производство нитей из твёрдой пшеницы в Трабиа под Палермо. Миф о том, что пасту привёз Марко Поло из Китая, появился лишь в XX веке — к тому времени пасту в Италии знали уже сотни лет. Настоящий бум случился в Неаполе в XVII–XVIII вв., когда придумали сушить пасту на солнце и ветру.',s:'Карбонара, аматричана, помидоры и базилик, вонголе, алио-олио',c:'9–11 мин, al dente'},
+{n:'Феттучине',e:'🍜',reg:'Рим, Лацио',form:'Плоские ленты шириной 6–8 мм',h:'От fettuccia — «ленточка». Римская классика, прославленная ресторатором Альфредо ди Лелио (1908), который смешивал её с большим количеством масла и пармезана для беременной жены. Позже блюдо «Фетучини Альфредо» стало визитной карточкой в США.',s:'Сливочные, грибные, с курицей и белыми грибами',c:'8–10 мин'},
+{n:'Тальятелле',e:'🍝',reg:'Эмилия-Романья, Болонья',form:'Яичная лента 6–8 мм',h:'Легенда гласит, что форма вдохновлена золотыми локонами Лукреции Борджиа. В 1972 г. Болонская торговая палата зарегистрировала «эталонные» тальятелле шириной ровно 8 мм (после сушки), а эталон хранится в палате. Шершавая яичная паста идеально удерживает густое рагу.',s:'Рагу болоньезе, грибы, белый соус',c:'3–5 мин свежие'},
+{n:'Паппарделле',e:'🍝',reg:'Тоскана',form:'Широкие ленты 2–3 см, яичные',h:'Название от pappare — «жадно есть». В Тоскане подаётся с рагу из кабана или зайца — праздничное блюдо охотничьего сезона.',s:'Рагу из дичи, грибы, кабан',c:'3–5 мин свежие'},
+{n:'Лингвини',e:'🍝',reg:'Лигурия, Генуя',form:'«Язычки» — сплющенные спагетти',h:'Linguine — «маленькие языки». Родом из Генуи, идеально подходит для песто и морепродуктов: плоская форма захватывает больше соуса, чем круглая.',s:'Песто, морепродукты, лимон',c:'9–10 мин'},
+{n:'Букатини',e:'🥢',reg:'Лацио, Рим',form:'Толстые спагетти с отверстием внутри',h:'От buco — «дырка». Полая внутри — в соусе пропитывается. Фаворит римской кухни: аматричана, карбонара, качо э пепе.',s:'Аматричана, карбонара',c:'10–12 мин'},
+{n:'Пенне',e:'✏️',reg:'Кампания',form:'Трубочки со срезом под углом, как перо',h:'Penne — «перья». Придумал в 1865 г. пастовар Джованни Баттиста Капури из Лигурии: срез трубочки под 45° увеличивает площадь, которая захватывает соус.',s:'Аррабьята, пенне с курицей, сырные',c:'11–13 мин'},
+{n:'Ригатони',e:'🍝',reg:'Рим, Южная Италия',form:'Крупные рифлёные трубочки',h:'Rigati — «рифлёные». Борозды хорошо удерживают густые, мясные и сырные соусы. Нужны и для запекания.',s:'Рагу, амматричана, кремовые соусы',c:'12–14 мин'},
+{n:'Фузилли',e:'🌀',reg:'Южная Италия',form:'Спирали',h:'Fusilli — от fuso («веретено»): традиционно паста накручивалась вручную на спицу. Спираль улавливает густые и кремовые соусы.',s:'Песто, овощные, тунец',c:'10–12 мин'},
+{n:'Фарфалле',e:'🎀',reg:'Ломбардия, Эмилия',form:'«Бабочки» или «бантики»',h:'Farfalle — «бабочки». Они родом из Ломбардии и Эмилии-Романьи, в XVI в. упоминались как «бантики» из теста. Подходят и для холодных салатов.',s:'Лосось и сливки, овощи, холодные салаты',c:'10–12 мин'},
+{n:'Орекьетте',e:'👂',reg:'Апулия',form:'«Ушки» — небольшие чашечки',h:'Название от «маленькие уши». Рецепт — только вода и дурум-мука, формуются большим пальцем. Традиционное блюдо Апулии — с брокколи рапини (чимe ди рапа).',s:'Рапини и анчоусы, колбаса',c:'10–12 мин'},
+{n:'Каннеллони',e:'🧻',reg:'Неаполь, Эмилия',form:'Большие трубки для начинки',h:'Cannelloni — «большие тростники». Рецепт придумал в 1907 г. неаполитанский повар Сальваторе Кознь, чтобы использовать остатки мяса. Фаршируются рикоттой и шпинатом либо мясом.',s:'Рикотта–шпинат, томатный соус, бешамель',c:'запекание 35 мин'},
+{n:'Лазанья',e:'🥘',reg:'Эмилия-Романья, Неаполь',form:'Широкие листы',h:'Одна из древнейших паст: греческое laganon — плоский лист теста. Римляне ели lasanum. Современная версия с рагу и бешамелью — из Болоньи XIX века, а неаполитанская — с рикоттой и фрикадельками, на карнавал.',s:'Болоньезе + бешамель',c:'запекание 45 мин'},
+{n:'Равиоли',e:'🥟',reg:'Лигурия, Ломбардия',form:'Квадратные «подушечки» с начинкой',h:'Одно из первых упоминаний — в XIV в. Генуя. Начинка — рикотта, шпинат, мясо, тыква. Подаются в масле с шалфеем или в бульоне.',s:'Сливочное масло и шалфей, томатный соус',c:'3–5 мин'},
+{n:'Тортеллини',e:'🧿',reg:'Болонья, Модена',form:'Колечки с начинкой, «пуп Венеры»',h:'По легенде, форму создал повар, подглядывавший за Венерой в трактире: он залюбовался её пупком. Тортеллини в бульоне — традиционное рождественское блюдо Болоньи.',s:'Капоне (бульон), сливки, рагу',c:'4–5 мин'},
+{n:'Орзо',e:'🍚',reg:'Греция, Южная Италия',form:'Паста в виде риса',h:'От греческого kritharaki («ячмень»). Используется в супах и как гарнир вместо риса, а также в салатах.',s:'Супы, ризотто-стайл, салаты',c:'8–9 мин'},
+{n:'Паккери',e:'⭕',reg:'Неаполь',form:'Крупные толстые трубки',h:'«Шлёпающие» — паккери, от schiaffo, «пощёчина», из-за звука, который они издают, падая на тарелку. Подходят для густых соусов, особенно с морепродуктами.',s:'Морепродукты, рыба-меч, помидоры',c:'12–14 мин'},
+{n:'Ньокки',e:'🥔',reg:'Север Италии, Рим',form:'Картофельные клёцки',h:'Строго говоря, не паста: тесто из картофеля, муки и яйца. Название — от nocchio, «узел в древесине». Традиция «ньокки по четвергам» в Риме и Венеции.',s:'Горгонзола, песто, масло с шалфеем',c:'2–3 мин'},
+{n:'Капеллини',e:'💇',reg:'Вся Италия',form:'Очень тонкие «волосы ангела»',h:'Capelli d’angelo — «волосы ангела». Варится за 2–3 минуты, подходит для лёгких соусов, бульонов.',s:'Томаты и базилик, масло, бульон',c:'2–3 мин'},
+{n:'Конкильони',e:'🐚',reg:'Кампания',form:'Крупные ракушки для начинки',h:'Название — от conchiglia, «раковина». Фаршируют рикоттой, мясом, шпинатом и запекают в томатном соусе.',s:'Рикотта + шпинат, бешамель',c:'запекание 30 мин'}
+];
+
+const WIKI_MEAT=[
+{g:'Говядина',e:'🐄',intro:'Самое «статусное» мясо для стейков. Вкус и нежность зависят от породы (Ангус, Герефорд, Шароле, Вагью), возраста, откорма и выдержки. Мраморность — внутримышечный жир, который делает стейк сочным.',cuts:[
+ ['Рибай (Ribeye)','Мышцы вдоль спинной части с жировой «шапочкой». Самый сочный, максимально мраморный стейк.','Гриль, сковорода, 52–57 °C'],
+ ['Стриплойн (Strip / Нью-Йорк)','Длинная мышца поясничной части. Плотный, насыщенный вкус, с жировой кромкой.','Сковорода, гриль'],
+ ['Филе-миньон / Тендерлойн','Вырезка. Самый нежный, но менее ароматный отруб — мало жира.','Сковорода + духовка, с беконом и соусом'],
+ ['Т-бон (T-Bone) и Портерхаус','С Т-образной костью: с одной стороны стриплойн, с другой — вырезка.','Гриль, 5–6 см толщины'],
+ ['Томагавк','Рибай на длинной (15–20 см) рёберной кости. Подача — эффектная, вкус — как у рибая.','Reverse sear, гриль'],
+ ['Фланк (Flank)','Брюшная мышца с длинными волокнами. Интенсивный вкус, нужно резать поперёк.','Быстрый гриль, маринад'],
+ ['Скёрт / Ромовая вырезка (Skirt)','Диафрагма. Сочная, насыщенная, слегка жёсткая.','Фахитас, гриль'],
+ ['Брискет','Грудинка. Много соединительной ткани, требует долгого томления.','Копчение 12 ч, тушение'],
+ ['Шорт-риб','Короткие рёбра. Жирные, богатые вкусом.','Томление 3–4 ч, су-вид 72 ч'],
+ ['Оссобуко (голяшка)','Поперечный срез голени с костным мозгом.','Тушение 2–3 ч'],
+ ['Бычий хвост','Много коллагена, даёт густой бульон.','Тушение 4 ч, супы'],
+ ['Чак-ролл (Chuck)','Лопаточная часть. Любимый отруб для бургеров и рагу.','Тушение, фарш']]},
+{g:'Свинина',e:'🐖',intro:'Нежная, универсальная, самая демократичная. Современные породы — Дюрок, Ландрас, Иберико. Безопасная температура: 63 °C с отдыхом.',cuts:[
+ ['Шея','Самая сочная часть с мраморностью. Для шашлыка, стейков и запекания.','Гриль, сковорода'],
+ ['Корейка (карбонад)','Спинная часть, часто на косточке. Нежная и постная.','Сковорода, духовка'],
+ ['Вырезка','Самая нежная, но постная.','Быстрая обжарка'],
+ ['Рёбра','Спаренные косточки с мясом.','Копчение, запекание 3 часа'],
+ ['Грудинка','Мясо с прослойками жира — основа бекона и пончетты.','Запекание, копчение'],
+ ['Окорок','Задняя часть. Подходит для ветчины и хамона.','Запекание, вяление'],
+ ['Щёчки','Мягкие после длительного томления.','Тушение 2–3 ч'],
+ ['Рулька','Богата коллагеном.','Тушение, запекание']]},
+{g:'Баранина и ягнятина',e:'🐑',intro:'Яркий, насыщенный вкус. Ягнёнок (до года) — нежнее и мягче, баранина — интенсивнее. Любит чеснок, розмарин, мяту, кислоту.',cuts:[
+ ['Каре (Rack)','Рёбрышки с нежным мясом.','Быстрая обжарка 55 °C'],
+ ['Седло','Спинная часть, высшего качества.','Запекание'],
+ ['Нога','Универсальный отруб: целая — в духовке, кусками — на шашлык.','Запекание 2–3 ч'],
+ ['Лопатка','Жиристая, подходит для томления.','Тушение, плов'],
+ ['Грудинка','Для длительного тушения.','Тушение']]},
+{g:'Телятина',e:'🐮',intro:'Мясо молодых бычков: светлое, нежное, с тонким вкусом. Классика Италии и Франции: оссобуко, сальтимбокка, витело тоннато, эскалоп.',cuts:[
+ ['Мякоть / оковалок','Для эскалопов и отбивных.','Быстрое жарение'],
+ ['Голяшка','Для оссобуко.','Тушение'],
+ ['Вырезка','Самая нежная часть.','Быстрое жарение']]},
+{g:'Птица',e:'🍗',intro:'Курица, индейка, утка, гусь. Всегда готовьте до 74 °C внутри; утиную грудку можно подавать розовой (57 °C).',cuts:[
+ ['Куриная грудка','Постная, быстро пересыхает. Лучше с рассолом.','Сковорода 5–6 мин/сторона'],
+ ['Куриное бедро','Сочное и ароматное, прощает ошибки.','Запекание, гриль'],
+ ['Утиная грудка','Кожа с толстым жиром. Топите жир на холодной сковороде.','57 °C, медиум'],
+ ['Утиная ножка','Для конфи и томления.','Конфи 2,5–3 ч'],
+ ['Индейка (филе)','Нежная, нужен соус или маринад.','Запекание 180 °C']]},
+{g:'Дичь и кролик',e:'🐇',intro:'Кролик — нежный диетический продукт; оленина и кабан — постные и ароматные. Дичь любит вино, ягоды, можжевельник.',cuts:[
+ ['Кролик','Нежное мясо, близкое к курице, но постнее.','Тушение в вине, горчице'],
+ ['Оленина (вырезка)','Постная, готовить до 52–55 °C.','Быстрое жарение'],
+ ['Кабан','Требует маринада и томления.','Рагу, тушение']]}
+];
+
+const MARBLING=[
+ ['USDA Prime','Высшая категория: самая высокая мраморность (≈ 2–3% всего мяса США). Сочность и вкус максимальны.'],
+ ['USDA Choice','Хороший баланс цены и качества, чуть меньше мраморности.'],
+ ['USDA Select','Постнее и жёстче — лучше мариновать.'],
+ ['Wagyu / Kobe (BMS 6–12)','Японская порода с экстремальной мраморностью, жир плавится при 25 °C. Порции небольшие (100–150 г).'],
+ ['Dry-aged','Сухая выдержка 28–60 дней: вода испаряется, ферменты разрушают волокна — вкус орехово-насыщенный.'],
+ ['Wet-aged','Выдержка в вакууме 14–28 дней: нежнее, но менее ароматно.']
+];
+
+const DONENESS=[
+ {n:'Blue (с кровью)',t:'46–49',tr:'-',c:'#a3131f',d:'Почти сырое, холодный красный центр. Для ценителей и качественной вырезки.',time:'1 мин с каждой стороны'},
+ {n:'Rare (с кровью)',t:'50–52',tr:'48–50',c:'#b8202d',d:'Тёплый красный центр, очень сочное.',time:'1,5–2 мин'},
+ {n:'Medium rare',t:'54–57',tr:'52–54',c:'#d04a56',d:'Золотой стандарт. Розово-красный центр, максимум сочности и вкуса.',time:'2–3 мин'},
+ {n:'Medium',t:'60–63',tr:'58–60',c:'#e0847f',d:'Розовый центр, плотнее. Подходит большинству гостей.',time:'3–4 мин'},
+ {n:'Medium well',t:'65–68',tr:'62–64',c:'#c7a08d',d:'Едва розовый, суховатее.',time:'4–5 мин'},
+ {n:'Well done',t:'71+',tr:'68+',c:'#8c7566',d:'Полностью прожарено, жёстче. Только для некоторых отрубов.',time:'6–7 мин'}
+];
+
+const STEAK_RULES=[
+ ['Выбор мяса','Берите стейк толщиной не менее 3–4 см, с мраморностью и ровной жировой кромкой. Тонкий кусок пересохнет раньше, чем образуется корочка.'],
+ ['Отепление','Достаньте из холодильника за 30–60 минут. Это снизит разницу температур и избавит от серой каймы. Для толстых стейков (> 4 см) этот шаг не критичен — используйте reverse sear.'],
+ ['Сухость','Обсушите поверхность бумажным полотенцем. Вода на мясе — враг реакции Майяра: сначала она испаряется, и только потом начинается обжарка.'],
+ ['Соль','Крупная соль — за 40+ минут (рассол проникает в мясо) или сразу перед жаркой. Золотая середина — «средняя» соль за 5–10 минут, которая только выпускает влагу.'],
+ ['Жар','Чугунная сковорода или гриль должны быть раскалены до лёгкого дыма. Масло — с высокой температурой дымления (рафинированное подсолнечное, авокадо, топлёное).'],
+ ['Не трогайте','Положили — не двигайте 2–3 минуты. Переворачивайте один-два раза. Миф «запечатывания соков» — ложь, но корочка = вкус.'],
+ ['Масло и травы','В конце — сливочное масло, чеснок, тимьян/розмарин. Поливайте мясо ложкой (arrosage) 1 минуту.'],
+ ['Термометр','Самый надёжный способ — щуп. Мясо «дозревает» при отдыхе на 3–5 °C, поэтому снимайте с огня раньше.'],
+ ['Отдых','5–10 минут на решётке под фольгой. Волокна расслабляются, сок распределяется. Режьте поперёк волокон.']
+];
+
+const STEAK_METHODS=[
+ ['Сковорода (чугун)','Лучшая корочка. Подходит для стейков 2–4 см.','Раскалить, 2–3 мин с каждой стороны + масло'],
+ ['Гриль / мангал','Дымок и клетчатая прожарка. Две зоны жара — прямая и непрямая.','Сначала на сильный жар, затем на слабый'],
+ ['Духовка + сковорода','Идеально для филе-миньон: корочка + запекание.','Обжарка 1 мин + духовка 200 °C 5–6 мин'],
+ ['Reverse sear','Сначала медленно в духовке (110 °C) до 48 °C, затем быстрая обжарка. Для толстых (4–6 см).','Равномерная прожарка без «серого слоя»'],
+ ['Су-вид','Точность температуры — ±0,1 °C. Выдерживает до 4 часов без пересушивания.','54–57 °C, 1,5–2 ч + обжарка 45 с']
+];
+
+const MOTHER_SAUCES=[
+ {n:'Бешамель',e:'🥛',base:'Молоко + мучная заправка (ру)',h:'Назван, по преданию, в честь маркиза Луи де Бешамеля, мажордома Людовика XIV. Но скорее всего, соус итальянского происхождения — его привезла во Францию Екатерина Медичи (XVI в.).',use:'Лазанья, гратен, крокет, мусака',deriv:'Морней (с сыром), Субиз (с луком), Нантюа (с раками)'},
+ {n:'Велюте',e:'🍲',base:'Светлый бульон + ру',h:'Название — «бархатный». Описан Мари-Антуаном Каремом в начале XIX века; варьируется по бульону — куриный, рыбный, телячий.',use:'Фрикасе, супы-пюре, соусы к рыбе',deriv:'Аллеманд, Супрем, Нормандский'},
+ {n:'Эспаньоль',e:'🥩',base:'Тёмный бульон + обжаренные кости и овощи',h:'«Испанский» соус — предположительно, назван за вклад испанских поваров, принесённых во Францию Анной Австрийской. Основа демигляса.',use:'Демигляс, к стейкам и дичи',deriv:'Деми-гляс, Мадера, Робер, Шассёр'},
+ {n:'Томатный',e:'🍅',base:'Спелые томаты, лук, бульон',h:'Томаты попали в Европу из Америки в XVI веке, но на кухне распространились лишь к XVIII веку. В систему вошли при Эскофье в 1903 году.',use:'Паста, пицца, запеканки',deriv:'Креольский, Португальский, Прованс'},
+ {n:'Голландез',e:'🍋',base:'Желтки + сливочное масло + лимон',h:'Эмульсионный тёплый соус. Название — вероятно, от «голландское масло», которое поставляли во Францию. Эскоффье включил в пятёрку соусов.',use:'Яйца Бенедикт, спаржа, рыба',deriv:'Беарнез, Мальтез, Шантильи, Муслин'}
+];
+const SAUCE_FAMILIES=[
+ ['Эмульсии','Майонез, айоли, голландез, беарнез. Основа — желток как эмульгатор, масло вливается тонкой струйкой.'],
+ ['Редукции и деми','Красновинный, перечный, демигляс — уваренные с бульоном соки и вино, ключ к стейкам.'],
+ ['Сливочные и сырные','Бешамель, четыре сыра, карбонара, Альфредо, грибной сливочный.'],
+ ['Томатные','Помидоро, аматричана, аррабьята, маринара, наполитана. Базилик, чеснок, масло.'],
+ ['Зелёные','Песто, чимичурри, сальса верде, гремолата, кинза-чесночный. Свежесть для жирных блюд.'],
+ ['Ореховые','Сациви, баже, ромеско — густые соусы на основе орехов.'],
+ ['Кисло-острые','Ткемали, сацебели, аджика, харисса. Кислота + жар к мясу.'],
+ ['Умами-соусы','Терияки, понзу, мисо, унаги, васаби-соевый. Глубина вкуса без лишнего жира.'],
+ ['Холодные заправки','Цезарь, тартар, тцадзики, винегрет, соус ранч.'],
+ ['Сладкие','Крем англез, карамель, ягодный кули, ганаш.']
+];
+
+const CUISINE_HISTORY=[
+ {k:'it',h:'Итальянская кухня — не одна, а двадцать региональных. Единой Италии как государства не было до 1861 года, и каждая область развивала собственный стиль. Северная кухня — на масле, рисе и сливках (ризотто, полента), южная — на оливковом масле, томате и пасте.',t:['Древний Рим: хлеб, оливки, гарум (рыбный соус), пшеничные лепёшки-прообразы пиццы.','XVI в.: Екатерина Медичи привозит во Францию итальянских поваров — рождение haute cuisine.','Томаты из Нового Света входят в рацион, но поначалу считаются декоративными или ядовитыми; к XVIII в. рождается неаполитанский томатный соус.','1889: пицца «Маргарита» — по преданию, для королевы Маргариты Савойской, цвета итальянского флага.','XX в.: эмиграция итальянцев в США и всемирное признание пасты и пиццы.','2010: Средиземноморская диета включена ЮНЕСКО в список нематериального наследия.'],
+  d:['Принцип «меньше — лучше»: 3–5 ингредиентов высокого качества.','Региональность и сезонность.','Паста — первое блюдо (primo), мясо или рыба — второе (secondo).']},
+ {k:'fr',h:'Французская кухня считается эталоном мировой гастрономии. Именно французы систематизировали мастерство: бригадная система кухни, «пять материнских соусов», кулинарные школы, звёзды Michelin. В 2010 г. «французская гастрономическая трапеза» внесена ЮНЕСКО в список нематериального наследия.',t:['XIV в.: «Le Viandier» Тайлевана — первая крупная французская кулинарная книга.','1533: Екатерина Медичи привозит во Францию итальянских мастеров.','XVIII в.: рождение ресторанов в современном смысле (Париж, 1765, «Boulanger»).','XIX в.: Мари-Антуан Карем и Огюст Эскофье создают систему соусов и профессиональную бригаду кухни.','1900: первый путеводитель Michelin; 1926 — первые звёзды.','1970-е: nouvelle cuisine — лёгкие порции и свежие продукты.'],
+  d:['Техника важнее продукта: слабый огонь, редукция, эмульсия.','Соусы — «душа» блюда.','Вино используется для приготовления и сопровождения.']},
+ {k:'ua',h:'Украинская кухня сформировалась на богатых землях: чернозёмы, реки, леса. Основа — зерно, овощи, свинина, птица, молочные продукты. Борщ, вареники, галушки — блюда, объединившие области. В 2022 г. ЮНЕСКО внесла «Культуру приготовления украинского борща» в Список нематериального наследия, нуждающегося в срочной защите.',t:['Киевская Русь: каши, мёд, рыба, дичь, пироги.','XVI–XVII вв.: картофель и свёкла приходят в быт; формируется классический борщ с красной свёклой.','Казацкая эпоха: сало, горилка, галушки, тулумбасы.','XIX в.: развивается городская кухня — котлета по-киевски (позднее), торты и выпечка.','XX–XXI вв.: возрождение традиций, фермерская кухня, регионализм (Закарпатье, Полтавщина, Гуцульщина).'],
+  d:['Щедрость и сытность.','Много зелени (укроп, петрушка), чеснок, сметана.','Кислое и сладкое сочетание: борщ с пампушками, вареники с вишней.']},
+ {k:'ge',h:'Грузинская кухня — это чудо Закавказья: орехи, зелень, острые перцы, гранат, кукуруза, сыры. Каждый регион (Кахетия, Имерети, Мегрелия, Аджария) имеет свою кухню, а трапеза — грузинский пир «супра» с тамадой — ритуал единства.',t:['Древность: виноделие — старейшее в мире (около 8000 лет, квеври).','Специи: кориандр, укроп, кинза, базилик, хмели-сунели.','XIX в.: возрастает популярность хачапури в разных регионах.','XX в.: грузинская кухня приобретает всесоюзную популярность.'],
+  d:['Грецкий орех, зелень, гранат, чеснок.','Мясо — на углях (мцвади) или в тоне (в глиняной печи).','Вино как часть трапезы, культ застолья.']},
+ {k:'jp',h:'Японская кухня (васёку) ЮНЕСКО признала нематериальным наследием в 2013 г. Основа — рис, рыба, соя, водоросли. Суши зародились как консервирование рыбы в рисе (нарэ-дзуси) в Юго-Восточной Азии, в Японию пришли в VIII в., а современный нигири придумал в 1820-х Ханая Ёхэй в Эдо (Токио) как «быстрый перекус».',t:['VIII в.: нарэ-дзуси — ферментированная рыба в рисе.','XVII в.: рис начинают сдабривать уксусом — «хаядзуси».','1820-е: Ёхэй Ханая создаёт Эдомаэ-нигири в Токио.','1960–70-е: «Калифорния-ролл» в Лос-Анджелесе (шеф Ичиро Масита, Tokyo Kaikan), рис снаружи.','XXI в.: суши — глобальный феномен.'],
+  d:['Умами — пятый вкус: даси, мисо, соевый соус.','Сезонность и подача.','Баланс: «ичидзю сансай» — суп и три блюда с рисом.']}
+];
+const WIKI_SUSHI=[
+ ['Нигири','Ручной брусочек риса с кусочком рыбы сверху. Классика «Эдомаэ».'],
+ ['Сашими','Нарезка свежей рыбы без риса. Главное — свежесть и острый нож.'],
+ ['Хосомаки (маки)','Тонкий ролл в нори, рис внутри, 1 начинка.'],
+ ['Футомаки','Толстый ролл с несколькими начинками.'],
+ ['Урамаки','Ролл с рисом снаружи («наизнанку»), как Калифорния и Филадельфия.'],
+ ['Темаки','Рожок из нори, который держат в руке.'],
+ ['Гункан','«Корабль»: рис в обёртке из нори с мягкой начинкой (икра, морской ёж).'],
+ ['Тирашидзуси','Рис в миске, сверху — рыба, овощи, омлет.'],
+ ['Инари','Мешочек из жареного тофу с рисом.'],
+ ['Темпура-роллы','Обжаренные во фритюре в кляре.']
+];
+
+const TECHNIQUES=[
+ ['Реакция Майяра','Химия румяной корочки: при 140–165 °C аминокислоты реагируют с сахарами, рождая сотни вкусовых молекул. Для неё нужна сухая поверхность и сильный жар.'],
+ ['Деглазирование','Налейте в горячую сковороду вино или бульон и соскребите «фонд» (прилипшие к дну кусочки) — получите основу соуса.'],
+ ['Софрито / мирпуа','Нарезанные лук, морковь, сельдерей, томлёные в масле — основа вкуса итальянских, французских и испанских блюд.'],
+ ['Редукция','Выпаривание жидкости для концентрации вкуса и густоты.'],
+ ['Эмульсия','Соединение несмешиваемых жидкостей (масло и вода) с помощью эмульгатора (желток, горчица, крахмал).'],
+ ['Блэнчинг (бланширование)','Быстрая варка в кипятке с последующим охлаждением в ледяной воде — сохраняет цвет.'],
+ ['Al dente','«На зуб»: паста слегка упругая в центре. Снимайте за минуту до указанного на упаковке времени.'],
+ ['Монте о бёр','Добавление холодного сливочного масла в конце приготовления соуса для блеска и бархатистости.'],
+ ['Брэйзинг (тушение)','Обжарка + медленное тушение в небольшом количестве жидкости.'],
+ ['Мариновка и рассол (брайн)','Соль, сахар, вода проникают в мясо, повышают сочность. 6–8% рассол на 4–12 часов для птицы.'],
+ ['Отдых мяса','После жарки 5–10 минут — иначе сок вытечет при нарезке.'],
+ ['Mise en place','«Всё на своём месте»: подготовьте продукты заранее — главный секрет спокойной готовки.']
+];
+
+const KNIVES=[
+ ['Шеф-нож 20 см','Универсал для овощей, мяса, зелени. Основа любой кухни.'],
+ ['Универсальный нож 12–15 см','Для мелких работ: чистка, нарезка.'],
+ ['Хлебный (зубчатый) нож','Хлеб, помидоры, пироги.'],
+ ['Нож для стейка','Зазубренный или гладкий, острый.'],
+ ['Мусат','Для правки лезвия: чем острее, тем безопаснее.']
+];
+
+const NUTRITION=[
+ {t:'С чего начинается питание: энергия',e:'⚡',p:['Калория — единица энергии. Организм тратит её на базовый обмен (дыхание, работа мозга и органов — 60–70% суточной нормы), на движение и на переваривание пищи (≈10%).','1 г белка = 4 ккал, 1 г углеводов = 4 ккал, 1 г жиров = 9 ккал, 1 г алкоголя = 7 ккал, клетчатка ≈ 2 ккал.','Вес зависит от баланса: съедаете больше, чем тратите — набор; меньше — снижение. 7700 ккал ≈ 1 кг жировой ткани (грубая оценка).','Не существует «плохих» калорий — есть пища, которая насыщает и обеспечивает питательными веществами, и пища, которая лишь добавляет энергию.']},
+ {t:'Белки — строительный материал',e:'🥩',p:['Белок строит мышцы, иммунные клетки, ферменты и гормоны. Состоит из 20 аминокислот, из которых 9 — незаменимые.','Нормы: минимум 0,8 г/кг веса; активным людям и при снижении веса — 1,6–2,2 г/кг.','Источники: мясо, птица, рыба, яйца, творог, греческий йогурт, бобовые, тофу, орехи.','Распределите белок на 3–4 приёма по 20–40 г — так усваивается лучше.']},
+ {t:'Жиры — не враги',e:'🥑',p:['Жиры нужны для гормонов, мозга, усвоения витаминов A, D, E, K. Оптимум — 25–35% калорий.','Полезные: оливковое масло, авокадо, орехи, жирная рыба (омега-3).','Насыщенные жиры (мясо, масло) — в пределах до 10% калорий.','Транс-жиры (маргарины, фастфуд) — по возможности избегайте.']},
+ {t:'Углеводы: быстрые и медленные',e:'🍞',p:['Углеводы — основной источник энергии для мозга и мышц. Доля — 40–55% калорий.','Сложные: цельные крупы, овощи, бобовые — дают долгую сытость.','Простые: сахар, сладости, соки — быстрый скачок глюкозы.','Свободный сахар (добавленный) — ВОЗ рекомендует не более 10% от энергии, лучше менее 5% (≈ 25 г в день).']},
+ {t:'Гликемический индекс',e:'📈',p:['ГИ показывает, как быстро продукт повышает сахар в крови: низкий (<55) — гречка, овсянка, бобовые; средний (56–69) — бананы, рис басмати; высокий (70+) — белый хлеб, картофель пюре, сладости.','Комбинация с белком, жиром и клетчаткой снижает скачок глюкозы.','Важнее ГИ — гликемическая нагрузка: порция продукта.']},
+ {t:'Клетчатка и микрофлора',e:'🥦',p:['Норма — 25–35 г в день. Источники: овощи, цельнозерновые, бобовые, ягоды, орехи.','Клетчатка кормит полезные бактерии кишечника, улучшает насыщение и снижает холестерин.','Увеличивайте количество постепенно и пейте больше воды.']},
+ {t:'Вода',e:'💧',p:['Ориентир — 30–35 мл на кг веса в день (с учётом супов и других напитков).','Лучший напиток — вода, чай и кофе без сахара умеренно.','Моча светло-жёлтого цвета — хороший признак.']},
+ {t:'Витамины и минералы',e:'🧬',p:['Разнообразие — ключ: «ешьте радугу» — овощи и фрукты разных цветов.','Железо — мясо, печень, бобовые. Кальций — молочные, зелень. Магний — орехи, крупы. Йод — рыба, йодированная соль. Витамин D — жирная рыба, солнце, при дефиците — добавки по назначению врача.','Витамины A, D, E, K усваиваются с жирами — добавляйте масло в салат.']},
+ {t:'Метод тарелки',e:'🍽️',p:['Половина тарелки — овощи и зелень (кроме картофеля).','Четверть — белок: мясо, рыба, яйца, бобовые.','Четверть — сложные углеводы: крупы, цельнозерновой хлеб, картофель.','Небольшая порция полезного жира: ложка масла, горсть орехов, авокадо.','Порции «рукой»: белок — ладонь, углеводы — кулак, жиры — большой палец, овощи — две горсти.']},
+ {t:'Как создать дефицит или профицит',e:'⚖️',p:['Для снижения веса — дефицит 10–20% от нормы (≈ 300–500 ккал). Безопасный темп: 0,5–1% веса в неделю.','Для набора массы — профицит 5–15%, плюс силовые тренировки.','Не опускайтесь ниже 1200 ккал (женщины) и 1500 ккал (мужчины) без наблюдения врача.','Взвешивайтесь утром, сравнивайте средние значения за неделю.']},
+ {t:'Режим питания',e:'⏰',p:['3 основных приёма + 1–2 перекуса или 3 приёма — выберите то, что вам удобно. Важнее общий баланс за день.','Завтрак с белком (яйца, творог) удерживает сытость.','Ужин за 2–3 часа до сна. Поздний ужин сам по себе не «откладывается в жир» — вопрос в общем балансе.','Ешьте медленно, 20 минут — чувство насыщения приходит с задержкой.']},
+ {t:'Мифы о питании',e:'🚫',p:['«После 18:00 нельзя есть» — миф. Важна суточная калорийность и качество.','«Жир сжигается только от кардио» — нет. Потеря жира идёт от общего дефицита энергии.','«Глютен вреден всем» — вреден только при целиакии и чувствительности.','«Детокс-напитки очищают» — печень и почки справляются сами.','«Углеводы вредны» — вредны избыток рафинированных и сладких.','«Съел сладкое — всё пропало» — нет, одна еда не определяет результат.']},
+ {t:'Как читать этикетки',e:'🏷️',p:['Смотрите на 100 г, а не на порцию.','Состав — по убыванию: чем короче, тем лучше.','Сахар может называться: глюкозный сироп, декстроза, мальтодекстрин, патока.','«Без сахара» ≠ «без калорий».','Продукты со скрытой солью: колбасы, соусы, сыры, хлеб. Норма соли — не более 5 г/день (ВОЗ).']},
+ {t:'Правильная готовка',e:'🍳',p:['Лучшие методы: варка на пару, запекание, тушение, гриль, су-вид.','Жарка на масле добавляет калории (1 ст. л. = 120 ккал).','Овощи не переваривайте — теряются витамины.','Мясо не готовьте до обугливания.','Заправки готовьте сами: масло, лимон, горчица, йогурт.']},
+ {t:'Сон, стресс и аппетит',e:'😴',p:['Недосып повышает грелин («гормон голода») и снижает лептин («гормон сытости») — тянет на сладкое.','Хронический стресс повышает кортизол и аппетит.','Сон 7–9 часов — важнейшая «диета».']},
+ {t:'Алкоголь',e:'🍷',p:['7 ккал на грамм — «пустые» калории. 100 мл вина ≈ 85 ккал, 500 мл пива ≈ 215 ккал.','Алкоголь снижает контроль над аппетитом.','Если пьёте — умеренно и с едой.']},
+ {t:'Питание при тренировках',e:'🏋️',p:['До тренировки (за 1,5–2 часа): углеводы + немного белка.','После: белок 20–40 г + углеводы.','Силовые тренировки + белок = сохранение мышц при снижении веса.','Кардио улучшает здоровье сердца и расход энергии.']}
+];
+
+/* ===== ПРОДУКТЫ: ккал, белки, жиры, углеводы на 100 г ===== */
+const FOODS=[
+['Куриная грудка (варёная)',165,31,3.6,0],['Куриное бедро (запечённое)',210,26,11,0],['Индейка (филе)',135,29,1.5,0],['Утиная грудка',200,23,11,0],
+['Говядина вырезка',158,26,5.5,0],['Говядина рибай',290,24,21,0],['Говяжий фарш 10%',176,20,10,0],['Свинина шея',260,18,21,0],['Свиная корейка',210,22,13,0],['Бекон',541,37,42,1.4],['Баранина (нога)',230,25,15,0],['Телятина',150,21,7,0],
+['Лосось',208,20,13,0],['Тунец (консервы в воде)',116,26,1,0],['Треска',82,18,0.7,0],['Креветки',99,24,0.3,0.2],['Мидии',172,24,4.5,7],['Сёмга слабосолёная',240,22,17,0],
+['Яйцо куриное',143,12.6,9.5,0.7],['Творог 5%',121,17,5,3],['Греческий йогурт 2%',73,10,2,4],['Молоко 2.5%',52,2.9,2.5,4.7],['Сыр пармезан',392,36,28,0],['Моцарелла',280,28,17,3],['Сыр фета',264,14,21,4],['Горгонзола',353,21,29,2.3],['Сливки 20%',205,2.8,20,3.7],['Сметана 20%',206,2.8,20,3.2],['Сливочное масло',717,0.9,81,0.1],['Маскарпоне',429,4.6,44,3.5],
+['Рис варёный',130,2.7,0.3,28],['Гречка варёная',110,4.2,1.1,21],['Овсянка на воде',71,2.5,1.5,12],['Киноа варёная',120,4.4,1.9,21],['Паста варёная',158,5.8,0.9,31],['Хлеб белый',265,9,3.2,49],['Хлеб цельнозерновой',247,13,3.4,41],['Картофель варёный',87,1.9,0.1,20],['Картофель фри',312,3.4,15,41],['Батат запечённый',90,2,0.2,21],['Мука пшеничная',364,10,1,76],['Нори',35,5.8,0.3,5],['Рис для суши готовый',150,2.7,0.3,33],
+['Помидор',18,0.9,0.2,3.9],['Огурец',15,0.7,0.1,3.6],['Капуста белая',27,1.8,0.1,4.7],['Морковь',41,0.9,0.2,10],['Брокколи',34,2.8,0.4,7],['Шпинат',23,2.9,0.4,3.6],['Свёкла',43,1.6,0.2,10],['Перец болгарский',31,1,0.3,6],['Баклажан',25,1,0.2,6],['Кабачок',17,1.2,0.3,3.1],['Лук репчатый',40,1.1,0.1,9],['Грибы шампиньоны',22,3.1,0.3,3.3],['Авокадо',160,2,15,9],['Руккола',25,2.6,0.7,3.7],
+['Яблоко',52,0.3,0.2,14],['Банан',89,1.1,0.3,23],['Апельсин',47,0.9,0.1,12],['Клубника',32,0.7,0.3,8],['Черника',57,0.7,0.3,14],['Виноград',69,0.7,0.2,18],['Лимон',29,1.1,0.3,9],
+['Фасоль красная варёная',127,8.7,0.5,23],['Чечевица варёная',116,9,0.4,20],['Нут варёный',164,8.9,2.6,27],['Тофу',76,8,4.8,1.9],
+['Оливковое масло',884,0,100,0],['Подсолнечное масло',899,0,100,0],['Грецкий орех',654,15,65,14],['Миндаль',579,21,50,22],['Арахис',567,26,49,16],['Мёд',304,0.3,0,82],['Сахар',387,0,0,100],['Шоколад горький 70%',546,7.8,31,46],['Шоколад молочный',535,7.6,30,59],['Арахисовая паста',588,25,50,20],
+['Пицца Маргарита',250,11,10,30],['Борщ (порция 100 г)',49,2.5,2.5,4.3],['Пельмени/вареники',200,8,8,24],['Бургер',295,17,14,24],['Мороженое пломбир',227,4.2,15,21],['Кола',42,0,0,10.6],['Пиво',43,0.5,0,3.6],['Красное вино',85,0.1,0,2.6],['Кофе чёрный',2,0.1,0,0],['Латте',54,3,2.5,5]
+].map((a,i)=>({id:'f'+i,n:a[0],k:a[1],p:a[2],f:a[3],c:a[4]}));
+/* ===== ПРИЛОЖЕНИЕ ===== */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().replace(/ё/g,'е');
+const store={
+  get(k,d){try{const v=localStorage.getItem('gk_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('gk_'+k,JSON.stringify(v))}catch(e){}}
+};
+let S={
+  fav:store.get('fav',[]),plan:store.get('plan',{}),diary:store.get('diary',{}),
+  prof:store.get('prof',{sex:'m',age:30,h:178,w:78,act:1.375,goal:'keep'}),
+  shop:store.get('shop',{}),people:store.get('people',2),theme:store.get('theme','dark')
+};
+const save=k=>store.set(k,S[k]);
+const byId=id=>RECIPES.find(r=>r.id===id);
+const ymd=d=>{const z=new Date(d);return z.getFullYear()+'-'+String(z.getMonth()+1).padStart(2,'0')+'-'+String(z.getDate()).padStart(2,'0')};
+const addDays=(d,n)=>{const z=new Date(d);z.setDate(z.getDate()+n);return z};
+const monday=d=>{const z=new Date(d);z.setHours(12,0,0,0);const w=(z.getDay()+6)%7;return addDays(z,-w)};
+const DOW=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const MONTHS=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const MEALS=[['b','Завтрак','🌅'],['l','Обед','☀️'],['d','Ужин','🌙'],['s','Перекус','🍎']];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2200)}
+function fq(q){if(!q)return'';q=+q;if(q>=100)q=Math.round(q/5)*5;else if(q>=10)q=Math.round(q);else q=Math.round(q*10)/10;return String(q).replace('.',',')}
+function ingStr(i,k){return i.q?fq(i.q*k)+' '+i.u:(i.u||'по вкусу')}
+const cuBg=cu=>`style="--c1:color-mix(in srgb,${(CUISINES[cu]||CUISINES.wd).c} 55%,#0b0806);--c2:#140e09"`;
+const lvlDots=l=>`<span class="lvl">${[1,2,3].map(i=>`<i class="${i<=l?'on':''}"></i>`).join('')}</span>`;
+const LVL=['','Просто','Средне','Мастер'];
+
+/* ---------- РОУТЕР ---------- */
+const NAV=[['','Главная','🏠'],['recipes','Рецепты','📖'],['steaks','Стейки','🥩'],['sauces','Соусы','🫕'],['wiki','Энциклопедия','🏛️'],['nutrition','Питание','🥗'],['calc','Калории','🔥'],['planner','Планер','📅'],['fav','Избранное','❤️']];
+let route={p:'',a:[],q:{}};
+function parseHash(){
+  const h=decodeURIComponent(location.hash.replace(/^#\/?/,''));const [path,qs]=h.split('?');
+  const a=path.split('/').filter(Boolean);const q={};
+  if(qs)qs.split('&').forEach(x=>{const [k,v]=x.split('=');q[k]=v});
+  return{p:a[0]||'',a:a.slice(1),q}
+}
+function go(h){location.hash=h}
+function render(){
+  route=parseHash();
+  $('#nav').innerHTML=NAV.map(n=>`<a href="#/${n[0]}" class="${route.p===n[0]?'on':''}">${n[1]}</a>`).join('');
+  $('#bnav').innerHTML=NAV.map(n=>`<a href="#/${n[0]}" class="${route.p===n[0]?'on':''}"><span>${n[2]}</span>${n[1]}</a>`).join('');
+  const v={'':vHome,recipes:vRecipes,r:vRecipe,steaks:vSteaks,sauces:vSauces,wiki:vWiki,nutrition:vNutrition,calc:vCalc,planner:vPlanner,fav:vFav}[route.p]||vHome;
+  $('#app').innerHTML='';v($('#app'));
+  window.scrollTo({top:0});
+}
+window.addEventListener('hashchange',render);
+
+/* ---------- ОБЩИЕ КОМПОНЕНТЫ ---------- */
+function card(r){
+  const cu=CUISINES[r.cu]||{};const fv=S.fav.includes(r.id);
+  return `<article class="card rc" onclick="go('#/r/${r.id}')">
+   <div class="ph" ${cuBg(r.cu)}><button class="fv ${fv?'on':''}" onclick="event.stopPropagation();toggleFav('${r.id}',this)">${fv?'♥':'♡'}</button><span>${r.em}</span></div>
+   <div class="bd"><div class="cu">${cu.f||''} ${cu.n||''}</div><h3>${esc(r.name)}</h3><p>${esc(r.desc)}</p>
+   <div class="meta"><span>⏱ <b>${r.t>=60?Math.floor(r.t/60)+' ч '+(r.t%60?r.t%60+' м':''):r.t+' мин'}</b></span><span>🔥 <b>${r.kcal}</b> ккал</span>${lvlDots(r.lvl)}</div></div></article>`;
+}
+function toggleFav(id,btn){
+  const i=S.fav.indexOf(id);if(i>=0)S.fav.splice(i,1);else S.fav.push(id);save('fav');
+  if(btn){const on=S.fav.includes(id);btn.classList.toggle('on',on);btn.textContent=on?'♥':'♡'}
+  toast(S.fav.includes(id)?'Добавлено в избранное ❤️':'Убрано из избранного');
+  if(route.p==='fav')render();
+}
+function openModal(t,h){$('#mt').textContent=t;$('#mb').innerHTML=h;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+function accToggle(el){el.parentElement.classList.toggle('open')}
+
+/* ---------- ПОИСК (глобальный) ---------- */
+function searchRecipes(q,f={}){
+  const n=norm(q).trim();const words=n.split(/\s+/).filter(Boolean);
+  return RECIPES.map(r=>{
+    const hay=norm(r.name+' '+r.desc+' '+(CUISINES[r.cu]||{}).n+' '+(CATS[r.cat]||'')+' '+r.ing.map(i=>i.n).join(' '));
+    let sc=0;
+    if(words.length){
+      for(const w of words){
+        if(norm(r.name).includes(w))sc+=10;else if(hay.includes(w))sc+=3;else return null;
+      }
+    }
+    return{r,sc};
+  }).filter(Boolean).sort((a,b)=>b.sc-a.sc).map(x=>x.r);
+}
+const gs=$('#gs'),sres=$('#sres');
+gs.addEventListener('input',()=>{
+  const q=gs.value.trim();if(!q){sres.style.display='none';return}
+  const res=searchRecipes(q).slice(0,8);
+  sres.innerHTML=res.length?res.map(r=>`<a href="#/r/${r.id}"><span style="font-size:26px">${r.em}</span><div><b>${esc(r.name)}</b><br><small>${(CUISINES[r.cu]||{}).n} · ${r.kcal} ккал</small></div></a>`).join('')+`<a href="#/recipes?q=${encodeURIComponent(q)}"><b style="color:var(--gold)">Показать все результаты →</b></a>`:'<a><small>Ничего не найдено</small></a>';
+  sres.style.display='block';
+});
+gs.addEventListener('keydown',e=>{if(e.key==='Enter'&&gs.value.trim()){go('#/recipes?q='+encodeURIComponent(gs.value.trim()));sres.style.display='none';gs.blur()}});
+document.addEventListener('click',e=>{if(!e.target.closest('.sbox'))sres.style.display='none'});
+sres.addEventListener('click',()=>{sres.style.display='none';gs.value=''});
+$('#themeBtn').onclick=()=>{S.theme=S.theme==='dark'?'light':'dark';save('theme');applyTheme()};
+function applyTheme(){document.documentElement.dataset.theme=S.theme;$('#themeBtn').textContent=S.theme==='dark'?'🌙':'☀️'}
+
+/* ---------- ГЛАВНАЯ ---------- */
+function vHome(el){
+  const day=Math.floor(Date.now()/864e5);const dish=RECIPES.filter(r=>r.cat!=='sauce')[day%RECIPES.filter(r=>r.cat!=='sauce').length];
+  const sections=[['recipes','📖','Все рецепты',RECIPES.length+' блюд с поиском и фильтрами','#d9ae5f'],['steaks','🥩','Школа стейков','Отрубы, прожарка, методы, 12 рецептов','#d1553a'],['sauces','🫕','Соусы','Матери-соусы, эмульсии и редукции','#e0a82e'],['wiki','🏛️','Энциклопедия','Пасты, мясо, кухни и их история','#6f9bd6'],['nutrition','🥗','Правильное питание','Как это работает — по-человечески','#5fae7e'],['calc','🔥','Калории','Калькулятор и дневник питания','#d1553a'],['planner','📅','Планер недели','Меню на 7 дней + список покупок','#a37be0']];
+  el.innerHTML=`
+  <section class="hero"><div class="eyebrow">Премиальная кулинарная книга</div>
+   <h1>Готовьте как <em>шеф</em>.<br>Ешьте как <em>гений</em>.</h1>
+   <p>От карбонары и хинкали до идеального рибая: рецепты, техника, история блюд, калории и планер на неделю — в одном приложении.</p>
+   <div class="row"><a class="btn gold" href="#/recipes">Открыть рецепты</a><a class="btn" href="#/steaks">Школа стейков 🥩</a><a class="btn" href="#/planner">Планер недели</a></div>
+   <div class="stats"><div><b>${RECIPES.length}</b><span>рецептов</span></div><div><b>${Object.keys(CUISINES).length-1}</b><span>кухонь мира</span></div><div><b>${WIKI_PASTA.length}</b><span>видов пасты</span></div><div><b>${FOODS.length}</b><span>продуктов в базе КБЖУ</span></div></div>
+   <div class="big">🍽️</div></section>
+  <div class="sec-h"><div><div class="eyebrow">Блюдо дня</div><h2>${esc(dish.name)}</h2></div><a href="#/r/${dish.id}">Открыть рецепт →</a></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${card(dish)}
+   <div class="panel" style="grid-column:span 2;display:flex;flex-direction:column;justify-content:center;gap:10px"><div class="eyebrow">Почему именно оно</div><h3 style="font-size:26px">${dish.em} ${esc(dish.desc)}</h3><p class="muted">${esc(dish.tip||'')}</p><div><a class="btn sm gold" href="#/r/${dish.id}">Готовить</a></div></div></div>
+  <div class="sec-h"><h2>Разделы</h2></div>
+  <div class="tiles">${sections.map(s=>`<a class="tile" href="#/${s[0]}" style="--c:${s[4]}"><span class="e">${s[1]}</span><h3>${s[2]}</h3><p>${s[3]}</p></a>`).join('')}</div>
+  <div class="sec-h"><h2>Кухни мира</h2><a href="#/recipes">Все →</a></div>
+  <div class="tiles">${Object.entries(CUISINES).filter(([k])=>k!=='wd').map(([k,c])=>`<a class="tile" href="#/recipes?cu=${k}" style="--c:${c.c}"><span class="e">${c.f}</span><h3>${c.n}</h3><p>${RECIPES.filter(r=>r.cu===k).length} рецептов</p></a>`).join('')}</div>
+  <div class="sec-h"><h2>Для начала — быстрые</h2><a href="#/recipes?sort=time">Все быстрые →</a></div>
+  <div class="grid">${RECIPES.filter(r=>r.t<=25&&r.cat!=='sauce').slice(0,8).map(card).join('')}</div>
+  <div class="sec-h"><h2>Самые необычные</h2></div>
+  <div class="grid">${['khinkali','khachapuri-adjar','confit-canard','bouillabaisse','kyiv-cutlet','bistecca','ramen','vitello'].map(byId).filter(Boolean).map(card).join('')}</div>`;
+}
+
+/* ---------- РЕЦЕПТЫ ---------- */
+let F={q:'',cu:'',cat:'',time:0,sort:'pop',lvl:0};
+function vRecipes(el){
+  F={q:route.q.q?decodeURIComponent(route.q.q):'',cu:route.q.cu||'',cat:route.q.cat||'',time:+route.q.time||0,sort:route.q.sort||'pop',lvl:0};
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Каталог</div><h1>Все рецепты</h1><p>Ищите по названию, ингредиенту или кухне. Фильтры помогут выбрать блюдо под настроение и время.</p></div></div>
+  <div class="filters">
+   <div class="toolbar"><input id="rq" placeholder="Например: курица, паста, грузинская…" style="flex:1;min-width:220px" value="${esc(F.q)}">
+    <select id="rtime" class="field"><option value="0">Любое время</option><option value="20">до 20 мин</option><option value="40">до 40 мин</option><option value="90">до 1,5 ч</option></select>
+    <select id="rlvl" class="field"><option value="0">Любая сложность</option><option value="1">Просто</option><option value="2">Средне</option><option value="3">Мастер</option></select>
+    <select id="rsort" class="field"><option value="pop">По умолчанию</option><option value="time">Быстрые сначала</option><option value="kcal">Меньше калорий</option><option value="name">По алфавиту</option></select></div>
+   <div class="chips sc" id="fcu"></div><div class="chips sc" id="fcat"></div></div>
+  <div id="rcount" class="muted" style="margin-bottom:14px"></div><div class="grid" id="rgrid"></div>`;
+  $('#rtime').value=F.time;$('#rsort').value=F.sort;
+  const draw=()=>{
+    $('#fcu').innerHTML=`<button class="pill ${!F.cu?'on':''}" data-k="cu" data-v="">Все кухни</button>`+Object.entries(CUISINES).map(([k,c])=>`<button class="pill ${F.cu===k?'on':''}" data-k="cu" data-v="${k}">${c.f} ${c.n}</button>`).join('');
+    $('#fcat').innerHTML=`<button class="pill ${!F.cat?'on':''}" data-k="cat" data-v="">Все типы</button>`+Object.entries(CATS).map(([k,n])=>`<button class="pill ${F.cat===k?'on':''}" data-k="cat" data-v="${k}">${n}</button>`).join('');
+    let list=searchRecipes(F.q);
+    if(F.cu)list=list.filter(r=>r.cu===F.cu);if(F.cat)list=list.filter(r=>r.cat===F.cat);
+    if(F.time)list=list.filter(r=>r.t<=F.time);if(F.lvl)list=list.filter(r=>r.lvl===F.lvl);
+    if(F.sort==='time')list=[...list].sort((a,b)=>a.t-b.t);else if(F.sort==='kcal')list=[...list].sort((a,b)=>a.kcal-b.kcal);else if(F.sort==='name')list=[...list].sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+    $('#rcount').textContent='Найдено: '+list.length;
+    $('#rgrid').innerHTML=list.length?list.map(card).join(''):'<div class="empty" style="grid-column:1/-1"><div class="e">🔎</div><p>Ничего не нашлось. Попробуйте другой запрос или сбросьте фильтры.</p></div>';
+  };
+  draw();
+  $('#rq').oninput=e=>{F.q=e.target.value;draw()};
+  $('#rtime').onchange=e=>{F.time=+e.target.value;draw()};$('#rlvl').onchange=e=>{F.lvl=+e.target.value;draw()};$('#rsort').onchange=e=>{F.sort=e.target.value;draw()};
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){F[b.dataset.k]=b.dataset.v;draw()}});
+}
+
+/* ---------- ТАЙМЕР ---------- */
+const timers=[];
+function startTimer(min,label){
+  const end=Date.now()+min*60000;const id=Date.now();timers.push({id,end,label});toast('⏱ Таймер '+min+' мин запущен');tickTimers();
+}
+function tickTimers(){
+  let box=$('#timers');if(!box){box=document.createElement('div');box.id='timers';box.style.cssText='position:fixed;right:14px;bottom:80px;z-index:150;display:flex;flex-direction:column;gap:8px';document.body.appendChild(box)}
+  box.innerHTML=timers.map(t=>{const s=Math.max(0,Math.round((t.end-Date.now())/1000));return `<div style="background:var(--card);border:1px solid var(--gold);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center">⏱ <b style="font-family:var(--serif);font-size:20px">${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}</b><small class="muted">${esc(t.label||'')}</small><button class="x" onclick="stopTimer(${t.id})">✕</button></div>`}).join('');
+  for(const t of [...timers])if(t.end<=Date.now()){beep();toast('⏰ Время вышло: '+(t.label||'таймер'));stopTimer(t.id)}
+  clearTimeout(tickTimers.t);if(timers.length)tickTimers.t=setTimeout(tickTimers,1000);
+}
+function stopTimer(id){const i=timers.findIndex(t=>t.id===id);if(i>=0)timers.splice(i,1);tickTimers()}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)();[0,.25,.5].forEach(d=>{const o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.value=.15;o.start(a.currentTime+d);o.stop(a.currentTime+d+.15)})}catch(e){}}
+function timerBtn(step){
+  const m=step.match(/(\d+)(?:\s*[–-]\s*(\d+))?\s*(мин|час)/);if(!m)return'';
+  let v=+(m[2]||m[1]);if(m[3]==='час')v*=60;if(v>240)return'';
+  return ` <button class="pill" style="cursor:pointer" onclick="startTimer(${v},'${esc(step).slice(0,30).replace(/'/g,'')}…')">⏱ ${v} мин</button>`;
+}
+
+/* ---------- СТРАНИЦА РЕЦЕПТА ---------- */
+let curServ=0;
+function vRecipe(el){
+  const r=byId(route.a[0]);if(!r){el.innerHTML='<div class="empty"><div class="e">🤷</div><p>Рецепт не найден. <a href="#/recipes" style="color:var(--gold)">К каталогу</a></p></div>';return}
+  curServ=curServ&&route.a[0]===vRecipe.last?curServ:r.serv;vRecipe.last=r.id;
+  const cu=CUISINES[r.cu]||{};const fv=S.fav.includes(r.id);const k=curServ/r.serv;
+  const related=RECIPES.filter(x=>x.id!==r.id&&(x.cu===r.cu||x.cat===r.cat)).sort(()=>.5-Math.random()).slice(0,4);
+  el.innerHTML=`<a class="back" href="javascript:history.back()">← Назад</a>
+  <div class="rhero" ${cuBg(r.cu)}><div class="em">${r.em}</div>
+   <div class="eyebrow">${cu.f||''} ${cu.n||''} · ${CATS[r.cat]}</div><h1 style="margin:10px 0">${esc(r.name)}</h1><p>${esc(r.desc)}</p>
+   <div class="chips"><span class="pill">⏱ ${r.t>=60?Math.floor(r.t/60)+' ч '+(r.t%60?r.t%60+' мин':''):r.t+' мин'}</span><span class="pill">🔥 ${r.kcal} ккал / порция</span><span class="pill">👨‍🍳 ${LVL[r.lvl]}</span></div></div>
+  <div class="chips noprint" style="margin-bottom:24px">
+   <button class="btn gold" onclick="startCook('${r.id}')">▶ Режим готовки</button>
+   <button class="btn" id="fvb" onclick="toggleFav('${r.id}');vRecipeFav(this,'${r.id}')">${fv?'♥ В избранном':'♡ В избранное'}</button>
+   <button class="btn" onclick="planModal('${r.id}')">📅 В планер</button>
+   <button class="btn" onclick="diaryAddRecipe('${r.id}')">🔥 В дневник калорий</button>
+   <button class="btn" onclick="window.print()">🖨 Печать</button></div>
+  <div class="rp"><div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="font-size:28px">Ингредиенты</h2>
+    <div class="stepper noprint"><button onclick="setServ(-1)">−</button><span>${curServ}</span><button onclick="setServ(1)">+</button></div></div>
+   <div class="muted" style="font-size:13px;margin-bottom:8px">на ${curServ} ${curServ===1?'порцию':curServ<5?'порции':'порций'} · отмечайте купленное</div>
+   <ul class="ing">${r.ing.map(i=>`<li onclick="this.classList.toggle('done');const c=this.querySelector('input');if(event.target!==c)c.checked=!c.checked"><input type="checkbox" onclick="event.stopPropagation();this.parentElement.classList.toggle('done')"><span>${esc(i.n)}</span><b>${ingStr(i,k)}</b></li>`).join('')}</ul>
+   <div class="nut"><div><b>${r.kcal}</b><span>ккал на порцию</span></div><div><b>${r.kcal*curServ}</b><span>всего блюдо</span></div><div><b>${r.t}</b><span>минут</span></div><div><b>${r.ing.length}</b><span>ингредиентов</span></div></div></div>
+  <div><h2 style="font-size:28px;margin-bottom:14px">Приготовление</h2><ol class="steps">${r.steps.map(s=>`<li><div>${esc(s)}${timerBtn(s)}</div></li>`).join('')}</ol>
+   ${r.tip?`<div class="tip"><b>💡 Совет шефа.</b> ${esc(r.tip)}</div>`:''}</div></div>
+  <div class="sec-h"><h2>Похожие блюда</h2></div><div class="grid">${related.map(card).join('')}</div>`;
+}
+function vRecipeFav(b,id){const on=S.fav.includes(id);b.textContent=on?'♥ В избранном':'♡ В избранное'}
+function setServ(d){curServ=Math.max(1,Math.min(20,curServ+d));render()}
+
+/* ---------- РЕЖИМ ГОТОВКИ ---------- */
+let cookState={};
+function startCook(id){
+  const r=byId(id);cookState={r,i:0};$('#cook').classList.add('on');document.body.style.overflow='hidden';
+  try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(()=>{})}catch(e){}
+  drawCook();
+}
+function drawCook(){
+  const {r,i}=cookState;const n=r.steps.length;
+  $('#cook').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div><div class="eyebrow">${r.em} ${esc(r.name)}</div></div><button class="ibtn" onclick="endCook()">✕</button></div>
+  <div class="bar"><i style="width:${(i+1)/n*100}%"></i></div>
+  <div class="cb"><div><small>Шаг ${i+1} из ${n}</small><p>${esc(r.steps[i])}</p><div style="margin-top:22px">${timerBtn(r.steps[i])}</div></div></div>
+  <div class="ctl"><button class="btn" ${i===0?'disabled style="opacity:.4"':''} onclick="cookMove(-1)">← Назад</button><button class="btn" onclick="cookIng()">🧾 Ингредиенты</button><button class="btn gold" onclick="${i===n-1?'endCook(true)':'cookMove(1)'}">${i===n-1?'Готово! 🎉':'Далее →'}</button></div>`;
+}
+function cookMove(d){cookState.i=Math.max(0,Math.min(cookState.r.steps.length-1,cookState.i+d));drawCook()}
+function cookIng(){const r=cookState.r;openModal('Ингредиенты',`<ul class="ing">${r.ing.map(i=>`<li style="cursor:default"><span>${esc(i.n)}</span><b>${ingStr(i,curServ/r.serv)}</b></li>`).join('')}</ul>`);$('#modal').style.zIndex=120}
+function endCook(done){$('#cook').classList.remove('on');document.body.style.overflow='';$('#modal').style.zIndex='';if(done)toast('Приятного аппетита! 🍽️')}
+document.addEventListener('keydown',e=>{if($('#cook').classList.contains('on')){if(e.key==='ArrowRight')cookMove(1);if(e.key==='ArrowLeft')cookMove(-1);if(e.key==='Escape')endCook()}else if(e.key==='Escape')closeModal()});
+
+/* ---------- СТЕЙКИ ---------- */
+function vSteaks(el){
+  const beef=WIKI_MEAT[0];
+  el.innerHTML=`<div class="hero" style="padding:44px 44px"><div class="eyebrow">Школа стейков</div><h1 style="font-size:clamp(32px,5vw,58px)">Идеальный стейк <em>за 9 шагов</em></h1><p>Выбор отруба, степень прожарки, температура, метод — всё, что нужно, чтобы готовить стейки как в лучших стейкхаусах.</p><div class="big" style="font-size:180px">🥩</div></div>
+  <div class="sec-h"><h2>Степень прожарки</h2></div>
+  <div class="done-wrap"><div class="dn" id="dn">${DONENESS.map((d,i)=>`<button class="pill ${i===2?'on':''}" data-i="${i}">${d.n}</button>`).join('')}</div>
+   <div class="steakviz" id="sv"></div><div id="sd"></div>
+   <div style="overflow-x:auto;margin-top:18px"><table class="t"><tr><th>Степень</th><th>Внутр. t° (снять)</th><th>После отдыха</th><th>Описание</th></tr>${DONENESS.map(d=>`<tr><td><b>${d.n}</b></td><td>${d.tr} °C</td><td>${d.t} °C</td><td class="muted">${d.d}</td></tr>`).join('')}</table></div></div>
+  <div class="sec-h"><h2>9 правил идеального стейка</h2></div>
+  <div>${STEAK_RULES.map((r,i)=>`<div class="acc ${i<2?'open':''}"><button onclick="accToggle(this)"><span class="e" style="font-family:var(--serif);color:var(--gold);font-weight:800">${i+1}</span><h3>${r[0]}</h3></button><div class="ab">${r[1]}</div></div>`).join('')}</div>
+  <div class="sec-h"><h2>Отрубы говядины для стейков</h2></div>
+  <p class="muted" style="margin-bottom:6px">${beef.intro}</p><div class="cutlist">${beef.cuts.map(c=>`<div class="cut"><h4>${c[0]}</h4><p>${c[1]}</p><em>🔥 ${c[2]}</em></div>`).join('')}</div>
+  <div class="sec-h"><h2>Методы приготовления</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">${STEAK_METHODS.map(m=>`<div class="panel"><h3 style="font-size:19px">${m[0]}</h3><p class="muted" style="font-size:14px">${m[1]}</p><p style="margin-top:8px;color:var(--gold2);font-size:13px">${m[2]}</p></div>`).join('')}</div>
+  <div class="sec-h"><h2>Мраморность и выдержка</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${MARBLING.map(m=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${m[0]}</h3><p class="muted" style="font-size:14px">${m[1]}</p></div>`).join('')}</div>
+  <div class="sec-h"><h2>Рецепты стейков</h2><a href="#/recipes?cat=steak">Все →</a></div>
+  <div class="grid">${RECIPES.filter(r=>r.cat==='steak').map(card).join('')}</div>
+  <div class="sec-h"><h2>Соусы к стейку</h2></div>
+  <div class="grid">${['bearnaise','red-wine-sauce','steak-au-poivre','chimichurri','mushroom-cream','bbq'].map(byId).map(card).join('')}</div>`;
+  const show=i=>{const d=DONENESS[i];const sv=$('#sv');
+   sv.style.background=`radial-gradient(ellipse at center,${d.c} 0 45%,color-mix(in srgb,${d.c} 55%,#7a4a2a) 70%,#5a3318 100%)`;
+   $('#sd').innerHTML=`<h3 style="font-size:26px">${d.n} — <span style="color:var(--gold2)">${d.t} °C</span></h3><p class="muted">${d.d}</p><p style="margin-top:6px">⏱ Примерное время (2,5–3 см): <b>${d.time}</b> с каждой стороны</p>`;
+   document.querySelectorAll('#dn .pill').forEach((b,j)=>b.classList.toggle('on',j===i))};
+  show(2);$('#dn').onclick=e=>{const b=e.target.closest('[data-i]');if(b)show(+b.dataset.i)};
+}
+
+/* ---------- СОУСЫ ---------- */
+function vSauces(el){
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Соусы</div><h1>Искусство соусов</h1><p>Соус превращает хороший продукт в блюдо. Начните с пяти материнских соусов — из них рождаются сотни других.</p></div></div>
+  <div class="sec-h"><h2>Пять материнских соусов</h2></div>
+  ${MOTHER_SAUCES.map(s=>`<div class="acc"><button onclick="accToggle(this)"><span class="e">${s.e}</span><div><h3>${s.n}</h3><small>${s.base}</small></div></button><div class="ab"><p>${s.h}</p><div class="kv"><b>Для чего</b><span>${s.use}</span><b>Производные</b><span>${s.deriv}</span></div></div></div>`).join('')}
+  <div class="sec-h"><h2>Семейства соусов</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${SAUCE_FAMILIES.map(f=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${f[0]}</h3><p class="muted" style="font-size:14px">${f[1]}</p></div>`).join('')}</div>
+  <div class="sec-h"><h2>Рецепты соусов</h2></div>
+  <div class="grid">${RECIPES.filter(r=>r.cat==='sauce').map(card).join('')}</div>`;
+}
+
+/* ---------- ЭНЦИКЛОПЕДИЯ ---------- */
+let wikiTab='pasta';
+function vWiki(el){
+  wikiTab=route.a[0]||wikiTab;
+  const tabs=[['pasta','🍝 Пасты'],['meat','🥩 Мясо'],['sauce','🫕 Соусы'],['cuisine','🌍 Кухни и история'],['sushi','🍣 Суши'],['tech','🔪 Техники']];
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Энциклопедия</div><h1>Знания шефа</h1><p>Виды пасты, отрубы мяса, соусы, история кухонь мира и ключевые кулинарные техники.</p></div></div>
+  <div class="tabs">${tabs.map(t=>`<button class="${wikiTab===t[0]?'on':''}" onclick="go('#/wiki/${t[0]}')">${t[1]}</button>`).join('')}</div><div id="wk"></div>`;
+  const w=$('#wk');
+  if(wikiTab==='pasta'){
+    w.innerHTML=`<p class="muted" style="margin-bottom:14px;max-width:760px">В Италии насчитывают более 350 форм пасты. Форма определяет, какой соус к ней подходит: длинная и тонкая — к лёгким и маслянистым, трубочки и спирали — к густым и мясным, плоская — к сливочным и рагу.</p>
+    <div class="toolbar" style="margin-bottom:14px"><input class="field" id="wp" placeholder="Найти пасту…" style="max-width:320px"></div><div id="wpl"></div>
+    <div class="sec-h"><h2>Рецепты с пастой</h2></div><div class="grid">${RECIPES.filter(r=>r.cat==='pasta').map(card).join('')}</div>`;
+    const draw=q=>{$('#wpl').innerHTML=WIKI_PASTA.filter(p=>norm(p.n+p.reg+p.form+p.h).includes(norm(q))).map(p=>`<div class="acc"><button onclick="accToggle(this)"><span class="e">${p.e}</span><div><h3>${p.n}</h3><small>${p.form} · ${p.reg}</small></div></button><div class="ab"><p>${p.h}</p><div class="kv"><b>Соусы</b><span>${p.s}</span><b>Варка</b><span>${p.c}</span></div></div></div>`).join('')||'<div class="empty">Не найдено</div>'};
+    draw('');$('#wp').oninput=e=>draw(e.target.value);
+  }
+  if(wikiTab==='meat'){
+    w.innerHTML=WIKI_MEAT.map((g,i)=>`<div class="acc ${i===0?'open':''}"><button onclick="accToggle(this)"><span class="e">${g.e}</span><div><h3>${g.g}</h3><small>${g.cuts.length} отрубов</small></div></button><div class="ab"><p>${g.intro}</p><div class="cutlist">${g.cuts.map(c=>`<div class="cut"><h4>${c[0]}</h4><p>${c[1]}</p><em>🔥 ${c[2]}</em></div>`).join('')}</div></div></div>`).join('')+
+    `<div class="sec-h"><h2>Как читать качество мяса</h2></div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${MARBLING.map(m=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${m[0]}</h3><p class="muted" style="font-size:14px">${m[1]}</p></div>`).join('')}</div>
+    <div class="sec-h"><h2>Безопасные температуры</h2></div><div class="panel"><table class="t"><tr><th>Продукт</th><th>Температура внутри</th></tr><tr><td>Говядина, баранина (стейки)</td><td>от 52 °C (rare) до 71 °C</td></tr><tr><td>Свинина</td><td>63 °C + отдых 3 мин</td></tr><tr><td>Фарш (любой)</td><td>71 °C</td></tr><tr><td>Птица (курица, индейка)</td><td>74 °C</td></tr><tr><td>Утиная грудка</td><td>57 °C (розовая) — 74 °C</td></tr><tr><td>Рыба</td><td>50–60 °C</td></tr></table></div>
+    <div class="sec-h"><h2>Рецепты с мясом</h2></div><div class="grid">${RECIPES.filter(r=>r.cat==='meat').map(card).join('')}</div>`;
+  }
+  if(wikiTab==='sauce'){
+    w.innerHTML=MOTHER_SAUCES.map(s=>`<div class="acc"><button onclick="accToggle(this)"><span class="e">${s.e}</span><div><h3>${s.n}</h3><small>${s.base}</small></div></button><div class="ab"><p>${s.h}</p><div class="kv"><b>Для чего</b><span>${s.use}</span><b>Производные</b><span>${s.deriv}</span></div></div></div>`).join('')+`<div class="sec-h"><h2>Семейства</h2></div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr))">${SAUCE_FAMILIES.map(f=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${f[0]}</h3><p class="muted" style="font-size:14px">${f[1]}</p></div>`).join('')}</div><p style="margin-top:18px"><a class="btn gold" href="#/sauces">Все рецепты соусов →</a></p>`;
+  }
+  if(wikiTab==='cuisine'){
+    w.innerHTML=CUISINE_HISTORY.map((c,i)=>{const cu=CUISINES[c.k];return `<div class="acc ${i===0?'open':''}"><button onclick="accToggle(this)"><span class="e">${cu.f}</span><div><h3>${cu.n} кухня</h3><small>история, этапы, особенности</small></div></button><div class="ab"><p>${c.h}</p><ul class="timeline">${c.t.map(x=>`<li>${x}</li>`).join('')}</ul><div class="eyebrow" style="margin-bottom:6px">Особенности</div><ul style="padding-left:20px">${c.d.map(x=>`<li>${x}</li>`).join('')}</ul><p style="margin-top:14px"><a class="btn sm gold" href="#/recipes?cu=${c.k}">Рецепты ${cu.n.toLowerCase()} кухни →</a></p></div></div>`}).join('')+
+    `<div class="sec-h"><h2>Истории знаменитых блюд</h2></div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr))">${[['Карбонара','Возникла в Риме после 1944 года: по одной версии, итальянские повара готовили пасту из американского пайка — яичного порошка и бекона. Первые печатные рецепты — 1950-е.'],['Маргарита','1889 г., Неаполь: пиццайоло Рафаэле Эспозито приготовил пиццу в цветах итальянского флага для королевы Маргариты.'],['Тирамису','Родом из Тревизо: появился в 1960–70-х в ресторане Le Beccherie. Название — «подними меня» (бодрит эспрессо).'],['Цезарь','Цезарь Кардини придумал салат в 1924 г. в Тихуане, когда в ресторане заканчивались продукты.'],['Борщ','Происходит от слова «борщевик» — первое кислое блюдо славян. Свёкла и томаты вошли позже. Борщ — культурное наследие, внесённое ЮНЕСКО в 2022 г.'],['Хачапури','Сыр в тесте — наследие Кавказа. Аджарская «лодочка» символизирует лодку с Чёрного моря: сыр — море, желток — солнце.'],['Крем-брюле','Спорят Франция, Англия и Испания. Французская версия описана в 1691 г. в книге Франсуа Массиало.'],['Котлета по-киевски','Считается изобретением начала XX века в Киеве (отель «Континенталь» и ресторан на Крещатике).']].map(x=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${x[0]}</h3><p class="muted" style="font-size:14px">${x[1]}</p></div>`).join('')}</div>`;
+  }
+  if(wikiTab==='sushi'){
+    w.innerHTML=`<p class="muted" style="max-width:760px;margin-bottom:14px">Суши — это не «сырая рыба», а рис с уксусом. Сырая рыба без риса — сашими. Слово «суси» буквально означает «кислый вкус» — от ферментированной рыбы в рисе.</p>
+    <div class="cutlist">${WIKI_SUSHI.map(s=>`<div class="cut"><h4>${s[0]}</h4><p>${s[1]}</p></div>`).join('')}</div>
+    <div class="sec-h"><h2>Сырая рыба: безопасность</h2></div><div class="panel"><ul style="padding-left:20px;display:grid;gap:6px"><li>Используйте рыбу «sushi-grade»: заморожена при −20 °C минимум 24 часа или −35 °C 15 часов (паразиты).</li><li>Покупайте у проверенных поставщиков, храните при 0–2 °C.</li><li>Сырую рыбу не рекомендуется беременным и маленьким детям.</li><li>Васаби чаще всего — хрен с горчицей; настоящий — натёртый корень вазаби.</li></ul></div>
+    <div class="sec-h"><h2>Рецепты суши и японской кухни</h2></div><div class="grid">${RECIPES.filter(r=>r.cu==='jp').map(card).join('')}</div>`;
+  }
+  if(wikiTab==='tech'){
+    w.innerHTML=`<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(290px,1fr))">${TECHNIQUES.map(t=>`<div class="panel"><h3 style="font-size:19px;color:var(--gold2)">${t[0]}</h3><p class="muted" style="font-size:14px">${t[1]}</p></div>`).join('')}</div>
+    <div class="sec-h"><h2>Ножи, без которых не обойтись</h2></div><div class="cutlist">${KNIVES.map(k=>`<div class="cut"><h4>${k[0]}</h4><p>${k[1]}</p></div>`).join('')}</div>`;
+  }
+}
+
+/* ---------- ПИТАНИЕ ---------- */
+function vNutrition(el){
+  el.innerHTML=`<div class="hero" style="padding:44px"><div class="eyebrow">Правильное питание</div><h1 style="font-size:clamp(30px,4.5vw,52px)">Как это работает — <em>просто</em></h1><p>Без диет и мифов: энергия, белки-жиры-углеводы, баланс тарелки, режим и привычки. Прочитайте — и вы будете понимать свои решения на кухне.</p><div class="row"><a class="btn gold" href="#/calc">Рассчитать мои калории</a></div><div class="big" style="font-size:170px">🥗</div></div>
+  <div class="sec-h"><h2>Тарелка идеального обеда</h2></div>
+  <div class="two"><div class="panel" style="display:grid;place-items:center"><svg viewBox="0 0 200 200" width="280" height="280"><circle cx="100" cy="100" r="92" fill="var(--card2)" stroke="var(--line)" stroke-width="3"/><path d="M100 100 L100 18 A82 82 0 0 1 100 182 Z" fill="#5fae7e"/><path d="M100 100 L100 182 A82 82 0 0 1 18 100 Z" fill="#d1553a"/><path d="M100 100 L18 100 A82 82 0 0 1 100 18 Z" fill="#d9ae5f"/><text x="150" y="104" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Овощи 50%</text><text x="62" y="152" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Белок 25%</text><text x="56" y="62" text-anchor="middle" fill="#1a1208" font-size="12" font-weight="700">Крупы 25%</text></svg></div>
+   <div class="panel"><h3>Метод тарелки</h3><ul style="padding-left:20px;display:grid;gap:8px;color:var(--mut)"><li><b style="color:#5fae7e">½ овощи и зелень</b> — клетчатка, витамины, объём без лишних калорий.</li><li><b style="color:#d1553a">¼ белок</b> — мясо, рыба, яйца, бобовые, творог.</li><li><b style="color:var(--gold)">¼ сложные углеводы</b> — гречка, рис, киноа, цельнозерновой хлеб, картофель.</li><li>Плюс ложка полезного жира: оливковое масло, орехи, авокадо.</li><li>Порции «ладонью»: белок — ладонь, углеводы — кулак, жиры — большой палец.</li></ul></div></div>
+  <div class="sec-h"><h2>Разбор по темам</h2></div>
+  ${NUTRITION.map((n,i)=>`<div class="acc ${i===0?'open':''}"><button onclick="accToggle(this)"><span class="e">${n.e}</span><h3>${n.t}</h3></button><div class="ab">${n.p.map(x=>`<p style="margin:8px 0">${x}</p>`).join('')}</div></div>`).join('')}
+  <div class="sec-h"><h2>Лёгкие и сбалансированные рецепты</h2><a href="#/recipes?cu=wd">Все →</a></div>
+  <div class="grid">${RECIPES.filter(r=>r.cu==='wd'||r.kcal<=350&&r.cat!=='sauce'&&r.cat!=='dessert').slice(0,8).map(card).join('')}</div>`;
+}
+
+/* ---------- КАЛОРИИ ---------- */
+const today=()=>ymd(new Date());
+let diaryDate=today();
+function calcTargets(){
+  const p=S.prof;const bmr=10*p.w+6.25*p.h-5*p.age+(p.sex==='m'?5:-161);const tdee=bmr*p.act;
+  const mult={cut:.8,cutl:.9,keep:1,bulk:1.1}[p.goal];let kcal=Math.round(tdee*mult);
+  const prot=Math.round(p.w*(p.goal==='cut'||p.goal==='cutl'?2:p.goal==='bulk'?1.8:1.6));
+  const fat=Math.round(kcal*.28/9);const carb=Math.max(0,Math.round((kcal-prot*4-fat*9)/4));
+  return{bmr:Math.round(bmr),tdee:Math.round(tdee),kcal,prot,fat,carb,water:Math.round(p.w*33),bmi:+(p.w/Math.pow(p.h/100,2)).toFixed(1)}
+}
+function bmiLabel(b){return b<18.5?'Недостаток веса':b<25?'Норма':b<30?'Избыточный вес':'Ожирение'}
+function dayTotals(d){const items=S.diary[d]||[];return items.reduce((a,i)=>({k:a.k+i.k,p:a.p+(i.p||0),f:a.f+(i.f||0),c:a.c+(i.c||0)}),{k:0,p:0,f:0,c:0})}
+function vCalc(el){
+  const p=S.prof;
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Калории</div><h1>Калькулятор и дневник питания</h1><p>Рассчитайте индивидуальную норму по формуле Миффлина — Сан-Жеора и ведите дневник: продукты и рецепты суммируются автоматически.</p></div></div>
+  <div class="two" style="margin-top:22px"><div class="panel"><h3>1. Ваши параметры</h3>
+   <div class="frm"><label class="full">Пол<div class="seg" id="sx"><button data-v="m" class="${p.sex==='m'?'on':''}">Мужской</button><button data-v="f" class="${p.sex==='f'?'on':''}">Женский</button></div></label>
+   <label>Возраст<input class="field" id="pa" type="number" min="14" max="90" value="${p.age}"></label><label>Рост, см<input class="field" id="ph" type="number" min="120" max="230" value="${p.h}"></label>
+   <label>Вес, кг<input class="field" id="pw" type="number" min="35" max="250" step="0.1" value="${p.w}"></label>
+   <label>Активность<select class="field" id="pact"><option value="1.2">Сидячий образ</option><option value="1.375">Лёгкая (1–3 трен./нед)</option><option value="1.55">Средняя (3–5 трен.)</option><option value="1.725">Высокая (6–7 трен.)</option><option value="1.9">Очень высокая</option></select></label>
+   <label class="full">Цель<select class="field" id="pgoal"><option value="cut">Похудение (−20%)</option><option value="cutl">Мягкое похудение (−10%)</option><option value="keep">Поддержание веса</option><option value="bulk">Набор массы (+10%)</option></select></label></div>
+   <div id="cres"></div></div>
+  <div class="panel"><h3>2. Дневник питания</h3>
+   <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><button class="ibtn" onclick="diaryNav(-1)">‹</button><input type="date" class="field" id="dd" value="${diaryDate}" style="flex:1"><button class="ibtn" onclick="diaryNav(1)">›</button></div>
+   <div id="dsum"></div>
+   <div class="sugg" style="margin:14px 0 6px"><input class="field" id="fs" placeholder="🔎 Найти продукт (курица, рис, яблоко…)" autocomplete="off"><div class="list" id="fl" style="display:none"></div></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" onclick="diaryRecipeModal()">+ Блюдо из рецептов</button><button class="btn sm" onclick="diaryCustomModal()">+ Свой продукт</button></div>
+   <ul class="dl" id="dlist" style="margin-top:12px"></ul></div></div>
+  <div class="sec-h"><h2>Калорийность и КБЖУ продуктов (на 100 г)</h2></div>
+  <div class="panel"><input class="field" id="ft" placeholder="Фильтр по названию…" style="max-width:320px;margin-bottom:12px"><div style="overflow-x:auto;max-height:480px;overflow-y:auto"><table class="t" id="ftab"></table></div></div>`;
+  $('#pact').value=p.act;$('#pgoal').value=p.goal;
+  const upd=()=>{S.prof={sex:$('#sx .on').dataset.v,age:+$('#pa').value||30,h:+$('#ph').value||175,w:+$('#pw').value||70,act:+$('#pact').value,goal:$('#pgoal').value};save('prof');drawCalc();drawDiary()};
+  ['pa','ph','pw','pact','pgoal'].forEach(i=>$('#'+i).oninput=upd);
+  $('#sx').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#sx .on').classList.remove('on');b.classList.add('on');upd()};
+  $('#dd').onchange=e=>{diaryDate=e.target.value||today();drawDiary()};
+  const fs=$('#fs'),fl=$('#fl');
+  fs.oninput=()=>{const q=norm(fs.value);if(!q){fl.style.display='none';return}const r=FOODS.filter(f=>norm(f.n).includes(q)).slice(0,10);fl.innerHTML=r.map(f=>`<button onclick="diaryFood('${f.id}')"><span>${esc(f.n)}</span><small class="muted">${f.k} ккал/100 г</small></button>`).join('')||'<button><span class="muted">Не найдено</span></button>';fl.style.display='block'};
+  fs.onblur=()=>setTimeout(()=>fl.style.display='none',200);
+  const drawT=q=>{$('#ftab').innerHTML='<tr><th>Продукт</th><th>Ккал</th><th>Б</th><th>Ж</th><th>У</th></tr>'+FOODS.filter(f=>norm(f.n).includes(norm(q))).map(f=>`<tr><td>${esc(f.n)}</td><td><b>${f.k}</b></td><td>${f.p}</td><td>${f.f}</td><td>${f.c}</td></tr>`).join('')};
+  drawT('');$('#ft').oninput=e=>drawT(e.target.value);
+  drawCalc();drawDiary();
+}
+function drawCalc(){
+  const t=calcTargets();const goalN={cut:'Похудение',cutl:'Мягкое похудение',keep:'Поддержание',bulk:'Набор массы'}[S.prof.goal];
+  $('#cres').innerHTML=`<div style="margin-top:20px;text-align:center"><div class="eyebrow">Ваша цель — ${goalN}</div><div class="big-n" style="margin:8px 0">${t.kcal}<small style="font-size:18px;color:var(--mut)"> ккал/день</small></div></div>
+  <div class="res3"><div><b style="color:#d1553a">${t.prot} г</b><span>Белки</span></div><div><b style="color:var(--gold)">${t.fat} г</b><span>Жиры</span></div><div><b style="color:#6f9bd6">${t.carb} г</b><span>Углеводы</span></div></div>
+  <div class="res3"><div><b>${t.bmr}</b><span>Базовый обмен</span></div><div><b>${t.tdee}</b><span>Расход за день</span></div><div><b>${t.water} мл</b><span>Вода</span></div></div>
+  <p class="muted" style="margin-top:14px;font-size:13px">ИМТ: <b style="color:var(--tx)">${t.bmi}</b> — ${bmiLabel(t.bmi)}. Расчёт ориентировочный; при заболеваниях и беременности проконсультируйтесь с врачом.</p>`;
+}
+function bar(l,v,max,col,u='г'){const pc=Math.min(100,max?v/max*100:0);return `<div class="mbar"><div class="l"><span>${l}</span><span><b>${Math.round(v)}</b> / ${max} ${u}</span></div><div class="tr"><i style="width:${pc}%;background:${col}"></i></div></div>`}
+function drawDiary(){
+  const t=calcTargets();const tot=dayTotals(diaryDate);const items=S.diary[diaryDate]||[];
+  const R=84,C=2*Math.PI*R;const pc=Math.min(1,tot.k/t.kcal);const over=tot.k>t.kcal;
+  $('#dsum').innerHTML=`<div class="ring"><svg width="200" height="200"><circle cx="100" cy="100" r="${R}" fill="none" stroke="var(--bg2)" stroke-width="16"/><circle cx="100" cy="100" r="${R}" fill="none" stroke="${over?'#d1553a':'url(#g)'}" stroke-width="16" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pc)}"/><defs><linearGradient id="g"><stop offset="0" stop-color="#f0cf8e"/><stop offset="1" stop-color="#d9ae5f"/></linearGradient></defs></svg><div class="c"><div><b>${Math.round(tot.k)}</b><span>из ${t.kcal} ккал</span><br><span style="color:${over?'#d1553a':'var(--green)'}">${over?'Перебор '+Math.round(tot.k-t.kcal):'Осталось '+Math.round(t.kcal-tot.k)}</span></div></div></div>
+  ${bar('Белки',tot.p,t.prot,'#d1553a')}${bar('Жиры',tot.f,t.fat,'#d9ae5f')}${bar('Углеводы',tot.c,t.carb,'#6f9bd6')}`;
+  $('#dlist').innerHTML=items.length?items.map((i,n)=>`<li><span>${esc(i.name)}<small>${i.g?i.g+' г · ':''}${i.s?i.s+' порц. · ':''}Б ${Math.round(i.p||0)} · Ж ${Math.round(i.f||0)} · У ${Math.round(i.c||0)}</small></span><b>${Math.round(i.k)}</b><button class="x" onclick="diaryDel(${n})">✕</button></li>`).join(''):'<div class="muted" style="padding:10px 0">Пока пусто — добавьте продукт или блюдо.</div>';
+}
+function diaryPush(it){(S.diary[diaryDate]=S.diary[diaryDate]||[]).push(it);save('diary');drawDiary();toast('Добавлено в дневник')}
+function diaryDel(n){S.diary[diaryDate].splice(n,1);save('diary');drawDiary()}
+function diaryNav(d){diaryDate=ymd(addDays(diaryDate+'T12:00:00',d));$('#dd').value=diaryDate;drawDiary()}
+function diaryFood(id){
+  const f=FOODS.find(x=>x.id===id);$('#fl').style.display='none';
+  openModal(f.n,`<p class="muted">На 100 г: ${f.k} ккал · Б ${f.p} · Ж ${f.f} · У ${f.c}</p><div class="frm" style="margin:14px 0"><label class="full">Масса, г<input class="field" id="gm" type="number" value="100" min="1"></label></div><div id="gpv" class="big-n" style="margin-bottom:14px">${f.k}</div><button class="btn gold" onclick="addFood('${id}')">Добавить в дневник</button>`);
+  $('#gm').oninput=e=>$('#gpv').textContent=Math.round(f.k*e.target.value/100)+' ккал';$('#gm').focus();
+}
+function addFood(id){const f=FOODS.find(x=>x.id===id);const g=+$('#gm').value||100,m=g/100;closeModal();$('#fs').value='';diaryPush({name:f.n,g,k:f.k*m,p:f.p*m,f:f.f*m,c:f.c*m})}
+function diaryAddRecipe(id){const r=byId(id);if(!diaryDate)diaryDate=today();diaryDate=today();(S.diary[diaryDate]=S.diary[diaryDate]||[]).push({name:r.name,s:1,k:r.kcal});save('diary');toast('Порция добавлена в дневник на сегодня 🔥')}
+function diaryRecipeModal(){
+  openModal('Добавить блюдо',`<input class="field" id="drq" placeholder="Поиск рецепта…" style="margin-bottom:10px"><div class="mlist" id="drl"></div>`);
+  const draw=q=>{$('#drl').innerHTML=searchRecipes(q).filter(r=>r.cat!=='sauce').slice(0,30).map(r=>`<button onclick="closeModal();diaryPush({name:'${esc(r.name).replace(/'/g,'')}',s:1,k:${r.kcal}})"><span style="font-size:26px">${r.em}</span><div><b>${esc(r.name)}</b><br><small class="muted">${r.kcal} ккал / порция</small></div></button>`).join('')};
+  draw('');$('#drq').oninput=e=>draw(e.target.value);
+}
+function diaryCustomModal(){
+  openModal('Свой продукт',`<div class="frm"><label class="full">Название<input class="field" id="cn" placeholder="Например: домашний борщ"></label><label>Ккал<input class="field" id="ck" type="number" min="0"></label><label>Белки, г<input class="field" id="cp" type="number" min="0"></label><label>Жиры, г<input class="field" id="cf" type="number" min="0"></label><label>Углеводы, г<input class="field" id="cc" type="number" min="0"></label></div><p style="margin-top:14px"><button class="btn gold" onclick="addCustom()">Добавить</button></p>`);
+}
+function addCustom(){const n=$('#cn').value.trim()||'Свой продукт',k=+$('#ck').value;if(!k){toast('Укажите калории');return}closeModal();diaryPush({name:n,k,p:+$('#cp').value||0,f:+$('#cf').value||0,c:+$('#cc').value||0})}
+
+/* ---------- ПЛАНЕР ---------- */
+let weekStart=monday(new Date());
+function vPlanner(el){
+  const days=[...Array(7)].map((_,i)=>addDays(weekStart,i));const a=days[0],b=days[6];
+  const title=`${a.getDate()} ${MONTHS[a.getMonth()]} — ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Планер</div><h1>Меню на неделю</h1><p>Планируйте завтраки, обеды и ужины, смотрите калории по дням и получайте готовый список покупок.</p></div></div>
+  <div class="pl-h"><div style="display:flex;gap:8px;align-items:center"><button class="ibtn" onclick="weekNav(-1)">‹</button><b style="font-family:var(--serif);font-size:20px;min-width:230px;text-align:center">${title}</b><button class="ibtn" onclick="weekNav(1)">›</button><button class="btn sm" onclick="weekStart=monday(new Date());render()">Сегодня</button></div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px">Едоков:</span><div class="stepper"><button onclick="setPeople(-1)">−</button><span>${S.people}</span><button onclick="setPeople(1)">+</button></div><button class="btn sm gold" onclick="autoFill()">✨ Заполнить неделю</button><button class="btn sm" onclick="clearWeek()">Очистить</button></div></div>
+  <div class="week">${days.map((d,i)=>{const k=ymd(d);const pl=S.plan[k]||{};let kc=0;
+    const slots=MEALS.map(([m,n,e])=>{const arr=pl[m]||[];arr.forEach(x=>{if(x.id){const r=byId(x.id);if(r)kc+=r.kcal}else kc+=x.k||0});
+      return `<div class="slot"><div class="sh"><span>${e} ${n}</span><button onclick="planModal(null,'${k}','${m}')">＋</button></div>${arr.map((x,j)=>{const r=x.id?byId(x.id):null;return `<div class="pm"><a ${r?`onclick="go('#/r/${r.id}')"`:''}>${r?r.em+' '+esc(r.name):'📝 '+esc(x.note)}${r?`<small>${r.kcal} ккал</small>`:x.k?`<small>${x.k} ккал</small>`:''}</a><button onclick="planDel('${k}','${m}',${j})">✕</button></div>`}).join('')}</div>`}).join('');
+    return `<div class="day ${k===today()?'today':''}"><h4>${DOW[i]}<small>${d.getDate()} ${MONTHS[d.getMonth()]}</small></h4>${slots}<div class="dsum">Итого: <b>${kc}</b> ккал</div></div>`}).join('')}</div>
+  <div class="sec-h"><h2>🛒 Список покупок</h2><button class="btn sm" onclick="copyShop()">Скопировать</button></div><div class="panel" id="shop"></div>`;
+  drawShop();
+}
+function weekNav(d){weekStart=addDays(weekStart,d*7);render()}
+function setPeople(d){S.people=Math.max(1,Math.min(12,S.people+d));save('people');render()}
+function planAdd(date,meal,item){const p=(S.plan[date]=S.plan[date]||{});(p[meal]=p[meal]||[]).push(item);save('plan')}
+function planDel(d,m,j){S.plan[d][m].splice(j,1);save('plan');render()}
+function planModal(rid,date,meal){
+  if(rid){const days=[...Array(14)].map((_,i)=>addDays(new Date(),i));
+    openModal('Добавить в планер',`<p class="muted" style="margin-bottom:12px">${esc(byId(rid).name)}</p><div class="frm"><label>День<select class="field" id="pd">${days.map(d=>`<option value="${ymd(d)}">${DOW[(d.getDay()+6)%7]}, ${d.getDate()} ${MONTHS[d.getMonth()]}</option>`).join('')}</select></label><label>Приём пищи<select class="field" id="pm">${MEALS.map(m=>`<option value="${m[0]}">${m[1]}</option>`).join('')}</select></label></div><p style="margin-top:16px"><button class="btn gold" onclick="planConfirm('${rid}')">Добавить</button></p>`);return}
+  openModal('Что приготовим?',`<input class="field" id="pq" placeholder="Поиск рецепта…" style="margin-bottom:10px"><div class="mlist" id="pl" style="max-height:44vh;overflow:auto"></div><div style="border-top:1px solid var(--line);margin-top:12px;padding-top:12px;display:flex;gap:8px"><input class="field" id="pn" placeholder="Или заметка (например: ужин в ресторане)"><button class="btn sm" onclick="planNote('${date}','${meal}')">Добавить</button></div>`);
+  const draw=q=>{$('#pl').innerHTML=searchRecipes(q).filter(r=>r.cat!=='sauce').slice(0,40).map(r=>`<button onclick="planPick('${date}','${meal}','${r.id}')"><span style="font-size:26px">${r.em}</span><div><b>${esc(r.name)}</b><br><small class="muted">${(CUISINES[r.cu]||{}).n} · ${r.kcal} ккал · ${r.t} мин</small></div></button>`).join('')};
+  draw('');$('#pq').oninput=e=>draw(e.target.value);
+}
+function planConfirm(id){planAdd($('#pd').value,$('#pm').value,{id});closeModal();toast('Добавлено в планер 📅')}
+function planPick(d,m,id){planAdd(d,m,{id});closeModal();render()}
+function planNote(d,m){const n=$('#pn').value.trim();if(!n)return;planAdd(d,m,{note:n});closeModal();render()}
+function clearWeek(){if(!confirm('Очистить всю неделю?'))return;for(let i=0;i<7;i++)delete S.plan[ymd(addDays(weekStart,i))];save('plan');render()}
+function autoFill(){
+  const pick=(cats,used)=>{const l=RECIPES.filter(r=>cats.includes(r.cat)&&!used.has(r.id));const pool=l.length?l:RECIPES.filter(r=>cats.includes(r.cat));return pool[Math.floor(Math.random()*pool.length)]};
+  const used=new Set();
+  for(let i=0;i<7;i++){const k=ymd(addDays(weekStart,i));S.plan[k]=S.plan[k]||{};
+   [['b',['breakfast']],['l',['soup','salad','pasta','veg','fish']],['d',['meat','steak','fish','pasta','side']]].forEach(([m,c])=>{if(!(S.plan[k][m]||[]).length){const r=pick(c,used);if(r){used.add(r.id);S.plan[k][m]=[{id:r.id}]}}})}
+  save('plan');render();toast('Неделя заполнена ✨ — поменяйте под себя');
+}
+function shopList(){
+  const map={};
+  for(let i=0;i<7;i++){const pl=S.plan[ymd(addDays(weekStart,i))]||{};
+    Object.values(pl).flat().forEach(x=>{if(!x.id)return;const r=byId(x.id);if(!r)return;const k=S.people/r.serv;
+      r.ing.forEach(g=>{const key=norm(g.n)+'|'+g.u;(map[key]=map[key]||{n:g.n,u:g.u,q:0}).q+=g.q*k})})}
+  return Object.values(map).sort((a,b)=>a.n.localeCompare(b.n,'ru'));
+}
+function drawShop(){
+  const l=shopList();const wk=ymd(weekStart);const ch=S.shop[wk]||[];
+  $('#shop').innerHTML=l.length?`<ul class="shop">${l.map(i=>{const key=norm(i.n)+'|'+i.u;const d=ch.includes(key);return `<li class="${d?'done':''}" onclick="shopTick('${wk}',this.dataset.k)" data-k="${esc(key)}"><input type="checkbox" ${d?'checked':''}><span>${esc(i.n)}</span><b>${i.q?fq(i.q)+' '+i.u:'по вкусу'}</b></li>`}).join('')}</ul>`:'<div class="empty"><div class="e">🧺</div><p>Добавьте блюда в планер — список покупок соберётся автоматически.</p></div>';
+}
+function shopTick(wk,key){const a=S.shop[wk]=S.shop[wk]||[];const i=a.indexOf(key);if(i>=0)a.splice(i,1);else a.push(key);save('shop');drawShop()}
+function copyShop(){const t=shopList().map(i=>'• '+i.n+(i.q?' — '+fq(i.q)+' '+i.u:'')).join('\n');if(!t){toast('Список пуст');return}navigator.clipboard?.writeText(t).then(()=>toast('Список скопирован 📋'),()=>toast('Не удалось скопировать'))}
+
+/* ---------- ИЗБРАННОЕ ---------- */
+function vFav(el){
+  const l=S.fav.map(byId).filter(Boolean);
+  el.innerHTML=`<div class="page-h"><div><div class="eyebrow">Избранное</div><h1>Мои рецепты</h1><p>Всё, что вы сохранили ❤️ — хранится на этом устройстве.</p></div></div><div style="margin-top:22px" class="grid">${l.map(card).join('')}</div>`+(l.length?'':`<div class="empty"><div class="e">❤️</div><p>Пока пусто. Нажмите ♡ на любом рецепте, чтобы сохранить.</p><p style="margin-top:14px"><a class="btn gold" href="#/recipes">Выбрать рецепт</a></p></div>`);
+}
+
+/* ---------- СТАРТ ---------- */
+applyTheme();render();
+</script></body></html>
