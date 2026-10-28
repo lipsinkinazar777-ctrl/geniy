@@ -1,0 +1,20 @@
+/* ===== КОЛЛЕКЦИИ (дополнение) И ПОПРАВКИ КАТЕГОРИЙ ===== */
+const CATFIX={margherita:'pizza','pizza-diavola':'pizza',focaccia:'pizza',burger:'sandwich',deruny:'potato','gratin-dauphinois':'potato',tacos:'sandwich'};
+RECIPES.forEach(r=>{if(CATFIX[r.id])r.cat=CATFIX[r.id]});
+['julienne','sous-vide-steak','pork-neck-steak'].forEach(k=>delete WP[k]);
+COLLECTIONS.push(
+ {id:'resto-cream',n:'Ресторанные сливочные пасты',e:'🍄',d:'Бархатные соусы, как в итальянском ресторане: грибы, креветки, лосось, курица, трюфель.',ids:['pasta-cream-mushroom','alfredo','chicken-alfredo','cream-shrimp-fettuccine','salmon-spinach-tagliatelle','pasta-bacon-cream','truffle-pasta','porcini-tagliatelle','gorgonzola-spinach-penne','mussels-cream-pasta','pasta-vodka','carbonara-cream','salmon-cream-pasta','pasta-chicken-cream','quattro-formaggi']},
+ {id:'pasta-all',n:'Все пасты',e:'🍝',d:'Больше 50 рецептов пасты — от римской классики до ресторанных сливочных.',f:r=>r.cat==='pasta'&&!['plov','risotto-funghi','risotto-milanese','fried-rice','pad-thai'].includes(r.id)},
+ {id:'salads',n:'Салаты и закуски',e:'🥗',d:'Оливье, винегрет, «шуба», мимоза, цезарь, греческий, капрезе и ещё десятки.',f:r=>r.cat==='salad'},
+ {id:'su',n:'Домашняя классика',e:'🏠',d:'Оливье, винегрет, «селёдка под шубой», котлеты с пюре, борщ, голубцы — как у бабушки.',ids:['olivie','olivie-chicken','vinegret','herring-fur','mimosa','crab-salad','tomato-cucumber','cucumber-sour-cream','borscht','green-borscht','cold-beet-soup','holubtsi','lazy-holubtsi','cutlets-mash','pelmeni-home','stuffed-peppers','meatballs-tomato','kholodets','rassolnik','solyanka','pea-soup','chicken-broth','charlotte']},
+ {id:'sauces-dips',n:'Соусы и дипы',e:'🫕',d:'Цацики, хумус, гуакамоле, чесночный, сырный, барбекю, песто, чимичурри, перечный.',f:r=>r.cat==='sauce'},
+ {id:'potato',n:'Картофель всех видов',e:'🥔',d:'Фри, пюре, жареный, запечённый, хасельбек, рёшти, драники, гратен, молодой с укропом.',f:r=>r.cat==='potato'},
+ {id:'fast',n:'Бургеры, сэндвичи, тендерс',e:'🍔',d:'Фастфуд, но по-шефски: смэш-бургер, клаб-сэндвич, панини, тендерс, крылья, шаурма.',ids:['burger','smash-burger','bacon-bbq-burger','chicken-burger','bean-burger','hot-dog','club-sandwich','grilled-cheese','panini-prosciutto','shawarma-home','quesadilla','tacos','steak-sandwich','croque-monsieur','bagel-salmon','tuna-melt','egg-bacon-sandwich','katsu-sando','chicken-tenders','chicken-nuggets','buffalo-wings','fried-chicken','potato-fries','potato-airfryer-fries']},
+ {id:'pizza',n:'Пицца и хлеб',e:'🍕',d:'Маргарита, пепперони, четыре сыра, кальцоне, пицца на сковороде без духовки.',f:r=>r.cat==='pizza'},
+ {id:'tenders',n:'Курица: хруст и сочность',e:'🍗',d:'Тендерс, наггетсы, шницель, кордон блю, крылья, жареная курица, терияки.',ids:['chicken-tenders','chicken-nuggets','buffalo-wings','fried-chicken','schnitzel','cordon-bleu','chicken-honey-mustard','chicken-cream-mushroom','chicken-teriyaki','kyiv-cutlet','chakhokhbili','pollo-cacciatora','chicken-parm','chicken-cream-skillet']},
+ {id:'soups',n:'Супы',e:'🍲',d:'Борщ, харчо, рамен, куриный бульон, томатный, грибной, уха.',f:r=>r.cat==='soup'},
+ {id:'steaks-all',n:'Стейки, соусы и гарниры',e:'🥩',d:'12+ стейков, соусы к ним и гарниры: чесночное масло, спаржа, картофель, сливочный шпинат.',ids:['ribeye-pan','striploin','filet-mignon','tomahawk-reverse','bistecca','chimichurri-flank','tagliata','steak-au-poivre','sous-vide-steak','steak-garlic-butter','steak-diane','steak-blue-cheese','garlic-butter','peppercorn-sauce','red-wine-sauce','bearnaise','garlic-asparagus','creamed-spinach','potato-roast-rosemary','potato-mash']}
+);
+
+const COLL_ORDER=['resto-cream','pasta-all','salads','su','potato','fast','pizza','steaks-all','meat-grand','ua','ge','jp','sauces-dips','tenders','soups','rome','tomato','cream','seafood','baked','asia-noodles','rice','breakfast','dessert','quick','stove','beginner','michelin'];
+COLLECTIONS.sort((a,b)=>{const x=COLL_ORDER.indexOf(a.id),y=COLL_ORDER.indexOf(b.id);return(x<0?99:x)-(y<0?99:y)});

@@ -1,0 +1,19 @@
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <a href="#/" class="logo"><i>◈</i><span>Гений <b>кухни</b></span></a>
+  <nav class="main" id="nav"></nav>
+  <div class="top-r">
+    <div class="sbox"><input id="gs" placeholder="Поиск… (нажмите /)" autocomplete="off" aria-label="Поиск"><div id="sres"></div></div>
+    <button class="ibtn dice" id="diceBtn" title="Случайное блюдо — что приготовить сегодня?" aria-label="Случайное блюдо" onclick="openRandom()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.1" fill="currentColor"/><circle cx="15" cy="9" r="1.1" fill="currentColor"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/><circle cx="9" cy="15" r="1.1" fill="currentColor"/><circle cx="15" cy="15" r="1.1" fill="currentColor"/></svg></button>
+    <button class="ibtn" id="themeBtn" title="Тема" aria-label="Тема">☾</button>
+  </div>
+</div></header>
+<main><div class="wrap" id="app"></div></main>
+<footer><div class="wrap">Гений кухни · готовьте с удовольствием · Калорийность и рекомендации по питанию ориентировочные и не заменяют консультацию врача.</div></footer>
+<nav class="bnav" id="bnav"></nav>
+<div class="modal" id="modal"><div class="mbox"><div class="mh"><h3 id="mt"></h3><button class="ibtn" onclick="closeModal()" aria-label="Закрыть">✕</button></div><div class="mb" id="mb"></div></div></div>
+<div id="cook"></div>
+<div id="toast"></div>
+<script>
