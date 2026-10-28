@@ -119,7 +119,8 @@ VIEWS.school=el=>vHub(el,'school');VIEWS.wiki=el=>vHub(el,'wiki');VIEWS.health=e
 
 /* ---------- ФОТО ---------- */
 const photoQ=[];let photoBusy=0;
-const thumbSize=(u,w)=>u.replace(/\/(\d+)px-/,'/'+w+'px-');
+const THUMB_STEPS=[250,330,500,960,1280,1920];
+const thumbSize=(u,w)=>{const st=THUMB_STEPS.find(x=>x>=w)||1920;return u.replace(/\/(\d+)px-/,'/'+st+'px-')};
 function photoGet(id){return(typeof PHOTOS!=='undefined'&&PHOTOS[id])||S.ph[id]||null}
 const photoFail=new Set();
 const PQ_STOP=new Set(['the','and','with','alla','al','di','de','la','style','homemade','classic','recipe']);
@@ -163,10 +164,22 @@ function photoPump(){
     photoFetch(id).then(u=>{photoBusy--;if(u)photoApply(id,u);photoPump()});
   }
 }
+let photoIO=null;
 function photoScan(root=document){
-  const ids=new Set();
-  $$('[data-ph],[data-bg]',root).forEach(n=>{if(!n.dataset.done)ids.add(n.dataset.ph||n.dataset.bg)});
-  ids.forEach(id=>{const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id)&&!photoQ.includes(id))photoQ.push(id)});
+  /* фото из кэша/вшитые применяем сразу; за остальными идём в сеть только когда карточка близко к экрану */
+  const bgs=new Set();
+  $$('[data-bg]',root).forEach(n=>{if(!n.dataset.done)bgs.add(n.dataset.bg)});
+  bgs.forEach(id=>{const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id)&&!photoQ.includes(id))photoQ.push(id)});
+  const imgs=$$('img[data-ph]',root).filter(n=>!n.dataset.done);
+  const need=[];
+  imgs.forEach(im=>{const id=im.dataset.ph;const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id))need.push(im)});
+  if(need.length){
+    if(!('IntersectionObserver' in window)){need.slice(0,24).forEach(im=>{const id=im.dataset.ph;if(!photoQ.includes(id))photoQ.push(id)})}
+    else{
+      if(!photoIO)photoIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){photoIO.unobserve(e.target);const id=e.target.dataset.ph;if(!e.target.dataset.done&&!photoQ.includes(id)&&!photoFail.has(id)){photoQ.push(id);photoPump()}}}),{rootMargin:'300px 0px'});
+      need.forEach(im=>photoIO.observe(im));
+    }
+  }
   photoPump();
 }
 const hasPhoto=id=>!!((typeof PHOTOS!=='undefined'&&PHOTOS[id])||(typeof WP!=='undefined'&&WP[id])||(typeof PQ!=='undefined'&&PQ[id]));

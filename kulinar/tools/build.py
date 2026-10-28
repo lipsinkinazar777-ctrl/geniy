@@ -14,6 +14,7 @@ import base64
 import glob
 import io
 import os
+import re
 import shutil
 import sys
 
@@ -98,7 +99,10 @@ def main():
     for i, p in enumerate(js_files):
         if i == first_app:
             out.append(photos_js(a.external, a.budget))
-        out.append(rd(p))
+        code = rd(p)
+        # защита: ни один встроенный скрипт не должен закрывать тег <script> раньше времени
+        code = re.sub(r'</(script)', r'<\\/\1', code, flags=re.I)
+        out.append(code)
         out.append('\n')
     out.append('</script></body></html>\n')
     html = ''.join(out)

@@ -618,6 +618,13 @@ html{scroll-behavior:auto}
 .toolbar select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px;cursor:pointer}
 select.field{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 52%,calc(100% - 14px) 52%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px;cursor:pointer}
 
+.week{grid-template-columns:repeat(7,minmax(148px,1fr));gap:10px}
+.day{padding:12px;min-width:148px}
+.slot{padding:7px 8px}
+.slot .sh>span:first-child{font-size:10.5px;letter-spacing:.05em}
+.slot .sh button{width:20px;height:20px}
+@media(max-width:760px){.week{grid-template-columns:1fr;overflow:visible}.day{min-width:0}.slot .sh>span:first-child{font-size:12px}}
+
 </style>
 </head>
 <body>
@@ -3226,7 +3233,8 @@ VIEWS.school=el=>vHub(el,'school');VIEWS.wiki=el=>vHub(el,'wiki');VIEWS.health=e
 
 /* ---------- ФОТО ---------- */
 const photoQ=[];let photoBusy=0;
-const thumbSize=(u,w)=>u.replace(/\/(\d+)px-/,'/'+w+'px-');
+const THUMB_STEPS=[250,330,500,960,1280,1920];
+const thumbSize=(u,w)=>{const st=THUMB_STEPS.find(x=>x>=w)||1920;return u.replace(/\/(\d+)px-/,'/'+st+'px-')};
 function photoGet(id){return(typeof PHOTOS!=='undefined'&&PHOTOS[id])||S.ph[id]||null}
 const photoFail=new Set();
 const PQ_STOP=new Set(['the','and','with','alla','al','di','de','la','style','homemade','classic','recipe']);
@@ -3270,10 +3278,22 @@ function photoPump(){
     photoFetch(id).then(u=>{photoBusy--;if(u)photoApply(id,u);photoPump()});
   }
 }
+let photoIO=null;
 function photoScan(root=document){
-  const ids=new Set();
-  $$('[data-ph],[data-bg]',root).forEach(n=>{if(!n.dataset.done)ids.add(n.dataset.ph||n.dataset.bg)});
-  ids.forEach(id=>{const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id)&&!photoQ.includes(id))photoQ.push(id)});
+  /* фото из кэша/вшитые применяем сразу; за остальными идём в сеть только когда карточка близко к экрану */
+  const bgs=new Set();
+  $$('[data-bg]',root).forEach(n=>{if(!n.dataset.done)bgs.add(n.dataset.bg)});
+  bgs.forEach(id=>{const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id)&&!photoQ.includes(id))photoQ.push(id)});
+  const imgs=$$('img[data-ph]',root).filter(n=>!n.dataset.done);
+  const need=[];
+  imgs.forEach(im=>{const id=im.dataset.ph;const c=photoGet(id);if(c)photoApply(id,c);else if(c===null&&!photoFail.has(id))need.push(im)});
+  if(need.length){
+    if(!('IntersectionObserver' in window)){need.slice(0,24).forEach(im=>{const id=im.dataset.ph;if(!photoQ.includes(id))photoQ.push(id)})}
+    else{
+      if(!photoIO)photoIO=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){photoIO.unobserve(e.target);const id=e.target.dataset.ph;if(!e.target.dataset.done&&!photoQ.includes(id)&&!photoFail.has(id)){photoQ.push(id);photoPump()}}}),{rootMargin:'300px 0px'});
+      need.forEach(im=>photoIO.observe(im));
+    }
+  }
   photoPump();
 }
 const hasPhoto=id=>!!((typeof PHOTOS!=='undefined'&&PHOTOS[id])||(typeof WP!=='undefined'&&WP[id])||(typeof PQ!=='undefined'&&PQ[id]));
@@ -3765,9 +3785,9 @@ function vPlanner(el){
    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="muted" style="font-size:13px">Едоков:</span><div class="stepper"><button onclick="setPeople(-1)">−</button><span>${S.people}</span><button onclick="setPeople(1)">+</button></div><button class="btn sm gold" onclick="autoFill()">✨ Заполнить неделю</button><button class="btn sm" onclick="clearWeek()">Очистить</button></div></div>
   <div class="week">${days.map((d,i)=>{const k=ymd(d);const pl=S.plan[k]||{};let kc=0;
     const slots=MEALS.map(([m,n,e])=>{const arr=pl[m]||[];arr.forEach(x=>{if(x.id){const r=byId(x.id);if(r)kc+=r.kcal}else kc+=x.k||0});
-      return `<div class="slot"><div class="sh"><span>${e} ${n}</span><span class="sbtns"><button class="dicebtn" title="Случайное блюдо" aria-label="Случайное блюдо" onclick="openRandom({meal:'${m}',date:'${k}'})">${ico('dice',15)}</button><button title="Выбрать блюдо" aria-label="Добавить блюдо" onclick="planModal(null,'${k}','${m}')">＋</button></span></div>${arr.map((x,j)=>{const r=x.id?byId(x.id):null;return `<div class="pm"><a ${r?`onclick="go('#/r/${r.id}')"`:''}>${r?r.em+' '+esc(r.name):'📝 '+esc(x.note)}${r?`<small>${r.kcal} ккал</small>`:x.k?`<small>${x.k} ккал</small>`:''}</a><button onclick="planDel('${k}','${m}',${j})">✕</button></div>`}).join('')}</div>`}).join('');
+      return `<div class="slot"><div class="sh"><span title="${n}">${n}</span><span class="sbtns"><button class="dicebtn" title="Случайное блюдо" aria-label="Случайное блюдо" onclick="openRandom({meal:'${m}',date:'${k}'})">${ico('dice',15)}</button><button title="Выбрать блюдо" aria-label="Добавить блюдо" onclick="planModal(null,'${k}','${m}')">＋</button></span></div>${arr.map((x,j)=>{const r=x.id?byId(x.id):null;return `<div class="pm"><a ${r?`onclick="go('#/r/${r.id}')"`:''}>${r?r.em+' '+esc(r.name):'📝 '+esc(x.note)}${r?`<small>${r.kcal} ккал</small>`:x.k?`<small>${x.k} ккал</small>`:''}</a><button onclick="planDel('${k}','${m}',${j})">✕</button></div>`}).join('')}</div>`}).join('');
     return `<div class="day ${k===today()?'today':''}"><h4><span>${DOW[i]} <button class="dayrnd" title="Заполнить день случайными блюдами" aria-label="Заполнить день случайными блюдами" onclick="randomDay('${k}')">${ico('dice',14)}</button></span><small>${d.getDate()} ${MONTHS[d.getMonth()]}</small></h4>${slots}<div class="dsum">Итого: <b>${kc}</b> ккал</div></div>`}).join('')}</div>
-  <div class="sec-h"><h2>🛒 Список покупок</h2><button class="btn sm" onclick="copyShop()">Скопировать</button></div><div class="panel" id="shop"></div>`;
+  <div class="sec-h"><h2>Список покупок</h2><button class="btn sm" onclick="copyShop()">Скопировать</button></div><div class="panel" id="shop"></div>`;
   drawShop();
 }
 function weekNav(d){weekStart=addDays(weekStart,d*7);render()}
@@ -5211,7 +5231,7 @@ function vCredits(el){
   const ids=Object.keys(PHOTO_CREDITS);
   const nm=id=>{const r=byId(id);if(r)return r.name;const g=GEAR.find(x=>'gear-'+x.id===id);if(g)return g.name;return id};
   el.innerHTML=`<a class="back" href="#/" onclick="event.preventDefault();goBack()">← Назад</a><div class="page-h"><div><div class="eyebrow">О приложении</div><h1>Источники фото</h1><p>Фотографии блюд принадлежат своим авторам. Часть изображений предоставлена владельцем приложения, часть загружается из Википедии, Wikimedia Commons и TheMealDB — ссылки и лицензии указаны ниже. Приложение личное и некоммерческое.</p></div></div>
-  ${ids.length?`<div class="tbl-w" style="margin-top:24px"><table class="t"><tr><th>Блюдо / предмет</th><th>Источник</th><th>Автор</th><th>Лицензия</th></tr>${ids.map(i=>{const c=PHOTO_CREDITS[i];return `<tr><td><b>${esc(nm(i))}</b></td><td>${c[1]?`<a style="color:var(--gold)" data-native href="${esc(c[1])}" target="_blank" rel="noopener">${esc(c[0])}</a>`:esc(c[0])}</td><td class="muted">${esc(c[2])}</td><td class="muted">${esc(c[3])}</td></tr>`}).join('')}</table></div>`:'<div class="empty"><p>Пока фотографии подгружаются из Википедии прямо в браузере. Список появится после запуска скрипта tools/fetch_photos.py.</p></div>'}
+  ${ids.length?`<div class="tbl-w" style="margin-top:24px"><table class="t"><tr><th>Блюдо / предмет</th><th>Источник</th><th>Автор</th><th>Лицензия</th></tr>${ids.map(i=>{const c=PHOTO_CREDITS[i];return `<tr><td><b>${esc(nm(i))}</b></td><td>${/^https?:\/\//.test(c[1]||'')?`<a style="color:var(--gold)" data-native href="${esc(c[1])}" target="_blank" rel="noopener noreferrer">${esc(c[0])}</a>`:esc(c[0])}</td><td class="muted">${esc(c[2])}</td><td class="muted">${esc(c[3])}</td></tr>`}).join('')}</table></div>`:'<div class="empty"><p>Пока фотографии подгружаются из Википедии прямо в браузере. Список появится после запуска скрипта tools/fetch_photos.py.</p></div>'}
   <p class="mini" style="margin-top:18px">Изображения, подгружаемые в браузере из Википедии, лицензированы Wikimedia (CC BY-SA, CC BY, общественное достояние) — подробности на странице каждого файла.</p>`;
 }
 VIEWS.credits=vCredits;

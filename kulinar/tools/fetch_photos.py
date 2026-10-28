@@ -138,7 +138,18 @@ def bad_image_url(u):
 
 
 def strip_tags(s):
-    return html.unescape(re.sub(r'<[^>]+>', '', s or '')).strip()
+    """Только простой текст: теги убираются ДО и ПОСЛЕ раскодировки сущностей, служебные символы вырезаются."""
+    t = re.sub(r'<[^>]*>', '', s or '')
+    t = html.unescape(t)
+    t = re.sub(r'<[^>]*>', '', t)
+    t = re.sub(r'[<>&\u2028\u2029\x00-\x1f]', ' ', t)
+    return re.sub(r'\s+', ' ', t).strip()[:160]
+
+
+def safe_url(u):
+    """Принимаем только http(s)-ссылки без символов, способных выйти из кавычек/тегов."""
+    u = (u or '').strip()
+    return u if re.match(r'^https?://[^\s<>"\'`\\]+$', u) else ''
 
 
 # ---------- поиск изображений ----------
@@ -154,7 +165,7 @@ def from_wikipedia_summary(title):
         th = (j.get('thumbnail') or {}).get('source')
         if th:
             img = re.sub(r'/(\d+)px-', '/1280px-', th)
-    page = ((j.get('content_urls') or {}).get('desktop') or {}).get('page', '')
+    page = safe_url(((j.get('content_urls') or {}).get('desktop') or {}).get('page', ''))
     return {'url': img, 'source': 'Wikipedia', 'page': page, 'author': 'см. страницу файла', 'license': 'CC / Public domain (Wikimedia)'}
 
 
@@ -255,9 +266,12 @@ def write_credits(rows):
         f.write('id\tsource\tpage\tauthor\tlicense\n')
         for i, r in sorted(rows.items()):
             f.write('\t'.join([i, r['source'], r['page'], r['author'].replace('\t', ' '), r['license']]) + '\n')
-    data = {i: [r['source'], r['page'], r['author'], r['license']] for i, r in sorted(rows.items())}
+    data = {i: [strip_tags(r['source']), safe_url(r['page']), strip_tags(r['author']), strip_tags(r['license'])] for i, r in sorted(rows.items())}
+    # JSON внутри инлайн-скрипта: экранируем символы, которыми можно «выйти» из <script>
+    js = json.dumps(data, ensure_ascii=False)
+    js = js.replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026').replace('\u2028', '\\u2028').replace('\u2029', '\\u2029')
     with open(os.path.join(SRC, 'js', '23-photo-credits.js'), 'w', encoding='utf-8') as f:
-        f.write('/* Источники фото: создаётся скриптом tools/fetch_photos.py */\nconst PHOTO_CREDITS=' + json.dumps(data, ensure_ascii=False) + ';\n')
+        f.write('/* Источники фото: создаётся скриптом tools/fetch_photos.py */\nconst PHOTO_CREDITS=' + js + ';\n')
 
 
 def load_credits():
