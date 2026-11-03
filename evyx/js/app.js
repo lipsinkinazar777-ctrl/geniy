@@ -217,7 +217,7 @@ views.home={
     const sts=$$(".st",hud),fcs=$$(".fc",hud);
     gsap.set(fcs,{yPercent:-50,autoAlpha:0});
     /* hero out */
-    tl.to(".hero-cta",{autoAlpha:0,y:40,duration:.3},.3).to(".hint",{autoAlpha:0,duration:.2},.1).to(S,{title:0,duration:.6},.2);
+    tl.to($(".hero-cta",hud),{autoAlpha:0,y:40,duration:.3},.3).to($(".hint",hud),{autoAlpha:0,duration:.2},.1).to(S,{title:0,duration:.6},.2);
     /* camera */
     poses.forEach((p,k)=>{if(k>0)tl.to(S,{...p,duration:.85,ease:"power2.inOut"},k-.4)});
     /* stages */
