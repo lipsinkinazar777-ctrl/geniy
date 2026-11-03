@@ -1,80 +1,143 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EVYX — AI video that looks expensive</title><meta name="description" content="Any AI video rebuilt for $15–20. Branded AI content for European businesses. Free guides and the full EVYX pack.">
-<meta name="theme-color" content="#070605">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23070605'/%3E%3Ctext x='32' y='46' font-family='serif' font-size='42' text-anchor='middle' fill='%23c9a24b'%3EE%3C/text%3E%3C/svg%3E">
+<title>EVYX — AI video, remade for your brand</title>
+<meta name="description" content="Send any AI video. EVYX rebuilds it for $15–20. Branded AI content for European business. Or learn to make it yourself, free.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23ffd60a' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}</script>
 </head><body data-page="home">
 <main>
-<section class="hero">
-  <div class="hero-bg" id="herobg" aria-hidden="true"></div>
-  <div class="wrap hero-in">
-    <h1 class="word load" aria-label="EVYX">EVYX</h1>
-    <div class="hero-sub">
-      <p class="lede load d1">Show us any AI video you like. We rebuild it for <span class="price-tag"><b>$<span data-from>15</span>–<span data-to>20</span></b></span>, or teach you to make it yourself for free.</p>
-      <div class="hero-cta load d2">
-        <a class="btn fill" href="services.html">Rebuild a video</a>
+
+<section class="hero" id="top" data-scene="hero" data-nav="Start">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="tag" data-i>Studio for AI video</span>
+      <h1 class="h1" id="h1" data-hero data-split>We remake<br>any AI video</h1>
+      <p class="lede" data-i>Send a link. Get your version back in one or two days, from $<span data-from>15</span>. Or learn to make it yourself without paying for a single subscription.</p>
+      <div class="hero-cta" data-i>
+        <a class="btn fill" href="services.html#order">Rebuild a video <span class="ar"></span></a>
         <a class="btn" href="academy.html">Learn it free</a>
       </div>
     </div>
   </div>
+  <div class="callout r" style="top:27%;right:7%;--l:0px" data-l="150px"><i style="left:calc(100% + 10px + 150px)"></i><b>REBUILD</b>Any reel, from $<span data-from>15</span></div>
+  <div class="callout l" style="top:69%;left:46%;--l:0px" data-l="110px"><b>FREE METHOD</b>Zero subscriptions<i style="left:calc(100% + 10px + 110px)"></i></div>
+  <div class="scroll-hint">SCROLL</div>
 </section>
 
-<div class="strip" aria-hidden="true"><div>
-  <span>Product films</span><i></i><span>Fashion</span><i></i><span>Real estate</span><i></i><span>Beauty</span><i></i><span>Hospitality</span><i></i><span>Cinematic</span><i></i>
-  <span>Product films</span><i></i><span>Fashion</span><i></i><span>Real estate</span><i></i><span>Beauty</span><i></i><span>Hospitality</span><i></i><span>Cinematic</span><i></i>
-</div></div>
+<div class="marq" aria-hidden="true"><div class="tr"></div></div>
 
-<section>
+<section class="svc" id="services" data-scene="services" data-nav="What we do">
   <div class="wrap">
-    <div class="head"><h2>Three ways<br>to work with us</h2><p>Pick the one that matches your budget today. You can move to the next one later.</p></div>
-    <div class="rows">
-      <a class="row" href="services.html#recreate"><span class="big">Rebuild</span><p>Send a link to any AI video. We recreate it with your product, your face or your brand, in vertical, ready to post.</p><span class="small">1–2 days</span><span class="amt">$<span data-from>15</span>–<span data-to>20</span></span></a>
-      <a class="row" href="services.html#business"><span class="big">Brand content</span><p>A steady flow of AI video for a business that wants to be seen across Europe. Monthly plans, built around your offer.</p><span class="small">Custom quote</span><span class="amt">Talk to us</span></a>
-      <a class="row" href="pay.html"><span class="big">The pack</span><p>Our full method for making this content yourself without paying for a single subscription. One edition, one price.</p><span class="small">Instant access</span><span class="amt">$<span data-course>100</span></span></a>
+    <div class="svc-stage">
+      <div class="svc-item">
+        <span class="tag sv">Rebuild</span>
+        <div class="big sv">Your<br>reference.<br>Your brand.</div>
+        <p class="lede sv">Found a video you wish you owned? We recreate it with your product, colours and logo. Vertical, clean, ready to post.</p>
+        <div class="sv"><span class="amt">$<span data-from>15</span>–<span data-to>20</span></span> &nbsp; <a class="link y" href="services.html#order">Order →</a></div>
+      </div>
+      <div class="svc-item">
+        <span class="tag sv">Brand content</span>
+        <div class="big sv">A feed<br>that never<br>goes dark.</div>
+        <p class="lede sv">For businesses that need attention across Europe and cannot wait for a shoot. Monthly AI video built around your offer, in the language of your market.</p>
+        <div class="sv"><span class="amt">Custom quote</span> &nbsp; <a class="link y" href="services.html#business">Details →</a></div>
+      </div>
+      <div class="svc-item">
+        <span class="tag sv">The pack</span>
+        <div class="big sv">Make it<br>yourself.<br>Keep it.</div>
+        <p class="lede sv">Every recipe we use, written down. Free tools only. One edition, one payment, no recurring fees.</p>
+        <div class="sv"><span class="amt">$<span data-course>100</span></span> &nbsp; <a class="link y" href="pay.html">Get it →</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="svc-prog"><em style="font-style:normal">1 / 3</em><div><i></i></div></div>
+</section>
+
+<section class="show" id="work" data-scene="show" data-nav="Work">
+  <div class="show-in">
+    <div class="wrap show-head" style="width:100%">
+      <h2 class="h2" data-split>Made in<br>days, not weeks</h2>
+      <div style="text-align:right"><p class="small" style="margin-bottom:14px">Scroll sideways. Click any video to open it.</p><a class="btn sm" href="work.html">All work</a></div>
+    </div>
+    <div class="track" id="track"></div>
+    <div class="wrap" style="width:100%"><div style="height:2px;background:var(--line)"><div id="showbar" style="height:100%;background:var(--y);transform:scaleX(0);transform-origin:left;box-shadow:0 0 10px var(--y)"></div></div></div>
+  </div>
+</section>
+
+<section id="process" data-scene="process" data-nav="Process">
+  <div class="wrap proc">
+    <div class="proc-l">
+      <span class="tag" data-up>How it works</span>
+      <h2 class="h2" style="margin-top:26px" data-split>From link<br>to live</h2>
+      <p class="lede" data-up>No calls, no briefs that take an hour. You send one link and we handle the rest.</p>
+    </div>
+    <div class="steps">
+      <div class="rail" style="position:absolute;left:14px;top:0;bottom:0;width:1px;background:var(--line)"></div>
+      <div class="beam" style="position:absolute;left:13px;top:0;bottom:0;width:3px;background:var(--y);box-shadow:0 0 14px var(--y);transform:scaleY(0)"></div>
+      <div class="step" data-n="1"><h3 class="h3">Send the reference</h3><p>A link or a file of the video you want, plus a line on what to change.</p></div>
+      <div class="step" data-n="2"><h3 class="h3">Get a price and a date</h3><p>You see the cost and delivery time before anything starts. Nothing is charged until you agree.</p></div>
+      <div class="step" data-n="3"><h3 class="h3">We build it</h3><p>Generation, selection, edit, grade and sound. Vertical 9:16 by default, any ratio on request.</p></div>
+      <div class="step" data-n="4"><h3 class="h3">You post it</h3><p>One round of fixes is included. Files arrive in full quality, without watermarks.</p></div>
     </div>
   </div>
 </section>
 
-<section style="padding-top:0">
-  <div class="wrap">
-    <div class="head"><h2>Recent work</h2><a class="link" href="work.html">See all videos</a></div>
-    <div class="reel" id="reel"></div>
-  </div>
-</section>
-
-<section style="background:var(--coal);border-block:1px solid var(--line)">
-  <div class="wrap">
-    <div class="head"><h2>From link to video</h2></div>
-    <ol class="steps">
-      <li><h3>Send the reference</h3><p>A link or a file of the video you want. A short note on what to change.</p></li>
-      <li><h3>We confirm</h3><p>You get the price and the delivery time before anything starts.</p></li>
-      <li><h3>We build it</h3><p>Generation, selection, edit, grade, sound. Vertical 9:16 by default.</p></li>
-      <li><h3>You post it</h3><p>One round of fixes is included. Files arrive without watermarks.</p></li>
-    </ol>
-  </div>
-</section>
-
-<section>
-  <div class="wrap split">
+<section class="free" data-nav="Free">
+  <div class="wrap two" style="align-items:center">
     <div>
-      <h2>Rather make it<br>yourself?</h2>
-      <p style="margin:26px 0 34px" class="lede">Every video on this site has a free guide. Four steps, free tools, no card needed. When you want the exact prompts and settings, the pack has them.</p>
-      <a class="btn" href="academy.html">Open the free guides</a>
+      <div class="h1" style="font-size:clamp(90px,17vw,260px);color:var(--y);text-shadow:0 0 80px var(--glow)" data-up>$0</div>
     </div>
-    <div class="frame"><div style="aspect-ratio:4/5;background:radial-gradient(90% 60% at 50% 20%,rgba(201,162,75,.35),transparent 70%),linear-gradient(180deg,#15110b,#070605);display:grid;place-items:center;text-align:center;padding:30px">
-      <div><div class="display gold-text" style="font-size:clamp(70px,9vw,130px)">$0</div><p class="small" style="margin:10px auto 0">monthly subscriptions needed<br>to follow the method</p></div></div></div>
+    <div>
+      <span class="tag" data-up>The free route</span>
+      <h2 class="h2" style="margin:26px 0" data-split>Learn the method.<br>Pay for nothing.</h2>
+      <p class="lede" data-up style="margin-bottom:36px">Every video on this site has a free four-step guide: which free tools, in which order, what to avoid. Start there. If you want the exact prompts and settings, the pack has them.</p>
+      <a class="btn" href="academy.html" data-up>Open free guides <span class="ar"></span></a>
+    </div>
   </div>
 </section>
 
-<section class="cta-band">
+<section class="pricing" id="pack" data-scene="price" data-nav="The pack">
   <div class="wrap">
-    <h2>Send us one reference.</h2>
-    <p style="margin:26px 0 34px" class="lede">We reply with a price and a date.</p>
-    <a class="btn fill" href="services.html#order">Start an order</a>
+    <span class="tag" data-up>One edition</span>
+    <h2 class="h2" style="margin-top:26px" data-split>Everything we know.<br>One payment.</h2>
+    <div class="pcard" data-up>
+      <div class="pcard-in">
+        <div>
+          <div class="num">$<span id="pnum">100</span></div>
+          <div class="once">PAY ONCE · KEEP FOREVER</div>
+          <p class="mute" style="margin-top:22px;max-width:30ch">Paid by card or crypto. <span id="paynames"></span></p>
+        </div>
+        <div>
+          <ul class="includes"></ul>
+          <a class="btn fill" href="pay.html">Get the pack <span class="ar"></span></a>
+        </div>
+      </div>
+    </div>
+    <div class="trust" data-up><span>Instant access with card</span><span>No subscriptions</span><span>Updated when tools change</span></div>
+  </div>
+</section>
+
+<section id="faq" data-scene="faq" data-nav="Questions">
+  <div class="wrap">
+    <h2 class="h2" style="text-align:center;margin-bottom:60px" data-split>Questions</h2>
+    <div class="faq" id="faqlist"></div>
+  </div>
+</section>
+
+<section class="cta" data-scene="cta" data-nav="Start">
+  <div class="wrap">
+    <h2 class="h1" data-split>Send one<br>reference.</h2>
+    <p class="lede" style="margin:30px auto 0" data-up>We reply with a price and a date.</p>
+    <a class="btn fill" href="services.html#order" data-up>Start an order <span class="ar"></span></a>
   </div>
 </section>
 </main>
-<script src="js/config.js"></script><script src="js/app.js"></script></body></html>
+<nav class="side-nav" id="sidenav" aria-label="Sections"></nav>
+
+<script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="vendor/lenis.min.js"></script>
+<script src="js/config.js"></script><script src="js/tiles.js"></script><script src="js/fx.js"></script><script src="js/pages.js"></script>
+<script type="module" src="js/scene.js"></script>
+</body></html>

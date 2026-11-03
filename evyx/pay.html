@@ -1,27 +1,31 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Get the pack — EVYX</title><meta name="description" content="Buy the EVYX pack for $100.">
-<meta name="theme-color" content="#070605">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23070605'/%3E%3Ctext x='32' y='46' font-family='serif' font-size='42' text-anchor='middle' fill='%23c9a24b'%3EE%3C/text%3E%3C/svg%3E">
+<title>Get the pack — EVYX</title><meta name="description" content="Buy the EVYX pack for $100 by card or crypto.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%23ffd60a' stroke-width='4'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}</script>
 </head><body data-page="pay">
 <main>
-<section class="page-hero"><div class="wrap">
-  <h1 class="display">Get the pack</h1>
-  <p class="lede">One edition. $<span data-course>100</span>. Pay with a card or crypto.</p>
-</div></section>
+<section class="ph" style="min-height:48svh"><div class="wrap"><span class="tag">Checkout</span><h1 class="h1" style="margin-top:26px" data-split>Get the pack</h1><p class="lede" data-up>One edition, $<span data-course>100</span>. Choose how you want to pay.</p></div></section>
 <section style="padding-top:20px"><div class="wrap pay-grid">
   <div>
-    <h3 style="margin-bottom:22px">Choose how to pay</h3>
+    <h3 class="h3" style="margin-bottom:22px">Payment method</h3>
     <div class="methods" id="methods"></div>
     <div id="out"></div>
+    <p class="small" style="margin-top:22px">Your order number: <b class="y" id="order"></b>. Quote it if you write to us.</p>
   </div>
-  <div class="product" style="grid-template-columns:1fr">
-    <div><p class="small">What you get</p><br><ul id="includes"></ul>
-    <p class="small">Questions before you pay? <a class="link" href="#" onclick="location.href='https://t.me/'+EVYX.contact.telegram;return false">Message us.</a></p></div>
-  </div>
+  <aside class="sum">
+    <span class="tag">Order</span>
+    <div class="num">$<span data-course>100</span></div>
+    <ul class="includes"></ul>
+    <p class="small" style="margin-top:22px">Questions before you pay? <a class="y" href="#" onclick="location.href='https://t.me/'+EVYX.contact.telegram;return false">Message us on Telegram</a>.</p>
+  </aside>
 </div></section>
 </main>
-<script src="js/config.js"></script><script src="js/app.js"></script></body></html>
+<script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="vendor/lenis.min.js"></script><script src="vendor/qrcode.js"></script>
+<script src="js/config.js"></script><script src="js/tiles.js"></script><script src="js/fx.js"></script><script src="js/pages.js"></script>
+<script type="module" src="js/scene.js"></script>
+</body></html>
