@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ScrollTrigger, scrollToTop } from '../lib/motion.js';
 
 const TITLES = {
@@ -11,8 +10,8 @@ const TITLES = {
 };
 
 /* On every route change: scroll to the top (or to #anchor), set the title, re-measure scroll animations. */
-export default function RouteEffects() {
-  const { pathname, hash } = useLocation();
+export default function RouteEffects({ location }) {
+  const { pathname, hash } = location;
 
   useEffect(() => {
     document.title = TITLES[pathname] || 'EVYX';

@@ -467,3 +467,8 @@ input[aria-invalid=true]{border-color:#b5694a}
 @media (max-width:1100px){.tariffs--4{grid-template-columns:1fr 1fr}.courses{grid-template-columns:1fr 1fr}}
 @media (max-width:1000px){.eutabs,.player-course{grid-template-columns:1fr}.modules,.cases{grid-template-columns:1fr}.stats__in{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0;padding-left:0}.csum{position:static}}
 @media (max-width:700px){.tariffs--4,.courses,.empty{grid-template-columns:1fr}.case{grid-template-columns:96px 1fr}.cart__line{grid-template-columns:1fr}.cart__side{grid-row:auto;grid-column:auto;flex-direction:row;justify-content:space-between;align-items:center}}
+
+/* page transition */
+.curtain{position:fixed;inset:0;z-index:140;display:none;background:radial-gradient(60% 60% at 50% 50%,#1a140b,#070605 70%);pointer-events:none}
+.curtain::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--gold-grad);box-shadow:0 0 30px rgba(214,176,112,.6)}
+.curtain span{position:absolute;left:50%;top:50%;translate:-50% -50%;font:300 clamp(28px,4vw,48px)/1 var(--d);letter-spacing:.38em;color:rgba(236,217,173,.55)}

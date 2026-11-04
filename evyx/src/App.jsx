@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import RouteEffects from './components/RouteEffects.jsx';
+import PageTransition from './components/PageTransition.jsx';
 import Home from './pages/Home.jsx';
 import Work from './pages/Work.jsx';
 import Services from './pages/Services.jsx';
@@ -20,19 +21,25 @@ export default function App() {
 
   return (
     <>
-      <RouteEffects />
       <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home intro={startedOnHome.current} />} />
-          <Route path="/work" element={<Work />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/academy" element={<Academy />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
+      <PageTransition>
+        {loc => (
+          <>
+            <RouteEffects location={loc} />
+            <main>
+              <Routes location={loc}>
+                <Route path="/" element={<Home intro={startedOnHome.current} />} />
+                <Route path="/work" element={<Work />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/academy" element={<Academy />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </>
+        )}
+      </PageTransition>
     </>
   );
 }
