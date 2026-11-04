@@ -1,24 +1,29 @@
 # EVYX
 
-Статичный сайт без сборки и без внешних зависимостей: three.js, GSAP, Lenis и шрифты лежат
-в `vendor/` и `fonts/`. Выложить папку можно на любой хостинг (Cloudflare Pages, Netlify,
-Vercel, GitHub Pages), домен привязывается там же.
+Static site, no build step, no external dependencies (GSAP, Lenis, QR generator and fonts are in
+`vendor/` and `fonts/`). One page with real tabs: `#home`, `#work`, `#services`, `#academy`, `#checkout`.
 
-Локальный запуск (из-за ES-модулей нужен сервер, а не двойной клик):
+Run locally (a tiny server is needed so images and fetch work):
 
-    python3 -m http.server 8000   # затем http://localhost:8000
+    python3 -m http.server 8000   # then open http://localhost:8000
 
-## Что где менять — `js/config.js`
-- `contact` — Telegram, почта, Instagram
-- `pay.methods` — оплата. Метод с `PASTE_...` на сайте скрыт; если не подключён ни один,
-  страница оплаты предлагает запросить реквизиты в Telegram
-- `videos` — свой ролик: mp4 9:16 в `assets/videos/`, путь в `src`. Пока `src` пуст, карточка
-  показывает живую анимированную заставку (`fx`)
-- `tutorials` — шаги «How to make this video free»
-- `courseIncludes`, `faq`, `prices`
+Host the folder anywhere static: Cloudflare Pages, Netlify, Vercel, GitHub Pages. Attach your domain there.
 
-## Структура
-- `index.html` — главная: 3D-сцена, закреплённые секции, горизонтальная галерея, цена, FAQ
-- `work.html`, `services.html`, `academy.html`, `pay.html`
-- `js/scene.js` — 3D-объект, кольца, частицы, свечение; состояния сцены по секциям
-- `js/fx.js` — плавный скролл, курсор, загрузчик, анимации текста
+## What to edit: `js/config.js`
+- `contact`: Telegram, email, Instagram
+- `pay.networks`: the wallet addresses (USDT on TRC20, ERC20, Solana). Replace every `PASTE_...`.
+  Until then checkout runs in a clearly marked preview mode with a fake, invalid address.
+  For two owners use a shared wallet: a multisig (Safe for TRC20/ERC20, Squads for Solana) or one exchange account.
+- `videos`: put a vertical mp4 in `assets/videos/` and set `src` (hover to play). `img` is the poster.
+- `stages`, `tutorials`, `program`, `faq`, `prices`: all copy
+
+## Images
+The robot and the card images are real path-traced renders made with the scripts in `tools/`
+(see `tools/README.md`). The card images are sample stills; replace them with your own videos.
+
+## Files
+- `index.html`: all tabs
+- `css/style.css`: design system
+- `js/app.js`: router, home story, modals, checkout
+- `js/robot.js`: the head-turn sequence that follows the cursor
+- `assets/robot/`: 15 transparent frames, `robot.json`

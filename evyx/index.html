@@ -2,157 +2,203 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EVYX</title>
-<meta name="description" content="EVYX remakes any AI video for $15–20 in 1–2 days. AI content for European business. Free guides and the EVYX program.">
-<meta name="theme-color" content="#030304">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030304'/%3E%3Cpath d='M16 18h32M16 32h22M16 46h32' stroke='%23d4af37' stroke-width='5' fill='none'/%3E%3C/svg%3E">
+<meta name="description" content="EVYX is an AI video studio. We make AI video from scratch and rebuild any video you send us, from $15. AI content for European business. Free guides and the EVYX program.">
+<meta name="theme-color" content="#070605">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070605'/%3E%3Cpath d='M16 18h32M16 32h22M16 46h32' stroke='%23c9a56a' stroke-width='5' fill='none'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/robot/r_000.webp" as="image">
 <link rel="stylesheet" href="css/style.css">
 </head><body>
-<div id="scene" aria-hidden="true"></div>
-<div class="vig" aria-hidden="true"></div>
-<div class="cur" aria-hidden="true"></div>
 
-<!-- fixed home layers -->
-<div id="hud" hidden>
-  <div class="hero-cta">
-    <h1>We remake<br>any AI video</h1>
-    <p>We recreate any AI video for <b class="gold">$15–20</b> in one or two days. Or teach you to make it yourself, free.</p>
-    <div class="row"><button class="btn fill" data-order>Order a video <span class="ar"></span></button><a class="tlink" href="#work">See examples</a></div>
-  </div>
-  <div class="hint">SCROLL</div>
-  <div class="dots"></div>
-</div>
+<header class="hdr" id="hdr"><div class="hdr__in">
+  <a class="logo" href="#home" aria-label="EVYX, home">EV<b>Y</b>X</a>
+  <nav class="nav" id="nav" aria-label="Main">
+    <a href="#home" data-r="home">Home</a>
+    <a href="#work" data-r="work">Work Showcase</a>
+    <a href="#services" data-r="services">Services (EU Business)</a>
+    <a href="#academy" data-r="academy">Academy</a>
+  </nav>
+  <button class="hdr__cta" data-order>Order · $15</button>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</div></header>
 
 <main>
-<!-- ===================== HOME ===================== -->
-<section class="view" id="v-home" data-title="EVYX">
-  <div id="story" aria-hidden="true"></div>
-  <div class="after ui">
-    <section>
-      <div class="wrap">
-        <div class="head"><div><span class="kick">Showcase templates</span><h2 class="h2" style="margin-top:20px" data-split>Pick a look.<br>We remake it.</h2></div>
-          <a class="btn" href="#work">All work <span class="ar"></span></a></div>
-        <div class="grid" id="home-grid"></div>
+<!-- ============================ HOME ============================ -->
+<section class="view" id="v-home" data-title="EVYX. AI video studio">
+
+  <section class="hero" id="hero">
+    <div class="hero__glow"></div>
+    <div class="word" id="heroWord" aria-hidden="true">EVYX</div>
+    <div class="word word--mirror" id="heroMirror" aria-hidden="true">EVYX</div>
+    <div class="robot" id="heroRobot" aria-hidden="true"><canvas></canvas><span class="lens-glow"></span></div>
+    <div class="hero__ui">
+      <h1 class="sr">EVYX. We make AI video from scratch, and rebuild any video you send us.</h1>
+      <div class="hero__card glass">
+        <span class="kicker">AI video studio</span>
+        <p>We make AI video from scratch, and rebuild any video you send us.</p>
+        <a class="tlink" href="#work">See our work <span class="arrow"></span></a>
+      </div>
+      <div class="hero__stack" aria-hidden="true"><span>Any video.</span><span>Remade.</span><span class="gtext">From $15.</span></div>
+      <div class="hero__cta">
+        <button class="btn btn--fill" data-order>Order a video <span class="arrow"></span></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee__tr" id="marquee"></div></div>
+
+  <section class="story" id="story" data-k="0" aria-label="What we make"></section>
+
+  <section class="sec" id="home-work">
+    <div class="container">
+      <div class="head">
+        <div><span class="kicker">Showcase templates</span><h2 class="h2">Pick a look.<br>We make it yours.</h2></div>
+        <a class="btn" href="#work">All work <span class="arrow"></span></a>
+      </div>
+      <div class="grid" id="home-grid"></div>
+    </div>
+  </section>
+
+  <section class="sec sec--soft sec--line" id="eu">
+    <div class="container split">
+      <div>
+        <span class="kicker">For European business</span>
+        <h2 class="h2" style="margin:20px 0 22px">Content that gets you seen in Europe</h2>
+        <p class="lede" style="margin-bottom:34px">Shoots are slow and costly. We turn your photos and your offer into a steady stream of branded AI video, in the language of the market you sell to.</p>
+        <a class="btn btn--fill" href="#services">See business plans <span class="arrow"></span></a>
+      </div>
+      <div class="rows">
+        <div class="row"><div><h3 class="h3">Branding films</h3><p>Brand story, product and venue films that look like a real campaign.</p></div></div>
+        <div class="row"><div><h3 class="h3">Reels and TikTok</h3><p>Vertical videos built for the feed, delivered on a schedule.</p></div></div>
+        <div class="row"><div><h3 class="h3">Ad creatives</h3><p>Test-ready variations for Meta and TikTok ads in several languages.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="home-academy">
+    <div class="container split">
+      <div>
+        <span class="kicker">EVYX Academy</span>
+        <h2 class="h2" style="margin:20px 0 22px">Learn to make it yourself. For free.</h2>
+        <p class="lede" style="margin-bottom:34px">Every video on this site has a free four-step guide: which free tools, in which order, and what to avoid. No subscriptions at any step.</p>
+        <a class="btn" href="#academy">Open the free guides <span class="arrow"></span></a>
+      </div>
+      <div class="glass product product--stack">
+        <div class="product__l"><span class="kicker">The EVYX program</span><div class="num gtext">$<span data-course>100</span></div><p class="small">One exclusive edition. Pay once, keep it.</p></div>
+        <div><ul class="ticks" data-includes="3"></ul><a class="btn btn--fill" href="#academy">See the program <span class="arrow"></span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <img class="cta__robot" src="assets/robot/r_000.webp" alt="" aria-hidden="true">
+    <div class="container">
+      <h2 class="h1">Order your first video.</h2>
+      <p class="lede" style="margin:22px auto 0">Send a reference or an idea. We reply with a price and a date.</p>
+      <button class="btn btn--fill" data-order>Order a video <span class="arrow"></span></button>
+    </div>
+  </section>
+</section>
+
+<!-- ============================ WORK ============================ -->
+<section class="view" id="v-work" data-title="Work Showcase | EVYX">
+  <div class="page">
+    <div class="container page__head">
+      <span class="kicker">Work showcase</span>
+      <h1 class="h1">Every video can be yours</h1>
+      <p class="lede">Filter by niche, open a preview, then order the same kind of video with your brand. Use the calculator below for an exact price.</p>
+    </div>
+    <div class="container"><div class="chips" id="chips"></div><div class="grid" id="work-grid"></div></div>
+    <section class="sec" id="calc">
+      <div class="container">
+        <div class="page__head" style="margin-bottom:44px"><span class="kicker">Quick order</span><h2 class="h2" style="margin-top:18px">Price your video</h2></div>
+        <div class="glass calc">
+          <form id="calcform" autocomplete="off">
+            <div class="field"><label for="c-niche">Niche</label><select id="c-niche"></select></div>
+            <div class="field"><span>Complexity</span><div class="seg" id="c-tier"></div></div>
+            <div class="field"><label for="c-ref">Reference link</label><textarea id="c-ref" placeholder="https://" required></textarea></div>
+            <div class="field"><label for="c-note">What should change</label><input id="c-note" placeholder="Your product, colours, text, language"></div>
+            <div class="field"><label for="c-contact">Your Telegram or email</label><input id="c-contact" required></div>
+            <button class="btn btn--fill" type="submit">Order and pay <span class="arrow"></span></button>
+          </form>
+          <div class="quote">
+            <div><span class="small">Your price</span><div class="num gtext">$<span id="c-price">15</span></div></div>
+            <ul><li>Delivery in 1–2 days</li><li>Vertical 9:16, no watermark</li><li>One round of fixes included</li><li>Pay in USDT: TRC20, ERC20 or Solana</li></ul>
+          </div>
+        </div>
       </div>
     </section>
+  </div>
+</section>
 
-    <section class="panel">
-      <div class="wrap eu">
+<!-- ============================ SERVICES ============================ -->
+<section class="view" id="v-services" data-title="Services | EVYX">
+  <div class="page">
+    <div class="container page__head">
+      <span class="kicker">Services</span>
+      <h1 class="h1">Three prices.<br>One for business.</h1>
+      <p class="lede">Pay a small fixed price for a single video, or build a steady stream of content for your company in Europe.</p>
+    </div>
+    <div class="container"><div class="tariffs" id="tariffs"></div></div>
+    <section class="sec sec--soft sec--line" style="margin-top:clamp(84px,11vw,168px)">
+      <div class="container split">
         <div>
-          <span class="kick">For European business</span>
-          <h2 class="h2" style="margin:22px 0" data-split>Content that gets you seen in Europe</h2>
-          <p class="lede" style="margin-bottom:34px">Shoots are slow and costly. We turn your photos and your offer into a steady stream of branded AI video, in the language of the market you sell to.</p>
-          <a class="btn fill" href="#services">See business plans <span class="ar"></span></a>
+          <span class="kicker">EU business</span>
+          <h2 class="h2" style="margin:20px 0 22px">A feed that never goes dark</h2>
+          <p class="lede" style="margin-bottom:30px">Restaurants, salons, boutiques, agencies and real estate. Tell us what you sell and who you want to reach. We plan the content, make it and deliver it every week.</p>
+          <a class="btn btn--fill" id="quote-tg" target="_blank" rel="noopener">Request a quote <span class="arrow"></span></a>
         </div>
-        <div class="eu-list">
-          <div class="glass eu-item"><span class="ic">B</span><div><h3 class="h3">Branding films</h3><p>Brand story, product and venue films that look like a real campaign.</p></div></div>
-          <div class="glass eu-item"><span class="ic">R</span><div><h3 class="h3">Reels and TikTok</h3><p>Vertical videos built for the feed, delivered on a schedule.</p></div></div>
-          <div class="glass eu-item"><span class="ic">A</span><div><h3 class="h3">Ad creatives</h3><p>Test-ready variations for Meta and TikTok ads in several languages.</p></div></div>
+        <div class="rows">
+          <div class="row"><div><h3 class="h3">Monthly content plans</h3><p>A fixed number of videos per month, planned around your offer.</p></div></div>
+          <div class="row"><div><h3 class="h3">Ad creatives</h3><p>Several variations of one idea for Meta and TikTok ads.</p></div></div>
+          <div class="row"><div><h3 class="h3">Multilingual versions</h3><p>The same video adapted for different European markets.</p></div></div>
+          <div class="row"><div><h3 class="h3">Posting calendar</h3><p>A schedule for the month, so nothing is left to chance.</p></div></div>
         </div>
       </div>
     </section>
-
-    <section class="cta panel">
-      <div class="wrap">
-        <h2 class="h1" data-split>Send one<br>reference.</h2>
-        <p class="lede" style="margin:26px auto 0">We reply with a price and a date.</p>
-        <button class="btn fill" data-order>Order a video · $15 <span class="ar"></span></button>
-      </div>
-    </section>
+    <section class="sec"><div class="container"><h2 class="h2 center" style="margin-bottom:48px">Questions</h2><div class="faq" id="faq"></div></div></section>
   </div>
 </section>
 
-<!-- ===================== WORK ===================== -->
-<section class="view ui" id="v-work" data-title="Work Showcase — EVYX">
-  <div class="wrap pagehead">
-    <span class="kick">Work showcase</span>
-    <h1 class="h1" data-split>Every video<br>can be yours</h1>
-    <p class="lede">Filter by niche, open a preview, then order the same kind of video with your brand. Use the calculator at the bottom for an exact price.</p>
-  </div>
-  <section class="pad" style="padding-top:20px">
-    <div class="wrap"><div class="chips" id="chips"></div><div class="grid" id="work-grid"></div></div>
-  </section>
-  <section class="pad panel" id="calc">
-    <div class="wrap">
-      <div class="head"><div><span class="kick">Quick order</span><h2 class="h2" style="margin-top:20px" data-split>Price your video</h2></div></div>
-      <div class="glass calc">
-        <form id="calcform" autocomplete="off">
-          <div class="field"><label for="c-niche">Niche</label><select id="c-niche"></select></div>
-          <div class="field"><span>Complexity</span><div class="seg" id="c-tier"></div></div>
-          <div class="field"><label for="c-ref">Reference link (one per line)</label><textarea id="c-ref" placeholder="https://" required></textarea></div>
-          <div class="field"><label for="c-note">What should change</label><input id="c-note" placeholder="Your product, colours, text, language"></div>
-          <div class="field"><label for="c-contact">Your Telegram or email</label><input id="c-contact" required></div>
-          <button class="btn fill" type="submit">Order and pay <span class="ar"></span></button>
-        </form>
-        <div class="quote">
-          <div><span class="small">Your price</span><div class="num gtext">$<span id="c-price">15</span></div></div>
-          <ul><li>Delivery in 1–2 days</li><li>Vertical 9:16, no watermark</li><li>One round of fixes included</li><li>Pay in USDT: TRC20, ERC20 or Solana</li></ul>
+<!-- ============================ ACADEMY ============================ -->
+<section class="view" id="v-academy" data-title="Academy | EVYX">
+  <div class="page">
+    <div class="container page__head">
+      <span class="kicker">EVYX Academy</span>
+      <h1 class="h1">How to make AI video free</h1>
+      <p class="lede">A free knowledge base first. Pick a video, follow four steps, use free tools only. When you want the full system, the program is below.</p>
+    </div>
+    <div class="container tabs"><div class="tablist" id="tablist" role="tablist" aria-label="Free guides"></div><div id="tpanels"></div></div>
+    <section class="sec sec--soft sec--line" style="margin-top:clamp(84px,11vw,168px)">
+      <div class="container">
+        <div class="glass product">
+          <div class="product__l"><span class="kicker">The EVYX program</span><div class="num gtext">$<span data-course>100</span></div><p class="small" style="max-width:30ch">One exclusive edition. Pay once, keep it. No subscriptions, no tiers.</p></div>
+          <div><ul class="ticks" data-includes></ul><a class="btn btn--fill" href="#checkout">Get the program <span class="arrow"></span></a></div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+    <section class="sec"><div class="container"><h2 class="h2 center" style="margin-bottom:48px">What is inside</h2><div class="faq" id="program"></div></div></section>
+  </div>
 </section>
 
-<!-- ===================== SERVICES ===================== -->
-<section class="view ui" id="v-services" data-title="Services — EVYX">
-  <div class="wrap pagehead">
-    <span class="kick">Services</span>
-    <h1 class="h1" data-split>Three prices.<br>One for business.</h1>
-    <p class="lede">Pay a small fixed price for a single video, or build a steady stream of content for your company in Europe.</p>
-  </div>
-  <section class="pad" style="padding-top:20px"><div class="wrap"><div class="tariffs" id="tariffs"></div></div></section>
-  <section class="pad panel">
-    <div class="wrap eu">
-      <div><span class="kick">EU business</span><h2 class="h2" style="margin:22px 0" data-split>A feed that never goes dark</h2>
-        <p class="lede" style="margin-bottom:30px">Restaurants, salons, boutiques, agencies and real estate. Tell us what you sell and who you want to reach. We plan the content, make it and deliver it every week.</p>
-        <a class="btn fill" id="quote-tg" target="_blank" rel="noopener">Request a quote <span class="ar"></span></a></div>
-      <div class="eu-list">
-        <div class="glass eu-item"><span class="ic">1</span><div><h3 class="h3">Monthly content plans</h3><p>A fixed number of videos per month, planned around your offer.</p></div></div>
-        <div class="glass eu-item"><span class="ic">2</span><div><h3 class="h3">Ad creatives</h3><p>Several variations of one idea for Meta and TikTok ads.</p></div></div>
-        <div class="glass eu-item"><span class="ic">3</span><div><h3 class="h3">Multilingual versions</h3><p>The same video adapted for different European markets.</p></div></div>
-      </div>
+<!-- ============================ CHECKOUT ============================ -->
+<section class="view" id="v-checkout" data-title="Checkout | EVYX">
+  <div class="page">
+    <div class="container page__head">
+      <span class="kicker">Checkout</span>
+      <h1 class="h1">Get the program</h1>
+      <p class="lede">Pay in USDT on the network you choose, then confirm the transaction. We verify it on-chain and send access in Telegram.</p>
     </div>
-  </section>
-  <section class="pad"><div class="wrap"><h2 class="h2" style="margin-bottom:40px" data-split>Questions</h2><div class="faq" id="faq"></div></div></section>
-</section>
-
-<!-- ===================== ACADEMY ===================== -->
-<section class="view ui" id="v-academy" data-title="Academy — EVYX">
-  <div class="wrap pagehead">
-    <span class="kick">EVYX Academy</span>
-    <h1 class="h1" data-split>How to make<br>AI video free</h1>
-    <p class="lede">A free knowledge base first. Pick a video, follow four steps, use free tools only. When you want the full system, the program is below.</p>
-  </div>
-  <section class="pad" style="padding-top:20px"><div class="wrap tabs"><div class="tablist" id="tablist" role="tablist" aria-label="Free guides"></div><div id="tpanels"></div></div></section>
-  <section class="pad panel">
-    <div class="wrap">
-      <div class="glass product">
-        <div class="l"><span class="kick">The EVYX program</span><div class="num gtext" style="margin:26px 0 18px">$<span data-course>100</span></div>
-          <p class="mute" style="max-width:30ch">One exclusive edition. Pay once, keep it. No subscriptions, no tiers.</p></div>
-        <div><ul class="includes" style="list-style:none;display:grid;gap:12px;margin-bottom:30px"></ul><a class="btn fill" href="#checkout">Get the program <span class="ar"></span></a></div>
-      </div>
+    <div class="container ck" style="padding-bottom:clamp(84px,11vw,168px)">
+      <div class="glass" style="padding:clamp(22px,4vw,40px)" id="ck-host"></div>
+      <aside class="glass" style="padding:30px"><span class="kicker">Order</span><div class="num gtext" style="font:500 64px/1 var(--d);letter-spacing:-.05em;margin:16px 0 22px">$<span data-course>100</span></div><ul class="ticks" data-includes style="margin-bottom:0"></ul></aside>
     </div>
-  </section>
-  <section class="pad"><div class="wrap"><div class="head"><h2 class="h2" data-split>What is inside</h2></div><div class="faq" id="program"></div></div></section>
-</section>
-
-<!-- ===================== CHECKOUT ===================== -->
-<section class="view ui" id="v-checkout" data-title="Checkout — EVYX">
-  <div class="wrap pagehead">
-    <span class="kick">Checkout</span>
-    <h1 class="h1" data-split>Get the program</h1>
-    <p class="lede">Pay in USDT on a network you choose, then confirm the transaction. We verify it on-chain and send access in Telegram.</p>
   </div>
-  <section class="pad" style="padding-top:10px"><div class="wrap ck">
-    <div class="glass" style="padding:clamp(22px,4vw,40px)" id="ck-host"></div>
-    <aside class="glass" style="padding:30px"><span class="kick">Order</span><div class="num gtext" style="font:600 64px/1 var(--disp);letter-spacing:-.05em;margin:16px 0 22px">$<span data-course>100</span></div>
-      <ul class="includes" style="list-style:none;display:grid;gap:11px;font-size:14.5px"></ul></aside>
-  </div></section>
 </section>
 </main>
 
-<footer class="ftr"><div class="wrap">
-  <div class="cols">
+<footer class="ftr"><div class="container">
+  <div class="ftr__cols">
     <div><span class="logo">EV<b>Y</b>X</span><p class="small">AI video for brands that want to be remembered.<br>Made in Europe, delivered anywhere.</p></div>
     <div><h4>Pages</h4><ul><li><a href="#home">Home</a></li><li><a href="#work">Work Showcase</a></li><li><a href="#services">Services</a></li><li><a href="#academy">Academy</a></li><li><a href="#checkout">Checkout</a></li></ul></div>
     <div><h4>Contact</h4><ul id="contacts"></ul></div>
@@ -160,11 +206,10 @@
   <p class="small">© <span id="yr"></span> EVYX</p>
 </div></footer>
 
-<div class="wipe" aria-hidden="true"></div>
-<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="mbox glass" id="mbox"><button class="mx" id="mclose">CLOSE</button><div id="mbody"></div></div></div>
+<div class="veil" id="veil" aria-hidden="true"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Dialog"><div class="mbox glass" id="mbox"><button class="mx" id="mclose">CLOSE</button><div id="mbody"></div></div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="vendor/lenis.min.js"></script><script src="vendor/qrcode.js"></script>
-<script src="js/config.js"></script><script src="js/tiles.js"></script><script src="js/app.js"></script>
-<script src="js/scene.bundle.js"></script>
+<script src="js/config.js"></script><script src="js/robot.js"></script><script src="js/tiles.js"></script><script src="js/app.js"></script>
 </body></html>
