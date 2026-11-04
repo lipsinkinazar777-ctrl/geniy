@@ -1,27 +1,37 @@
 # EVYX
 
-Static site, no build step, no external dependencies (GSAP, Lenis, QR generator and fonts are in
-`vendor/` and `fonts/`). One page with real tabs: `#home`, `#work`, `#services`, `#academy`, `#checkout`.
+AI video studio and academy. React + React Router, built with Vite.
 
-Run locally (a tiny server is needed so images and fetch work):
+## Pages
+| Path | Page |
+| --- | --- |
+| `/` | Hero with the android, opening sequence, videos that fly out on scroll, quick stats, video types, how it works, top showcases |
+| `/work` | Filterable gallery (`/work?type=VFX`), video player modal with case-study tabs, case studies |
+| `/services` | Pricing tiers, EU business solutions (tabs), cartoons / ad videos / promo clips and more, FAQ |
+| `/academy` | Free courses with enrolment and lesson progress, the $100 program with curriculum and lesson previews |
+| `/checkout` | Cart → details → USDT payment (TRC20 / ERC20 / Solana, QR) → receipt |
 
-    python3 -m http.server 8000   # then open http://localhost:8000
+The navbar is on every page, highlights the active route and shows the cart counter. The cart, Academy progress and receipts are kept in the browser (`localStorage`).
 
-Host the folder anywhere static: Cloudflare Pages, Netlify, Vercel, GitHub Pages. Attach your domain there.
+## Run
 
-## What to edit: `js/config.js`
-- `contact`: Telegram, email, Instagram
-- `pay.networks`: the wallet addresses (USDT on TRC20, ERC20, Solana). Replace every `PASTE_...`.
-  Until then checkout runs in a clearly marked preview mode with a fake, invalid address.
-  For two owners use a shared wallet: a multisig (Safe for TRC20/ERC20, Squads for Solana) or one exchange account.
-- `videos`: put a vertical mp4 in `assets/videos/` and set `src` (hover to play). `img` is the poster.
-- `stages`, `tutorials`, `program`, `faq`, `prices`: all copy
+    npm install
+    npm run dev        # http://localhost:5173
+    npm run build      # production build in dist/
 
-## Images
-`assets/hero/robot.webp` is cut from the reference image you supplied. `assets/cards/*` are sample stills
-(cropped from your reference sheet plus two renders). Replace them with your own videos.
+Host `dist/` on Netlify, Vercel or Cloudflare Pages. `public/_redirects` (Netlify) and `vercel.json` send every path to `index.html`, so `/work` and the other routes open directly.
+On a host that cannot do that, build with `npm run build:hash`: routes then live after `#` (`/#/work`).
 
-## Files
-- `index.html`: all tabs
-- `css/style.css`: design system
-- `js/app.js`: router, home story, modals, checkout
+## Edit
+- `src/data/site.js`: contacts, prices, **wallet addresses** (empty = preview mode, nothing can be paid), nav, quick stats
+- `src/data/videos.js`: showcase videos. Set `src` to an mp4 URL to play a real video; `poster` is the still
+- `src/data/services.js`: tiers, video types, EU solutions, FAQ
+- `src/data/academy.js`: free courses, the program, its modules and lessons
+
+## Structure
+    src/components   Navbar, Footer, VideoCard, VideoModal, Modal, PricingTable, Hero, KindsGrid, HowItWorks, Accordion, QRCode, PageHead, CtaBand, RouteEffects
+    src/pages        Home, Work, Services, Academy, Checkout, NotFound
+    src/data         all content and settings
+    src/context      CartContext, ToastContext
+    src/lib          motion (GSAP + Lenis), intro sequence, QR, clipboard, storage
+    src/assets       images and fonts
