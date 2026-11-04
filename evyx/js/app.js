@@ -67,7 +67,7 @@ modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 
 function openPreview(v){
-  mbody.innerHTML = `<div class="preview"><div id="pv"></div><div><span class="kicker">${esc(v.cat)}</span><h3 class="h2" style="font-size:clamp(24px,3vw,38px);margin:16px 0 10px">${esc(v.title)}</h3><p class="small" style="margin-bottom:8px">Sample · ${esc(v.len)}</p><p style="margin-bottom:26px;color:var(--ink-2)">We make this kind of video with your product and brand: vertical, no watermark, ready to post.</p><div class="h1 gtext" style="font-size:52px;margin-bottom:24px">from $${C.prices.tiers[0]}</div><button class="btn btn--fill" id="pv-order">Order this video <span class="arrow"></span></button></div></div>`;
+  mbody.innerHTML = `<div class="preview"><div id="pv"></div><div><span class="kicker">${esc(v.cat)}</span><h3 class="h2" style="font-size:clamp(24px,3vw,38px);margin:16px 0 10px">${esc(v.title)}</h3><p class="small" style="margin-bottom:8px">Sample · ${esc(v.len)}</p><p style="margin-bottom:26px;color:var(--ink-2)">We make this kind of video for you: vertical, no watermark, ready to post.</p><div class="h1 gtext" style="font-size:52px;margin-bottom:24px">from $${C.prices.tiers[0]}</div><button class="btn btn--fill" id="pv-order">Order this video <span class="arrow"></span></button></div></div>`;
   const card = window.EVYXCard(v, {static: true, autoplay: true, eager: true});
   const vd = $('video', card); if (vd){ vd.controls = true; vd.muted = false; vd.play().catch(() => {}); }
   $('#pv').appendChild(card);
@@ -94,9 +94,9 @@ function renderCheckout(host, opts){
     if (st.step === 1){
       host.innerHTML = `${stepper()}<span class="kicker">Step 1 · Your video</span>
         <form id="ck-brief" style="margin-top:22px">
-          <div class="field"><span>Price</span><div class="seg" id="ck-tier">${C.prices.tiers.map((p, i) => `<button type="button" data-i="${i}" aria-pressed="${i === st.tier}"><b>$${p}</b>${['One scene', 'Two scenes', 'Character + product'][i]}</button>`).join('')}</div></div>
+          <div class="field"><span>Price</span><div class="seg" id="ck-tier">${C.prices.tiers.map((p, i) => `<button type="button" data-i="${i}" aria-pressed="${i === st.tier}"><b>$${p}</b>${['One scene', 'Two scenes', 'Character + effects'][i]}</button>`).join('')}</div></div>
           <div class="field"><label for="ck-ref">Reference link</label><input id="ck-ref" required placeholder="https://" value="${esc((st.brief && st.brief.ref) || '')}"></div>
-          <div class="field"><label for="ck-note">What should change</label><input id="ck-note" placeholder="Your product, colours, text" value="${esc((st.brief && st.brief.note) || '')}"></div>
+          <div class="field"><label for="ck-note">What should change</label><input id="ck-note" placeholder="Your idea, style, text" value="${esc((st.brief && st.brief.note) || '')}"></div>
           <div class="field"><label for="ck-contact">Your Telegram or email</label><input id="ck-contact" required value="${esc(st.contact)}"></div>
           <button class="btn btn--fill" type="submit">Continue to payment <span class="arrow"></span></button>
         </form>`;
@@ -206,83 +206,85 @@ function revealCards(grid){
 const views = {};
 
 /* ----- HOME ----- */
-const robots = {hero: null, story: null};
 let homeBuilt = false;
-function buildStory(){
-  const el = $('#story'), N = C.stages.length;
-  el.innerHTML = `<div class="story__stage">
-    ${C.stages.map((s, k) => `<div class="word story__word" data-k="${k}" aria-hidden="true">${esc(s.word)}</div>`).join('')}
-    <div class="robot story__robot" id="storyRobot" aria-hidden="true"><canvas></canvas><span class="lens-glow"></span></div>
-    <div class="story__nav">${C.stages.map((s, k) => `<button type="button" data-k="${k}">${esc(s.title.split(' and ')[0])}</button>`).join('')}</div>
-  </div>`;
-  const stage = $('.story__stage', el);
-  C.stages.forEach((s, k) => {
-    const v = vid(s.video), other = s.side === 'left' ? 'right' : 'left';
-    const cw = document.createElement('div'); cw.className = 'story__item is-card'; cw.dataset.k = k; cw.dataset.side = s.side;
-    const card = window.EVYXCard(v, {static: true, eager: true});
-    card.setAttribute('role', 'button'); card.tabIndex = 0; card.style.cursor = 'pointer'; card.setAttribute('aria-label', 'Open ' + v.title);
-    card.addEventListener('click', () => openPreview(v));
-    card.addEventListener('keydown', e => { if (e.key === 'Enter') openPreview(v); });
-    const play = document.createElement('span'); play.className = 'card__play'; card.appendChild(play);
-    cw.appendChild(card);
-    const ob = document.createElement('button'); ob.className = 'btn btn--sm btn--fill'; ob.style.cssText = 'width:100%;margin-top:12px';
-    ob.textContent = 'Remake this · $' + C.prices.tiers[0]; ob.onclick = () => openOrder({product: 'Video · ' + v.title});
-    cw.appendChild(ob);
-    stage.appendChild(cw);
-    const tw = document.createElement('div'); tw.className = 'story__item is-text'; tw.dataset.k = k; tw.dataset.side = other;
-    const niche = s.title.split(' and ')[0];
-    tw.innerHTML = `<span class="kicker">${esc(s.title)}</span><h3 class="h2" style="font-size:clamp(24px,2.6vw,40px)">${esc(v.title)}</h3><p>${esc(s.text)}</p><a class="tlink" href="#work" data-filter="${esc(niche === 'E-commerce' ? 'E-commerce' : niche)}">See ${esc(niche)} examples <span class="arrow"></span></a>`;
-    stage.appendChild(tw);
-  });
-  $$('.story__nav button', el).forEach(b => b.onclick = () => {
-    const k = +b.dataset.k, top = scrollY + el.getBoundingClientRect().top, dist = el.offsetHeight - innerHeight;
-    scrollToY(top + (k + .5) / N * dist);
+const ICONS = {
+  cartoon: '<rect x="8" y="14" width="40" height="28" rx="5"/><path d="M20 14l-6-7M36 14l6-7"/><circle cx="28" cy="28" r="6"/><path d="M52 24v8"/>',
+  ad: '<rect x="18" y="6" width="26" height="46" rx="5"/><path d="M26 12h10M22 22h18v12H22zM26 44h10"/><path d="M48 18l8-4M48 30h8M48 42l8 4"/>',
+  music: '<path d="M22 40V12l24-6v28"/><circle cx="16" cy="42" r="6"/><circle cx="40" cy="36" r="6"/>',
+  meme: '<circle cx="28" cy="28" r="20"/><path d="M19 33c3 6 15 6 18 0"/><circle cx="21" cy="23" r="1.5"/><circle cx="35" cy="23" r="1.5"/><path d="M50 10l3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/>',
+  avatar: '<circle cx="28" cy="18" r="10"/><path d="M8 52c2-14 10-20 20-20s18 6 20 20"/><path d="M44 12l8-4M46 24h8"/>',
+  any: '<rect x="6" y="10" width="44" height="30" rx="4"/><path d="M24 20l12 6-12 6z"/><path d="M14 48h28M20 52h16"/>'
+};
+function buildHome(){
+  const words = C.niches.concat(['Reels', 'TikTok']);
+  $('#marquee').innerHTML = words.concat(words).map(w => `<span>${esc(w)}</span>`).join('');
+  $('#kindsGrid').innerHTML = C.kinds.map(k => `<div class="kind"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k.icon]}</svg><h3 class="h3">${esc(k.title)}</h3><p>${esc(k.text)}</p></div>`).join('');
+  const g = $('#home-grid');
+  C.videos.forEach(v => { const c = window.EVYXCard(v); c.addEventListener('click', () => openPreview(v)); g.appendChild(c); });
+  accordion($('#reqs'), [['What requests do you work with?', C.requests]], false);
+  const rc = $('#reelCards');
+  C.videos.forEach((v, i) => {
+    const w = document.createElement('div'); w.className = 'reel__card'; w.dataset.i = i;
+    const c = window.EVYXCard(v, {static: true, eager: true});
+    c.classList.remove('card--static'); c.style.cursor = 'pointer'; c.setAttribute('role', 'button'); c.tabIndex = 0; c.setAttribute('aria-label', 'Open ' + v.title);
+    c.addEventListener('click', () => openPreview(v)); c.addEventListener('keydown', e => { if (e.key === 'Enter') openPreview(v); });
+    w.appendChild(c); rc.appendChild(w);
   });
 }
-
 views.home = {
   mount(view){
-    if (!homeBuilt){
-      homeBuilt = true;
-      const wrap = document.createElement('div');
-      wrap.innerHTML = [...C.niches, 'Reels', 'Ads'].concat([...C.niches, 'Reels', 'Ads']).map(w => `<span>${esc(w)}</span>`).join('');
-      $('#marquee').append(...wrap.children);
-      buildStory();
-      const g = $('#home-grid'); C.videos.slice(0, 8).forEach(v => { const c = window.EVYXCard(v); c.addEventListener('click', () => openPreview(v)); g.appendChild(c); });
-      robots.hero = window.EVYXRobot.create($('#heroRobot'), {range: 26});
-      robots.story = window.EVYXRobot.create($('#storyRobot'), {follow: false, wobble: 5});
+    if (!homeBuilt){ homeBuilt = true; buildHome(); }
+    const hero = $('#hero'), robot = $('#heroRobot'), title = $('#heroTitle');
+    const lines = $$('.hl', title);
+    function fit(){
+      let size = 1e9;
+      lines.forEach(l => {
+        const sp = l.firstElementChild; sp.style.fontSize = '100px';
+        const w = sp.getBoundingClientRect().width || 1;
+        size = Math.min(size, 100 * Math.min(hero.clientWidth * .875, 2000) / w);
+      });
+      lines.forEach(l => { l.firstElementChild.style.fontSize = size + 'px'; });
     }
-    const hero = $('#hero'), hw = $('#heroWord'), hm = $('#heroMirror');
-    function layout(){
-      const fs = fitWord(hw, .94); fitWord(hm, .94);
-      const top = Math.max(hero.clientHeight * .12, 100);
-      hw.style.top = top + 'px';
-      hm.style.top = (top + hw.offsetHeight - fs * .035) + 'px';
-      $$('.story__word').forEach(w => fitWord(w, .9, 24));
+    fit();
+    const onResize = () => fit(); addEventListener('resize', onResize);
+
+    let mx = 0, my = 0, cx = 0, cy = 0;
+    const onMove = e => { mx = (e.clientX / innerWidth - .5) * 2; my = (e.clientY / innerHeight - .5) * 2; };
+    addEventListener('pointermove', onMove, {passive: true});
+    const tick = () => {
+      cx += (mx - cx) * .06; cy += (my - cy) * .06;
+      robot.style.setProperty('--px', (cx * 16) + 'px'); robot.style.setProperty('--py2', (cy * 8) + 'px');
+      title.style.setProperty('--tx', (cx * -12) + 'px'); title.style.setProperty('--ty', (cy * -5) + 'px');
+    };
+    if (!reduce) gsap.ticker.add(tick);
+
+    if (!reduce){
+      gsap.to('.hero__title', {scale: 1.25, opacity: 0, ease: 'none', scrollTrigger: {trigger: hero, start: 'top top', end: 'bottom top', scrub: true}});
+      gsap.to(robot, {yPercent: 8, scale: 1.1, ease: 'none', scrollTrigger: {trigger: hero, start: 'top top', end: 'bottom top', scrub: true}});
     }
-    layout();
-    const onResize = () => layout();
-    addEventListener('resize', onResize);
 
-    /* story: one stage per slice of scroll, the robot looks at the sample */
-    const story = $('#story'), N = C.stages.length;
-    let curK = -1;
-    function setStage(k){
-      if (k === curK) return; curK = k; story.dataset.k = k;
-      robots.story.setManual(C.stages[k].side === 'left' ? -22 : 22);
+    /* reel: videos fly out of the android as you scroll */
+    const reel = $('#reel'), cards = $$('.reel__card', reel);
+    if (innerWidth > 900 && !reduce){
+      const N = cards.length;
+      const slots = [[-30, -8, -13], [30, -22, 9], [-40, 20, 7], [40, 14, -8], [-19, -34, -5], [21, 33, 11], [-26, 36, 13], [31, -2, -12]];
+      gsap.set(cards, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', autoAlpha: 0, scale: .15, z: -900});
+      const tl = gsap.timeline({defaults: {ease: 'power2.out'}, scrollTrigger: {trigger: reel, start: 'top top', end: 'bottom bottom', scrub: .8}});
+      cards.forEach((c, i) => {
+        const [x, y, r] = slots[i % slots.length], t = i * .42;
+        tl.fromTo(c, {autoAlpha: 0, scale: .15, z: -900, x: 0, y: 0, rotationY: 0, rotation: 0},
+                     {autoAlpha: 1, scale: 1, z: 0, x: x * innerWidth / 100, y: y * innerHeight / 100 * .9, rotation: r * .5, rotationY: x < 0 ? 14 : -14, duration: 1.4}, t)
+          .to(c, {x: x * innerWidth / 100 * 1.07, y: y * innerHeight / 100 * 1.04, z: 120, duration: 1.6, ease: 'none'}, t + 1.4);
+      });
+      tl.to('.reel__word', {scale: 1.15, opacity: .35, duration: N * .42 + 2, ease: 'none'}, 0);
+      tl.fromTo('.reel__core', {scale: .86}, {scale: 1.02, duration: N * .42 + 2, ease: 'none'}, 0);
     }
-    setStage(0);
-    ST.create({trigger: story, start: 'top top', end: 'bottom bottom', onUpdate: self => setStage(clamp(Math.floor(self.progress * N * .999), 0, N - 1))});
 
-    /* gentle parallax on the hero */
-    ST.create({trigger: hero, start: 'top top', end: 'bottom top', scrub: true, onUpdate: self => {
-      hero.style.setProperty('--py', (self.progress * 90) + 'px');
-      $('#heroRobot').style.setProperty('--ry', (self.progress * -50) + 'px');
-    }});
-
-    revealCards($('#home-grid'));
     revealBlocks(view);
-    return () => { removeEventListener('resize', onResize); hero.style.removeProperty('--py'); };
+    revealCards($('#home-grid'));
+    gsap.set($$('.kind', view), {opacity: 0, y: 36});
+    ST.batch($$('.kind', view), {start: 'top 92%', once: true, onEnter: b => gsap.to(b, {opacity: 1, y: 0, duration: .8, stagger: .08, ease: 'power3.out'})});
+    return () => { removeEventListener('resize', onResize); removeEventListener('pointermove', onMove); gsap.ticker.remove(tick); };
   }
 };
 
@@ -293,13 +295,13 @@ views.work = {
     if (!grid.children.length){
       C.videos.forEach(v => { const c = window.EVYXCard(v); c.addEventListener('click', () => openPreview(v)); grid.appendChild(c); });
       const chips = $('#chips');
-      ['All', ...C.niches].forEach((c, i) => {
+      ['All', ...new Set(C.videos.map(v => v.cat))].forEach((c, i) => {
         const b = document.createElement('button'); b.className = 'chip'; b.type = 'button'; b.textContent = c; b.setAttribute('aria-pressed', i === 0);
         b.onclick = () => applyFilter(c);
         chips.appendChild(b);
       });
       const sel = $('#c-niche'); sel.innerHTML = C.niches.map(n => `<option>${esc(n)}</option>`).join('');
-      const tiers = [['Up to 8 seconds, one scene', C.prices.tiers[0]], ['Up to 15 seconds, two scenes', C.prices.tiers[1]], ['15 seconds, character and product', C.prices.tiers[2]]];
+      const tiers = [['Up to 8 seconds, one scene', C.prices.tiers[0]], ['Up to 15 seconds, two scenes', C.prices.tiers[1]], ['15 seconds, character and effects', C.prices.tiers[2]]];
       let tier = 0; const tb = $('#c-tier');
       tb.innerHTML = tiers.map((t, i) => `<button type="button" data-i="${i}" aria-pressed="${i === 0}"><b>$${t[1]}</b>${t[0]}</button>`).join('');
       $$('button', tb).forEach(b => b.onclick = () => {
@@ -322,7 +324,7 @@ views.work = {
         ST.refresh();
       }});
     }
-    if (window.EVYX_filter){ const f = window.EVYX_filter; window.EVYX_filter = null; applyFilter(C.niches.includes(f) ? f : 'All'); }
+    if (window.EVYX_filter){ const f = window.EVYX_filter; window.EVYX_filter = null; applyFilter(C.videos.some(v => v.cat === f) ? f : 'All'); }
     gsap.from($$('.page > .page__head > *', view), {y: 28, opacity: 0, stagger: .09, duration: .8, ease: 'power3.out', delay: .1, clearProps: 'transform'});
     revealCards(grid); revealBlocks(view);
   }
@@ -333,9 +335,9 @@ views.services = {
   mount(view){
     const t = $('#tariffs');
     if (!t.children.length){
-      const data = [['Single scene', 'Up to 8 seconds, one scene', ['Any reference you send', 'Your product and brand', 'Vertical 9:16', 'One round of fixes']],
+      const data = [['Single scene', 'Up to 8 seconds, one scene', ['Any reference you send', 'Your idea and brand', 'Vertical 9:16', 'One round of fixes']],
         ['Two scenes', 'Up to 15 seconds, two scenes', ['Everything in Single scene', 'Two scenes, one story', 'Sound and captions', 'Delivery in 1–2 days']],
-        ['Character & product', '15 seconds, character and product', ['Everything in Two scenes', 'A consistent character', 'Product close-ups', 'Priority queue']]];
+        ['Character + effects', '15 seconds, character and effects', ['Everything in Two scenes', 'A consistent character', 'Custom VFX', 'Priority queue']]];
       data.forEach((d, i) => {
         const el = document.createElement('div'); el.className = 'glass tariff' + (i === 1 ? ' tariff--hot' : '');
         el.innerHTML = `<span class="kicker">${esc(d[0])}</span><div class="price gtext">$${C.prices.tiers[i]}</div><p class="small" style="margin-top:-8px">${esc(d[1])}</p><ul>${d[2].map(x => `<li>${esc(x)}</li>`).join('')}</ul><button class="btn ${i === 1 ? 'btn--fill' : ''}" type="button">Order $${C.prices.tiers[i]} <span class="arrow"></span></button>`;
@@ -425,7 +427,7 @@ function loader(){
     L.innerHTML = `<div style="text-align:center"><div style="font:600 clamp(34px,6vw,64px)/1 Unbounded,sans-serif;letter-spacing:.24em;position:relative;color:rgba(236,217,173,.18)">EVYX<span class="lf" style="position:absolute;left:0;top:0;overflow:hidden;width:0;white-space:nowrap;background:linear-gradient(115deg,#8b6d3c,#d0ad70 40%,#f2e3bf 55%,#cfa966 70%,#8b6d3c);-webkit-background-clip:text;background-clip:text;color:transparent">EVYX</span></div></div>`;
     document.body.appendChild(L);
     const lf = $('.lf', L), o = {v: 0};
-    const ready = Promise.all([document.fonts && document.fonts.ready, window.EVYXRobot.load()]).catch(() => {});
+    const ready = Promise.all([document.fonts && document.fonts.ready, Promise.resolve()]).catch(() => {});
     let done = false, minDone = false;
     const finish = () => {
       if (!(done && minDone)) return;
@@ -437,18 +439,22 @@ function loader(){
   });
 }
 
+function flyIn(){
+  const tl = gsap.timeline({defaults: {ease: 'power3.out'}});
+  tl.set('.hero__ui, .hdr__in', {opacity: 0})
+    .fromTo('.hero__bg', {opacity: 0}, {opacity: 1, duration: 1.4}, 0)
+    .fromTo('#ring1', {attr: {r: 40}, opacity: 0}, {attr: {r: 262}, opacity: 1, duration: 2.2, ease: 'expo.out'}, 0)
+    .fromTo('#ring2', {attr: {r: 60}, opacity: 0}, {attr: {r: 430}, opacity: 1, duration: 2.6, ease: 'expo.out'}, .15)
+    .fromTo('.hero__flare', {opacity: 0, scaleX: .2}, {opacity: 1, scaleX: 1, duration: 2, transformOrigin: '100% 50%'}, .3)
+    .fromTo('.hero__title .hl > span', {scale: 2.6, opacity: 0, filter: 'blur(26px)'}, {scale: 1, opacity: 1, filter: 'blur(0px)', duration: 2.1, stagger: .18, ease: 'expo.out'}, .1)
+    .fromTo('#heroRobot', {opacity: 0, scale: 1.28, yPercent: 7, filter: 'brightness(.15) blur(10px)'}, {opacity: 1, scale: 1, yPercent: 0, filter: 'brightness(1) blur(0px)', duration: 2.4, ease: 'expo.out'}, .45)
+    .to('.hero__ui, .hdr__in', {opacity: 1, duration: 1, stagger: .1}, 1.5)
+    .from('.hero__copy > *', {y: 26, opacity: 0, duration: .9, stagger: .1}, 1.55)
+    .fromTo('.visor', {opacity: 0}, {opacity: 1, duration: 1.2}, 1.2);
+}
 loader().then(() => {
   go(routeFromHash(), true);
-  if (!reduce){
-    gsap.from('.hdr__in > *', {opacity: 0, y: -16, stagger: .06, duration: .9, ease: 'power3.out'});
-    if (current === 'home'){
-      const hero = $('#hero');
-      gsap.fromTo($('#heroWord'), {opacity: 0, '--wy': '40px'}, {opacity: 1, '--wy': '0px', duration: 1.6, ease: 'power3.out'});
-      gsap.fromTo($('#heroMirror'), {opacity: 0}, {opacity: .2, duration: 1.8, delay: .3});
-      gsap.fromTo($('#heroRobot'), {opacity: 0}, {opacity: 1, duration: 1.4, delay: .15, ease: 'power2.out'});
-      gsap.from(['.hero__card', '.hero__stack'], {opacity: 0, y: 24, duration: 1, stagger: .12, delay: .7, ease: 'power3.out'});
-      gsap.from('.hero__cta', {opacity: 0, duration: 1, delay: 1, ease: 'power3.out'});
-    }
-  }
+  if (!reduce && current === 'home') flyIn();
+  else if (!reduce) gsap.from('.hdr__in > *', {opacity: 0, y: -16, stagger: .06, duration: .9, ease: 'power3.out'});
 });
 })();

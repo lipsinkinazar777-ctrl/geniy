@@ -18,12 +18,10 @@ Host the folder anywhere static: Cloudflare Pages, Netlify, Vercel, GitHub Pages
 - `stages`, `tutorials`, `program`, `faq`, `prices`: all copy
 
 ## Images
-The robot and the card images are real path-traced renders made with the scripts in `tools/`
-(see `tools/README.md`). The card images are sample stills; replace them with your own videos.
+`assets/hero/robot.webp` is cut from the reference image you supplied. `assets/cards/*` are sample stills
+(cropped from your reference sheet plus two renders). Replace them with your own videos.
 
 ## Files
 - `index.html`: all tabs
 - `css/style.css`: design system
 - `js/app.js`: router, home story, modals, checkout
-- `js/robot.js`: the head-turn sequence that follows the cursor
-- `assets/robot/`: 15 transparent frames, `robot.json`
