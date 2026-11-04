@@ -26,8 +26,8 @@ const NAV=[["home","Home"],["work","Work Showcase"],["services","Services (EU Bu
 document.body.insertAdjacentHTML("afterbegin",
 `<header class="hdr"><div class="wrap">
   <a class="logo" href="#home" aria-label="EVYX home">EV<b>Y</b>X</a>
-  <nav class="nav glass" id="nav">${NAV.map(n=>`<a href="#${n[0]}" data-r="${n[0]}">${n[1]}</a>`).join("")}</nav>
-  <button class="btn sm fill hdr-cta" data-order>Order $${C.prices.tiers[0]}</button>
+  <nav class="nav" id="nav">${NAV.map(n=>`<a href="#${n[0]}" data-r="${n[0]}">${n[1]}</a>`).join("")}</nav>
+  <button class="hlink hdr-cta" data-order>Order · $${C.prices.tiers[0]}</button>
   <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 </div></header>`);
 $("#yr").textContent=new Date().getFullYear();
@@ -162,11 +162,11 @@ const mounted={ctx:null,name:null};
 /* ----- HOME ----- */
 let hudBuilt=false;
 const poses=[
-  {camX:0,camY:1.25,camZ:5.6,lookX:0,lookY:1.0},
-  {camX:-.9,camY:1.5,camZ:3.2,lookX:.1,lookY:1.25},
-  {camX:.6,camY:1.78,camZ:1.95,lookX:0,lookY:1.75},
-  {camX:.45,camY:.5,camZ:3.1,lookX:0,lookY:.7},
-  {camX:0,camY:1.5,camZ:7.6,lookX:0,lookY:1.1}
+  {camX:0,camY:2.3,camZ:9,lookX:.8,lookY:.45,seam:1.5,vortex:1},
+  {camX:-1.6,camY:1.7,camZ:6.8,lookX:.5,lookY:.4,seam:-.6,vortex:1},
+  {camX:1.3,camY:1.25,camZ:5.4,lookX:-.4,lookY:.7,seam:-2.8,vortex:.9},
+  {camX:-.5,camY:3.4,camZ:7.8,lookX:0,lookY:-.2,seam:-5,vortex:.7},
+  {camX:0,camY:2.6,camZ:10.5,lookX:0,lookY:.4,seam:-9,vortex:.25}
 ];
 function fcHTML(v,cls,r,mini){
   return `<div class="fc ${mini?'mini':''}" data-id="${v.id}"><div class="fl"></div></div>`;
@@ -217,7 +217,7 @@ views.home={
     const sts=$$(".st",hud),fcs=$$(".fc",hud);
     gsap.set(fcs,{yPercent:-50,autoAlpha:0});
     /* hero out */
-    tl.to($(".hero-cta",hud),{autoAlpha:0,y:40,duration:.3},.3).to($(".hint",hud),{autoAlpha:0,duration:.2},.1).to(S,{title:0,duration:.6},.2);
+    tl.to($(".hero-cta",hud),{autoAlpha:0,y:40,duration:.3},.3).to($(".hint",hud),{autoAlpha:0,duration:.2},.1);
     /* camera */
     poses.forEach((p,k)=>{if(k>0)tl.to(S,{...p,duration:.85,ease:"power2.inOut"},k-.4)});
     /* stages */
@@ -232,10 +232,10 @@ views.home={
       });
     });
     /* outro */
-    tl.to(hud,{autoAlpha:0,duration:.35},5.15).to(S,{op:.28,bloom:.4,dust:.5,duration:.6},5.0);
+    tl.to(hud,{autoAlpha:0,duration:.35},5.15).to(S,{op:.3,vortex:0,duration:.6},5.0);
     tl.duration(5.6);
     ST.refresh();
-    return()=>{ /* cleanup handled by context */ gsap.set([hud,".hero-cta",".hint"],{clearProps:"all"});sts.forEach(e=>gsap.set(e,{clearProps:"all"}));fcs.forEach(e=>gsap.set(e,{clearProps:"all"}));hud.hidden=true;if(S)S.op=1,S.title=0};
+    return()=>{ /* cleanup handled by context */ gsap.set([hud,".hero-cta",".hint"],{clearProps:"all"});sts.forEach(e=>gsap.set(e,{clearProps:"all"}));fcs.forEach(e=>gsap.set(e,{clearProps:"all"}));hud.hidden=true;if(S)S.op=1};
   }
 };
 
@@ -355,9 +355,9 @@ function loader(){
     const L=document.createElement("div");
     L.style.cssText="position:fixed;inset:0;z-index:200;background:#030304;display:grid;place-items:center;clip-path:circle(150% at 50% 50%)";
     L.innerHTML=`<svg viewBox="0 0 260 60" style="width:min(260px,60vw);overflow:visible"><defs><clipPath id="lc"><rect class="lr" x="0" y="60" width="260" height="60"/></clipPath></defs>
-      <text x="130" y="46" text-anchor="middle" style="font:600 44px Unbounded,sans-serif;letter-spacing:.14em;fill:transparent;stroke:rgba(212,175,55,.5);stroke-width:1">EVYX</text>
-      <text x="130" y="46" text-anchor="middle" style="font:600 44px Unbounded,sans-serif;letter-spacing:.14em;fill:#d4af37" clip-path="url(#lc)">EVYX</text></svg>
-      <div class="n" style="position:absolute;bottom:8vh;font:400 12px Unbounded,sans-serif;color:#8f8a7c;letter-spacing:.2em">0</div>`;
+      <text x="130" y="46" text-anchor="middle" style="font:600 44px Unbounded,sans-serif;letter-spacing:.14em;fill:transparent;stroke:rgba(201,169,107,.5);stroke-width:1">EVYX</text>
+      <text x="130" y="46" text-anchor="middle" style="font:600 44px Unbounded,sans-serif;letter-spacing:.14em;fill:#c9a96b" clip-path="url(#lc)">EVYX</text></svg>
+      <div class="n" style="position:absolute;bottom:8vh;font:400 12px Unbounded,sans-serif;color:#948d7f;letter-spacing:.2em">0</div>`;
     document.body.appendChild(L);
     const o={v:0},rect=$(".lr",L),num=$(".n",L);
     gsap.timeline({onComplete:()=>{L.remove();lenis&&lenis.start();res()}})
@@ -369,7 +369,6 @@ loader().then(()=>{
   go(routeFromHash(),true);
   gsap.from(".hdr .wrap",{y:-80,opacity:0,duration:1,ease:"power3.out"});
   if(current==="home"&&!reduce){
-    const SS=window.EVYXScene&&window.EVYXScene.S;SS&&gsap.fromTo(SS,{title:0},{title:1,duration:1.8,ease:"power2.out"});
     gsap.from(".hero-cta > *",{opacity:0,y:30,duration:1,stagger:.12,delay:.5,ease:"power3.out"});
   }
 });
