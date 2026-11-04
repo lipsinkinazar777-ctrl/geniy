@@ -40,12 +40,19 @@ window.EVYX = {
   niches: ["Ad video", "Promo clip", "Cartoon", "Music clip", "Greeting / meme", "AI character"],
 
   kinds: [
-    { icon: "cartoon", title: "Cartoons", text: "From short animated stories to full projects. Any style: 2D, 3D, hand-drawn or anime." },
-    { icon: "ad",      title: "Ad videos", text: "Selling through visuals. Vertical and wide videos for Instagram, YouTube, TikTok and screens." },
-    { icon: "music",   title: "Music clips", text: "Clips for artists and labels. Lyrics, performance, abstract worlds, with or without a person." },
-    { icon: "meme",    title: "Greetings and memes", text: "Personal videos, video cards, parodies and memes, made for the person and the moment." },
-    { icon: "avatar",  title: "AI characters", text: "A presenter, a mascot or a digital double that stays the same in every video." },
-    { icon: "any",     title: "Any format", text: "Have an idea? We make it. Format, platform, style and script are up to you." }
+    { img: "assets/kinds/cartoon.webp", title: "Cartoons", text: "From short animated stories to full projects. Any style: 2D, 3D, hand-drawn or anime." },
+    { img: "assets/kinds/ad.webp",      title: "Ad videos", text: "Selling through visuals. Videos for Instagram, YouTube, TikTok, websites and screens." },
+    { img: "assets/kinds/promo.webp",   title: "Promo clips", text: "Presenter-style and brand videos for launches, events and campaigns, shot without a crew." },
+    { img: "assets/kinds/music.webp",   title: "Music clips", text: "Clips for artists and labels. Performance, lyrics and abstract worlds, with or without a person." },
+    { img: "assets/kinds/meme.webp",    title: "Greetings and memes", text: "Personal videos, video cards, parodies and memes, made for the person and the moment." },
+    { img: "assets/kinds/any.webp",     title: "Any format", text: "Have an idea? We make it. Format, platform, style and script are up to you." }
+  ],
+
+  how: [
+    ["Send a reference", "A link or a file of the video you want, plus one line on what to change."],
+    ["Get a price and a date", "You see the cost and the delivery time before anything starts."],
+    ["We build it", "Generation, selection, edit, grade and sound. Vertical 9:16 by default."],
+    ["Post it", "One round of fixes is included. Files arrive without watermarks."]
   ],
 
   tutorials: [

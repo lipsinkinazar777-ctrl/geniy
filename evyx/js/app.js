@@ -207,18 +207,9 @@ const views = {};
 
 /* ----- HOME ----- */
 let homeBuilt = false;
-const ICONS = {
-  cartoon: '<rect x="8" y="14" width="40" height="28" rx="5"/><path d="M20 14l-6-7M36 14l6-7"/><circle cx="28" cy="28" r="6"/><path d="M52 24v8"/>',
-  ad: '<rect x="18" y="6" width="26" height="46" rx="5"/><path d="M26 12h10M22 22h18v12H22zM26 44h10"/><path d="M48 18l8-4M48 30h8M48 42l8 4"/>',
-  music: '<path d="M22 40V12l24-6v28"/><circle cx="16" cy="42" r="6"/><circle cx="40" cy="36" r="6"/>',
-  meme: '<circle cx="28" cy="28" r="20"/><path d="M19 33c3 6 15 6 18 0"/><circle cx="21" cy="23" r="1.5"/><circle cx="35" cy="23" r="1.5"/><path d="M50 10l3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/>',
-  avatar: '<circle cx="28" cy="18" r="10"/><path d="M8 52c2-14 10-20 20-20s18 6 20 20"/><path d="M44 12l8-4M46 24h8"/>',
-  any: '<rect x="6" y="10" width="44" height="30" rx="4"/><path d="M24 20l12 6-12 6z"/><path d="M14 48h28M20 52h16"/>'
-};
 function buildHome(){
-  const words = C.niches.concat(['Reels', 'TikTok']);
-  $('#marquee').innerHTML = words.concat(words).map(w => `<span>${esc(w)}</span>`).join('');
-  $('#kindsGrid').innerHTML = C.kinds.map(k => `<div class="kind"><svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k.icon]}</svg><h3 class="h3">${esc(k.title)}</h3><p>${esc(k.text)}</p></div>`).join('');
+  $('#kindsGrid').innerHTML = C.kinds.map(k => `<div class="kind"><div class="kind__pic"><img src="${k.img}" alt="${esc(k.title)}" loading="lazy"></div><h3 class="h3">${esc(k.title)}</h3><p>${esc(k.text)}</p></div>`).join('');
+  $('#howList').innerHTML = C.how.map(([t, d]) => `<li><h3 class="h3">${esc(t)}</h3><p>${esc(d)}</p></li>`).join('');
   const g = $('#home-grid');
   C.videos.forEach(v => { const c = window.EVYXCard(v); c.addEventListener('click', () => openPreview(v)); g.appendChild(c); });
   accordion($('#reqs'), [['What requests do you work with?', C.requests]], false);
@@ -234,56 +225,61 @@ function buildHome(){
 views.home = {
   mount(view){
     if (!homeBuilt){ homeBuilt = true; buildHome(); }
-    const hero = $('#hero'), robot = $('#heroRobot'), title = $('#heroTitle');
-    const lines = $$('.hl', title);
+    const intro = $('#intro'), hero = $('#hero'), robot = $('#heroRobot'), title = $('#heroTitle');
+    const lines = $$('.hl', title), spans = lines.map(l => l.firstElementChild);
     function fit(){
       let size = 1e9;
-      lines.forEach(l => {
-        const sp = l.firstElementChild; sp.style.fontSize = '100px';
-        const w = sp.getBoundingClientRect().width || 1;
-        size = Math.min(size, 100 * Math.min(hero.clientWidth * .875, 2000) / w);
-      });
-      lines.forEach(l => { l.firstElementChild.style.fontSize = size + 'px'; });
+      spans.forEach(sp => { sp.style.fontSize = '100px'; size = Math.min(size, 100 * Math.min(hero.clientWidth * .875, 2000) / (sp.offsetWidth || 1)); });
+      spans.forEach(sp => { sp.style.fontSize = size + 'px'; });
     }
     fit();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
     const onResize = () => fit(); addEventListener('resize', onResize);
 
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    const onMove = e => { mx = (e.clientX / innerWidth - .5) * 2; my = (e.clientY / innerHeight - .5) * 2; };
+    /* cursor: parallax, a gold light on the robot, a light that sweeps through the words */
+    let mx = 0, my = 0, cx = 0, cy = 0, px = -9999, py = -9999;
+    const onMove = e => { mx = (e.clientX / innerWidth - .5) * 2; my = (e.clientY / innerHeight - .5) * 2; px = e.clientX; py = e.clientY; };
     addEventListener('pointermove', onMove, {passive: true});
     const tick = () => {
       cx += (mx - cx) * .06; cy += (my - cy) * .06;
       robot.style.setProperty('--px', (cx * 16) + 'px'); robot.style.setProperty('--py2', (cy * 8) + 'px');
       title.style.setProperty('--tx', (cx * -12) + 'px'); title.style.setProperty('--ty', (cy * -5) + 'px');
+      const r = robot.getBoundingClientRect();
+      const inside = px > r.left + r.width * .18 && px < r.right - r.width * .14 && py > r.top + r.height * .06 && py < r.bottom;
+      robot.style.setProperty('--hov', inside ? 1 : 0);
+      robot.style.setProperty('--gx', ((px - r.left) / r.width * 100) + '%'); robot.style.setProperty('--gy', ((py - r.top) / r.height * 100) + '%');
+      spans.forEach(sp => { const b = sp.getBoundingClientRect(); sp.style.setProperty('--lx', (px - b.left) + 'px'); sp.style.setProperty('--ly', (py - b.top) + 'px'); });
     };
     if (!reduce) gsap.ticker.add(tick);
 
-    if (!reduce){
-      gsap.to('.hero__title', {scale: 1.25, opacity: 0, ease: 'none', scrollTrigger: {trigger: hero, start: 'top top', end: 'bottom top', scrub: true}});
-      gsap.to(robot, {yPercent: 8, scale: 1.1, ease: 'none', scrollTrigger: {trigger: hero, start: 'top top', end: 'bottom top', scrub: true}});
-    }
-
-    /* reel: videos fly out of the android as you scroll */
-    const reel = $('#reel'), cards = $$('.reel__card', reel);
+    /* one continuous scroll: the words recede, videos fly out of the android */
+    const cards = $$('.reel__card', hero);
     if (innerWidth > 900 && !reduce){
-      const N = cards.length;
-      const slots = [[-30, -8, -13], [30, -22, 9], [-40, 20, 7], [40, 14, -8], [-19, -34, -5], [21, 33, 11], [-26, 36, 13], [31, -2, -12]];
-      gsap.set(cards, {xPercent: -50, yPercent: -50, left: '50%', top: '50%', autoAlpha: 0, scale: .15, z: -900});
-      const tl = gsap.timeline({defaults: {ease: 'power2.out'}, scrollTrigger: {trigger: reel, start: 'top top', end: 'bottom bottom', scrub: .8}});
+      const slots = [[-31, -6, -13], [31, -20, 9], [-40, 22, 7], [40, 16, -8], [-20, -30, -5], [22, 30, 11], [-27, 34, 13], [31, 0, -12]];
+      gsap.set(cards, {xPercent: -50, yPercent: -50, left: '50%', top: '46%', autoAlpha: 0, scale: .15, z: -900});
+      const tl = gsap.timeline({defaults: {ease: 'power2.out'}, scrollTrigger: {trigger: intro, start: 'top top', end: 'bottom bottom', scrub: .8}});
+      tl.to('#heroUI', {autoAlpha: 0, y: 30, duration: .5, ease: 'power2.in'}, 0)
+        .to(title, {scale: 1.35, opacity: 0, duration: 2.2, ease: 'power1.in'}, .1)
+        .to('.hero__rings', {scale: 1.6, opacity: 0, duration: 3, ease: 'none'}, 0)
+        .to(robot, {scale: 1.04, duration: 6, ease: 'none'}, 0)
+        .to('.reel__cap', {opacity: 1, duration: .6}, 4.6);
       cards.forEach((c, i) => {
-        const [x, y, r] = slots[i % slots.length], t = i * .42;
+        const [x, y, r] = slots[i % slots.length], t = .7 + i * .5;
         tl.fromTo(c, {autoAlpha: 0, scale: .15, z: -900, x: 0, y: 0, rotationY: 0, rotation: 0},
-                     {autoAlpha: 1, scale: 1, z: 0, x: x * innerWidth / 100, y: y * innerHeight / 100 * .9, rotation: r * .5, rotationY: x < 0 ? 14 : -14, duration: 1.4}, t)
-          .to(c, {x: x * innerWidth / 100 * 1.07, y: y * innerHeight / 100 * 1.04, z: 120, duration: 1.6, ease: 'none'}, t + 1.4);
+                     {autoAlpha: 1, scale: 1, z: 0, x: x * innerWidth / 100, y: y * innerHeight / 100 * .9, rotation: r * .5, rotationY: x < 0 ? 14 : -14, duration: 1.5}, t)
+          .to(c, {x: x * innerWidth / 100 * 1.07, y: y * innerHeight / 100 * 1.04, z: 120, duration: 1.6, ease: 'none'}, t + 1.5);
       });
-      tl.to('.reel__word', {scale: 1.15, opacity: .35, duration: N * .42 + 2, ease: 'none'}, 0);
-      tl.fromTo('.reel__core', {scale: .86}, {scale: 1.02, duration: N * .42 + 2, ease: 'none'}, 0);
     }
 
     revealBlocks(view);
     revealCards($('#home-grid'));
-    gsap.set($$('.kind', view), {opacity: 0, y: 36});
-    ST.batch($$('.kind', view), {start: 'top 92%', once: true, onEnter: b => gsap.to(b, {opacity: 1, y: 0, duration: .8, stagger: .08, ease: 'power3.out'})});
+    /* "what we create": pictures rise in as you scroll, with a little parallax */
+    $$('.kind', view).forEach((k, i) => {
+      if (reduce) return;
+      gsap.fromTo(k, {opacity: 0, y: 70}, {opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: {trigger: k, start: 'top 90%', once: true}});
+      gsap.fromTo($('img', k), {yPercent: 8}, {yPercent: -8, ease: 'none', scrollTrigger: {trigger: k, start: 'top bottom', end: 'bottom top', scrub: true}});
+    });
+    $$('.how li', view).forEach((li, i) => { if (!reduce) gsap.fromTo(li, {opacity: 0, y: 40}, {opacity: 1, y: 0, duration: .9, delay: i * .1, scrollTrigger: {trigger: li, start: 'top 92%', once: true}}); });
     return () => { removeEventListener('resize', onResize); removeEventListener('pointermove', onMove); gsap.ticker.remove(tick); };
   }
 };
@@ -439,22 +435,50 @@ function loader(){
   });
 }
 
+function warp(){
+  return new Promise(res => {
+    const cv = document.createElement('canvas');
+    cv.style.cssText = 'position:fixed;inset:0;z-index:180;width:100%;height:100%;pointer-events:none';
+    document.body.appendChild(cv);
+    const dpr = Math.min(devicePixelRatio || 1, 2), W = cv.width = innerWidth * dpr, H = cv.height = innerHeight * dpr, g = cv.getContext('2d');
+    const N = 420, st = Array.from({length: N}, () => ({a: Math.random() * 6.283, d: Math.random(), s: .4 + Math.random() * .9, c: Math.random() < .25}));
+    const t0 = performance.now(), D = 2300;
+    (function frame(now){
+      const t = Math.min((now - t0) / D, 1), e = t * t * (3 - 2 * t);
+      g.fillStyle = `rgba(5,4,3,${.28})`; g.fillRect(0, 0, W, H);
+      const cx = W / 2, cy = H * .47, R = Math.hypot(W, H) / 2, sp = .006 + e * .05;
+      for (const p of st){
+        const r0 = p.d * p.d * R, len = 18 + e * 520 * p.s;
+        p.d += sp * p.s * (.6 + p.d); if (p.d > 1){ p.d = Math.random() * .08; p.a = Math.random() * 6.283; }
+        const r1 = p.d * p.d * R, rr = Math.max(0, r1 - len * p.d);
+        const x1 = cx + Math.cos(p.a) * r1, y1 = cy + Math.sin(p.a) * r1, x0 = cx + Math.cos(p.a) * rr, y0 = cy + Math.sin(p.a) * rr;
+        g.strokeStyle = p.c ? `rgba(255,240,205,${.35 + .5 * e})` : `rgba(214,170,100,${.25 + .5 * e})`; g.lineWidth = (.6 + p.d * 2.2) * dpr;
+        g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
+      }
+      const gl = g.createRadialGradient(cx, cy, 0, cx, cy, R * .5); gl.addColorStop(0, `rgba(255,214,150,${.5 * e})`); gl.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gl; g.fillRect(0, 0, W, H);
+      if (t < 1) requestAnimationFrame(frame);
+      else { gsap.to(cv, {opacity: 0, duration: .9, onComplete: () => { cv.parentNode && cv.parentNode.removeChild(cv); }}); res(); }
+    })(t0);
+  });
+}
 function flyIn(){
   const tl = gsap.timeline({defaults: {ease: 'power3.out'}});
   tl.set('.hero__ui, .hdr__in', {opacity: 0})
+    .fromTo('.hero', {scale: 1.35}, {scale: 1, duration: 2.8, ease: 'expo.out'}, 0)
     .fromTo('.hero__bg', {opacity: 0}, {opacity: 1, duration: 1.4}, 0)
-    .fromTo('#ring1', {attr: {r: 40}, opacity: 0}, {attr: {r: 262}, opacity: 1, duration: 2.2, ease: 'expo.out'}, 0)
-    .fromTo('#ring2', {attr: {r: 60}, opacity: 0}, {attr: {r: 430}, opacity: 1, duration: 2.6, ease: 'expo.out'}, .15)
-    .fromTo('.hero__flare', {opacity: 0, scaleX: .2}, {opacity: 1, scaleX: 1, duration: 2, transformOrigin: '100% 50%'}, .3)
-    .fromTo('.hero__title .hl > span', {scale: 2.6, opacity: 0, filter: 'blur(26px)'}, {scale: 1, opacity: 1, filter: 'blur(0px)', duration: 2.1, stagger: .18, ease: 'expo.out'}, .1)
-    .fromTo('#heroRobot', {opacity: 0, scale: 1.28, yPercent: 7, filter: 'brightness(.15) blur(10px)'}, {opacity: 1, scale: 1, yPercent: 0, filter: 'brightness(1) blur(0px)', duration: 2.4, ease: 'expo.out'}, .45)
-    .to('.hero__ui, .hdr__in', {opacity: 1, duration: 1, stagger: .1}, 1.5)
-    .from('.hero__copy > *', {y: 26, opacity: 0, duration: .9, stagger: .1}, 1.55)
-    .fromTo('.visor', {opacity: 0}, {opacity: 1, duration: 1.2}, 1.2);
+    .fromTo('#ring1', {attr: {r: 40}, opacity: 0}, {attr: {r: 262}, opacity: 1, duration: 2.2, ease: 'expo.out'}, .1)
+    .fromTo('#ring2', {attr: {r: 60}, opacity: 0}, {attr: {r: 430}, opacity: 1, duration: 2.6, ease: 'expo.out'}, .25)
+    .fromTo('.hero__flare', {opacity: 0, scaleX: .2}, {opacity: 1, scaleX: 1, duration: 2, transformOrigin: '100% 50%'}, .4)
+    .fromTo('.hero__title .hl > span', {scale: 2.2, opacity: 0, filter: 'blur(24px)'}, {scale: 1, opacity: .9, filter: 'blur(0px)', duration: 2.1, stagger: .18, ease: 'expo.out'}, .2)
+    .fromTo('#heroRobot', {opacity: 0, scale: 1.25, yPercent: 8, filter: 'brightness(.12) blur(12px)'}, {opacity: 1, scale: 1, yPercent: 0, filter: 'brightness(1) blur(0px)', duration: 2.4, ease: 'expo.out'}, .5)
+    .to('.hero__ui, .hdr__in', {opacity: 1, duration: 1, stagger: .1}, 1.6)
+    .from('.hero__card, .hero__btns, .hero__stack', {y: 28, opacity: 0, duration: 1, stagger: .12}, 1.6)
+    .fromTo('.visor', {opacity: 0}, {opacity: 1, duration: 1.2}, 1.3);
 }
 loader().then(() => {
   go(routeFromHash(), true);
-  if (!reduce && current === 'home') flyIn();
+  if (!reduce && current === 'home'){ gsap.set('.hero__title .hl > span', {opacity: 0}); warp(); flyIn(); }
   else if (!reduce) gsap.from('.hdr__in > *', {opacity: 0, y: -16, stagger: .06, duration: .9, ease: 'power3.out'});
 });
 })();

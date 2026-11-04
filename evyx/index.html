@@ -5,7 +5,7 @@
 <meta name="description" content="EVYX is an AI video studio. We make AI video from scratch and rebuild any video you send us, from $15. AI content for European business. Free guides and the EVYX program.">
 <meta name="theme-color" content="#070605">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23070605'/%3E%3Cpath d='M16 18h32M16 32h22M16 46h32' stroke='%23c9a56a' stroke-width='5' fill='none'/%3E%3C/svg%3E">
-<link rel="preload" href="fonts/unbounded-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/hero/robot.webp" as="image">
 <link rel="stylesheet" href="css/style.css">
 </head><body>
@@ -18,7 +18,7 @@
     <a href="#services" data-r="services">Services (EU Business)</a>
     <a href="#academy" data-r="academy">Academy</a>
   </nav>
-  <button class="hdr__cta" data-order>Order · $15</button>
+  <button class="hdr__cta" data-order>Order - $15</button>
   <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 </div></header>
 
@@ -26,6 +26,7 @@
 <!-- ============================ HOME ============================ -->
 <section class="view" id="v-home" data-title="EVYX. AI video studio">
 
+  <div class="intro" id="intro">
   <section class="hero" id="hero">
     <div class="hero__bg" aria-hidden="true"></div>
     <svg class="hero__rings" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -34,36 +35,31 @@
     </svg>
     <div class="hero__flare" aria-hidden="true"></div>
     <h1 class="hero__title" id="heroTitle" aria-label="Remake any AI videos">
-      <span class="hl" data-fit=".88"><span>REMAKE ANY</span></span>
-      <span class="hl" data-fit=".93"><span>AI VIDEOS</span></span>
+      <span class="hl" data-fit=".875"><span>REMAKE ANY</span></span>
+      <span class="hl" data-fit=".875"><span>AI VIDEOS</span></span>
     </h1>
     <div class="hero__robot" id="heroRobot" aria-hidden="true">
-      <img src="assets/hero/robot.webp" alt="" width="1584" height="1368" fetchpriority="high">
+      <img src="assets/hero/robot.webp" alt="" width="1980" height="1710" fetchpriority="high">
+      <span class="lit"></span>
       <span class="visor"></span>
     </div>
-    <div class="hero__ui">
-      <div class="hero__copy">
-        <span class="kicker">AI video studio</span>
+    <div class="reel__cards" id="reelCards"></div>
+    <div class="hero__ui" id="heroUI">
+      <div class="hero__card glass">
+        <div class="hero__cardhead"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor"/><path d="M10 8l6 4-6 4z" fill="currentColor"/></svg><span>AI VIDEO STUDIO</span></div>
         <p>We make AI video from scratch, and rebuild any video you send us.</p>
-        <div class="hero__btns">
-          <button class="btn btn--pill btn--fill" data-order>Order a Video <span class="arrow"></span></button>
-          <a class="tlink" href="#academy">Learn it Free</a>
-        </div>
+        <a class="tlink" href="#work">See our work <span class="arrow"></span></a>
       </div>
-      <div class="hero__scroll"><i></i><span>Scroll down</span></div>
-      <div class="hero__tag"><span>Premium AI Video Solutions</span><i></i></div>
+      <div class="hero__btns">
+        <button class="btn btn--pill btn--fill btn--lg" data-order>ORDER A VIDEO <span class="arrow"></span></button>
+        <a class="btn btn--pill btn--ghost btn--lg" href="#academy">LEARN IT FREE</a>
+      </div>
+      <div class="hero__stack" aria-hidden="true"><span>ANY VIDEO.</span><span>REMADE.</span><span class="gold">FROM $15.</span></div>
+      <div class="hero__scroll"><span>SCROLL DOWN</span><i></i></div>
     </div>
+    <p class="reel__cap">Every card is a video we can make for you. <a class="tlink" href="#work">See all work</a></p>
   </section>
-
-  <section class="reel" id="reel" aria-label="Video examples">
-    <div class="reel__stage">
-      <div class="reel__bg" aria-hidden="true"></div>
-      <div class="reel__word" aria-hidden="true">YOUR VIDEO</div>
-      <div class="reel__core" aria-hidden="true"><img src="assets/hero/robot.webp" alt=""></div>
-      <div class="reel__cards" id="reelCards"></div>
-      <p class="reel__cap">Every card is a video we can make for you. <a class="tlink" href="#work">See all work</a></p>
-    </div>
-  </section>
+  </div>
 
   <section class="sec" id="kinds">
     <div class="container">
@@ -74,7 +70,13 @@
     </div>
   </section>
 
-  <div class="marquee" aria-hidden="true"><div class="marquee__tr" id="marquee"></div></div>
+  <section class="sec sec--soft sec--line" id="how">
+    <div class="container">
+      <div class="head head--center"><div><span class="kicker">How it works</span><h2 class="h2" style="margin-top:20px">From a link to a finished video in 1–2 days</h2></div></div>
+      <ol class="how" id="howList"></ol>
+      <div class="how__cta"><button class="btn btn--pill btn--fill btn--lg" data-order>ORDER A VIDEO <span class="arrow"></span></button><span class="small">From $15. You see the price before we start.</span></div>
+    </div>
+  </section>
 
   <section class="sec" id="home-work">
     <div class="container">
